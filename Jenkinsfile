@@ -13,15 +13,16 @@ pipeline {
     stage('Validate Version & Determine Docker Tag') {
       steps {
         script {
+          def VERSION
           def PROJECT_VERSION = sh(script: 'cat package.json | grep version | head -1 | sed -e \'s/[ "]*version":[ ]*//g\' | cut -c 2-6', returnStdout: true).trim()
           if (env.BRANCH_NAME == 'develop') {
             VERSION = PROJECT_VERSION
-            DOCKER_TAG = 'dev'
+            DOCKER_TAG = '${GIT_COMMIT}-dev'
             BUILD_CONFIGURATION = 'beta'
             echo "Detected develop branch version: ${VERSION}"
           } else if (env.BRANCH_NAME == 'master') {
             VERSION = PROJECT_VERSION
-            DOCKER_TAG = "${VERSION}-beta"
+            DOCKER_TAG = "${VERSION}-${GIT_COMMIT}"
             echo "Detected master branch version: ${VERSION}"
           } else if (env.BRANCH_NAME.startsWith('release/')) {
             VERSION = env.BRANCH_NAME.split('/')[1]
@@ -34,7 +35,7 @@ pipeline {
           } else {
             VERSION = PROJECT_VERSION
             def branch = env.BRANCH_NAME.replace('/', '-')
-            DOCKER_TAG = "${VERSION}-${branch}"
+            DOCKER_TAG = "${VERSION}-${GIT_COMMIT}"
             BUILD_CONFIGURATION = 'beta'
           }
           if ( PROJECT_VERSION != VERSION ) {
