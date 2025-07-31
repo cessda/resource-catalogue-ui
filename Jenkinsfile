@@ -1,12 +1,14 @@
 pipeline {
-  agent any
+  agent {
+    label 'jnlp-himem'
+  }
 
   environment {
     IMAGE_NAME = "resource-catalogue-ui"
     REGISTRY = "docker.madgik.di.uoa.gr"
     REGISTRY_CRED = 'docker-registry'
     DOCKER_IMAGE = ''
-    DOCKER_TAG = ''
+    DOCKER_TAG = ""
     BUILD_CONFIGURATION = 'prod'
   }
   stages {
@@ -17,7 +19,7 @@ pipeline {
           def PROJECT_VERSION = sh(script: 'cat package.json | grep version | head -1 | sed -e \'s/[ "]*version":[ ]*//g\' | cut -c 2-6', returnStdout: true).trim()
           if (env.BRANCH_NAME == 'develop') {
             VERSION = PROJECT_VERSION
-            DOCKER_TAG = '${GIT_COMMIT}-dev'
+            DOCKER_TAG = "${GIT_COMMIT}-dev"
             BUILD_CONFIGURATION = 'beta'
             echo "Detected develop branch version: ${VERSION}"
           } else if (env.BRANCH_NAME == 'master') {
