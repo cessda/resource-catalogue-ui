@@ -4,8 +4,8 @@ pipeline {
   }
 
   environment {
-    IMAGE_NAME = "resource-catalogue-ui"
-    REGISTRY = "docker.madgik.di.uoa.gr"
+    IMAGE_NAME = "eosc-resource-catalogue-ui"
+    REGISTRY = 'europe-west1-docker.pkg.dev/cessda-prod/docker'
     REGISTRY_CRED = 'docker-registry'
     DOCKER_IMAGE = ''
     DOCKER_TAG = ''
