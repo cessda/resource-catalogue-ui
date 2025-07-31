@@ -8,7 +8,7 @@ pipeline {
     REGISTRY = "docker.madgik.di.uoa.gr"
     REGISTRY_CRED = 'docker-registry'
     DOCKER_IMAGE = ''
-    DOCKER_TAG = ""
+    DOCKER_TAG = ''
     BUILD_CONFIGURATION = 'prod'
   }
   stages {
@@ -58,7 +58,7 @@ pipeline {
     stage('Upload Image') {
       when { // upload images only from the 'master' branch and tagged builds
         expression {
-          return env.TAG_NAME != null || env.BRANCH_NAME == 'main'
+          return env.TAG_NAME != null || env.BRANCH_NAME == 'master'
         }
       }
       steps{
