@@ -1,7 +1,7 @@
 export const environment = {
   production: true,
   beta: false,
-  CATALOGUE: 'eosc',
+  CATALOGUE: 'cessda',
   MATOMO_URL: 'https://providers.eosc-portal.eu/matomo/',
   MATOMO_SITE: 1,
   FAQ_ENDPOINT: '/faq/api',
@@ -9,7 +9,7 @@ export const environment = {
   API_LOGIN: '/api/oauth2/authorization/eosc',
   API_LOGOUT: '/api/logout',
   STATS_ENDPOINT: 'https://providers.eosc-portal.eu/stats-api/',
-  projectName: 'EOSC',
+  projectName: 'CESSDA',
   projectMail: 'support@sandbox.eosc-beyond.eu',
   serviceORresource: 'Service',
   hasUserConsent: true,

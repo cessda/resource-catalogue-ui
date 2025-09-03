@@ -4,7 +4,7 @@ pipeline {
   }
 
   environment {
-    IMAGE_NAME = "eosc-resource-catalogue-ui"
+    IMAGE_NAME = 'eosc-resource-catalogue-ui'
     REGISTRY = 'europe-west1-docker.pkg.dev/cessda-prod/docker'
     REGISTRY_CRED = 'docker-registry'
     DOCKER_IMAGE = ''
@@ -83,6 +83,7 @@ pipeline {
   post {
     success {
       echo 'Build Successful'
+      build job: 'cessda.resource-catalogue.deploy/main', parameters: [string(name: 'FRONTEND_IMAGE_TAG', value: DOCKER_TAG)], wait: false
     }
     failure {
       echo 'Build Failed'
