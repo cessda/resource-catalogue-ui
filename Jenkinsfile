@@ -36,7 +36,6 @@ pipeline {
             echo "Detected tag: ${env.TAG_NAME} (version ${VERSION})"
           } else {
             VERSION = PROJECT_VERSION
-            def branch = env.BRANCH_NAME.replace('/', '-')
             DOCKER_TAG = "${VERSION}-${GIT_COMMIT}"
             BUILD_CONFIGURATION = 'beta'
           }
