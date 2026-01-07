@@ -72,14 +72,16 @@ export class TicketListComponent implements OnInit {
     this.helpdeskService.getUserTickets().subscribe({
       next: (tickets) => {
         this.tickets = tickets;
-        this.updatePagination();
-        this.loading = false;
+        if(this.tickets) this.updatePagination();
       },
       error: (err) => {
         this.error = "Failed to load tickets. Please try again.";
         this.loading = false;
         console.error("Error loading tickets:", err);
       },
+      complete: () => {
+        this.loading = false;
+      }
     });
   }
 
