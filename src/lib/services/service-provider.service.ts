@@ -89,7 +89,7 @@ export class ServiceProviderService {
   }
 
   getRandomProviders(quantity: string) {
-    return this.http.get<ProviderBundle[]>(this.base + `/provider/randomProviders?quantity=${quantity}`, this.options);
+    return this.http.get<ProviderBundle[]>(this.base + `/provider/random?quantity=${quantity}`, this.options);
   }
 
   getServiceProviderBundleById(id: string, catalogue_id?: string) {

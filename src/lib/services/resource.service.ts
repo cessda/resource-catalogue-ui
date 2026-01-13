@@ -452,7 +452,7 @@ export class ResourceService {
   }
 
   getRandomResources(quantity: string) {
-    return this.http.get<ServiceBundle[]>(this.base + `/service/randomResources?quantity=${quantity}`, this.options);
+    return this.http.get<ServiceBundle[]>(this.base + `/service/random?quantity=${quantity}`, this.options);
   }
 
   getSharedServicesByProvider(id: string, from: string, quantity: string, order: string, sort: string) {

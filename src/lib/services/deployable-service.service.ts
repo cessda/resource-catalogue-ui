@@ -169,7 +169,7 @@ export class DeployableServiceService {
   }
 
   getRandomResources(quantity: string) {
-    return this.http.get<ServiceBundle[]>(this.base + `/deployableService/randomResources?quantity=${quantity}`, this.options);
+    return this.http.get<ServiceBundle[]>(this.base + `/deployableService/random?quantity=${quantity}`, this.options);
   }
 
   getSharedServicesByProvider(id: string, from: string, quantity: string, order: string, sort: string) {
