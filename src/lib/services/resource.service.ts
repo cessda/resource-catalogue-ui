@@ -538,15 +538,15 @@ export class ResourceService {
     id = decodeURIComponent(id);
     if(!catalogueId) catalogueId = this.catalogueConfigId;
     if (catalogueId === this.catalogueConfigId)
-      return this.http.patch(this.base + `/service/auditResource/${id}?actionType=${action}&catalogueId=${catalogueId}&comment=${comment}`, this.options);
+      return this.http.patch(this.base + `/service/audit/${id}?actionType=${action}&catalogueId=${catalogueId}&comment=${comment}`, this.options);
     else
-      return this.http.patch(this.base + `/catalogue/${catalogueId}/service/auditService/${id}?actionType=${action}&comment=${comment}`, this.options);
+      return this.http.patch(this.base + `/catalogue/${catalogueId}/service/audit/${id}?actionType=${action}&comment=${comment}`, this.options);
   }
 
   //TODO: unsued - remove
   auditDatasource(id: string, action: string, catalogueId: string, comment: string) {
     id = decodeURIComponent(id);
-    return this.http.patch(this.base + `/datasource/auditResource/${id}?actionType=${action}&catalogueId=${catalogueId}&comment=${comment}`, this.options);
+    return this.http.patch(this.base + `/datasource/audit/${id}?actionType=${action}&catalogueId=${catalogueId}&comment=${comment}`, this.options);
   }
 
   verifyResource(id: string, active: boolean, status: string) { // for 1st service

@@ -112,7 +112,7 @@ export class DatasourceService {
 
   auditDatasource(id: string, action: string, comment: string) {
     id = decodeURIComponent(id);
-    return this.http.patch(this.base + `/datasource/auditDatasource/${id}?actionType=${action}&comment=${comment}`, this.options);
+    return this.http.patch(this.base + `/datasource/audit/${id}?actionType=${action}&comment=${comment}`, this.options);
   }
 
   getDatasourceByServiceId(serviceId: string, catalogueId?:string){

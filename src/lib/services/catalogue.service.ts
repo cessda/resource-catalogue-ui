@@ -190,7 +190,7 @@ export class CatalogueService {
   }
 
   auditCatalogue(id: string, action: string, comment: string) {
-    return this.http.patch(this.base + `/catalogue/auditCatalogue/${id}?actionType=${action}&comment=${comment}`, this.options);
+    return this.http.patch(this.base + `/catalogue/audit/${id}?actionType=${action}&comment=${comment}`, this.options);
   }
 
   getContactInfo() {
