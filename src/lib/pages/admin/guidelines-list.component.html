@@ -329,14 +329,14 @@
                         }
                         @if ((guidelineBundle.status === 'approved') && (!guidelineBundle.active)) {
                           <li
-                            (click)="publishGuideline(guidelineBundle.id, true)"
+                            (click)="activateGuideline(guidelineBundle.id, true)"
                             class="uk-margin-small-top">
                             <a><i aria-hidden="true" class="fa fa-thumbs-up uk-margin-small-right"></i>Activate</a>
                           </li>
                         }
                         @if ((guidelineBundle.status === 'approved') && (guidelineBundle.active)) {
                           <li
-                            (click)="publishGuideline(guidelineBundle.id, false)"
+                            (click)="activateGuideline(guidelineBundle.id, false)"
                             class="uk-margin-small-top">
                             <a><i aria-hidden="true" class="fa fa-thumbs-down uk-margin-small-right"></i>Deactivate</a>
                           </li>

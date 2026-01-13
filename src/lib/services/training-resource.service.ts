@@ -388,9 +388,9 @@ export class TrainingResourceService {
     return throwError(error);
   }
 
-  publishTrainingResource(id: string, active: boolean) { // toggles active/inactive service
+  activateTrainingResource(id: string, active: boolean) { // toggles active/inactive service
     id = decodeURIComponent(id);
-    return this.http.patch(this.base + `/trainingResource/publish/${id}?active=${active}`, this.options);
+    return this.http.patch(this.base + `/trainingResource/setActive/${id}?active=${active}`, this.options);
   }
 
   suspendTrainingResource(trainingResourceId: string, catalogueId: string, suspend: boolean) {

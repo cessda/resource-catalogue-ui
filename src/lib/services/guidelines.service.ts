@@ -79,9 +79,9 @@ export class GuidelinesService {
     return this.http.patch(this.base + `/interoperabilityRecord/verify/${id}?active=${active}&status=${status}`, {}, this.options);
   }
 
-  publishInteroperabilityRecord(id: string, active: boolean) { // toggles active/inactive provider
+  activateInteroperabilityRecord(id: string, active: boolean) { // toggles active/inactive provider
     // id = decodeURIComponent(id);
-    return this.http.patch(this.base + `/interoperabilityRecord/publish/${id}?active=${active}`, this.options);
+    return this.http.patch(this.base + `/interoperabilityRecord/setActive/${id}?active=${active}`, this.options);
   }
    /** <-- new **/
   /** <-- InteroperabilityRecords **/

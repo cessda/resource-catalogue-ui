@@ -110,7 +110,7 @@ export class CatalogueTrainingResourcesComponent implements OnInit {
       return;
     }
     this.toggleLoading = true;
-    this.trainingResourceService.publishTrainingResource(bundle.id, !bundle.active).subscribe(
+    this.trainingResourceService.activateTrainingResource(bundle.id, !bundle.active).subscribe(
       res => {},
       error => {
         this.errorMessage = 'Something went bad. ' + error.error ;

@@ -110,7 +110,7 @@ export class CatalogueDeployableServicesComponent implements OnInit {
       return;
     }
     this.toggleLoading = true;
-    this.deployableServiceService.publishDeployableService(bundle.id, !bundle.active).subscribe(
+    this.deployableServiceService.activateDeployableService(bundle.id, !bundle.active).subscribe(
       res => {},
       error => {
         this.errorMessage = 'Something went bad. ' + error.error ;

@@ -55,7 +55,7 @@ export class ServiceProviderService {
     return this.http.put<Provider>(this.base + `/provider?comment=${comment}`, updatedFields, this.options);
   }
 
-  updateAndPublishPendingProvider(updatedFields: any, comment: string): Observable<Provider> {
+  updateAndActivatePendingProvider(updatedFields: any, comment: string): Observable<Provider> {
     return this.http.put<Provider>(this.base + '/provider/draft/transform', updatedFields, this.options);
   }
 
@@ -204,25 +204,25 @@ export class ServiceProviderService {
       `/provider/resources/rejected/${id}?from=${from}&quantity=${quantity}&order=${order}&sort=${sort}&resourceType=${resourceType}`);
   }
 
-  publishService(id: string, version: string, active: boolean) { // toggles active/inactive service
+  activateService(id: string, version: string, active: boolean) { // toggles active/inactive service
     id = decodeURIComponent(id);
     if (version === null) {
-      return this.http.patch(this.base + `/service/publish/${id}?active=${active}`, this.options);
+      return this.http.patch(this.base + `/service/setActive/${id}?active=${active}`, this.options);
     }
-    return this.http.patch(this.base + `/service/publish/${id}?active=${active}&version=${version}`, this.options); // copy for provider without version
+    return this.http.patch(this.base + `/service/setActive/${id}?active=${active}&version=${version}`, this.options); // copy for provider without version
   }
 
-  publishDatasource(id: string, version: string, active: boolean) { // toggles active/inactive datasource
+  activateDatasource(id: string, version: string, active: boolean) { // toggles active/inactive datasource
     id = decodeURIComponent(id);
     if (version === null) {
-      return this.http.patch(this.base + `/datasource/publish/${id}?active=${active}`, this.options);
+      return this.http.patch(this.base + `/datasource/setActive/${id}?active=${active}`, this.options);
     }
-    return this.http.patch(this.base + `/datasource/publish/${id}?active=${active}&version=${version}`, this.options); // copy for provider without version
+    return this.http.patch(this.base + `/datasource/setActive/${id}?active=${active}&version=${version}`, this.options); // copy for provider without version
   }
 
-  publishProvider(id: string, active: boolean) { // toggles active/inactive provider
+  activateProvider(id: string, active: boolean) { // toggles active/inactive provider
     id = decodeURIComponent(id);
-    return this.http.patch(this.base + `/provider/publish/${id}?active=${active}`, this.options);
+    return this.http.patch(this.base + `/provider/setActive/${id}?active=${active}`, this.options);
   }
 
   temporarySaveProvider(provider: Provider, providerExists: boolean) {

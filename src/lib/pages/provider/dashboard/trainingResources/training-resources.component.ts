@@ -120,7 +120,7 @@ export class TrainingResourcesComponent implements OnInit {
       return;
     }
     UIkit.modal('#spinnerModal').show();
-    this.trainingResourceService.publishTrainingResource(trBundle.id, !trBundle.active).subscribe(
+    this.trainingResourceService.activateTrainingResource(trBundle.id, !trBundle.active).subscribe(
       res => {},
       error => {
         this.errorMessage = 'Something went bad. ' + error.error ;

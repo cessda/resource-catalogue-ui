@@ -102,12 +102,12 @@ export class DatasourceService {
     return this.http.patch(this.base + `/datasource/verifyDatasource/${id}?active=${active}&status=${status}`, {}, this.options);
   }
 
-  publishDatasource(id: string, version: string, active: boolean) { // toggles active/inactive datasource
+  activateDatasource(id: string, version: string, active: boolean) { // toggles active/inactive datasource
     id = decodeURIComponent(id);
     if (version === null) {
-      return this.http.patch(this.base + `/datasource/publish/${id}?active=${active}`, this.options);
+      return this.http.patch(this.base + `/datasource/setActive/${id}?active=${active}`, this.options);
     }
-    return this.http.patch(this.base + `/datasource/publish/${id}?active=${active}&version=${version}`, this.options); // copy for provider without version
+    return this.http.patch(this.base + `/datasource/setActive/${id}?active=${active}&version=${version}`, this.options); // copy for provider without version
   }
 
   auditDatasource(id: string, action: string, comment: string) {

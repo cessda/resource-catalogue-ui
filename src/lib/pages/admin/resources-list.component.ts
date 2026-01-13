@@ -669,7 +669,7 @@ export class ResourcesListComponent implements OnInit {
       return;
     }
     UIkit.modal('#spinnerModal').show();
-    this.providerService.publishService(bundle.id, bundle.service.version, !bundle.active).subscribe(
+    this.providerService.activateService(bundle.id, bundle.service.version, !bundle.active).subscribe(
       res => {},
       error => {
         UIkit.modal('#spinnerModal').hide();

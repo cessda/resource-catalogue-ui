@@ -158,7 +158,7 @@ export class CatalogueFormComponent implements OnInit {
     const path = this.route.snapshot.routeConfig.path;
     let method;
     if (path === 'add/:catalogueId') {
-      method = 'updateAndPublishPendingProvider';
+      method = 'updateAndActivatePendingProvider';
     } else {
       method = this.editMode ? 'updateCatalogue' : 'createNewCatalogue';
     }

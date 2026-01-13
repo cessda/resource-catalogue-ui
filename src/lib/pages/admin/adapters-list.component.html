@@ -317,14 +317,14 @@
                                 }
                                 @if ((adapterBundle.status === 'approved') && (!adapterBundle.active)) {
                                   <li
-                                    (click)="publishAdapter(adapterBundle.id, true)"
+                                    (click)="activateAdapter(adapterBundle.id, true)"
                                     class="uk-margin-small-top">
                                     <a><i aria-hidden="true" class="fa fa-thumbs-up uk-margin-small-right"></i>Activate</a>
                                   </li>
                                 }
                                 @if ((adapterBundle.status === 'approved') && (adapterBundle.active)) {
                                   <li
-                                    (click)="publishAdapter(adapterBundle.id, false)"
+                                    (click)="activateAdapter(adapterBundle.id, false)"
                                     class="uk-margin-small-top">
                                     <a><i aria-hidden="true" class="fa fa-thumbs-down uk-margin-small-right"></i>Deactivate</a>
                                   </li>

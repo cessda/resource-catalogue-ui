@@ -115,7 +115,7 @@ export class DeployableServicesComponent implements OnInit {
       return;
     }
     UIkit.modal('#spinnerModal').show();
-    this.deployableServiceService.publishDeployableService(dsBundle.id, !dsBundle.active).subscribe(
+    this.deployableServiceService.activateDeployableService(dsBundle.id, !dsBundle.active).subscribe(
       res => {},
       error => {
         this.errorMessage = 'Something went bad. ' + error.error ;

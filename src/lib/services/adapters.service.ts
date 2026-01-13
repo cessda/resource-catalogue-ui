@@ -74,9 +74,9 @@ export class AdaptersService {
     return this.http.patch(this.base + `/adapter/verify/${id}?active=${active}&status=${status}`, {}, this.options);
   }
 
-  publishAdapter(id: string, active: boolean) { // toggles active/inactive provider
+  activateAdapter(id: string, active: boolean) { // toggles active/inactive provider
     // id = decodeURIComponent(id);
-    return this.http.patch(this.base + `/adapter/publish/${id}?active=${active}`, this.options);
+    return this.http.patch(this.base + `/adapter/setActive/${id}?active=${active}`, this.options);
   }
 
   suspendAdapter(adapterId: string, catalogueId: string, suspend: boolean) {

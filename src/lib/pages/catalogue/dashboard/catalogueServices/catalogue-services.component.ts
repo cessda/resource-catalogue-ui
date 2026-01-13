@@ -115,7 +115,7 @@ export class CatalogueServicesComponent implements OnInit {
       return;
     }
     this.toggleLoading = true;
-    this.providerService.publishService(bundle.id, bundle.service.version, !bundle.active).subscribe(
+    this.providerService.activateService(bundle.id, bundle.service.version, !bundle.active).subscribe(
       res => {},
       error => {
         this.errorMessage = 'Something went bad. ' + error.error ;

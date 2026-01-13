@@ -285,10 +285,10 @@ export class GuidelinesListComponent implements OnInit {
     );
   }
 
-  publishGuideline(id: string, active: boolean){ // Activates/Deactivates
+  activateGuideline(id: string, active: boolean){
     this.loadingMessage = '';
     UIkit.modal('#spinnerModal').show();
-    this.guidelinesService.publishInteroperabilityRecord(id, active).subscribe(
+    this.guidelinesService.activateInteroperabilityRecord(id, active).subscribe(
       res => this.getGuidelines(),
       err => UIkit.modal('#spinnerModal').hide(),
       () => {

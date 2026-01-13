@@ -617,8 +617,8 @@ export class ServiceProvidersListComponent implements OnInit {
             this.loadingMessage = '';
           }
         );
-    } else { //use publish method
-      this.serviceProviderService.publishProvider(this.selectedProvider.id, active)
+    } else { //use setActive method
+      this.serviceProviderService.activateProvider(this.selectedProvider.id, active)
         .subscribe(
           res => {
             /*this.providers = [];

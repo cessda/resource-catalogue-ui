@@ -299,9 +299,9 @@ export class DeployableServiceService {
     return throwError(error);
   }
 
-  publishDeployableService(id: string, active: boolean) { // toggles active/inactive service
+  activateDeployableService(id: string, active: boolean) { // toggles active/inactive service
     id = decodeURIComponent(id);
-    return this.http.patch(this.base + `/deployableService/publish/${id}?active=${active}`, this.options);
+    return this.http.patch(this.base + `/deployableService/setActive/${id}?active=${active}`, this.options);
   }
 
   suspendDeployableService(deployableServiceId: string, catalogueId: string, suspend: boolean) {

@@ -285,10 +285,10 @@ export class AdaptersListComponent implements OnInit {
     );
   }
 
-  publishAdapter(id: string, active: boolean){ // Activates/Deactivates
+  activateAdapter(id: string, active: boolean){ // Activates/Deactivates
     this.loadingMessage = '';
     UIkit.modal('#spinnerModal').show();
-    this.adaptersService.publishAdapter(id, active).subscribe(
+    this.adaptersService.activateAdapter(id, active).subscribe(
       res => this.getAdapters(),
       err => UIkit.modal('#spinnerModal').hide(),
       () => {
