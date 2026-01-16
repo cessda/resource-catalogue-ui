@@ -277,8 +277,9 @@ export class ServiceFormComponent implements OnInit {
         else if(this.catalogueId) this.showCatalogueName(this.catalogueId);
 
         if(!this.editMode){ //prefill field(s)
-          this.payloadAnswer = {'answer': { Service:
+          this.payloadAnswer = {'answer': { service:
                 { 'serviceOwner': decodeURIComponent(this.providerId),
+                  'type': "Service",
                   'catalogueId': this.catalogueConfigId}
           }};
         }
