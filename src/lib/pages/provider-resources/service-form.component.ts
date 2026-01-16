@@ -156,7 +156,7 @@ export class ServiceFormComponent implements OnInit {
   }
 
   submitForm(formData: any) {
-    let serviceValue = formData.value.Service;
+    let serviceValue = formData.value.service;
     window.scrollTo(0, 0);
 
     if (!this.authenticationService.isLoggedIn()) {
