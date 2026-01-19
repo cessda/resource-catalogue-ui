@@ -272,7 +272,7 @@
                           <div class="uk-width-4-5">
                             <div class="providerName">
                               <span class="uk-margin-auto-vertical">
-                                <a [routerLink]="['/dashboard', trBundle.trainingResource.catalogueId, pidHandler.customEncodeURIComponent(trBundle.trainingResource.resourceOrganisation), 'training-resource-dashboard', pidHandler.customEncodeURIComponent(trBundle.id)]" data-uk-tooltip title="Go to the training resource dashboard">
+                                <a [routerLink]="['/dashboard', trBundle.trainingResource.catalogueId, pidHandler.customEncodeURIComponent(trBundle.trainingResource.serviceOwner), 'training-resource-dashboard', pidHandler.customEncodeURIComponent(trBundle.id)]" data-uk-tooltip title="Go to the training resource dashboard">
                                   {{ trBundle.trainingResource.title }}
                                 </a>
                               </span>
@@ -292,10 +292,10 @@
                                   <span class="statusLabel">Training Resource Status: </span>{{labels[statuses.indexOf(trBundle.status)]}}
                                 </div>
                                 <div class="uk-margin-small-top">
-                                  <span class="statusLabel">Resource Organisation: </span>{{ providersPage?.results ? getProviderNameWithId(trBundle.trainingResource.resourceOrganisation) : ''}}
+                                  <span class="statusLabel">Resource Organisation: </span>{{ providersPage?.results ? getProviderNameWithId(trBundle.trainingResource.serviceOwner) : ''}}
                                 </div>
                                 <div class="uk-margin-small-top">
-                                  <span class="statusLabel">Resource Providers: </span>{{ providersPage?.results ? getProviderNamesWithIds(trBundle.trainingResource.resourceProviders) : ''}}
+                                  <span class="statusLabel">Resource Providers: </span>{{ providersPage?.results ? getProviderNamesWithIds(trBundle.trainingResource.serviceProviders) : ''}}
                                 </div>
                                 <!--                              <div class="uk-margin-small-top">-->
                                 <!--                                <span class="statusLabel">Status: </span>{{ trBundle.active ? 'Active' : 'Inactive' }}-->
@@ -336,7 +336,7 @@
                       <hr class="uk-margin-top">
                       <div class="uk-align-right">
                         <button
-                          routerLink="/provider/{{trBundle.trainingResource.catalogueId}}/{{trBundle.trainingResource.resourceOrganisation}}/training-resource/view/{{trBundle.id}}"
+                          routerLink="/provider/{{trBundle.trainingResource.catalogueId}}/{{trBundle.trainingResource.serviceOwner}}/training-resource/view/{{trBundle.id}}"
                           class="uk-button uk-button-link" style="">
                           <i class="fa fa-eye fa-lg uk-margin-small-right" aria-hidden="true"></i>
                           View Training Resource
@@ -374,7 +374,7 @@
                       <hr class="uk-margin-top">
                       <div class="uk-align-right">
                         <button
-                          routerLink="/provider/{{pidHandler.customEncodeURIComponent(trBundle.trainingResource.resourceOrganisation)}}/training-resource/update/{{pidHandler.customEncodeURIComponent(trBundle.id)}}"
+                          routerLink="/provider/{{pidHandler.customEncodeURIComponent(trBundle.trainingResource.serviceOwner)}}/training-resource/update/{{pidHandler.customEncodeURIComponent(trBundle.id)}}"
                           class="uk-button uk-button-link"
                           style="">
                           <i class="fa fa-pencil fa-lg uk-margin-small-right" aria-hidden="true"></i>
@@ -412,7 +412,7 @@
                                 </li>
                                 <li class="uk-nav-divider"></li>
                               </ng-container>
-                              @if (isProviderActive(trBundle.trainingResource.resourceOrganisation) ) {
+                              @if (isProviderActive(trBundle.trainingResource.serviceOwner) ) {
                                 <div>
                                   <li class="uk-button uk-button-link uk-padding-small"
                                     (click)="toggleService(trBundle)">
@@ -612,7 +612,7 @@
     <div class="uk-modal-dialog uk-modal-body uk-margin-auto-vertical">
       @if (selectedTrainingResource) {
         <div>
-          <p>Training Resource "{{ selectedTrainingResource.trainingResource.title }}" is currently managed by provider "{{ selectedTrainingResource.trainingResource.resourceOrganisation }}."</p>
+          <p>Training Resource "{{ selectedTrainingResource.trainingResource.title }}" is currently managed by provider "{{ selectedTrainingResource.trainingResource.serviceOwner }}."</p>
           <p>Choose another provider to move "{{ selectedTrainingResource.trainingResource.title }}".</p>
           <p style="color: grey">The initial {{serviceORresource | lowercase}} will be deleted from its current provider.</p>
           <form [formGroup]="providersDropdownForm">

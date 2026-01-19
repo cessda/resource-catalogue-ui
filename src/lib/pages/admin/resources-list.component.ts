@@ -96,7 +96,7 @@ export class ResourcesListComponent implements OnInit {
   serviceTemplatePerProvider: any[] = [];
 
   providersFormPrepare = {
-    resourceOrganisation: ''
+    serviceOwner: ''
   };
   providersDropdownForm: UntypedFormGroup;
   providersPage: Paging<Provider>;
@@ -332,8 +332,9 @@ export class ResourcesListComponent implements OnInit {
               this.resourceService.getResourceTemplateOfProvider(p.id).subscribe(
                 res => {
                   if (res) {
-                    // console.log(res);
+                    console.log(res);
                     this.serviceTemplatePerProvider.push({providerId: p.id, serviceId: JSON.parse(JSON.stringify(res)).id});
+                    console.log(this.serviceTemplatePerProvider)
                   }
                 }
               );
@@ -685,7 +686,8 @@ export class ResourcesListComponent implements OnInit {
   templateAction(serviceBundle, active, status) {
     this.loadingMessage = '';
     UIkit.modal('#spinnerModal').show();
-    const providerId = serviceBundle.service.resourceOrganisation;
+    console.log(serviceBundle.service.serviceOwner);
+    const providerId = serviceBundle.service.serviceOwner;
     const templateId = this.serviceTemplatePerProvider.filter(x => x.providerId === providerId)[0].serviceId;
     this.resourceService.verifyResource(templateId, active, status).subscribe(
       res => {

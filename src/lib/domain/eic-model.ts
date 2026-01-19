@@ -358,8 +358,8 @@ export class ServiceCategory {
 /*export class Service implements Identifiable {
   id: string;
   name: string;
-  resourceOrganisation: string;
-  resourceProviders: string[];
+  serviceOwner: string;
+  serviceProviders: string[];
   webpage: URL;
   alternativeIdentifiers: AlternativeIdentifier[];
   description: string;
@@ -384,8 +384,8 @@ export class Service implements Identifiable {
   id: string;
   abbreviation: string;
   name: string;
-  resourceOrganisation: string;
-  resourceProviders: string[];
+  serviceOwner: string;
+  serviceProviders: string[];
   webpage: URL;
   alternativeIdentifiers: AlternativeIdentifier[];
   description: string;
@@ -443,7 +443,7 @@ export class DeployableService implements Identifiable {
   id: string;
   name: string;
   acronym: string;
-  resourceOrganisation: string;
+  serviceOwner: string;
   catalogueId: string;
   node: string;
   url: URL;
@@ -493,8 +493,8 @@ export class ResearchProductMetadataLicensing {
 export class TrainingResource implements Identifiable {
   id: string;
   title: string;
-  resourceOrganisation: string; // like service
-  resourceProviders: string[]; // like service
+  serviceOwner: string; // like service
+  serviceProviders: string[]; // like service
   authors: string[];
   url: URL;
   urlType: string; // new voc

@@ -147,13 +147,13 @@ export class ServiceStatsComponent implements OnInit, OnDestroy {
 
   onRecommendationsTabClick() {
     if (!this.recommendationsOverTimeForService) {
-      this.recommendationsService.getRecommendationsOverTime(this.catalogueId.concat('.',this.service.resourceOrganisation), this.catalogueId.concat('.',this.service.id)).subscribe(
+      this.recommendationsService.getRecommendationsOverTime(this.catalogueId.concat('.',this.service.serviceOwner), this.catalogueId.concat('.',this.service.id)).subscribe(
         data => this.setRecommendationsOverTimeForService(data),
         err => this.errorMessage = 'An error occurred while retrieving visits for this service. ' + err.error
       );
     }
     if (this.enrichedRecommendationsOfCompetitorsServices.length == 0) {
-      this.recommendationsService.getCompetitorsServices(this.catalogueId.concat('.',this.service.resourceOrganisation), this.catalogueId.concat('.',this.service.id)).subscribe(
+      this.recommendationsService.getCompetitorsServices(this.catalogueId.concat('.',this.service.serviceOwner), this.catalogueId.concat('.',this.service.id)).subscribe(
         (data: any[]) => {
           if (data && data.length === 0) {
             this.emptyResponseOnGetCompetitorsServices = true;

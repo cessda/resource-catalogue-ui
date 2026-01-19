@@ -261,7 +261,7 @@ export class TrainingResourceForm implements OnInit {
           // console.log(_service);
           this.showLoader = false;
           // return this.router.dashboardDraftResources(this.providerId); // navigate to draft list
-          return this.router.go('/provider/' + _service.resourceOrganisation + '/draft-resource/update/' + _service.id);
+          return this.router.go('/provider/' + _service.serviceOwner + '/draft-resource/update/' + _service.id);
         },
         err => {
           this.showLoader = false;
@@ -318,7 +318,7 @@ export class TrainingResourceForm implements OnInit {
           // console.log(_service);
           this.showLoader = false;
           // return this.router.dashboardDraftResources(this.providerId); // navigate to draft list
-          return this.router.go('/provider/' + _service.resourceOrganisation + '/draft-resource/update/' + _service.id);
+          return this.router.go('/provider/' + _service.serviceOwner + '/draft-resource/update/' + _service.id);
         },
         err => {
           this.showLoader = false;
@@ -715,8 +715,8 @@ export class TrainingResourceForm implements OnInit {
       this.scientificDomainArray.push(this.newScientificDomain());
     }
 
-    if (trainingResource.resourceProviders) {
-      for (let i = 0; i < trainingResource.resourceProviders.length - 1; i++) {
+    if (trainingResource.serviceProviders) {
+      for (let i = 0; i < trainingResource.serviceProviders.length - 1; i++) {
         this.push('resourceProviders', true);
       }
     }
