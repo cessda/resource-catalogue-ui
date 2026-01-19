@@ -2,12 +2,37 @@ import { Component, OnInit, ChangeDetectorRef } from "@angular/core";
 import { Router } from "@angular/router";
 import { HelpdeskService } from "../../../services/helpdesk.service";
 import { HelpdeskTicketResponse } from "../../../../lib/domain/eic-model";
+import {TicketModalComponent} from '../ticket-modal/ticket-modal.component';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: "app-ticket-list",
   templateUrl: "./ticket-list.component.html",
   styleUrls: ["./ticket-list.component.css"],
+  standalone: true,
+  imports: [TicketModalComponent, CommonModule]
 })
+// @Component({
+//   selector: 'app-ticket-list',
+//   template: `
+//     <div class="ticket-list-container">
+//       <div class="list-header">
+//         <div class="header-content">
+//           <h2>My Support Tickets</h2>
+//           <p>This feature is currently under construction</p>
+//         </div>
+//       </div>
+//       <div class="construction-message">
+//         <i class="fas fa-tools"></i>
+//         <h3>Coming Soon</h3>
+//         <p>The "My Tickets" functionality is currently under development. The webhook from our backend team is still being constructed.</p>
+//         <p>You can still create new tickets using the "Create Ticket" option.</p>
+//       </div>
+//     </div>
+//   `,
+//   styleUrls: ['./ticket-list.component.css'],
+//   standalone: true
+// })
 export class TicketListComponent implements OnInit {
   tickets: HelpdeskTicketResponse[] = [];
   loading = true;
@@ -80,8 +105,8 @@ export class TicketListComponent implements OnInit {
     this._cachedFilteredTickets = filtered;
     this._lastFilterStatus = this.selectedStatus;
 
-    console.log(
-      `🔍 Filtered tickets for status "${this.selectedStatus}":`,
+    console.debug(
+      `Filtered tickets for status "${this.selectedStatus}":`,
       filtered.length
     );
     return filtered;
@@ -116,16 +141,16 @@ export class TicketListComponent implements OnInit {
   }
 
   setStatusFilter(status: string): void {
-    console.log(
-      "🔄 Changing status filter from",
+    console.debug(
+      "Changing status filter from",
       this.selectedStatus,
       "to",
       status
     );
     this.selectedStatus = status;
     this.onStatusChange();
-    console.log(
-      "📊 After filter change - paginated tickets:",
+    console.debug(
+      "After filter change - paginated tickets:",
       this.paginatedTickets.map((t) => ({
         number: t.number,
         state_id: t.state_id,
@@ -138,7 +163,7 @@ export class TicketListComponent implements OnInit {
     if (page >= 1 && page <= this.totalPages) {
       this.currentPage = page;
       this.cdr.detectChanges();
-      console.log("📄 Navigated to page:", page);
+      console.debug("Navigated to page:", page);
     }
   }
 
@@ -265,7 +290,7 @@ export class TicketListComponent implements OnInit {
   }
 
   viewTicket(ticketNumber: string): void {
-    console.log("🔍 Viewing ticket with number:", ticketNumber);
+    console.log("Viewing ticket with number:", ticketNumber);
 
     // Find the ticket in our list using ticket.number (string)
     let ticketFromList = this.paginatedTickets.find(
@@ -277,42 +302,39 @@ export class TicketListComponent implements OnInit {
     }
 
     if (!ticketFromList) {
-      console.error("❌ Ticket not found with number:", ticketNumber);
+      console.error("Ticket not found with number:", ticketNumber);
       return;
     }
 
     if (!ticketFromList.id) {
-      console.error("❌ Ticket ID is missing for ticket:", ticketNumber);
+      console.error("Ticket ID is missing for ticket:", ticketNumber);
       return;
     }
 
     // Use ticket.id (number) for API call: GET /helpdesk/tickets/{ticket_id}
     const ticketIdForApi = String(ticketFromList.id); // Convert number to string
-    console.log("📞 Calling API with ticket ID:", ticketIdForApi);
+    console.log("Calling API with ticket ID:", ticketIdForApi);
     this.helpdeskService.getTicket(ticketIdForApi).subscribe({
       next: (fullTicket) => {
-        console.log("🎫 Full ticket details (raw):", fullTicket);
+        console.debug("Full ticket details (raw):", fullTicket);
 
         // Handle case where API returns an array instead of a single object
         let ticketData: HelpdeskTicketResponse;
         if (Array.isArray(fullTicket)) {
           ticketData = fullTicket[0];
-          console.log(
-            "📋 API returned array, using first element:",
-            ticketData
-          );
+          console.debug("API returned array, using first element:", ticketData);
         } else {
           ticketData = fullTicket;
         }
 
-        console.log("🎫 Processed ticket data:", ticketData);
+        console.debug("Processed ticket data:", ticketData);
         this.selectedTicket = ticketData;
         this.isModalOpen = true;
         this.cdr.detectChanges();
-        console.log("✅ Modal opened for ticket:", ticketData.number);
+        console.debug("Modal opened for ticket:", ticketData.number);
       },
       error: (err) => {
-        console.error("❌ Error fetching ticket details:", err);
+        console.error("Error fetching ticket details:", err);
         // Fallback to ticket from list if API call fails
         this.selectedTicket = ticketFromList;
         this.isModalOpen = true;

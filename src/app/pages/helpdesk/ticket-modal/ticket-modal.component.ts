@@ -11,11 +11,14 @@ import {
   HelpdeskTicketResponse,
   HelpdeskArticle,
 } from "../../../../lib/domain/eic-model";
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: "app-ticket-modal",
   templateUrl: "./ticket-modal.component.html",
   styleUrls: ["./ticket-modal.component.css"],
+  standalone: true,
+  imports: [CommonModule]
 })
 export class TicketModalComponent implements OnInit, OnChanges {
   @Input() ticket: HelpdeskTicketResponse | null = null;
@@ -28,13 +31,13 @@ export class TicketModalComponent implements OnInit, OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes["isOpen"]) {
-      console.log("🔄 Modal isOpen changed:", changes["isOpen"].currentValue);
+      console.debug("Modal isOpen changed:", changes["isOpen"].currentValue);
     }
     if (changes["ticket"]) {
       const ticket = changes["ticket"].currentValue;
-      console.log("🎫 Modal ticket changed:", ticket);
+      console.debug("Modal ticket changed:", ticket);
       if (ticket) {
-        console.log("📅 Ticket timestamps:", {
+        console.debug("Ticket timestamps:", {
           created_at: ticket.created_at,
           updated_at: ticket.updated_at,
           close_at: ticket.close_at,
@@ -44,7 +47,7 @@ export class TicketModalComponent implements OnInit, OnChanges {
   }
 
   onClose(): void {
-    console.log("❌ Modal close requested");
+    console.debug(" Modal close requested");
     this.closeModal.emit();
   }
 

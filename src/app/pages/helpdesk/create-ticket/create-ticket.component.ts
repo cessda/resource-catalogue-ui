@@ -5,9 +5,10 @@ import { HelpdeskService } from "../../../services/helpdesk.service";
 import { CreateTicketRequest } from "../../../../lib/domain/eic-model";
 
 @Component({
-  selector: "app-create-ticket",
-  templateUrl: "./create-ticket.component.html",
-  styleUrls: ["./create-ticket.component.css"],
+    selector: 'app-create-ticket',
+    templateUrl: './create-ticket.component.html',
+    styleUrls: ['./create-ticket.component.css'],
+    standalone: false
 })
 export class CreateTicketComponent implements OnInit {
   ticketForm: FormGroup;
@@ -50,14 +51,14 @@ export class CreateTicketComponent implements OnInit {
       };
 
       console.debug(
-        "🎫 Submitting ticket with data:",
+        "Submitting ticket with data:",
         JSON.stringify(ticketData, null, 2)
       );
-      console.debug("🌐 Sending to KIT webhook via helpdesk service");
+      console.debug("Sending to KIT webhook via helpdesk service");
 
       this.helpdeskService.createTicket(ticketData).subscribe({
         next: (response) => {
-          console.debug("✅ Ticket submitted successfully:", response);
+          console.debug(" Ticket submitted successfully:", response);
           this.loading = false;
           this.success = true;
           // Reset form after successful submission
@@ -66,8 +67,8 @@ export class CreateTicketComponent implements OnInit {
           // User can manually navigate to "My Tickets" if needed
         },
         error: (err) => {
-          console.error("❌ Error submitting ticket:", err);
-          console.error("🔍 Full error details:", {
+          console.error("Error submitting ticket:", err);
+          console.error("Full error details:", {
             status: err.status,
             statusText: err.statusText,
             url: err.url,
