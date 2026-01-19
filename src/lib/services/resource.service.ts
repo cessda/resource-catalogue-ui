@@ -400,7 +400,7 @@ export class ResourceService {
   }
 
   getResourceBundles(from: string, quantity: string, sort: string, order: string, query: string, active: string, suspended: string,
-                     resource_organisation: string[], status: string[], auditState: string[], catalogue_id: string[]) {
+                     resource_organisation: string[], status: string[], auditState: string[], catalogue_id?: string[]) {
     let params = new HttpParams();
     params = params.append('from', from);
     params = params.append('quantity', quantity);
