@@ -875,6 +875,7 @@ export interface HelpdeskArticle {
   updated_at: string;
   from: string;
   to: string;
+  sender?: string; // "Agent" for EPOT messages, "Customer" for user messages
 }
 
 export interface CreateTicketRequest {
