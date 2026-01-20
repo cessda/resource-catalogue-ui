@@ -120,7 +120,7 @@ export class ServiceEditComponent extends ServiceFormComponent implements OnInit
               }
               if (serviceBundle.service.relatedResources) {
                 serviceBundle.service.relatedResources = serviceBundle.service.relatedResources.map(value => value.startsWith(this.catalogueId) ? value.substring(this.catalogueId.length + 1) : value);
-              }*/
+
               this.serviceForm.patchValue(serviceBundle.service);
               for (const i in this.serviceForm.controls) {
                 if (this.serviceForm.controls[i].value === null) {
@@ -131,6 +131,7 @@ export class ServiceEditComponent extends ServiceFormComponent implements OnInit
                 const lastUpdate = new Date(this.serviceForm.get('lastUpdate').value);
                 this.serviceForm.get('lastUpdate').setValue(this.datePipe.transform(lastUpdate, 'yyyy-MM-dd'));
               }
+ */
             },
             err => this.errorMessage = 'Could not get the data for the requested service. ' + err.error,
             () => {
