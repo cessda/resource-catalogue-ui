@@ -595,12 +595,12 @@ export class ResourceService {
 
   suspendService(serviceId: string, catalogueId: string, suspend: boolean) {
     serviceId = decodeURIComponent(serviceId);
-    return this.http.put<ServiceBundle>(this.base + `/service/suspend?serviceId=${serviceId}&catalogueId=${catalogueId}&suspend=${suspend}`, this.options);
+    return this.http.put<ServiceBundle>(this.base + `/service/suspend?id=${serviceId}&catalogueId=${catalogueId}&suspend=${suspend}`, this.options);
   }
 
   suspendDatasource(datasourceId: string, catalogueId: string, suspend: boolean) {
     datasourceId = decodeURIComponent(datasourceId);
-    return this.http.put<DatasourceBundle>(this.base + `/datasource/suspend?datasourceId=${datasourceId}&catalogueId=${catalogueId}&suspend=${suspend}`, this.options);
+    return this.http.put<DatasourceBundle>(this.base + `/datasource/suspend?id=${datasourceId}&catalogueId=${catalogueId}&suspend=${suspend}`, this.options);
   }
 
   getFormModelById(id: string) {

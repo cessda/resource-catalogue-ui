@@ -560,7 +560,7 @@ export class ResourcesListComponent implements OnInit {
 
   suspendService() {
     UIkit.modal('#spinnerModal').show();
-    this.resourceService.suspendService(this.selectedService.id, this.selectedService.service.catalogueId, !this.selectedService.suspended)
+    this.resourceService.suspendService(this.selectedService.id, this.selectedService.catalogueId, !this.selectedService.suspended)
       .subscribe(
         res => {
           UIkit.modal('#suspensionModal').hide();
@@ -739,7 +739,7 @@ export class ResourcesListComponent implements OnInit {
   }
 
   auditResourceAction(action: string, bundle: ServiceBundle) {
-    this.resourceService.auditResource(this.selectedService.id, action, this.selectedService.service.catalogueId, this.commentAuditControl.value)
+    this.resourceService.auditResource(this.selectedService.id, action, this.selectedService.catalogueId, this.commentAuditControl.value)
       .subscribe(
         res => {
           if (!this.showSideAuditForm) {
