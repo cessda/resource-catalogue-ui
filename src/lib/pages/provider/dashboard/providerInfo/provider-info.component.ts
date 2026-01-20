@@ -72,7 +72,7 @@ export class ProviderInfoComponent {
     this.providerId = this.route.parent.snapshot.paramMap.get('provider');
     this.getVocs();
     this.getProviderBundle();
-    this.getModel('m-b-providertest');
+    this.getModel('m-b-provider');
   }
 
   getModel(modelId: string) {

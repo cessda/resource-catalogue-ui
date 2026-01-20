@@ -231,7 +231,7 @@ export class ServiceFormComponent implements OnInit {
       this.resourceService.getProvidersAsVocs(this.catalogueId ? this.catalogueId : this.catalogueConfigId),
       this.resourceService.getResourcesAsVocs(this.catalogueId ? this.catalogueId : this.catalogueConfigId),
       this.resourceService.getTerritories(),
-      this.serviceProviderService.getFormModelById('m-b-servicetest')
+      this.serviceProviderService.getFormModelById('m-b-service')
     ).subscribe(suc => {
         this.providersPage = <Paging<Provider>>suc[0];
         this.vocabularies = <Map<string, Vocabulary[]>>suc[1];

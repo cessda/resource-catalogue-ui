@@ -118,7 +118,7 @@ export class ServiceProviderFormComponent implements OnInit {
 
     this.showLoader = true;
 
-    this.serviceProviderService.getFormModelById('m-b-providertest').subscribe(
+    this.serviceProviderService.getFormModelById('m-b-provider').subscribe(
       res => this.model = res,
       err => console.log(err),
       () => {
