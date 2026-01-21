@@ -74,16 +74,16 @@ export class DatasourceService {
     params = params.append('sort', sort);
     params = params.append('order', order);
     params = params.append('keyword', query);
-    return this.http.get<Paging<Datasource>>(this.base + '/datasource/getAllOpenAIREDatasources', {params});
+    return this.http.get<Paging<Datasource>>(this.base + '/datasource/openaire/all', {params});
   }
 
   getOpenAIREDatasourcesById(OAid: string) {
-    return this.http.get<Datasource>(this.base + `/datasource/getOpenAIREDatasourceById?datasourceId=${OAid}`, this.options);
+    return this.http.get<Datasource>(this.base + `/datasource/openaire/getById?datasourceId=${OAid}`, this.options);
   }
 
   isDatasourceRegisteredOnOpenAIRE(datasourceId: string) {
     datasourceId = decodeURIComponent(datasourceId);
-    return this.http.get<boolean>(this.base + `/datasource/isDatasourceRegisteredOnOpenAIRE/${datasourceId}`);
+    return this.http.get<boolean>(this.base + `/datasource/openaire/isRegistered/${datasourceId}`);
   }
 
   submitDatasource(datasource: Datasource, shouldPut: boolean) {
