@@ -346,7 +346,7 @@ export class TrainingResourceService {
 
   verifyTrainingResource(id: string, active: boolean, status: string) { // for 1st service
     id = decodeURIComponent(id);
-    return this.http.patch(this.base + `/trainingResource/verifyTrainingResource/${id}?active=${active}&status=${status}`, {}, this.options);
+    return this.http.patch(this.base + `/trainingResource/verify/${id}?active=${active}&status=${status}`, {}, this.options);
   }
 
   getServiceTemplate(id: string) {  // gets oldest(?) pending resource of the provider // replaced with /resourceTemplateBundles/templates?id=testprovidertemplate

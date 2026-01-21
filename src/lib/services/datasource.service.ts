@@ -99,7 +99,7 @@ export class DatasourceService {
 
   verifyDatasource(id: string, active: boolean, status: string) {
     id = decodeURIComponent(id);
-    return this.http.patch(this.base + `/datasource/verifyDatasource/${id}?active=${active}&status=${status}`, {}, this.options);
+    return this.http.patch(this.base + `/datasource/verify/${id}?active=${active}&status=${status}`, {}, this.options);
   }
 
   activateDatasource(id: string, version: string, active: boolean) { // toggles active/inactive datasource

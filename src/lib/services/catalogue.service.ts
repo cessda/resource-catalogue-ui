@@ -44,7 +44,7 @@ export class CatalogueService {
   }
 
   verifyCatalogue(id: string, active: boolean, status: string) { //used for onboarding process
-    return this.http.patch(this.base + `/catalogue/verifyCatalogue/${id}?active=${active}&status=${status}`, {}, this.options);
+    return this.http.patch(this.base + `/catalogue/verify/${id}?active=${active}&status=${status}`, {}, this.options);
   }
 
   getMyCatalogues() {

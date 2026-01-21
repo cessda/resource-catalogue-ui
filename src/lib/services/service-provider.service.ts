@@ -61,7 +61,7 @@ export class ServiceProviderService {
 
   verifyProvider(id: string, active: boolean, status: string) { // use for onboarding process
     id = decodeURIComponent(id);
-    return this.http.patch(this.base + `/provider/verifyProvider/${id}?active=${active}&status=${status}`, {}, this.options);
+    return this.http.patch(this.base + `/provider/verify/${id}?active=${active}&status=${status}`, {}, this.options);
   }
 
   auditProvider(id: string, action: string, catalogueId: string, comment: string) {
