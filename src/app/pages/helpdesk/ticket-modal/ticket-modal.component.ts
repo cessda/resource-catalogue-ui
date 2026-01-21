@@ -254,15 +254,25 @@ export class TicketModalComponent implements OnInit, OnChanges {
       const replyBody = this.replyForm.value.body;
 
       this.helpdeskService.addReply(ticketId, replyBody).subscribe({
-        next: (response) => {
-          // Handle response - might be array or single object
-          const updatedTicket = Array.isArray(response) ? response[0] : response;
-          
-          // Update the ticket with the new data
-          this.ticket = updatedTicket;
-          this.replyForm.reset();
-          this.submittingReply = false;
+        next: () => {
           console.log("✅ Reply submitted successfully");
+          this.replyForm.reset();
+          
+          // Re-fetch the full ticket to get updated articles/conversation
+          this.helpdeskService.getTicket(ticketId).subscribe({
+            next: (fullTicket) => {
+              // Handle case where API returns an array instead of a single object
+              const ticketData = Array.isArray(fullTicket) ? fullTicket[0] : fullTicket;
+              this.ticket = ticketData;
+              this.submittingReply = false;
+              console.log("✅ Ticket refreshed with updated conversation");
+            },
+            error: (fetchErr) => {
+              console.error("⚠️ Reply sent but failed to refresh ticket:", fetchErr);
+              // Reply was sent successfully, just couldn't refresh
+              this.submittingReply = false;
+            }
+          });
         },
         error: (err) => {
           console.error("❌ Error submitting reply:", err);
