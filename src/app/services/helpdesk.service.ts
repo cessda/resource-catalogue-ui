@@ -1,9 +1,9 @@
 import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { Observable } from "rxjs";
-import { 
-  HelpdeskTicketResponse, 
-  CreateTicketRequest, 
+import {
+  HelpdeskTicketResponse,
+  CreateTicketRequest,
 } from "../../lib/domain/eic-model";
 import { environment } from "../../environments/environment";
 
@@ -26,14 +26,14 @@ export class HelpdeskService {
       ...ticket,
       group: ticket.group || "EPOT", // Use provided group or default to EPOT
     };
-    
+
     console.log("🔧 HelpdeskService: Sending POST via proxy to KIT webhook");
     console.log("🌐 Proxy route: /api/helpdesk → KIT webhook");
     console.log(
       "📦 Payload (GDPR compliant - no customer data):",
       JSON.stringify(payload, null, 2)
     );
-    
+
     return this.http.post<HelpdeskTicketResponse>(this.webhookUrl, payload);
   }
 
@@ -80,9 +80,9 @@ export class HelpdeskService {
     console.log("🔧 HelpdeskService: Adding reply via PUT to KIT webhook");
     console.log("🌐 Endpoint:", `${this.webhookUrl}?ticket_id=${ticketId}`);
     console.log("📦 Payload:", JSON.stringify(payload, null, 2));
-    
+
     return this.http.put<HelpdeskTicketResponse>(
-      `${this.webhookUrl}?ticket_id=${ticketId}`,
+      `${this.webhookUrl}/tickets/${ticketId}`,
       payload
     );
   }
