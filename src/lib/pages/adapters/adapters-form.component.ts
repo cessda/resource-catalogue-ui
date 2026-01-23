@@ -31,6 +31,7 @@ export class AdaptersFormComponent implements OnInit {
   catalogueConfigId: string | null = null;
   serviceORresource = environment.serviceORresource;
   serviceName = '';
+  catalogueId: string;
   firstServiceForm = false;
   showLoader = false;
   pendingService = false;
@@ -146,8 +147,8 @@ export class AdaptersFormComponent implements OnInit {
       err => console.log(err),
       () => {
           zip(//get vocs for linkedResource
-            this.adaptersService.getLinkedGuidelinesForAdapter(),
-            this.adaptersService.getLinkedServicesForAdapter()
+            this.adaptersService.getResourcesAsVocs(this.catalogueId ? this.catalogueId : this.catalogueConfigId, "interoperability_record"),
+            this.adaptersService.getResourcesAsVocs(this.catalogueId ? this.catalogueId : this.catalogueConfigId, "service")
           ).subscribe(data => {
               const unifiedResponse = {
                 LINKED_RESOURCE_VOCS_UNIFIED: [

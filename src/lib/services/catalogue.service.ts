@@ -48,7 +48,7 @@ export class CatalogueService {
   }
 
   getMyCatalogues() {
-    return this.http.get<CatalogueBundle[]>(this.base + '/catalogue/getMyCatalogues', this.options);
+    return this.http.get<CatalogueBundle[]>(this.base + '/catalogue/getMy', this.options);
   }
 
   getCatalogueBundleById(id: string) {

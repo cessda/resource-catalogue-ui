@@ -126,12 +126,8 @@ export class ResourceService {
     return this.http.get<BrowseResults>(this.base + '/service/by/category/');
   }
 
-  getProvidersAsVocs(catalogueId: string){
-    return this.http.get(this.base + `/provider/providerIdToNameMap?catalogueId=${catalogueId}`);
-  }
-
-  getResourcesAsVocs(catalogueId: string){ // Gets services and trainings as VOCs
-    return this.http.get(this.base + `/service/resourceIdToNameMap?catalogueId=${catalogueId}`);
+  getResourcesAsVocs(catalogueId: string, resourceType?: string){
+    return this.http.get(this.base + `/reference/idToNameMap?catalogueId=${catalogueId}&resourceType=${resourceType}`);
   }
 
   getService(serviceId: string, catalogueId?: string) { // can handle public ids too
@@ -554,14 +550,14 @@ export class ResourceService {
     return this.http.patch(this.base + `/service/verify/${id}?active=${active}&status=${status}`, {}, this.options);
   }
 
-  getServiceTemplate(id: string) {  // gets oldest(?) pending resource of the provider // replaced with /resourceTemplateBundles/templates?id=testprovidertemplate
+  getServiceTemplate(id: string) {  // gets oldest(?) pending resource of the provider // replaced with /resourceTemplate/templates?id=testprovidertemplate
     id = decodeURIComponent(id);
     return this.http.get<Service[]>(this.base + `/resource/getServiceTemplate/${id}`);
   }
 
   getResourceTemplateOfProvider(id: string) {  // returns the template, service or datasource
     id = decodeURIComponent(id);
-    return this.http.get<any[]>(this.base + `/resourceTemplateBundles/templates?id=${id}`);
+    return this.http.get<any[]>(this.base + `/resourceTemplate/templates?id=${id}`);
   }
 
   sendEmailForOutdatedResource(id: string) {

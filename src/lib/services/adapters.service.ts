@@ -93,19 +93,8 @@ export class AdaptersService {
       return this.http.patch(this.base + `/catalogue/${catalogueId}/adapter/audit/${id}?actionType=${action}&comment=${comment}`, this.options);
   }
 
-  getLinkedResourcesForAdapter(catalogueId?: string) {
-    if(!catalogueId) catalogueId = this.catalogueConfigId;
-    return this.http.get<any>(this.base + `/adapter/resourceIdToNameMap?catalogueId=${catalogueId}`);
-  }
-
-  getLinkedServicesForAdapter(catalogueId?: string) {
-    if(!catalogueId) catalogueId = this.catalogueConfigId;
-    return this.http.get<any>(this.base + `/adapter/linkedResourceServiceMapDetails?catalogueId=${catalogueId}`);
-  }
-
-  getLinkedGuidelinesForAdapter(catalogueId?: string) {
-    if(!catalogueId) catalogueId = this.catalogueConfigId;
-    return this.http.get<any>(this.base + `/adapter/linkedResourceGuidelineMapDetails?catalogueId=${catalogueId}`);
+  getResourcesAsVocs(catalogueId: string, resourceType?: string){
+    return this.http.get<any>(this.base + `/reference/idToNameMap?catalogueId=${catalogueId}&resourceType=${resourceType}`);
   }
 
   getFormModelById(id: string) {

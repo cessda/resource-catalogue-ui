@@ -85,7 +85,7 @@ export class ServiceProviderService {
 
   getMyProviders(draftProviders: boolean = false) {
     const params = new HttpParams().set('draft', draftProviders.toString());
-    return this.http.get<ProviderBundle[]>(this.base + '/provider/getMyProviders', {...this.options, params});
+    return this.http.get<ProviderBundle[]>(this.base + '/provider/getMy', {...this.options, params});
   }
 
   getRandomProviders(quantity: string) {

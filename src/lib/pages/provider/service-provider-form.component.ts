@@ -237,7 +237,7 @@ export class ServiceProviderFormComponent implements OnInit {
   setVocabularies() {
     zip(
       this.resourceService.getAllVocabulariesByType(),
-      this.resourceService.getProvidersAsVocs(this.catalogueId ? this.catalogueId : this.catalogueConfigId)
+      this.resourceService.getResourcesAsVocs(this.catalogueId ? this.catalogueId : this.catalogueConfigId, "provider")
     ).subscribe(data => {
       this.vocabularies = <Map<string, Vocabulary[]>>data[0]; //old
       this.vocabulariesMap = data[0];
