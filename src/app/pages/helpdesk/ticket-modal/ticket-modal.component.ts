@@ -36,7 +36,7 @@ export class TicketModalComponent implements OnInit, OnChanges {
     private helpdeskService: HelpdeskService
   ) {
     this.replyForm = this.formBuilder.group({
-      body: ["", [Validators.required, Validators.minLength(10)]],
+      body: ["", [Validators.required]],
     });
   }
 
@@ -307,10 +307,6 @@ export class TicketModalComponent implements OnInit, OnChanges {
     const control = this.replyForm.get(field);
     if (control?.hasError("required")) {
       return `${field} is required`;
-    }
-    if (control?.hasError("minlength")) {
-      const minLength = control.errors?.["minlength"]?.requiredLength;
-      return `${field} should be at least ${minLength} characters`;
     }
     return "";
   }
