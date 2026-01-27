@@ -93,6 +93,16 @@ export class AdaptersService {
       return this.http.patch(this.base + `/catalogue/${catalogueId}/adapter/audit/${id}?actionType=${action}&comment=${comment}`, this.options);
   }
 
+  hasAdminAcceptedTerms(id: string) {
+    id = decodeURIComponent(id);
+    return this.http.get<boolean>(this.base + `/adapter/hasAdminAcceptedTerms?id=${id}`);
+  }
+
+  adminAcceptedTerms(id: string) {
+    id = decodeURIComponent(id);
+    return this.http.put(this.base + `/adapter/adminAcceptedTerms?providerId=${id}`, this.options);
+  }
+
   getResourcesAsVocs(catalogueId: string, resourceType?: string){
     return this.http.get<any>(this.base + `/reference/idToNameMap?catalogueId=${catalogueId}&resourceType=${resourceType}`);
   }

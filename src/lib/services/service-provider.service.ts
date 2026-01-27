@@ -237,20 +237,14 @@ export class ServiceProviderService {
     return this.http.get<ProviderRequest[]>(this.base + `/request/allProviderRequests?providerId=${id}`);
   }
 
-  hasAdminAcceptedTerms(id: string, pendingProvider: boolean) {
+  hasAdminAcceptedTerms(id: string) {
     id = decodeURIComponent(id);
-    if (pendingProvider) {
-      return this.http.get<boolean>(this.base + `/provider/hasAdminAcceptedTerms?id=${id}&isDraft=true`);
-    }
-    return this.http.get<boolean>(this.base + `/provider/hasAdminAcceptedTerms?id=${id}&isDraft=false`);
+    return this.http.get<boolean>(this.base + `/provider/hasAdminAcceptedTerms?id=${id}`);
   }
 
-  adminAcceptedTerms(id: string, pendingProvider: boolean) {
+  adminAcceptedTerms(id: string) {
     id = decodeURIComponent(id);
-    if (pendingProvider) {
-      return this.http.put(this.base + `/provider/adminAcceptedTerms?providerId=${id}&isDraft=true`, this.options);
-    }
-    return this.http.put(this.base + `/provider/adminAcceptedTerms?providerId=${id}&isDraft=false`, this.options);
+    return this.http.put(this.base + `/provider/adminAcceptedTerms?providerId=${id}`, this.options);
   }
 
   validateUrl(url: string) {

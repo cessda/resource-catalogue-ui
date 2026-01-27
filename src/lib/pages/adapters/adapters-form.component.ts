@@ -14,6 +14,8 @@ import {SurveyComponent} from "../../../dynamic-catalogue/pages/dynamic-form/sur
 import {zip} from "rxjs";
 import {AdaptersService} from "../../services/adapters.service";
 
+declare var UIkit: any;
+
 @Component({
     selector: 'app-resource-adapters-form',
     templateUrl: './adapters-form.component.html',
@@ -29,6 +31,7 @@ export class AdaptersFormComponent implements OnInit {
   payloadAnswer: object = null;
 
   catalogueConfigId: string | null = null;
+  catalogueName: string | null = null;
   serviceORresource = environment.serviceORresource;
   serviceName = '';
   catalogueId: string;
@@ -59,6 +62,12 @@ export class AdaptersFormComponent implements OnInit {
   serviceTypesVoc: any;
   resourceService: ResourceService = this.injector.get(ResourceService);
   navigator: NavigationService = this.injector.get(NavigationService);
+
+  _hasUserConsent = environment.hasUserConsent;
+  privacyPolicyURL = environment.privacyPolicyURL;
+  privacyPolicy = false;
+  authorizedRepresentative = false;
+  agreedToTerms: boolean;
 
   protected readonly isDevMode = isDevMode;
 
@@ -93,6 +102,7 @@ export class AdaptersFormComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.catalogueName = this.config.getProperty('catalogueName');
     this.catalogueConfigId = this.config.getProperty('catalogueId');
     this.showLoader = true;
     this.getIdsFromCurrentPath();
@@ -133,6 +143,25 @@ export class AdaptersFormComponent implements OnInit {
         err => { console.log(err); }
       );
     }
+
+    if (this._hasUserConsent) {
+      if (this.editMode) {
+        this.adaptersService.hasAdminAcceptedTerms(this.adapterId).subscribe(
+          boolean => { this.agreedToTerms = boolean; },
+          error => console.log(error),
+          () => {
+            if (!this.agreedToTerms) {
+              UIkit.modal('#modal-consent').show();
+            }
+          }
+        );
+      } else {
+        if (!this.agreedToTerms) {
+          UIkit.modal('#modal-consent').show();
+        }
+      }
+    }
+
   }
 
   getIdsFromCurrentPath(){
@@ -196,4 +225,28 @@ export class AdaptersFormComponent implements OnInit {
     };
   }
 
+  /** Terms Modal--> **/
+  toggleTerm(term) {
+    if (term === 'privacyPolicy') {
+      this.privacyPolicy = !this.privacyPolicy;
+    } else if (term === 'authorizedRepresentative') {
+      this.authorizedRepresentative = !this.authorizedRepresentative;
+    }
+    this.checkTerms();
+  }
+
+  checkTerms() {
+    this.agreedToTerms = this.privacyPolicy && this.authorizedRepresentative;
+  }
+
+  acceptTerms() {
+    if (this._hasUserConsent && this.editMode) {
+      this.adaptersService.adminAcceptedTerms(this.adapterId).subscribe(
+        res => {},
+        error => { console.log(error); },
+        () => {}
+      );
+    }
+  }
+  /** <--Terms Modal **/
 }

@@ -157,7 +157,7 @@ export class ServiceProviderFormComponent implements OnInit {
 
     if (this._hasUserConsent && path !== 'view/:catalogueId/:providerId') {
       if (this.editMode) {
-        this.serviceProviderService.hasAdminAcceptedTerms(this.providerId, this.pendingProvider).subscribe(
+        this.serviceProviderService.hasAdminAcceptedTerms(this.providerId).subscribe(
           boolean => { this.agreedToTerms = boolean; },
           error => console.log(error),
           () => {
@@ -296,14 +296,13 @@ export class ServiceProviderFormComponent implements OnInit {
 
   acceptTerms() {
     if (this._hasUserConsent && this.editMode) {
-      this.serviceProviderService.adminAcceptedTerms(this.providerId, this.pendingProvider).subscribe(
+      this.serviceProviderService.adminAcceptedTerms(this.providerId).subscribe(
         res => {},
         error => { console.log(error); },
         () => {}
       );
     }
   }
-
   /** <--Terms Modal **/
 
   /** Submit Comment Modal--> **/
@@ -315,7 +314,6 @@ export class ServiceProviderFormComponent implements OnInit {
       this.submitForm(formData);
     }
   }
-
   /** <--Submit Comment Modal **/
 
   /*submitSuggestion(entryValueName, vocabulary, parent) {
