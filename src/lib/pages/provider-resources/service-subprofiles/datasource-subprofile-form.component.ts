@@ -306,9 +306,10 @@ export class DatasourceSubprofileFormComponent implements OnInit {
         if (!this.editMode) { //prefill field(s)
           this.payloadAnswer = {
             'answer': {
-              Datasource:
+              datasource:
                 {
                   'id': this.openaireId,
+                  'type': "Service@DataSource",
                   'serviceId': decodeURIComponent(this.resourceId),
                   'catalogueId': this.catalogueConfigId
                 }

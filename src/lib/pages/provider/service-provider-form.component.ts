@@ -128,6 +128,7 @@ export class ServiceProviderFormComponent implements OnInit {
             'answer': {
               provider: {
                 'catalogueId': this.catalogueConfigId,
+                'type': "Service",
                 'users': [
                   {
                     name: currentUser.firstname,

@@ -188,9 +188,10 @@ export class DeployableServiceForm implements OnInit {
         if(!this.editMode){ //prefill field(s)
           this.payloadAnswer = {
             'answer': {
-              DeployableService:
+              deployable:
                 {
                   'resourceOrganisation': decodeURIComponent(this.providerId),
+                  'type': "Deployable Service",
                   'catalogueId': this.catalogueConfigId
                 }
             }

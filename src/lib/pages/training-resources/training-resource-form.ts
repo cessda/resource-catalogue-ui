@@ -445,9 +445,10 @@ export class TrainingResourceForm implements OnInit {
         if(!this.editMode){ //prefill field(s)
           this.payloadAnswer = {
             'answer': {
-              TrainingResource:
+              training:
                 {
                   'resourceOrganisation': decodeURIComponent(this.providerId),
+                  'type': "Training Material",
                   'catalogueId': this.catalogueConfigId
                 }
             }

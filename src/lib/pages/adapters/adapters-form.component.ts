@@ -116,8 +116,9 @@ export class AdaptersFormComponent implements OnInit {
           const currentUser = this.getCurrentUserInfo();
           this.payloadAnswer = {
             'answer': {
-              Adapter: {
+              adapter: {
                 'catalogueId': this.catalogueConfigId,
+                'type': "Adapter",
                 'admins': [
                   {
                     name: currentUser.firstname,

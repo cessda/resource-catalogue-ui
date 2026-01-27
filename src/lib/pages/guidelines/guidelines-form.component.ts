@@ -182,9 +182,10 @@ export class GuidelinesFormComponent implements OnInit {
         if (!this.editMode) { //prefill field(s)
           this.payloadAnswer = {
             'answer': {
-              Guidelines:
+              guidelines:
                 {
                   'providerId': decodeURIComponent(this.providerId),
+                  'type': "Interoperability Guidelines",
                   'catalogueId': this.catalogueConfigId
                 }
             }
