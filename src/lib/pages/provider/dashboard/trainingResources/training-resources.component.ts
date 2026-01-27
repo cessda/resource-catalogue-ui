@@ -30,7 +30,7 @@ export class TrainingResourcesComponent implements OnInit {
     from: '0',
     quantity: '10',
     order: 'ASC',
-    sort: 'title',
+    sort: 'name',
     query: '',
     active: 'statusAll',
     status: ''
