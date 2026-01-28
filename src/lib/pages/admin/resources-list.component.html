@@ -310,10 +310,10 @@
 <!--                                  </a>-->
 <!--                                </span>-->
 <!--                                <span *ngIf="serviceBundle.status==='approved'" class="uk-margin-auto-vertical">-->
-                                    <a [routerLink]="['/dashboard', serviceBundle.catalogueId, pidHandler.customEncodeURIComponent(serviceBundle.service.serviceOwner), 'resource-dashboard', pidHandler.customEncodeURIComponent(serviceBundle.id)]" data-uk-tooltip title="Go to the service dashboard">
+                                    <a [routerLink]="['/dashboard', serviceBundle.catalogueId, pidHandler.customEncodeURIComponent(serviceBundle.service.owner), 'resource-dashboard', pidHandler.customEncodeURIComponent(serviceBundle.id)]" data-uk-tooltip title="Go to the service dashboard">
                                       {{ serviceBundle.service.name }}
                                     </a>
-<!--                                  <a [routerLink]="['/dashboard', serviceBundle.catalogueId, serviceBundle.service.serviceOwner, 'resource-dashboard', serviceBundle.id]" data-uk-tooltip title="Go to the service dashboard">-->
+<!--                                  <a [routerLink]="['/dashboard', serviceBundle.catalogueId, serviceBundle.service.owner, 'resource-dashboard', serviceBundle.id]" data-uk-tooltip title="Go to the service dashboard">-->
 <!--                                      {{ serviceBundle.service.name }}-->
 <!--                                  </a>-->
 <!--                                  <a [routerLink]="['/provider/view',serviceBundle.id]" class="uk-display-inline-block">-->
@@ -336,7 +336,7 @@
                                     <span class="statusLabel">{{serviceORresource}} Status: </span>{{labels[statuses.indexOf(serviceBundle.status)]}}
                                   </div>
                                   <div class="uk-margin-small-top">
-                                    <span class="statusLabel">Resource Organisation: </span>{{ providersPage?.results ? getProviderNameWithId(serviceBundle.service.serviceOwner) : ''}}
+                                    <span class="statusLabel">Resource Organisation: </span>{{ providersPage?.results ? getProviderNameWithId(serviceBundle.service.owner) : ''}}
                                   </div>
                                   <div class="uk-margin-small-top">
                                     <span class="statusLabel">Resource Providers: </span>{{ providersPage?.results ? getProviderNamesWithIds(serviceBundle.service.serviceProviders) : ''}}
@@ -376,7 +376,7 @@
                             <!--<div class="uk-width-1-5">
                               <div class="action-buttons">
 
-                                <div *ngIf="isProviderActive(serviceBundle.service.serviceOwner) ; else elseBlock">
+                                <div *ngIf="isProviderActive(serviceBundle.service.owner) ; else elseBlock">
                                   <button class="uk-button uk-button-action uk-display-block uk-margin-small-top"
                                           (click)="toggleService(serviceBundle)">
                                     <ng-container *ngIf="serviceBundle.active"><i class="fa fa-thumbs-down" aria-hidden="true"></i> Deactivate {{serviceORresource}}</ng-container>
@@ -394,7 +394,7 @@
                                   </div>
                                 </ng-template>
 
-                                <button routerLink="/provider/{{serviceBundle.service.serviceOwner}}/resource/update/{{serviceBundle.id}}"
+                                <button routerLink="/provider/{{serviceBundle.service.owner}}/resource/update/{{serviceBundle.id}}"
                                         class="uk-button uk-button-action uk-display-block uk-margin-medium-top">
                                   <i class="fa fa-pencil" aria-hidden="true"></i> Update {{serviceORresource}}
                                 </button>
@@ -427,7 +427,7 @@
                           <hr class="uk-margin-top">
                           <div class="uk-align-right">
                             <button
-                              routerLink="/provider/{{serviceBundle.catalogueId}}/{{pidHandler.customEncodeURIComponent(serviceBundle.service.serviceOwner)}}/resource/view/{{pidHandler.customEncodeURIComponent(serviceBundle.id)}}"
+                              routerLink="/provider/{{serviceBundle.catalogueId}}/{{pidHandler.customEncodeURIComponent(serviceBundle.service.owner)}}/resource/view/{{pidHandler.customEncodeURIComponent(serviceBundle.id)}}"
                               class="uk-button uk-button-link" style="">
                               <i class="fa fa-eye fa-lg uk-margin-small-right" aria-hidden="true"></i>
                               View {{serviceORresource}}
@@ -464,7 +464,7 @@
                           <hr class="uk-margin-top">
                           <div class="uk-align-right">
                             <button
-                              routerLink="/provider/{{pidHandler.customEncodeURIComponent(serviceBundle.service.serviceOwner)}}/resource/update/{{pidHandler.customEncodeURIComponent(serviceBundle.id)}}"
+                              routerLink="/provider/{{pidHandler.customEncodeURIComponent(serviceBundle.service.owner)}}/resource/update/{{pidHandler.customEncodeURIComponent(serviceBundle.id)}}"
                               class="uk-button uk-button-link"
                               style="">
                               <i class="fa fa-pencil fa-lg uk-margin-small-right" aria-hidden="true"></i>
@@ -513,7 +513,7 @@
                                     <li class="uk-nav-divider"></li>
                                   </ng-container>
 
-                                  <ng-container *ngIf="isProviderActive(serviceBundle.service.serviceOwner) ; else elseBlockList">
+                                  <ng-container *ngIf="isProviderActive(serviceBundle.service.owner) ; else elseBlockList">
                                     <div>
                                       <li class="uk-button uk-button-link uk-padding-small"
                                               (click)="toggleService(serviceBundle)">
@@ -680,7 +680,7 @@
 <div id="moveResourceModal" uk-modal>
   <div *ngIf="!loadingMessage" class="uk-modal-dialog uk-modal-body uk-margin-auto-vertical">
     <div *ngIf="selectedService">
-      <p>{{serviceORresource}} "{{ selectedService.service.name }}" is currently managed by provider "{{ selectedService.service.serviceOwner }}."</p>
+      <p>{{serviceORresource}} "{{ selectedService.service.name }}" is currently managed by provider "{{ selectedService.service.owner }}."</p>
       <p>Choose another provider to move "{{ selectedService.service.name }}".</p>
       <p style="color: grey">The initial {{serviceORresource | lowercase}} will be deleted from its current provider.</p>
 
@@ -901,7 +901,7 @@
               <div class="providerName">
                 <span class="uk-margin-auto-vertical">
 <!--                <ng-container *ngIf="serviceBundle.catalogueId===catalogueConfigId else anotherCatalogue">-->
-                  <a [routerLink]="['/dashboard/' + pidHandler.customEncodeURIComponent(serviceBundle.service.serviceOwner) + '/resource-dashboard', pidHandler.customEncodeURIComponent(serviceBundle.id)]" target="_blank" data-uk-tooltip title="Go to the service dashboard">
+                  <a [routerLink]="['/dashboard/' + pidHandler.customEncodeURIComponent(serviceBundle.service.owner) + '/resource-dashboard', pidHandler.customEncodeURIComponent(serviceBundle.id)]" target="_blank" data-uk-tooltip title="Go to the service dashboard">
                       {{ serviceBundle.service.name }}
                   </a>
 <!--                  <a [routerLink]="['/provider/view',serviceBundle.id]" class="uk-display-inline-block">-->
@@ -939,7 +939,7 @@
                 <ng-container *ngIf="!serviceBundle.latestAuditInfo"><i>Never audited</i></ng-container>
               </div>
               <div class="uk-margin-small-top">
-                <span class="statusLabel">Resource Organisation: </span>{{ getProviderNameWithId(serviceBundle.service.serviceOwner) }}
+                <span class="statusLabel">Resource Organisation: </span>{{ getProviderNameWithId(serviceBundle.service.owner) }}
               </div>
               <div class="uk-margin-small-top">
                 <span class="statusLabel">Resource Providers: </span>{{ getProviderNamesWithIds(serviceBundle.service.serviceProviders) }}
@@ -952,7 +952,7 @@
             <!--<div class="uk-width-2-5">
               <div class="action-buttons">
 
-                <div *ngIf="isProviderActive(serviceBundle.service.serviceOwner) ; else elseBlock">
+                <div *ngIf="isProviderActive(serviceBundle.service.owner) ; else elseBlock">
                   <button class="uk-button uk-button-action uk-display-block uk-margin-small-top"
                           (click)="toggleService(serviceBundle)">
                     <ng-container *ngIf="serviceBundle.active"><i class="fa fa-thumbs-down" aria-hidden="true"></i> Deactivate {{serviceORresource}}</ng-container>
@@ -970,7 +970,7 @@
                   </div>
                 </ng-template>
 
-                <button routerLink="/provider/{{serviceBundle.service.serviceOwner}}/resource/update/{{serviceBundle.id}}"
+                <button routerLink="/provider/{{serviceBundle.service.owner}}/resource/update/{{serviceBundle.id}}"
                         class="uk-button uk-button-action uk-display-block uk-margin-medium-top">
                   <i class="fa fa-pencil" aria-hidden="true"></i> Update {{serviceORresource}}
                 </button>
@@ -1040,7 +1040,7 @@
             </button>
             <div uk-dropdown="mode: click">
               <ul class="uk-nav uk-dropdown-nav uk-dropdown-close">
-                <li (click)="editResourceInNewTab(pidHandler.customEncodeURIComponent(serviceBundle.service.serviceOwner), pidHandler.customEncodeURIComponent(serviceBundle.id))"
+                <li (click)="editResourceInNewTab(pidHandler.customEncodeURIComponent(serviceBundle.service.owner), pidHandler.customEncodeURIComponent(serviceBundle.id))"
                   class="uk-button uk-button-link">
                   <a><i class="fa fa-pencil fa-lg uk-margin-small-right" aria-hidden="true"></i>
                   Update {{serviceORresource}}</a>
@@ -1051,7 +1051,7 @@
                   Delete {{serviceORresource}}</a>
                 </li>
 
-                <ng-container *ngIf="isProviderActive(serviceBundle.service.serviceOwner) ; else elseBlockList">
+                <ng-container *ngIf="isProviderActive(serviceBundle.service.owner) ; else elseBlockList">
                   <li class="uk-button uk-button-link uk-margin-small-top"
                       (click)="toggleService(serviceBundle)">
                     <ng-container *ngIf="serviceBundle.status=='approved' && serviceBundle.active"><i class="fa fa-thumbs-down" aria-hidden="true"></i> Deactivate {{serviceORresource}}</ng-container>

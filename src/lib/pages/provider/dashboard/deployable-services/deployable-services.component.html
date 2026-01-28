@@ -169,7 +169,7 @@
                   <!--                </div>-->
                   <div class="uk-width-3-4">
                     <h4 class="uk-margin-remove uk-padding-small uk-padding-remove-top uk-padding-remove-left uk-padding-remove-right">
-                      <a [routerLink]="['/dashboard', dsBundle.deployableService.catalogueId, dsBundle.deployableService.serviceOwner, 'deployable-service-dashboard', dsBundle.id]" data-uk-tooltip title="Go to the deployable service dashboard">
+                      <a [routerLink]="['/dashboard', dsBundle.deployableService.catalogueId, dsBundle.deployableService.owner, 'deployable-service-dashboard', dsBundle.id]" data-uk-tooltip title="Go to the deployable service dashboard">
                         {{dsBundle.deployableService.name}}
                       </a>
                     </h4>
@@ -189,7 +189,7 @@
                     <div class="uk-width-1-4">
                       <div class="action-buttons">
                         <button
-                          [routerLink]="['/provider/'+ pidHandler.customEncodeURIComponent(dsBundle.deployableService.serviceOwner) +'/deployable-service/update/'+ pidHandler.customEncodeURIComponent(dsBundle.id)]"
+                          [routerLink]="['/provider/'+ pidHandler.customEncodeURIComponent(dsBundle.deployableService.owner) +'/deployable-service/update/'+ pidHandler.customEncodeURIComponent(dsBundle.id)]"
                           class="uk-button uk-button-action uk-display-block uk-margin-small-top">
                           <i class="fa fa-pencil fa-lg" aria-hidden="true"></i> Update deployable service
                         </button>

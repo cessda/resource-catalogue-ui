@@ -358,7 +358,7 @@ export class ServiceCategory {
 /*export class Service implements Identifiable {
   id: string;
   name: string;
-  serviceOwner: string;
+  owner: string;
   serviceProviders: string[];
   webpage: URL;
   alternativeIdentifiers: AlternativeIdentifier[];
@@ -384,7 +384,7 @@ export class Service implements Identifiable {
   id: string;
   abbreviation: string;
   name: string;
-  serviceOwner: string;
+  owner: string;
   serviceProviders: string[];
   webpage: URL;
   alternativeIdentifiers: AlternativeIdentifier[];
@@ -443,7 +443,7 @@ export class DeployableService implements Identifiable {
   id: string;
   name: string;
   acronym: string;
-  serviceOwner: string;
+  owner: string;
   catalogueId: string;
   node: string;
   url: URL;
@@ -493,7 +493,7 @@ export class ResearchProductMetadataLicensing {
 export class TrainingResource implements Identifiable {
   id: string;
   title: string;
-  serviceOwner: string; // like service
+  owner: string; // like service
   serviceProviders: string[]; // like service
   authors: string[];
   url: URL;

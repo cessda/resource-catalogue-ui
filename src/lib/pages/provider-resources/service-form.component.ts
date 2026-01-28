@@ -179,7 +179,7 @@ export class ServiceFormComponent implements OnInit {
           // console.log(_service);
           this.showLoader = false;
           // return this.navigator.dashboardDraftResources(this.providerId); // navigate to draft list
-          return this.navigator.go('/provider/' + this.pidHandler.customEncodeURIComponent(_service.serviceOwner) + '/draft-resource/update/' + this.pidHandler.customEncodeURIComponent(_service.id)); // remain on form
+          return this.navigator.go('/provider/' + this.pidHandler.customEncodeURIComponent(_service.owner) + '/draft-resource/update/' + this.pidHandler.customEncodeURIComponent(_service.id)); // remain on form
         },
         err => {
           this.showLoader = false;
@@ -281,7 +281,7 @@ export class ServiceFormComponent implements OnInit {
 
         if(!this.editMode){ //prefill field(s)
           this.payloadAnswer = {'answer': { service:
-                { 'serviceOwner': decodeURIComponent(this.providerId),
+                { 'owner': decodeURIComponent(this.providerId),
                   'type': "Service",
                   'catalogueId': this.catalogueConfigId}
           }};

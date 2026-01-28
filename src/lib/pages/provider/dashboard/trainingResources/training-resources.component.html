@@ -169,7 +169,7 @@
                   <!--                </div>-->
                   <div class="uk-width-3-4">
                     <h4 class="uk-margin-remove uk-padding-small uk-padding-remove-top uk-padding-remove-left uk-padding-remove-right">
-                      <a [routerLink]="['/dashboard', trBundle.trainingResource.catalogueId, trBundle.trainingResource.serviceOwner, 'training-resource-dashboard', trBundle.id]" data-uk-tooltip title="Go to the resource dashboard">
+                      <a [routerLink]="['/dashboard', trBundle.trainingResource.catalogueId, trBundle.trainingResource.owner, 'training-resource-dashboard', trBundle.id]" data-uk-tooltip title="Go to the resource dashboard">
                         {{trBundle.trainingResource.title}}
                       </a>
                     </h4>
@@ -210,7 +210,7 @@
         <div class="uk-width-1-4">
           <div class="action-buttons">
             <button
-              [routerLink]="['/provider/'+ pidHandler.customEncodeURIComponent(trBundle.trainingResource.serviceOwner) +'/training-resource/update/'+ pidHandler.customEncodeURIComponent(trBundle.id)]"
+              [routerLink]="['/provider/'+ pidHandler.customEncodeURIComponent(trBundle.trainingResource.owner) +'/training-resource/update/'+ pidHandler.customEncodeURIComponent(trBundle.id)]"
               class="uk-button uk-button-action uk-display-block uk-margin-small-top">
               <i class="fa fa-pencil fa-lg" aria-hidden="true"></i> Update training resource
             </button>

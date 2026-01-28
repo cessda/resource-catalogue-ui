@@ -53,7 +53,7 @@
           }
 
           @if (datasource && service) {
-            <button [routerLink]="['/dashboard/'+datasource.catalogueId+'/'+pidHandler.customEncodeURIComponent(this.service.serviceOwner)+'/resource-dashboard/'+pidHandler.customEncodeURIComponent(this.datasource.serviceId)]"
+            <button [routerLink]="['/dashboard/'+datasource.catalogueId+'/'+pidHandler.customEncodeURIComponent(this.service.owner)+'/resource-dashboard/'+pidHandler.customEncodeURIComponent(this.datasource.serviceId)]"
               class="uk-button uk-button-secondary uk-align-center" style="padding-left: 30px">
               {{serviceORresource}} Dashboard
             </button>
