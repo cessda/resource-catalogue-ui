@@ -42,7 +42,7 @@ export class TrainingListComponent implements OnInit {
 
   formPrepare = {
     query: '',
-    sort: 'title',
+    sort: 'name',
     order: 'ASC',
     quantity: '10',
     from: '0',

@@ -74,7 +74,7 @@ export class TrainingResourceService {
     // const questionMark = urlParameters.length > 0 ? '?' : '';
     // return this.http.get<SearchResults<RichService>>(this.base + `/service/rich/all${questionMark}${searchQuery.toString()}`, this.options)
     return this.http.get<Paging<RichService>>(
-      this.base + `/trainingResource/rich/all?sort=title&order=asc&${searchQuery.toString()}`, this.options);
+      this.base + `/trainingResource/rich/all?sort=name&order=asc&${searchQuery.toString()}`, this.options);
   }
 
   getAllVocabulariesByType() {
