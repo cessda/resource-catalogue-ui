@@ -386,48 +386,6 @@ export class TrainingResourceForm implements OnInit {
         this.resourcesAsVocs = suc[3];
         this.territoriesVoc = suc[4]; //combined COUNTRY and REGION vocs
         this.model = suc[5];
-        // this.getLocations();
-
-        this.vocabulariesMap = suc[1];
-        let subVocs: Vocabulary[] = this.vocabulariesMap['SCIENTIFIC_SUBDOMAIN'].concat(this.vocabulariesMap['SUBCATEGORY']);
-        this.subVocabulariesMap = this.groupByKey(subVocs, 'parentId');
-
-        [this.providersAsVocs, this.resourcesAsVocs, this.territoriesVoc].forEach(vocSet => {
-          Object.entries(vocSet).forEach(([key, newItems]) => {
-            // Type assertion to ensure newItems is an array
-            const additionalItems = newItems as Vocabulary[];
-            const existingItems = this.vocabulariesMap[key] || [];
-            this.vocabulariesMap[key] = [...existingItems, ...additionalItems];
-          });
-        });
-
-/*        this.targetUsersVocabulary = this.vocabularies[Type.TARGET_USER];
-        this.accessTypesVocabulary = this.vocabularies[Type.ACCESS_TYPE];
-        this.accessModesVocabulary = this.vocabularies[Type.ACCESS_MODE];
-        this.orderTypeVocabulary = this.vocabularies[Type.ORDER_TYPE];
-        this.phaseVocabulary = this.vocabularies[Type.LIFE_CYCLE_STATUS];
-        this.trlVocabulary = this.vocabularies[Type.TRL];
-        this.superCategoriesVocabulary = this.vocabularies[Type.SUPERCATEGORY];
-        this.categoriesVocabulary = this.vocabularies[Type.CATEGORY];
-        this.subCategoriesVocabulary = this.vocabularies[Type.SUBCATEGORY];
-        this.scientificDomainVocabulary = this.vocabularies[Type.SCIENTIFIC_DOMAIN];
-        this.scientificSubDomainVocabulary = this.vocabularies[Type.SCIENTIFIC_SUBDOMAIN];
-        this.fundingBodyVocabulary = this.vocabularies[Type.FUNDING_BODY];
-        this.fundingProgramVocabulary = this.vocabularies[Type.FUNDING_PROGRAM];
-        this.relatedPlatformsVocabulary = this.vocabularies[Type.RELATED_PLATFORM];
-        this.placesVocabulary = this.vocabularies[Type.COUNTRY];
-        // this.geographicalVocabulary = Object.assign(this.vocabularies[Type.COUNTRY],this.vocabularies[Type.REGION]);
-        this.geographicalVocabulary = this.vocabularies[Type.REGION];
-        this.geographicalVocabulary.push(...this.vocabularies[Type.COUNTRY]);
-        this.languagesVocabulary = this.vocabularies[Type.LANGUAGE];
-
-
-        this.accessRightsVocabulary = this.vocabularies[Type.TR_ACCESS_RIGHT];
-        this.contentResourceTypesVocabulary = this.vocabularies[Type.TR_CONTENT_RESOURCE_TYPE];
-        this.learningResourceTypesVocabulary = this.vocabularies[Type.TR_DCMI_TYPE];
-        this.expertiseLevelVocabulary = this.vocabularies[Type.TR_EXPERTISE_LEVEL];
-        this.qualificationsVocabulary = this.vocabularies[Type.TR_QUALIFICATION];
-        this.urlTypeVocabulary = this.vocabularies[Type.TR_URL_TYPE];*/
       },
       error => {
         this.errorMessage = 'Something went bad while getting the data for page initialization. ' + JSON.stringify(error.error.message);

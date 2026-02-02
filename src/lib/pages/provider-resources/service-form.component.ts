@@ -243,20 +243,6 @@ export class ServiceFormComponent implements OnInit {
         this.resourcesAsVocs = suc[3];
         this.territoriesVoc = suc[4]; //combined COUNTRY and REGION vocs
         this.model = suc[5];
-        // this.getLocations();
-
-        let subVocs: Vocabulary[] = this.vocabulariesMap['SCIENTIFIC_SUBDOMAIN'].concat(this.vocabulariesMap['SUBCATEGORY']);
-        this.subVocabulariesMap = this.groupByKey(subVocs, 'parentId');
-
-        [this.providersAsVocs, this.resourcesAsVocs, this.territoriesVoc].forEach(vocSet => {
-          Object.entries(vocSet).forEach(([key, newItems]) => {
-            // Type assertion to ensure newItems is an array
-            const additionalItems = newItems as Vocabulary[];
-            const existingItems = this.vocabulariesMap[key] || [];
-            this.vocabulariesMap[key] = [...existingItems, ...additionalItems];
-          });
-        });
-
       },
       error => {
         this.errorMessage = 'Something went bad while getting the data for page initialization. ' + JSON.stringify(error.error.message);
