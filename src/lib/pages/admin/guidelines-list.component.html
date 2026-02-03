@@ -244,7 +244,7 @@
                                     <span class="statusLabel">Provider ID: </span>{{ guidelineBundle.interoperabilityRecord.providerId }}
                                   </div>
                                   <div class="uk-margin-small-top">
-                                    <span class="statusLabel">Catalogue ID: </span>{{ guidelineBundle.interoperabilityRecord.catalogueId }}
+                                    <span class="statusLabel">Catalogue ID: </span>{{ guidelineBundle.catalogueId }}
                                   </div>
                                   <!--                              <div class="uk-margin-small-top">-->
                                   <!--                                <span class="statusLabel">Creators: </span><span *ngFor="let creator of guidelineBundle.interoperabilityRecord.creators; let i = index">{{i>0 ? ', ' : ''}} {{creator.creatorNameTypeInfo.creatorName}}</span>-->
@@ -300,7 +300,7 @@
                   </div>
                   <hr class="uk-margin-top">
                   <div class="uk-align-right uk-margin-bottom">
-                    @if (guidelineBundle.interoperabilityRecord.catalogueId===catalogueConfigId) {
+                    @if (guidelineBundle.catalogueId===catalogueConfigId) {
                       <button
                         routerLink="/guidelines/{{pidHandler.customEncodeURIComponent(guidelineBundle.interoperabilityRecord.providerId)}}/update/{{pidHandler.customEncodeURIComponent(guidelineBundle.id)}}"
                         class="uk-button uk-button-link"

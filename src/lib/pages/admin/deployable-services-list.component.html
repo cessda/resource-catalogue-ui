@@ -272,7 +272,7 @@
                           <div class="uk-width-4-5">
                             <div class="providerName">
                               <span class="uk-margin-auto-vertical">
-                                <a [routerLink]="['/dashboard', dsBundle.deployableService.catalogueId, pidHandler.customEncodeURIComponent(dsBundle.deployableService.owner), 'deployable-service-dashboard', pidHandler.customEncodeURIComponent(dsBundle.id)]" data-uk-tooltip title="Go to the deployable service dashboard">
+                                <a [routerLink]="['/dashboard', dsBundle.catalogueId, pidHandler.customEncodeURIComponent(dsBundle.deployableService.owner), 'deployable-service-dashboard', pidHandler.customEncodeURIComponent(dsBundle.id)]" data-uk-tooltip title="Go to the deployable service dashboard">
                                   {{ dsBundle.deployableService.name }}
                                 </a>
                               </span>
@@ -325,18 +325,18 @@
                                 }
                               </div>
                               <div class="uk-margin-small-top">
-                                <span class="statusLabel">Catalogue id: </span>{{ dsBundle.deployableService.catalogueId }}
+                                <span class="statusLabel">Catalogue id: </span>{{ dsBundle.catalogueId }}
                               </div>
                             </div>
                           </div>
                         </div>
                       </div>
                     </div>
-                    @if (dsBundle.deployableService.catalogueId !== catalogueConfigId) {
+                    @if (dsBundle.catalogueId !== catalogueConfigId) {
                       <hr class="uk-margin-top">
                       <div class="uk-align-right">
                         <button
-                          routerLink="/provider/{{dsBundle.deployableService.catalogueId}}/{{dsBundle.deployableService.owner}}/deployable-service/view/{{dsBundle.id}}"
+                          routerLink="/provider/{{dsBundle.catalogueId}}/{{dsBundle.deployableService.owner}}/deployable-service/view/{{dsBundle.id}}"
                           class="uk-button uk-button-link" style="">
                           <i class="fa fa-eye fa-lg uk-margin-small-right" aria-hidden="true"></i>
                           View Deployable Service
@@ -370,7 +370,7 @@
                         </div>
                       </div>
                     }
-                    @if (dsBundle.deployableService.catalogueId === catalogueConfigId) {
+                    @if (dsBundle.catalogueId === catalogueConfigId) {
                       <hr class="uk-margin-top">
                       <div class="uk-align-right">
                         <button

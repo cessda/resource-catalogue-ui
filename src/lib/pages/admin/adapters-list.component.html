@@ -244,7 +244,7 @@
                                     <span class="statusLabel">Linked Resource ID: </span>{{ adapterBundle.adapter.linkedResource.id }}
                                   </div>
                                   <div class="uk-margin-small-top">
-                                    <span class="statusLabel">Catalogue ID: </span>{{ adapterBundle.adapter.catalogueId }}
+                                    <span class="statusLabel">Catalogue ID: </span>{{ adapterBundle.catalogueId }}
                                   </div>
                                 </div>
                                 <div>
@@ -288,7 +288,7 @@
                           </div>
                           <hr class="uk-margin-top">
                           <div class="uk-align-right uk-margin-bottom">
-                            @if (adapterBundle.adapter.catalogueId===catalogueConfigId) {
+                            @if (adapterBundle.catalogueId===catalogueConfigId) {
                               <button
                                 routerLink="/adapters/update/{{pidHandler.customEncodeURIComponent(adapterBundle.id)}}"
                                 class="uk-button uk-button-link"

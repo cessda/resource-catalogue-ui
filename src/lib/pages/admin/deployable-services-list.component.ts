@@ -69,7 +69,6 @@ export class DeployableServicesListComponent implements OnInit {
   loadingMessage = '';
 
   providers: ProviderBundle[] = [];
-  selectedProvider: ProviderBundle;
   providersTotal: number;
 
   deployableServiceBundles: DeployableServiceBundle[] = [];
