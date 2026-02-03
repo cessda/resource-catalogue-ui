@@ -91,7 +91,7 @@ export class DeployableServiceForm implements OnInit {
   }
 
   submitForm(formData: any, tempSave: boolean, pendingService: boolean) {//TODO
-    let dsValue = formData.value.deployable;
+    let dsValue = formData.value.deployableService;
     window.scrollTo(0, 0);
 
 /*    if (!this.authenticationService.isLoggedIn()) {
@@ -173,7 +173,7 @@ export class DeployableServiceForm implements OnInit {
         if(!this.editMode){ //prefill field(s)
           this.payloadAnswer = {
             'answer': {
-              deployable:
+              deployableService:
                 {
                   'owner': decodeURIComponent(this.providerId),
                   'type': "Deployable Service",

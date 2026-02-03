@@ -202,7 +202,7 @@ export class TrainingResourceForm implements OnInit {
   }
 
   submitForm(formData: any, tempSave: boolean, pendingService: boolean) {//TODO
-    let trValue = formData.value.training;
+    let trValue = formData.value.trainingResource;
     window.scrollTo(0, 0);
 
     if (!this.authenticationService.isLoggedIn()) {
@@ -364,7 +364,7 @@ export class TrainingResourceForm implements OnInit {
         if(!this.editMode){ //prefill field(s)
           this.payloadAnswer = {
             'answer': {
-              training:
+              trainingResource:
                 {
                   'owner': decodeURIComponent(this.providerId),
                   'type': "Training Material",

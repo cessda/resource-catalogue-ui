@@ -152,7 +152,7 @@ export class GuidelinesFormComponent implements OnInit {
         if (!this.editMode) { //prefill field(s)
           this.payloadAnswer = {
             'answer': {
-              guidelines:
+              interoperabilityRecord:
                 {
                   'providerId': decodeURIComponent(this.providerId),
                   'type': "Interoperability Guidelines",
@@ -209,7 +209,7 @@ export class GuidelinesFormComponent implements OnInit {
   }
 
   submitForm(formData: any) {
-    let guidelinesValue = formData.value.guidelines;
+    let guidelinesValue = formData.value.interoperabilityRecord;
     window.scrollTo(0, 0);
     if (!this.authService.isLoggedIn()) {
       sessionStorage.setItem('guideline', JSON.stringify(this.guidelinesForm.value));
