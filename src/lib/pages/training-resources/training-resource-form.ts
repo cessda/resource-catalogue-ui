@@ -405,7 +405,7 @@ export class TrainingResourceForm implements OnInit {
             'answer': {
               training:
                 {
-                  'resourceOrganisation': decodeURIComponent(this.providerId),
+                  'owner': decodeURIComponent(this.providerId),
                   'type': "Training Material",
                   'catalogueId': this.catalogueConfigId
                 }
