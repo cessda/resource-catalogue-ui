@@ -545,7 +545,7 @@ export class TrainingListComponent implements OnInit {
 
   suspendTrainingResource() {
     UIkit.modal('#spinnerModal').show();
-    this.trainingResourceService.suspendTrainingResource(this.selectedTrainingResource.id, this.selectedTrainingResource.trainingResource.catalogueId, !this.selectedTrainingResource.suspended)
+    this.trainingResourceService.suspendTrainingResource(this.selectedTrainingResource.id, this.selectedTrainingResource.catalogueId, !this.selectedTrainingResource.suspended)
       .subscribe(
         res => {
           UIkit.modal('#suspensionModal').hide();
@@ -569,7 +569,7 @@ export class TrainingListComponent implements OnInit {
   /** resourceExtras--> **/
   /*toggleHorizontalService(trBundle: TrainingResourceBundle) {
     UIkit.modal('#spinnerModal').show();
-    this.resourceExtrasService.updateHorizontalService(trBundle.id, 'training_resource', trBundle.trainingResource.catalogueId, !trBundle?.resourceExtras?.horizontalService).subscribe(
+    this.resourceExtrasService.updateHorizontalService(trBundle.id, 'training_resource', trBundle.catalogueId, !trBundle?.resourceExtras?.horizontalService).subscribe(
       res => {},
       err => {
         UIkit.modal('#spinnerModal').hide();
@@ -602,7 +602,7 @@ export class TrainingListComponent implements OnInit {
 
   updateResearchCategories(trBundle: TrainingResourceBundle) {
     UIkit.modal('#spinnerModal').show();
-    this.resourceExtrasService.updateResearchCategories(trBundle.id, 'training_resource', trBundle.trainingResource.catalogueId, this.extrasForm.value.researchCategories).subscribe(
+    this.resourceExtrasService.updateResearchCategories(trBundle.id, 'training_resource', trBundle.catalogueId, this.extrasForm.value.researchCategories).subscribe(
       res => {},
       err => {
         UIkit.modal('#spinnerModal').hide();
@@ -617,7 +617,7 @@ export class TrainingListComponent implements OnInit {
 
   updateEoscIFGuidelines(trBundle: TrainingResourceBundle) {
     UIkit.modal('#spinnerModal').show();
-    this.resourceExtrasService.updateEoscIFGuidelines(trBundle.id, 'training_resource', trBundle.trainingResource.catalogueId, this.extrasForm.value.eoscIFGuidelines).subscribe(
+    this.resourceExtrasService.updateEoscIFGuidelines(trBundle.id, 'training_resource', trBundle.catalogueId, this.extrasForm.value.eoscIFGuidelines).subscribe(
       res => {},
       err => {
         UIkit.modal('#spinnerModal').hide();
@@ -763,7 +763,7 @@ export class TrainingListComponent implements OnInit {
   }
 
   auditResourceAction(action: string) {
-    this.trainingResourceService.auditTrainingResource(this.selectedTrainingResource.id, action, this.selectedTrainingResource.trainingResource.catalogueId, this.commentAuditControl.value)
+    this.trainingResourceService.auditTrainingResource(this.selectedTrainingResource.id, action, this.selectedTrainingResource.catalogueId, this.commentAuditControl.value)
       .subscribe(
         res => {
           if (!this.showSideAuditForm) {

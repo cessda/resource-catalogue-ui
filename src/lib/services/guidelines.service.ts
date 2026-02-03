@@ -106,7 +106,7 @@ export class GuidelinesService {
 
   suspendInteroperabilityRecord(interoperabilityRecordId: string, catalogueId: string, suspend: boolean) {
     interoperabilityRecordId = decodeURIComponent(interoperabilityRecordId);
-    return this.http.put<InteroperabilityRecordBundle>(this.base + `/interoperabilityRecord/suspend?interoperabilityRecordId=${interoperabilityRecordId}&catalogueId=${catalogueId}&suspend=${suspend}`, this.options);
+    return this.http.put<InteroperabilityRecordBundle>(this.base + `/interoperabilityRecord/suspend?id=${interoperabilityRecordId}&catalogueId=${catalogueId}&suspend=${suspend}`, this.options);
   }
 
   auditGuideline(id: string, action: string, catalogueId: string, comment: string) {

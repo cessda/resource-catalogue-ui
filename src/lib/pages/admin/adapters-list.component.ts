@@ -251,7 +251,7 @@ export class AdaptersListComponent implements OnInit {
 
   suspendAdapter() {
     UIkit.modal('#spinnerModal').show();
-    this.adaptersService.suspendAdapter(this.selectedAdapter.id, this.selectedAdapter.adapter.catalogueId, !this.selectedAdapter.suspended)
+    this.adaptersService.suspendAdapter(this.selectedAdapter.id, this.selectedAdapter.catalogueId, !this.selectedAdapter.suspended)
       .subscribe(
         res => {
           UIkit.modal('#suspensionModal').hide();
@@ -311,7 +311,7 @@ export class AdaptersListComponent implements OnInit {
   }
 
   auditResourceAction(action: string, bundle: AdapterBundle) {
-    this.adaptersService.auditAdapter(this.selectedAdapter.id, action, this.selectedAdapter.adapter.catalogueId, this.commentAuditControl.value)
+    this.adaptersService.auditAdapter(this.selectedAdapter.id, action, this.selectedAdapter.catalogueId, this.commentAuditControl.value)
       .subscribe(
         res => {this.getAdapters();},
         err => {console.log(err);},

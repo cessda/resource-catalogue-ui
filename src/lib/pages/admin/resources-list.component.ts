@@ -593,7 +593,7 @@ export class ResourcesListComponent implements OnInit {
 
   updateEoscIFGuidelines(bundle: ServiceBundle) {
     UIkit.modal('#spinnerModal').show();
-    this.resourceExtrasService.updateEoscIFGuidelines(bundle.id, 'service', bundle.service.catalogueId, this.extrasForm.value.eoscIFGuidelines).subscribe(
+    this.resourceExtrasService.updateEoscIFGuidelines(bundle.id, 'service', bundle.catalogueId, this.extrasForm.value.eoscIFGuidelines).subscribe(
       res => {},
       err => {
         UIkit.modal('#spinnerModal').hide();

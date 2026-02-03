@@ -217,7 +217,7 @@
 
       @if (catalogueId !== catalogueConfigId && providerBundle) {
         <li>
-          <a href="/provider/view/{{providerBundle?.provider.catalogueId}}/{{pidHandler.customEncodeURIComponent(providerBundle?.id)}}">
+          <a href="/provider/view/{{providerBundle.catalogueId}}/{{pidHandler.customEncodeURIComponent(providerBundle?.id)}}">
             <i class="fa fa-eye fa-lg uk-margin-small-right" aria-hidden="true" style="color: #26c0e2"></i> View Provider
           </a>
         </li>

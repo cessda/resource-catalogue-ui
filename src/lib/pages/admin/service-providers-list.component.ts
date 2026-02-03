@@ -681,7 +681,7 @@ export class ServiceProvidersListComponent implements OnInit {
   }
 
   auditProviderAction(action: string) {
-    this.serviceProviderService.auditProvider(this.selectedProvider.id, action, this.selectedProvider.provider.catalogueId, this.commentControl.value)
+    this.serviceProviderService.auditProvider(this.selectedProvider.id, action, this.selectedProvider.catalogueId, this.commentControl.value)
       .subscribe(
         res => {
           if (!this.showSideAuditForm) {

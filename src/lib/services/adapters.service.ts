@@ -81,7 +81,7 @@ export class AdaptersService {
 
   suspendAdapter(adapterId: string, catalogueId: string, suspend: boolean) {
     adapterId = decodeURIComponent(adapterId);
-    return this.http.put<AdapterBundle>(this.base + `/adapter/suspend?adapterId=${adapterId}&catalogueId=${catalogueId}&suspend=${suspend}`, this.options);
+    return this.http.put<AdapterBundle>(this.base + `/adapter/suspend?id=${adapterId}&catalogueId=${catalogueId}&suspend=${suspend}`, this.options);
   }
 
   auditAdapter(id: string, action: string, catalogueId: string, comment: string) {

@@ -186,7 +186,7 @@ export class CatalogueService {
   }
 
   suspendCatalogue(catalogueId: string, suspend: boolean) {
-    return this.http.put<CatalogueBundle>(this.base + `/catalogue/suspend?catalogueId=${catalogueId}&suspend=${suspend}`, this.options);
+    return this.http.put<CatalogueBundle>(this.base + `/catalogue/suspend?id=${catalogueId}&suspend=${suspend}`, this.options);
   }
 
   auditCatalogue(id: string, action: string, comment: string) {

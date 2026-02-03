@@ -395,6 +395,6 @@ export class TrainingResourceService {
 
   suspendTrainingResource(trainingResourceId: string, catalogueId: string, suspend: boolean) {
     trainingResourceId = decodeURIComponent(trainingResourceId);
-    return this.http.put<TrainingResourceBundle>(this.base + `/trainingResource/suspend?trainingResourceId=${trainingResourceId}&catalogueId=${catalogueId}&suspend=${suspend}`, this.options);
+    return this.http.put<TrainingResourceBundle>(this.base + `/trainingResource/suspend?id=${trainingResourceId}&catalogueId=${catalogueId}&suspend=${suspend}`, this.options);
   }
 }

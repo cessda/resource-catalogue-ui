@@ -251,7 +251,7 @@ export class GuidelinesListComponent implements OnInit {
 
   suspendInteroperabilityRecord() {
     UIkit.modal('#spinnerModal').show();
-    this.guidelinesService.suspendInteroperabilityRecord(this.selectedGuideline.id, this.selectedGuideline.interoperabilityRecord.catalogueId, !this.selectedGuideline.suspended)
+    this.guidelinesService.suspendInteroperabilityRecord(this.selectedGuideline.id, this.selectedGuideline.catalogueId, !this.selectedGuideline.suspended)
       .subscribe(
         res => {
           UIkit.modal('#suspensionModal').hide();
@@ -311,7 +311,7 @@ export class GuidelinesListComponent implements OnInit {
   }
 
   auditResourceAction(action: string, bundle: InteroperabilityRecordBundle) {
-    this.guidelinesService.auditGuideline(this.selectedGuideline.id, action, this.selectedGuideline.interoperabilityRecord.catalogueId, this.commentAuditControl.value)
+    this.guidelinesService.auditGuideline(this.selectedGuideline.id, action, this.selectedGuideline.catalogueId, this.commentAuditControl.value)
       .subscribe(
         res => {this.getGuidelines();},
         err => {console.log(err);},
