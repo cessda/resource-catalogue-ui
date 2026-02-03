@@ -91,7 +91,7 @@ export class DeployableServiceForm implements OnInit {
   }
 
   submitForm(formData: any, tempSave: boolean, pendingService: boolean) {//TODO
-    let dsValue = formData.value.DeployableService;
+    let dsValue = formData.value.deployable;
     window.scrollTo(0, 0);
 
 /*    if (!this.authenticationService.isLoggedIn()) {
