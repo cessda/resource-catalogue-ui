@@ -305,7 +305,7 @@ export class ServiceProviderService {
 
   suspendProvider(providerId: string, catalogueId: string, suspend: boolean) {
     providerId = decodeURIComponent(providerId);
-    return this.http.put<ProviderBundle>(this.base + `/provider/suspend?providerId=${providerId}&catalogueId=${catalogueId}&suspend=${suspend}`, this.options);
+    return this.http.put<ProviderBundle>(this.base + `/provider/suspend?id=${providerId}&catalogueId=${catalogueId}&suspend=${suspend}`, this.options);
   }
 
   getAllResourcesUnderHLE(providerName?: string){

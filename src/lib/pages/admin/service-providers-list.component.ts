@@ -565,7 +565,7 @@ export class ServiceProvidersListComponent implements OnInit {
 
   suspendProvider() {
     UIkit.modal('#spinnerModal').show();
-    this.serviceProviderService.suspendProvider(this.selectedProvider.id, this.selectedProvider.provider.catalogueId, !this.selectedProvider.suspended)
+    this.serviceProviderService.suspendProvider(this.selectedProvider.id, this.selectedProvider.catalogueId, !this.selectedProvider.suspended)
       .subscribe(
         res => {
           UIkit.modal('#suspensionModal').hide();
