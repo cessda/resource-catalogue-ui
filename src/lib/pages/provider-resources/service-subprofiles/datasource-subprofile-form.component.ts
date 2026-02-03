@@ -4,7 +4,6 @@ import {AuthenticationService} from '../../../services/authentication.service';
 import {NavigationService} from '../../../services/navigation.service';
 import {ResourceService} from '../../../services/resource.service';
 import {ServiceExtensionsService} from '../../../services/service-extensions.service';
-import * as dm from '../../../shared/description.map';
 import {Provider, Service, Datasource, Vocabulary, Type} from '../../../domain/eic-model';
 import {Paging} from '../../../domain/paging';
 import {URLValidator} from '../../../shared/validators/generic.validator';
@@ -101,29 +100,6 @@ export class DatasourceSubprofileFormComponent implements OnInit {
   allRequiredFields = 28;
   loaderBitSet = new BitSet;
   loaderPercentage = 0;
-
-  readonly nodeDesc: dm.Description = dm.datasourceDescMap.get('nodeDesc');
-  readonly catalogueIdDesc: dm.Description = dm.datasourceDescMap.get('catalogueIdDesc');
-
-  readonly submissionPolicyURLDesc: dm.Description = dm.datasourceDescMap.get('submissionPolicyURLDesc');
-  readonly preservationPolicyURLDesc: dm.Description = dm.datasourceDescMap.get('preservationPolicyURLDesc');
-  readonly versionControlDesc: dm.Description = dm.datasourceDescMap.get('versionControlDesc');
-  readonly persistentIdentityEntityTypeDesc: dm.Description = dm.datasourceDescMap.get('persistentIdentityEntityTypeDesc');
-  readonly persistentIdentityEntityTypeSchemeDesc: dm.Description = dm.datasourceDescMap.get('persistentIdentityEntityTypeSchemeDesc');
-
-  readonly jurisdictionDesc: dm.Description = dm.datasourceDescMap.get('jurisdictionDesc');
-  readonly datasourceClassificationDesc: dm.Description = dm.datasourceDescMap.get('datasourceClassificationDesc');
-  readonly researchEntityTypesDesc: dm.Description = dm.datasourceDescMap.get('researchEntityTypesDesc');
-  readonly thematicDesc: dm.Description = dm.datasourceDescMap.get('thematicDesc');
-  readonly harvestableDesc: dm.Description = dm.datasourceDescMap.get('harvestableDesc');
-
-  readonly researchProductLicenseNameDesc: dm.Description = dm.datasourceDescMap.get('researchProductLicenseNameDesc');
-  readonly researchProductLicenseURLDesc: dm.Description = dm.datasourceDescMap.get('researchProductLicenseURLDesc');
-  readonly researchProductAccessPoliciesDesc: dm.Description = dm.datasourceDescMap.get('researchProductAccessPoliciesDesc');
-
-  readonly researchProductMetadataLicenseNameDesc: dm.Description = dm.datasourceDescMap.get('researchProductMetadataLicenseNameDesc');
-  readonly researchProductMetadataLicenseURLDesc: dm.Description = dm.datasourceDescMap.get('researchProductMetadataLicenseURLDesc');
-  readonly researchProductMetadataAccessPoliciesDesc: dm.Description = dm.datasourceDescMap.get('researchProductMetadataAccessPoliciesDesc');
 
 
   formGroupMeta = {

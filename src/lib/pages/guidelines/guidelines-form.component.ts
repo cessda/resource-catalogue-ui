@@ -1,6 +1,5 @@
 import {Component, isDevMode, OnInit, ViewChild} from '@angular/core';
 import {UntypedFormArray, UntypedFormBuilder, FormControl, UntypedFormGroup, Validators} from '@angular/forms';
-import * as dm from '../../shared/description.map';
 import {AuthenticationService} from '../../services/authentication.service';
 import {ServiceProviderService} from '../../services/service-provider.service';
 import {ResourceService} from '../../services/resource.service';
@@ -72,35 +71,6 @@ export class GuidelinesFormComponent implements OnInit {
   allRequiredFields = 15;
   loaderBitSet = new BitSet;
   loaderPercentage = 0;
-
-  readonly identifierDesc: dm.Description = dm.guidelinesDescMap.get('identifierDesc');
-  readonly identifierTypeDesc: dm.Description = dm.guidelinesDescMap.get('identifierTypeDesc');
-  readonly creatorDesc: dm.Description = dm.guidelinesDescMap.get('creatorDesc');
-  readonly creatorNameDesc: dm.Description = dm.guidelinesDescMap.get('creatorNameDesc');
-  readonly nameTypeDesc: dm.Description = dm.guidelinesDescMap.get('nameTypeDesc');
-  readonly givenNameDesc: dm.Description = dm.guidelinesDescMap.get('givenNameDesc');
-  readonly familyNameDesc: dm.Description = dm.guidelinesDescMap.get('familyNameDesc');
-  readonly nameIdentifierDesc: dm.Description = dm.guidelinesDescMap.get('nameIdentifierDesc');
-  readonly affiliationDesc: dm.Description = dm.guidelinesDescMap.get('affiliationDesc');
-  readonly affiliationIdentifierDesc: dm.Description = dm.guidelinesDescMap.get('affiliationIdentifierDesc');
-  readonly titleDesc: dm.Description = dm.guidelinesDescMap.get('titleDesc');
-  readonly publicationYearDesc: dm.Description = dm.guidelinesDescMap.get('publicationYearDesc');
-  readonly resourceTypeDesc: dm.Description = dm.guidelinesDescMap.get('resourceTypeDesc');
-  readonly resourceTypeGeneralDesc: dm.Description = dm.guidelinesDescMap.get('resourceTypeGeneralDesc');
-  readonly createdDesc: dm.Description = dm.guidelinesDescMap.get('createdDesc');
-  readonly updatedDesc: dm.Description = dm.guidelinesDescMap.get('updatedDesc');
-  readonly relatedStandardURIDesc: dm.Description = dm.guidelinesDescMap.get('relatedStandardURIDesc');
-  readonly relatedStandardIdentifierDesc: dm.Description = dm.guidelinesDescMap.get('relatedStandardIdentifierDesc');
-  readonly rightTitleDesc: dm.Description = dm.guidelinesDescMap.get('rightTitleDesc');
-  readonly rightURIDesc: dm.Description = dm.guidelinesDescMap.get('rightURIDesc');
-  readonly rightIdentifierDesc: dm.Description = dm.guidelinesDescMap.get('rightIdentifierDesc');
-  readonly descriptionDesc: dm.Description = dm.guidelinesDescMap.get('descriptionDesc');
-  readonly statusDesc: dm.Description = dm.guidelinesDescMap.get('statusDesc');
-  readonly domainDesc: dm.Description = dm.guidelinesDescMap.get('domainDesc');
-  readonly eoscGuidelineTypeDesc: dm.Description = dm.guidelinesDescMap.get('eoscGuidelineTypeDesc');
-  readonly eoscIntegrationOptionsDesc: dm.Description = dm.guidelinesDescMap.get('eoscIntegrationOptionsDesc');
-  readonly altIdTypeDesc: dm.Description = dm.serviceDescMap.get('altIdTypeDesc');
-  readonly altIdValueDesc: dm.Description = dm.serviceDescMap.get('altIdValueDesc');
 
   identifierTypeVocabulary: Vocabulary[] = null;
   nameTypeVocabulary: Vocabulary[] = null;

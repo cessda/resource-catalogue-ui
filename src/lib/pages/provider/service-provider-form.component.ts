@@ -1,6 +1,5 @@
 import {Component, isDevMode, OnInit, ViewChild} from '@angular/core';
 import {UntypedFormBuilder, UntypedFormControl, UntypedFormGroup} from '@angular/forms';
-import * as dm from '../../shared/description.map';
 import {AuthenticationService} from '../../services/authentication.service';
 import {ServiceProviderService} from '../../services/service-provider.service';
 import {ActivatedRoute, Router} from '@angular/router';
