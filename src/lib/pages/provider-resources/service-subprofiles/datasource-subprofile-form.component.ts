@@ -173,7 +173,7 @@ export class DatasourceSubprofileFormComponent implements OnInit {
   }
 
   submitForm(formData: any, tempSave: boolean, pendingService: boolean) {
-    let datasourceValue = formData.value.Datasource;
+    let datasourceValue = formData.value.datasource;
     window.scrollTo(0, 0);
 
     if (!this.authenticationService.isLoggedIn()) {

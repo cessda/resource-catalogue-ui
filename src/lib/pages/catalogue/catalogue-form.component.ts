@@ -149,7 +149,7 @@ export class CatalogueFormComponent implements OnInit {
   }
 
   submitForm(formData: any, tempSave: boolean) {
-    let catalogueValue = formData.value.Catalogue;
+    let catalogueValue = formData.value.catalogue;
     window.scrollTo(0, 0);
 
     this.errorMessage = '';

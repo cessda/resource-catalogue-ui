@@ -202,7 +202,7 @@ export class TrainingResourceForm implements OnInit {
   }
 
   submitForm(formData: any, tempSave: boolean, pendingService: boolean) {//TODO
-    let trValue = formData.value.TrainingResource;
+    let trValue = formData.value.training;
     window.scrollTo(0, 0);
 
     if (!this.authenticationService.isLoggedIn()) {
