@@ -100,7 +100,7 @@ export class AdaptersService {
 
   adminAcceptedTerms(id: string) {
     id = decodeURIComponent(id);
-    return this.http.put(this.base + `/adapter/adminAcceptedTerms?providerId=${id}`, this.options);
+    return this.http.put(this.base + `/adapter/adminAcceptedTerms?id=${id}`, this.options);
   }
 
   getResourcesAsVocs(catalogueId: string, resourceType?: string){

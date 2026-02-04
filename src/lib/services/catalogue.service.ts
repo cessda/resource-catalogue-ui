@@ -173,16 +173,16 @@ export class CatalogueService {
 
   hasAdminAcceptedTerms(id: string, pendingCatalogue: boolean) {
     if (pendingCatalogue) {
-      return this.http.get<boolean>(this.base + `/catalogue/hasAdminAcceptedTerms?catalogueId=${id}&isDraft=true`);
+      return this.http.get<boolean>(this.base + `/catalogue/hasAdminAcceptedTerms?id=${id}&isDraft=true`);
     }
-    return this.http.get<boolean>(this.base + `/catalogue/hasAdminAcceptedTerms?catalogueId=${id}&isDraft=false`);
+    return this.http.get<boolean>(this.base + `/catalogue/hasAdminAcceptedTerms?id=${id}&isDraft=false`);
   }
 
   adminAcceptedTerms(id: string, pendingCatalogue: boolean) {
     if (pendingCatalogue) {
-      return this.http.put(this.base + `/pendingCatalogue/adminAcceptedTerms?catalogueId=${id}&isDraft=true`, this.options);
+      return this.http.put(this.base + `/pendingCatalogue/adminAcceptedTerms?id=${id}&isDraft=true`, this.options);
     }
-    return this.http.put(this.base + `/catalogue/adminAcceptedTerms?catalogueId=${id}&isDraft=false`, this.options);
+    return this.http.put(this.base + `/catalogue/adminAcceptedTerms?id=${id}&isDraft=false`, this.options);
   }
 
   suspendCatalogue(catalogueId: string, suspend: boolean) {

@@ -244,7 +244,7 @@ export class ServiceProviderService {
 
   adminAcceptedTerms(id: string) {
     id = decodeURIComponent(id);
-    return this.http.put(this.base + `/provider/adminAcceptedTerms?providerId=${id}`, this.options);
+    return this.http.put(this.base + `/provider/adminAcceptedTerms?id=${id}`, this.options);
   }
 
   validateUrl(url: string) {
