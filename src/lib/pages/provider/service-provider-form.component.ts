@@ -13,7 +13,6 @@ import {NavigationService} from "../../services/navigation.service";
 import {Model} from "../../../dynamic-catalogue/domain/dynamic-form-model";
 import {FormControlService} from "../../../dynamic-catalogue/services/form-control.service";
 import {SurveyComponent} from "../../../dynamic-catalogue/pages/dynamic-form/survey.component";
-import {zip} from "rxjs";
 
 declare var UIkit: any;
 
@@ -27,8 +26,6 @@ declare var UIkit: any;
 export class ServiceProviderFormComponent implements OnInit {
   @ViewChild(SurveyComponent) child: SurveyComponent
   model: Model = null;
-  vocabulariesMap: Map<string, object[]> = null;
-  subVocabulariesMap: Map<string, object[]> = null;
   payloadAnswer: object = null;
   formDataToSubmit: any = null;
 
@@ -83,22 +80,6 @@ export class ServiceProviderFormComponent implements OnInit {
 
   commentControl = new UntypedFormControl();
 
-  placesVocabulary: Vocabulary[] = null;
-  providerTypeVocabulary: Vocabulary[] = null;
-  providerLCSVocabulary: Vocabulary[] = null;
-  domainsVocabulary: Vocabulary[] = null;
-  categoriesVocabulary: Vocabulary[] = null;
-  merilDomainsVocabulary: Vocabulary[] = null;
-  merilCategoriesVocabulary: Vocabulary[] = null;
-  esfriDomainVocabulary: Vocabulary[] = null;
-  legalStatusVocabulary: Vocabulary[] = null;
-  esfriVocabulary: Vocabulary[] = null;
-  areasOfActivityVocabulary: Vocabulary[] = null;
-  networksVocabulary: Vocabulary[] = null;
-  societalGrandChallengesVocabulary: Vocabulary[] = null;
-  hostingLegalEntityVocabulary: Vocabulary[] = null;
-  nodeVocabulary: Vocabulary[] = null;
-
   constructor(public fb: UntypedFormBuilder,
               public authService: AuthenticationService,
               public serviceProviderService: ServiceProviderService,
@@ -152,7 +133,6 @@ export class ServiceProviderFormComponent implements OnInit {
     if ( !this.router.url.includes('/update/') ) {
       this.saveAsDraftAvailable = true;
     }
-    this.setVocabularies();
 
     if (this._hasUserConsent && path !== 'view/:catalogueId/:providerId') {
       if (this.editMode) {
@@ -230,45 +210,6 @@ export class ServiceProviderFormComponent implements OnInit {
         }
       );
     }
-  }
-
-  /** get and set vocabularies **/
-  setVocabularies() {
-    zip(
-      this.resourceService.getAllVocabulariesByType(),
-      this.resourceService.getResourcesAsVocs(this.catalogueId ? this.catalogueId : this.catalogueConfigId, "provider")
-    ).subscribe(data => {
-      this.vocabularies = <Map<string, Vocabulary[]>>data[0]; //old
-      this.vocabulariesMap = data[0];
-      let subVocs: Vocabulary[] = this.vocabulariesMap['SCIENTIFIC_SUBDOMAIN'].concat(this.vocabulariesMap['PROVIDER_MERIL_SCIENTIFIC_SUBDOMAIN']);
-      this.subVocabulariesMap = this.groupByKey(subVocs, 'parentId');
-      Object.keys(data[1]).forEach(key => {
-        const newItems = data[1][key];
-        const existingItems = this.vocabulariesMap[key] || [];
-        this.vocabulariesMap[key] = [...existingItems, ...newItems];
-      });
-    },
-      error => {
-        this.errorMessage = 'Error during vocabularies loading.';
-      },
-      () => this.showLoader = false
-    );
-  }
-
-  getSortedChildrenCategories(childrenCategory: Vocabulary[], parentId: string) {
-    return this.sortVocabulariesByName(childrenCategory.filter(entry => entry.parentId === parentId));
-  }
-
-  sortVocabulariesByName(vocabularies: Vocabulary[]): Vocabulary[] {
-    return vocabularies.sort((vocabulary1, vocabulary2) => {
-      if (vocabulary1.name > vocabulary2.name) {
-        return 1;
-      }
-      if (vocabulary1.name < vocabulary2.name) {
-        return -1;
-      }
-      return 0;
-    });
   }
 
   unsavedChangesPrompt() {

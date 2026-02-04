@@ -27,7 +27,6 @@ export class AdaptersFormComponent implements OnInit {
   @ViewChild(SurveyComponent) child: SurveyComponent
   model: Model = null;
   vocabulariesMap: Map<string, object[]> = null;
-  subVocabulariesMap: Map<string, object[]> = null;
   payloadAnswer: object = null;
 
   catalogueConfigId: string | null = null;
@@ -86,8 +85,7 @@ export class AdaptersFormComponent implements OnInit {
 
   submitForm(formData) {
     window.scrollTo(0, 0);
-    if (!formData.value.Adapter.serviceId) formData.value.Adapter.serviceId = decodeURIComponent(this.adapterId);
-    this.adaptersService.uploadAdapter(formData.value.Adapter, this.editMode).subscribe(
+    this.adaptersService.uploadAdapter(formData.value.adapter, this.editMode).subscribe(
       _service => {
         this.showLoader = false;
         this.router.navigate(['/adapters/my']);
@@ -104,9 +102,8 @@ export class AdaptersFormComponent implements OnInit {
   ngOnInit() {
     this.catalogueName = this.config.getProperty('catalogueName');
     this.catalogueConfigId = this.config.getProperty('catalogueId');
-    this.showLoader = true;
+    // this.showLoader = true;
     this.getIdsFromCurrentPath();
-    this.getVocs();
 
     this.adaptersService.getFormModelById('m-b-adapter').subscribe(
       res => this.model = res,
@@ -169,53 +166,6 @@ export class AdaptersFormComponent implements OnInit {
     if (this.route.snapshot.paramMap.get('adapterId')) {
       this.adapterId = this.route.snapshot.paramMap.get('adapterId');
     }
-  }
-
-  getVocs(){
-    this.resourceService.getAllVocabulariesByType().subscribe(
-      res => this.vocabulariesMap = res,
-      err => console.log(err),
-      () => {
-          zip(//get vocs for linkedResource
-            this.adaptersService.getResourcesAsVocs(this.catalogueId ? this.catalogueId : this.catalogueConfigId, "interoperability_record"),
-            this.adaptersService.getResourcesAsVocs(this.catalogueId ? this.catalogueId : this.catalogueConfigId, "service")
-          ).subscribe(data => {
-              const unifiedResponse = {
-                LINKED_RESOURCE_VOCS_UNIFIED: [
-                  ...data[0].GUIDELINES_VOC,
-                  ...data[1].SERVICES_VOC
-                ]
-              };
-              let subVocs: Vocabulary[] = unifiedResponse.LINKED_RESOURCE_VOCS_UNIFIED.map(item => ({
-                id: item.id,
-                name: item.name,
-                description: null,
-                parentId: item.parentId,
-                type: null,
-                extras: {}
-              }));
-              this.subVocabulariesMap = this.groupByKey(subVocs, 'parentId');
-              const vocMap = <{ [key: string]: object[] }>(<unknown>this.vocabulariesMap);
-              vocMap['LINKED_RESOURCE_VOCS_UNIFIED'] = subVocs;
-              this.vocabulariesMap = <Map<string, object[]>>(<unknown>vocMap);
-            },
-            error => {
-              this.errorMessage = 'Error during vocabularies loading.';
-              this.showLoader = false;
-            },
-            () => this.showLoader = false
-          );
-      }
-    )
-  }
-
-  groupByKey(array, key) {
-    return array.reduce((hash, obj) => {
-      if (obj[key] === undefined) {
-        return hash;
-      }
-      return Object.assign(hash, {[obj[key]]: (hash[obj[key]] || []).concat(obj)});
-    }, {});
   }
 
   getCurrentUserInfo(): { firstname: string; lastname: string; email: string } {
