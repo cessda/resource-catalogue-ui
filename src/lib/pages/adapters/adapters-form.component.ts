@@ -116,7 +116,7 @@ export class AdaptersFormComponent implements OnInit {
               adapter: {
                 'catalogueId': this.catalogueConfigId,
                 'type': "Adapter",
-                'admins': [
+                'users': [
                   {
                     name: currentUser.firstname,
                     surname: currentUser.lastname,
