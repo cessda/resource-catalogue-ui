@@ -48,16 +48,7 @@ export class UpdateServiceProviderComponent extends ServiceProviderFormComponent
     if (path === 'view/:catalogueId/:providerId') {
       this.disable = true;
     }
-
-    if (sessionStorage.getItem('service')) {
-      sessionStorage.removeItem('service');
-    } else {
-      if (this.vocabularies === null) {
-
-      } else {
-        this.getProvider();
-      }
-    }
+    this.getProvider();
     super.ngOnInit();
   }
 
