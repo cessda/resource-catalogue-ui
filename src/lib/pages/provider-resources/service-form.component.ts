@@ -226,8 +226,8 @@ export class ServiceFormComponent implements OnInit {
     zip(
       this.resourceService.getProvidersNames('approved'),
       this.resourceService.getAllVocabulariesByType(),
-      this.resourceService.getResourcesAsVocs(this.catalogueId ? this.catalogueId : this.catalogueConfigId, "provider"),
-      this.resourceService.getResourcesAsVocs(this.catalogueId ? this.catalogueId : this.catalogueConfigId, "service"),
+      // this.resourceService.getResourcesAsVocs(this.catalogueId ? this.catalogueId : this.catalogueConfigId, "provider"),
+      // this.resourceService.getResourcesAsVocs(this.catalogueId ? this.catalogueId : this.catalogueConfigId, "service"),
       //TODO see if we need those and fix
       // this.resourceService.getResourcesAsVocs(this.catalogueId ? this.catalogueId : this.catalogueConfigId, "datasource"),
       // this.resourceService.getResourcesAsVocs(this.catalogueId ? this.catalogueId : this.catalogueConfigId, "training_resource"),
@@ -237,10 +237,10 @@ export class ServiceFormComponent implements OnInit {
         this.providersPage = <Paging<Provider>>suc[0];
         this.vocabularies = <Map<string, Vocabulary[]>>suc[1];
         this.vocabulariesMap = suc[1];
-        this.providersAsVocs = suc[2];
-        this.resourcesAsVocs = suc[3];
-        this.territoriesVoc = suc[4]; //combined COUNTRY and REGION vocs
-        this.model = suc[5];
+        // this.providersAsVocs = suc[2];
+        // this.resourcesAsVocs = suc[3];
+        this.territoriesVoc = suc[2]; //combined COUNTRY and REGION vocs
+        this.model = suc[3];
       },
       error => {
         this.errorMessage = 'Something went bad while getting the data for page initialization. ' + JSON.stringify(error.error.message);

@@ -126,9 +126,9 @@ export class ResourceService {
     return this.http.get<BrowseResults>(this.base + '/service/by/category/');
   }
 
-  getResourcesAsVocs(catalogueId: string, resourceType?: string){
-    return this.http.get(this.base + `/reference/idToNameMap?catalogueId=${catalogueId}&resourceType=${resourceType}`);
-  }
+  // getResourcesAsVocs(catalogueId: string, resourceType?: string){
+  //   return this.http.get(this.base + `/reference/idToNameMap?catalogueId=${catalogueId}&resourceType=${resourceType}`);
+  // }
 
   getService(serviceId: string, catalogueId?: string) { // can handle public ids too
     serviceId = decodeURIComponent(serviceId);

@@ -103,9 +103,9 @@ export class AdaptersService {
     return this.http.put(this.base + `/adapter/adminAcceptedTerms?id=${id}`, this.options);
   }
 
-  getResourcesAsVocs(catalogueId: string, resourceType?: string){
-    return this.http.get<any>(this.base + `/reference/idToNameMap?catalogueId=${catalogueId}&resourceType=${resourceType}`);
-  }
+  // getResourcesAsVocs(catalogueId: string, resourceType?: string){
+  //   return this.http.get<any>(this.base + `/reference/idToNameMap?catalogueId=${catalogueId}&resourceType=${resourceType}`);
+  // }
 
   getFormModelById(id: string) {
     return this.http.get<Model>(this.base + `/forms/models/${id}`);
