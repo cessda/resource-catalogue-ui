@@ -191,8 +191,7 @@ export class ServiceFormComponent implements OnInit {
       this.resourceService.submitPendingService(serviceValue).subscribe(
         _service => {
           this.showLoader = false;
-          if (!this.firstServiceForm || !this.editMode) return this.navigator.selectSubprofile(this.providerId, _service.id);  // navigate to select-subprofile
-          if (this.editMode || this.firstServiceForm) return this.navigator.resourceDashboard(this.providerId, _service.id);  // navigate to resource-dashboard
+          return this.navigator.resourceDashboard(this.providerId, _service.id);  // navigate to resource-dashboard
         },
         err => {
           this.showLoader = false;
@@ -204,9 +203,8 @@ export class ServiceFormComponent implements OnInit {
       this.resourceService.submitService(serviceValue, this.editMode, this.commentControl.value).subscribe(
         _service => {
           this.showLoader = false;
-          if (this.pendingService && !this.firstServiceForm) return this.navigator.selectSubprofile(this.providerId, _service.id);  // navigate to select-subprofile
-          if (this.editMode || this.firstServiceForm) return this.navigator.resourceDashboard(this.providerId, _service.id);  // navigate to resource-dashboard
-          if (!this.editMode) return this.navigator.selectSubprofile(this.providerId, _service.id);  // navigate to select-subprofile
+          return this.navigator.resourceDashboard(this.providerId, _service.id);  // navigate to resource-dashboard
+          // if (!this.editMode) return this.navigator.selectSubprofile(this.providerId, _service.id);  // navigate to select-subprofile
           // return this.router.dashboardResources(this.providerId);                  // navigate to provider dashboard -> resource list
           // return window.location.href = this._marketplaceServicesURL + _service.id; // navigate to marketplace
         },
