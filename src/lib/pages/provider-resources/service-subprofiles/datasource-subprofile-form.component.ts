@@ -29,8 +29,6 @@ declare var UIkit: any;
 export class DatasourceSubprofileFormComponent implements OnInit {
   @ViewChild(SurveyComponent) child: SurveyComponent
   model: Model = null;
-  vocabulariesMap: Map<string, object[]> = null;
-  subVocabulariesMap: Map<string, object[]> = null
   payloadAnswer: object = null;
 
   catalogueConfigId: string = this.config.getProperty('catalogueId');
@@ -265,15 +263,9 @@ export class DatasourceSubprofileFormComponent implements OnInit {
     this.openaireId = this.route.snapshot.paramMap.get('openaireId');
     this.providerId = this.route.snapshot.paramMap.get('providerId');
     this.resourceId = this.route.snapshot.paramMap.get('resourceId');
-    zip(
-      this.resourceService.getAllVocabulariesByType(),
-      this.resourceService.getFormModelById('m-b-datasource'),
-    ).subscribe(
+    this.resourceService.getFormModelById('m-b-datasource').subscribe(
       suc => {
-        // TODO: 2 vars with the same data / keep one
-        this.vocabularies = <Map<string, Vocabulary[]>>suc[0];
-        this.vocabulariesMap = suc[0];
-        this.model = suc[1];
+        this.model = suc; // Since you're only dealing with the getFormModelById response now
       },
       error => {
         this.errorMessage = 'Something went bad while getting the data for page initialization. ' + JSON.stringify(error.error.message);
@@ -282,19 +274,19 @@ export class DatasourceSubprofileFormComponent implements OnInit {
         if (!this.editMode) { //prefill field(s)
           this.payloadAnswer = {
             'answer': {
-              datasource:
-                {
-                  'id': this.openaireId,
-                  'type': "Service@DataSource",
-                  'serviceId': decodeURIComponent(this.resourceId),
-                  'catalogueId': this.catalogueConfigId
-                }
+              datasource: {
+                'id': this.openaireId,
+                'type': "Service@DataSource",
+                'serviceId': decodeURIComponent(this.resourceId),
+                'catalogueId': this.catalogueConfigId
+              }
             }
           };
         }
         this.showLoader = false;
       }
-    )
+    );
+
     if (this.route.snapshot.paramMap.get('resourceId')) {
       this.serviceId = this.route.snapshot.paramMap.get('resourceId');
       this.resourceType = 'service';

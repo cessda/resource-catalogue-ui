@@ -3,7 +3,7 @@ import {Component, Injector, isDevMode, OnInit, ViewChild} from '@angular/core';
 import {AuthenticationService} from '../../services/authentication.service';
 import {NavigationService} from '../../services/navigation.service';
 import {TrainingResourceService} from '../../services/training-resource.service';
-import {Provider, Service, TrainingResource, Type, Vocabulary} from '../../domain/eic-model';
+import {Provider, Service, TrainingResource, Type} from '../../domain/eic-model';
 import {Paging} from '../../domain/paging';
 import {URLValidator} from '../../shared/validators/generic.validator';
 import {zip} from 'rxjs';
@@ -29,8 +29,6 @@ declare var UIkit: any;
 export class TrainingResourceForm implements OnInit {
   @ViewChild(SurveyComponent) child: SurveyComponent
   model: Model = null;
-  vocabulariesMap: Map<string, object[]> = null;
-  subVocabulariesMap: Map<string, object[]> = null
   payloadAnswer: object = null;
   formDataToSubmit: any = null;
 
@@ -149,41 +147,10 @@ export class TrainingResourceForm implements OnInit {
   };
 
   providersPage: Paging<Provider>;
-  providersAsVocs: any;
-  resourcesAsVocs: any;
-  territoriesVoc: any;
-  vocabularies: Map<string, Vocabulary[]> = null;
-  subVocabularies: Map<string, Vocabulary[]> = null;
-  premiumSort = new PremiumSortPipe();
   resourceService: ResourceService = this.injector.get(ResourceService);
   trainingResourceService: TrainingResourceService = this.injector.get(TrainingResourceService);
 
   router: NavigationService = this.injector.get(NavigationService);
-
-  public fundingBodyVocabulary: Vocabulary[] = null;
-  public fundingProgramVocabulary: Vocabulary[] = null;
-  public relatedPlatformsVocabulary: Vocabulary[] = null;
-  public targetUsersVocabulary: Vocabulary[] = null;
-  public accessTypesVocabulary: Vocabulary[] = null;
-  public accessModesVocabulary: Vocabulary[] = null;
-  public orderTypeVocabulary: Vocabulary[] = null;
-  public phaseVocabulary: Vocabulary[] = null;
-  public trlVocabulary: Vocabulary[] = null;
-  public superCategoriesVocabulary: Vocabulary[] = null;
-  public categoriesVocabulary: Vocabulary[] = null;
-  public subCategoriesVocabulary: Vocabulary[] = null;
-  public scientificDomainVocabulary: Vocabulary[] = null;
-  public scientificSubDomainVocabulary: Vocabulary[] = null;
-  public placesVocabulary: Vocabulary[] = [];
-  public geographicalVocabulary: Vocabulary[] = null;
-  public languagesVocabulary: Vocabulary[] = null;
-
-  public accessRightsVocabulary: Vocabulary[] = null;
-  public contentResourceTypesVocabulary: Vocabulary[] = null;
-  public learningResourceTypesVocabulary: Vocabulary[] = null;
-  public expertiseLevelVocabulary: Vocabulary[] = null;
-  public qualificationsVocabulary: Vocabulary[] = null;
-  public urlTypeVocabulary: Vocabulary[] = null;
 
 
   constructor(protected injector: Injector,
@@ -331,34 +298,15 @@ export class TrainingResourceForm implements OnInit {
     this.showLoader = true;
     zip(
       this.trainingResourceService.getProvidersNames('approved'),
-      this.trainingResourceService.getAllVocabulariesByType(),
-      // this.resourceService.getResourcesAsVocs(this.catalogueId ? this.catalogueId : this.catalogueConfigId, "provider"),
-      // this.resourceService.getResourcesAsVocs(this.catalogueId ? this.catalogueId : this.catalogueConfigId, "service"),
-      //TODO see if we need those and fix
-      // this.resourceService.getResourcesAsVocs(this.catalogueId ? this.catalogueId : this.catalogueConfigId, "datasource"),
-      // this.resourceService.getResourcesAsVocs(this.catalogueId ? this.catalogueId : this.catalogueConfigId, "training_resource"),
-      this.trainingResourceService.getTerritories(),
       this.serviceProviderService.getFormModelById('m-b-training')
     ).subscribe(suc => {
         this.providersPage = <Paging<Provider>>suc[0];
-        this.vocabularies = <Map<string, Vocabulary[]>>suc[1];
-        this.vocabulariesMap = suc[1];
-        // this.providersAsVocs = suc[2];
-        // this.resourcesAsVocs = suc[3];
-        this.territoriesVoc = suc[2]; //combined COUNTRY and REGION vocs
-        this.model = suc[3];
+        this.model = suc[1];
       },
       error => {
         this.errorMessage = 'Something went bad while getting the data for page initialization. ' + JSON.stringify(error.error.message);
       },
       () => {
-        this.premiumSort.transform(this.geographicalVocabulary, ['Europe', 'Worldwide']);
-        this.premiumSort.transform(this.languagesVocabulary, ['English']);
-        this.providersPage.results.sort((a, b) => 0 - (a.name > b.name ? -1 : 1));
-
-        let voc: Vocabulary[] = this.vocabularies[Type.SUBCATEGORY].concat(this.vocabularies[Type.SCIENTIFIC_SUBDOMAIN]);
-        this.subVocabularies = this.groupByKey(voc, 'parentId');
-
         this.providerId = this.route.snapshot.paramMap.get('providerId');
 
         if(!this.editMode){ //prefill field(s)
@@ -374,22 +322,6 @@ export class TrainingResourceForm implements OnInit {
           };
         }
 
-/*        if (!this.editMode) { // prefill main contact info
-          this.serviceProviderService.getServiceProviderById(this.providerId).subscribe(
-            res => { this.provider = res; },
-            err => { console.log(err); },
-            () => {
-              Object.entries(this.provider.mainContact).forEach(([key, val]) => {
-                if (val !== '' && val != null) {
-                  this.serviceForm.controls['contact'].get(key).setValue(val);
-                }
-              });
-              this.handleBitSetsOfGroups(5, 14, 'firstName', 'contact');
-              this.handleBitSetsOfGroups(5, 15, 'lastName', 'contact');
-              this.handleBitSetsOfGroups(5, 16, 'email', 'contact');
-            }
-          );
-        }*/
         this.showLoader = false;
       }
     );
@@ -602,26 +534,6 @@ export class TrainingResourceForm implements OnInit {
     this.alternativeIdentifiersArray.removeAt(index);
   }
   /** <--Alternative Identifiers**/
-
-  getVocabularyById(vocabularies: Vocabulary[], id: string) {
-    return vocabularies.find(entry => entry.id === id);
-  }
-
-  getSortedChildrenCategories(childrenCategory: Vocabulary[], parentId: string) {
-    return this.sortVocabulariesByName(childrenCategory.filter(entry => entry.parentId === parentId));
-  }
-
-  sortVocabulariesByName(vocabularies: Vocabulary[]): Vocabulary[] {
-    return vocabularies.sort((vocabulary1, vocabulary2) => {
-      if (vocabulary1.name > vocabulary2.name) {
-        return 1;
-      }
-      if (vocabulary1.name < vocabulary2.name) {
-        return -1;
-      }
-      return 0;
-    });
-  }
 
   formPrepare(trainingResource: TrainingResource) {
 

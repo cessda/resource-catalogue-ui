@@ -24,8 +24,6 @@ declare var UIkit: any;
 export class CatalogueFormComponent implements OnInit {
   @ViewChild(SurveyComponent) child: SurveyComponent
   model: Model = null;
-  vocabulariesMap: Map<string, object[]> = null;
-  subVocabulariesMap: Map<string, object[]> = null
   payloadAnswer: object = null;
   formDataToSubmit: any = null;
 
@@ -39,8 +37,6 @@ export class CatalogueFormComponent implements OnInit {
   catalogueId: string = null;
   errorMessage = '';
   userInfo = {sub:'', family_name: '', given_name: '', email: ''};
-  vocabularies: Map<string, Vocabulary[]> = null;
-  subVocabularies: Map<string, Vocabulary[]> = null;
   editMode = false;
   hasChanges = false;
   pendingCatalogue = false;
@@ -67,15 +63,6 @@ export class CatalogueFormComponent implements OnInit {
   };
 
   commentControl = new UntypedFormControl();
-
-  placesVocabulary: Vocabulary[] = null;
-  providerTypeVocabulary: Vocabulary[] = null;
-  domainsVocabulary: Vocabulary[] = null;
-  categoriesVocabulary: Vocabulary[] = null;
-  legalStatusVocabulary: Vocabulary[] = null;
-  networksVocabulary: Vocabulary[] = null;
-  hostingLegalEntityVocabulary: Vocabulary[] = null;
-  nodeVocabulary: Vocabulary[] = null;
 
   constructor(public fb: UntypedFormBuilder,
               public authService: AuthenticationService,
@@ -123,7 +110,6 @@ export class CatalogueFormComponent implements OnInit {
     // if (path.includes('info/:catalogueId')) {
     //   this.pendingCatalogue = true;
     // }
-    this.setVocabularies();
 
     if (this._hasUserConsent) {
       if (this.editMode) {
@@ -207,50 +193,6 @@ export class CatalogueFormComponent implements OnInit {
       );
     }
 
-  }
-
-  /** get and set vocabularies **/
-  setVocabularies() {
-    this.resourceService.getAllVocabulariesByType().subscribe(
-      res => {
-        this.vocabulariesMap = res;
-        let subVocs: Vocabulary[] = this.vocabulariesMap['SCIENTIFIC_SUBDOMAIN'].concat(this.vocabulariesMap['PROVIDER_MERIL_SCIENTIFIC_SUBDOMAIN']);
-        this.subVocabulariesMap = this.groupByKey(subVocs, 'parentId');
-
-        this.vocabularies = res;
-        this.nodeVocabulary = this.vocabularies[Type.NODE];
-        this.placesVocabulary = this.vocabularies[Type.COUNTRY];
-        this.domainsVocabulary = this.vocabularies[Type.SCIENTIFIC_DOMAIN];
-        this.categoriesVocabulary = this.vocabularies[Type.SCIENTIFIC_SUBDOMAIN];
-        this.legalStatusVocabulary = this.vocabularies[Type.PROVIDER_LEGAL_STATUS];
-        this.networksVocabulary = this.vocabularies[Type.PROVIDER_NETWORK];
-        this.hostingLegalEntityVocabulary = this.vocabularies[Type.PROVIDER_HOSTING_LEGAL_ENTITY];
-        return this.vocabularies;
-      },
-      error => console.log(JSON.stringify(error.error)),
-      () => {
-        let voc: Vocabulary[] = this.vocabularies[Type.SCIENTIFIC_SUBDOMAIN].concat(this.vocabularies[Type.PROVIDER_MERIL_SCIENTIFIC_SUBDOMAIN]);
-        this.subVocabularies = this.groupByKey(voc, 'parentId');
-        this.showLoader = false;
-        return this.vocabularies;
-      }
-    );
-  }
-
-  getSortedChildrenCategories(childrenCategory: Vocabulary[], parentId: string) {
-    return this.sortVocabulariesByName(childrenCategory.filter(entry => entry.parentId === parentId));
-  }
-
-  sortVocabulariesByName(vocabularies: Vocabulary[]): Vocabulary[] {
-    return vocabularies.sort((vocabulary1, vocabulary2) => {
-      if (vocabulary1.name > vocabulary2.name) {
-        return 1;
-      }
-      if (vocabulary1.name < vocabulary2.name) {
-        return -1;
-      }
-      return 0;
-    });
   }
 
   unsavedChangesPrompt() {

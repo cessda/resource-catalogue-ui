@@ -3,17 +3,9 @@ import {Component, Injector, isDevMode, OnInit, ViewChild} from '@angular/core';
 import {AuthenticationService} from '../../services/authentication.service';
 import {NavigationService} from '../../services/navigation.service';
 import {TrainingResourceService} from '../../services/training-resource.service';
-import {
-  DeployableService,
-  Provider,
-  Service,
-  Type,
-  Vocabulary
-} from '../../domain/eic-model';
+import {DeployableService, Provider, Service, Type} from '../../domain/eic-model';
 import {Paging} from '../../domain/paging';
-import {URLValidator} from '../../shared/validators/generic.validator';
 import {zip} from 'rxjs';
-import {PremiumSortPipe} from '../../shared/pipes/premium-sort.pipe';
 import {ConfigService} from '../../services/config.service';
 import {environment} from '../../../environments/environment';
 import BitSet from 'bitset';
@@ -35,8 +27,6 @@ declare var UIkit: any;
 export class DeployableServiceForm implements OnInit {
   @ViewChild(SurveyComponent) child: SurveyComponent
   model: Model = null;
-  vocabulariesMap: Map<string, object[]> = null;
-  subVocabulariesMap: Map<string, object[]> = null
   payloadAnswer: object = null;
   formDataToSubmit: any = null;
 
@@ -65,11 +55,6 @@ export class DeployableServiceForm implements OnInit {
   commentControl = new UntypedFormControl();
 
   providersPage: Paging<Provider>;
-  providersAsVocs: any;
-  resourcesAsVocs: any;
-  territoriesVoc: any;
-  vocabularies: Map<string, Vocabulary[]> = null;
-  subVocabularies: Map<string, Vocabulary[]> = null;
   resourceService: ResourceService = this.injector.get(ResourceService);
   trainingResourceService: TrainingResourceService = this.injector.get(TrainingResourceService);
 
@@ -142,32 +127,15 @@ export class DeployableServiceForm implements OnInit {
     this.showLoader = true;
     zip(
       this.trainingResourceService.getProvidersNames('approved'),
-      this.trainingResourceService.getAllVocabulariesByType(),
-      // this.resourceService.getResourcesAsVocs(this.catalogueId ? this.catalogueId : this.catalogueConfigId, "provider"),
-      // this.resourceService.getResourcesAsVocs(this.catalogueId ? this.catalogueId : this.catalogueConfigId, "service"),
-      //TODO see if we need those and fix
-      // this.resourceService.getResourcesAsVocs(this.catalogueId ? this.catalogueId : this.catalogueConfigId, "datasource"),
-      // this.resourceService.getResourcesAsVocs(this.catalogueId ? this.catalogueId : this.catalogueConfigId, "training_resource"),
-      this.trainingResourceService.getTerritories(),
       this.deployableServiceService.getFormModelById('m-b-deployable')
     ).subscribe(suc => {
         this.providersPage = <Paging<Provider>>suc[0];
-        this.vocabularies = <Map<string, Vocabulary[]>>suc[1];
-        this.vocabulariesMap = suc[1];
-        // this.providersAsVocs = suc[2];
-        // this.resourcesAsVocs = suc[3];
-        this.territoriesVoc = suc[2]; //combined COUNTRY and REGION vocs
-        this.model = suc[3];
+        this.model = suc[1];
       },
       error => {
         this.errorMessage = 'Something went bad while getting the data for page initialization. ' + JSON.stringify(error.error.message);
       },
       () => {
-        this.providersPage.results.sort((a, b) => 0 - (a.name > b.name ? -1 : 1));
-
-        let voc: Vocabulary[] = this.vocabularies[Type.SUBCATEGORY].concat(this.vocabularies[Type.SCIENTIFIC_SUBDOMAIN]);
-        this.subVocabularies = this.groupByKey(voc, 'parentId');
-
         this.providerId = this.route.snapshot.paramMap.get('providerId');
 
         if(!this.editMode){ //prefill field(s)
@@ -213,26 +181,6 @@ export class DeployableServiceForm implements OnInit {
           }
         }
       }
-    });
-  }
-
-  getVocabularyById(vocabularies: Vocabulary[], id: string) {
-    return vocabularies.find(entry => entry.id === id);
-  }
-
-  getSortedChildrenCategories(childrenCategory: Vocabulary[], parentId: string) {
-    return this.sortVocabulariesByName(childrenCategory.filter(entry => entry.parentId === parentId));
-  }
-
-  sortVocabulariesByName(vocabularies: Vocabulary[]): Vocabulary[] {
-    return vocabularies.sort((vocabulary1, vocabulary2) => {
-      if (vocabulary1.name > vocabulary2.name) {
-        return 1;
-      }
-      if (vocabulary1.name < vocabulary2.name) {
-        return -1;
-      }
-      return 0;
     });
   }
 

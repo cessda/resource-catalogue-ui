@@ -25,8 +25,6 @@ declare var UIkit: any;
 export class GuidelinesFormComponent implements OnInit {
   @ViewChild(SurveyComponent) child: SurveyComponent
   model: Model = null;
-  vocabulariesMap: Map<string, object[]> = null;
-  subVocabulariesMap: Map<string, object[]> = null //?
   payloadAnswer: object = null;
 
   catalogueConfigId: string | null = null;
@@ -36,9 +34,6 @@ export class GuidelinesFormComponent implements OnInit {
   guidelineTitle = '';
   errorMessage = '';
   guidelinesForm: UntypedFormGroup;
-  vocabularies: Map<string, Vocabulary[]> = null;
-  subVocabularies: Map<string, Vocabulary[]> = null;
-  premiumSort = new PremiumSortPipe();
   editMode = false;
   hasChanges = false;
   disable = false;
@@ -71,13 +66,6 @@ export class GuidelinesFormComponent implements OnInit {
   allRequiredFields = 15;
   loaderBitSet = new BitSet;
   loaderPercentage = 0;
-
-  identifierTypeVocabulary: Vocabulary[] = null;
-  nameTypeVocabulary: Vocabulary[] = null;
-  resourceTypeGeneralVocabulary: Vocabulary[] = null;
-  statusVocabulary: Vocabulary[] = null;
-  domainVocabulary: Vocabulary[] = null;
-  eoscGuidelineTypeVocabulary: Vocabulary[] = null;
 
   readonly formDefinition = {
     id: [''],
@@ -169,7 +157,6 @@ export class GuidelinesFormComponent implements OnInit {
     // if (path.includes('update/:guidelineId')) {
     //
     // }
-    this.setVocabularies();
     this.guidelinesForm = this.fb.group(this.formDefinition);
     this.guidelinesForm.get('providerId').setValue(decodeURIComponent(this.route.snapshot.paramMap.get('providerId')));
     // if (this.editMode === false) {
@@ -347,63 +334,7 @@ export class GuidelinesFormComponent implements OnInit {
     // return false;
   }
 
-  // markTabs() {
-  //   this.tabs[0] = (this.checkFormValidity('name', this.edit)
-  //     || this.checkFormValidity('abbreviation', this.edit)
-  //     || this.checkFormValidity('website', this.edit)
-  //     || this.checkEveryArrayFieldValidity('legalEntity', this.edit)
-  //     || this.checkFormValidity('legalStatus', this.edit)
-  //     || this.checkFormValidity('hostingLegalEntity', this.edit));
-  //   this.tabs[1] = (this.checkFormValidity('description', this.edit)
-  //     || this.checkFormValidity('logo', this.edit)
-  //     || this.checkEveryArrayFieldValidity('multimedia', this.edit, 'multimediaURL')
-  //     || this.checkEveryArrayFieldValidity('multimedia', this.edit, 'multimediaName'));
-  //   this.tabs[2] = (this.checkEveryArrayFieldValidity('tags', this.edit)
-  //     || this.checkEveryArrayFieldValidity('scientificDomains', this.edit, 'scientificDomain')
-  //     || this.checkEveryArrayFieldValidity('scientificDomains', this.edit, 'scientificSubdomain'));
-  //   this.tabs[3] = (this.checkFormValidity('location.streetNameAndNumber', this.edit)
-  //     || this.checkFormValidity('location.postalCode', this.edit)
-  //     || this.checkFormValidity('location.city', this.edit)
-  //     || this.checkFormValidity('location.region', this.edit)
-  //     || this.checkFormValidity('location.country', this.edit));
-  //   this.tabs[4] = (this.checkFormValidity('mainContact.firstName', this.edit)
-  //     || this.checkFormValidity('mainContact.lastName', this.edit)
-  //     || this.checkFormValidity('mainContact.email', this.edit)
-  //     || this.checkFormValidity('mainContact.phone', this.edit)
-  //     || this.checkFormValidity('mainContact.position', this.edit)
-  //     || this.checkEveryArrayFieldValidity('publicContacts', this.edit, 'firstName')
-  //     || this.checkEveryArrayFieldValidity('publicContacts', this.edit, 'lastName')
-  //     || this.checkEveryArrayFieldValidity('publicContacts', this.edit, 'email')
-  //     || this.checkEveryArrayFieldValidity('publicContacts', this.edit, 'phone')
-  //     || this.checkEveryArrayFieldValidity('publicContacts', this.edit, 'position'));
-  // }
-
   /** <--check form fields and tabs validity**/
-
-  /** get and set vocabularies **/
-  setVocabularies() {
-    this.resourceService.getAllVocabulariesByType().subscribe(
-      res => {
-        this.vocabulariesMap = res;
-
-        // this.vocabularies = res;
-        // this.identifierTypeVocabulary = this.vocabularies[Type.IR_IDENTIFIER_TYPE];
-        // this.nameTypeVocabulary = this.vocabularies[Type.IR_NAME_TYPE];
-        // this.resourceTypeGeneralVocabulary = this.vocabularies[Type.IR_RESOURCE_TYPE_GENERAL];
-        // this.statusVocabulary = this.vocabularies[Type.IR_STATUS];
-        // this.domainVocabulary = this.vocabularies[Type.SCIENTIFIC_DOMAIN];
-        // this.eoscGuidelineTypeVocabulary = this.vocabularies[Type.IR_EOSC_GUIDELINE_TYPE];
-        // return this.vocabularies;
-      },
-      error => console.log(JSON.stringify(error.error)),
-      () => {
-        // let voc: Vocabulary[] = this.vocabularies[Type.SCIENTIFIC_SUBDOMAIN].concat(this.vocabularies[Type.PROVIDER_MERIL_SCIENTIFIC_SUBDOMAIN]);
-        // this.subVocabularies = this.groupByKey(voc, 'parentId');
-        // this.premiumSort.transform(this.statusVocabulary, ['Candidate', 'Proposed', 'Consultation', 'On Hold', 'Update Pending', 'Accepted', 'Operating', 'Deprecated', 'Abandoned', 'Withdrawn', 'Rejected']);
-        // return this.vocabularies;
-      }
-    );
-  }
 
   /** handle form arrays--> **/
   getFieldAsFormArray(field: string) {
@@ -543,23 +474,6 @@ export class GuidelinesFormComponent implements OnInit {
   }
 
   /** <--creator as public contacts **/
-
-
-  getSortedChildrenCategories(childrenCategory: Vocabulary[], parentId: string) {
-    return this.sortVocabulariesByName(childrenCategory.filter(entry => entry.parentId === parentId));
-  }
-
-  sortVocabulariesByName(vocabularies: Vocabulary[]): Vocabulary[] {
-    return vocabularies.sort((vocabulary1, vocabulary2) => {
-      if (vocabulary1.name > vocabulary2.name) {
-        return 1;
-      }
-      if (vocabulary1.name < vocabulary2.name) {
-        return -1;
-      }
-      return 0;
-    });
-  }
 
   markFormAsDirty() {
     for (const i in this.guidelinesForm.controls) {
