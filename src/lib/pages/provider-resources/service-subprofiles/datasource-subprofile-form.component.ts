@@ -320,7 +320,7 @@ export class DatasourceSubprofileFormComponent implements OnInit {
                 parsedDatasource[field] = parsedDatasource[field].toString();
               }
             });
-            this.payloadAnswer = { 'answer': { Datasource: parsedDatasource } };
+            this.payloadAnswer = { 'answer': { datasource: parsedDatasource } };
           }
         }
       );

@@ -58,7 +58,7 @@ export class UpdateGuidelinesFormComponent extends GuidelinesFormComponent imple
     this.guidelinesService.getInteroperabilityRecordById(this.guidelineId).subscribe(
         guideline => {
           this.guideline = guideline,
-          this.payloadAnswer = {'answer': {Guidelines: guideline}};
+          this.payloadAnswer = {'answer': {interoperabilityRecord: guideline}};
         },
         err => {
           console.log(err);

@@ -88,7 +88,7 @@ export class CatalogueFormComponent implements OnInit {
           const currentUser = this.getCurrentUserInfo();
           this.payloadAnswer = {
             'answer': {
-              Catalogue: {
+              catalogue: {
                 'users': [
                   {
                     name: currentUser.firstname,

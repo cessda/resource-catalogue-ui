@@ -59,7 +59,7 @@ export class UpdateTrainingResource extends TrainingResourceForm implements OnIn
               this.formPrepare(trBundle.trainingResource);
               this.serviceForm.patchValue(trBundle.trainingResource);
 
-              this.payloadAnswer = {'answer': {TrainingResource: trBundle.trainingResource}};
+              this.payloadAnswer = {'answer': {trainingResource: trBundle.trainingResource}};
 
               for (const i in this.serviceForm.controls) {
                 if (this.serviceForm.controls[i].value === null) {

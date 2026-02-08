@@ -56,7 +56,7 @@ export class UpdateCatalogueComponent extends CatalogueFormComponent implements 
             ...this.catalogue,
             legalEntity: typeof this.catalogue.legalEntity === 'boolean' ? this.catalogue.legalEntity.toString() : this.catalogue.legalEntity
           };
-          this.payloadAnswer = {'answer': {Catalogue: parsedCatalogue}};
+          this.payloadAnswer = {'answer': {catalogue: parsedCatalogue}};
         },
         err => {
           console.log(err);
