@@ -26,7 +26,9 @@ export class MyServiceProvidersComponent implements OnInit {
   serviceTemplatePerProvider: any[] = [];
   hasDraftServices: { id: string, flag: boolean }[] = [];
   hasRejectedServices: { id: string, flag: boolean }[] = [];
+  hasRejectedDatasources: { id: string, flag: boolean }[] = [];
   hasRejectedTrainingResources: { id: string, flag: boolean }[] = [];
+  hasRejectedDeployableServices: { id: string, flag: boolean }[] = [];
 
   myApprovedProviders: ProviderBundle[] = [];
   myPendingActionProviders: ProviderBundle[] = [];
@@ -107,12 +109,30 @@ export class MyServiceProvidersComponent implements OnInit {
                     }
                   }
                 );
+                this.serviceProviderService.getRejectedResourcesOfProvider(p.id, '0', '50', 'ASC', 'name', 'datasource').subscribe(
+                  res => {
+                    if (res.results?.length > 0) {
+                      this.hasRejectedDatasources.push({id: p.id, flag: true});
+                    } else {
+                      this.hasRejectedDatasources.push({id: p.id, flag: false});
+                    }
+                  }
+                );
                 this.serviceProviderService.getRejectedResourcesOfProvider(p.id, '0', '50', 'ASC', 'title', 'training_resource').subscribe(
                   res => {
                     if (res.results?.length > 0) {
                       this.hasRejectedTrainingResources.push({id: p.id, flag: true});
                     } else {
                       this.hasRejectedTrainingResources.push({id: p.id, flag: false});
+                    }
+                  }
+                );
+                this.serviceProviderService.getRejectedResourcesOfProvider(p.id, '0', '50', 'ASC', 'name', 'deployable_service').subscribe(
+                  res => {
+                    if (res.results?.length > 0) {
+                      this.hasRejectedDeployableServices.push({id: p.id, flag: true});
+                    } else {
+                      this.hasRejectedDeployableServices.push({id: p.id, flag: false});
                     }
                   }
                 );
@@ -178,10 +198,28 @@ export class MyServiceProvidersComponent implements OnInit {
     return false;
   }
 
+  checkForRejectedDatasources(id: string): boolean {
+    for (let i = 0; i < this.hasRejectedDatasources.length; i++) {
+      if (this.hasRejectedDatasources[i].id === id) {
+        return this.hasRejectedDatasources[i].flag;
+      }
+    }
+    return false;
+  }
+
   checkForRejectedTrainingResources(id: string): boolean {
     for (let i = 0; i < this.hasRejectedTrainingResources.length; i++) {
       if (this.hasRejectedTrainingResources[i].id === id) {
         return this.hasRejectedTrainingResources[i].flag;
+      }
+    }
+    return false;
+  }
+
+  checkForRejectedDeployableServices(id: string): boolean {
+    for (let i = 0; i < this.hasRejectedDeployableServices.length; i++) {
+      if (this.hasRejectedDeployableServices[i].id === id) {
+        return this.hasRejectedDeployableServices[i].flag;
       }
     }
     return false;

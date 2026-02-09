@@ -32,6 +32,7 @@ import {UpdateDeployableService} from "../deployable-services/update-deployable-
 import {
   RejectedDeployableServicesComponent
 } from "./dashboard/rejectedDeployableServices/rejected-deployable-services.component";
+import {RejectedDatasourcesComponent} from "./dashboard/rejectedDatasources/rejected-datasources.component";
 
 const providerRoutes: Routes = [
 
@@ -90,6 +91,14 @@ const providerRoutes: Routes = [
     canActivate: [CanActivateViaAuthGuard],
     data: {
       breadcrumb: 'Rejected ' + environment.serviceORresource + 's'
+    }
+  },
+  {
+    path: 'rejected-datasources/:providerId',
+    component: RejectedDatasourcesComponent,
+    canActivate: [CanActivateViaAuthGuard],
+    data: {
+      breadcrumb: 'Rejected Datasources'
     }
   },
   {

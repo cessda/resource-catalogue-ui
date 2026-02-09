@@ -27,6 +27,9 @@ import {ExternalFooterComponent} from "../../app/shared/eosc-commons/eosc-common
 import {
   RejectedDeployableServicesComponent
 } from "../pages/provider/dashboard/rejectedDeployableServices/rejected-deployable-services.component";
+import {
+  RejectedDatasourcesComponent
+} from "../pages/provider/dashboard/rejectedDatasources/rejected-datasources.component";
 
 @NgModule({
   imports: [
@@ -54,6 +57,7 @@ import {
     PendingServicesComponent,
     SharedServicesComponent,
     RejectedServicesComponent,
+    RejectedDatasourcesComponent,
     RejectedTrainingResourcesComponent,
     RejectedDeployableServicesComponent,
     PreviewResourceComponent,
@@ -76,6 +80,7 @@ import {
     PendingServicesComponent,
     SharedServicesComponent,
     RejectedServicesComponent,
+    RejectedDatasourcesComponent,
     RejectedTrainingResourcesComponent,
     RejectedDeployableServicesComponent,
     PreviewResourceComponent,

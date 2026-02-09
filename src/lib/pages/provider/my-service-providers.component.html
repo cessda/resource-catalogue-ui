@@ -114,10 +114,24 @@
                                                     </a>
                                                   </li>
                                                 }
+                                                @if (checkForRejectedDatasources(providerBundle.id)) {
+                                                  <li class="uk-active">
+                                                    <a [routerLink]="['/provider/rejected-datasources/' + pidHandler.customEncodeURIComponent(providerBundle.id)] ">
+                                                      Select from rejected datasources
+                                                    </a>
+                                                  </li>
+                                                }
                                                 @if (checkForRejectedTrainingResources(providerBundle.id)) {
                                                   <li class="uk-active">
                                                     <a [routerLink]="['/provider/rejected-training-resources/' + pidHandler.customEncodeURIComponent(providerBundle.id)] ">
                                                       Select from rejected training resources
+                                                    </a>
+                                                  </li>
+                                                }
+                                                @if (checkForRejectedDeployableServices(providerBundle.id)) {
+                                                  <li class="uk-active">
+                                                    <a [routerLink]="['/provider/rejected-deployable-services/' + pidHandler.customEncodeURIComponent(providerBundle.id)] ">
+                                                      Select from rejected deployable services
                                                     </a>
                                                   </li>
                                                 }
