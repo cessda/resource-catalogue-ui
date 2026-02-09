@@ -272,7 +272,7 @@
                           <div class="uk-width-4-5">
                             <div class="providerName">
                               <span class="uk-margin-auto-vertical">
-                                <a [routerLink]="['/dashboard', trBundle.catalogueId, pidHandler.customEncodeURIComponent(trBundle.trainingResource.owner), 'training-resource-dashboard', pidHandler.customEncodeURIComponent(trBundle.id)]" data-uk-tooltip title="Go to the training resource dashboard">
+                                <a [routerLink]="['/dashboard', trBundle.catalogueId, pidHandler.customEncodeURIComponent(trBundle.trainingResource.resourceOwner), 'training-resource-dashboard', pidHandler.customEncodeURIComponent(trBundle.id)]" data-uk-tooltip title="Go to the training resource dashboard">
                                   {{ trBundle.trainingResource.title }}
                                 </a>
                               </span>
@@ -292,7 +292,7 @@
                                   <span class="statusLabel">Training Resource Status: </span>{{labels[statuses.indexOf(trBundle.status)]}}
                                 </div>
                                 <div class="uk-margin-small-top">
-                                  <span class="statusLabel">Resource Organisation: </span>{{ providersPage?.results ? getProviderNameWithId(trBundle.trainingResource.owner) : ''}}
+                                  <span class="statusLabel">Resource Organisation: </span>{{ providersPage?.results ? getProviderNameWithId(trBundle.trainingResource.resourceOwner) : ''}}
                                 </div>
                                 <div class="uk-margin-small-top">
                                   <span class="statusLabel">Resource Providers: </span>{{ providersPage?.results ? getProviderNamesWithIds(trBundle.trainingResource.serviceProviders) : ''}}
@@ -336,7 +336,7 @@
                       <hr class="uk-margin-top">
                       <div class="uk-align-right">
                         <button
-                          routerLink="/provider/{{trBundle.catalogueId}}/{{trBundle.trainingResource.owner}}/training-resource/view/{{trBundle.id}}"
+                          routerLink="/provider/{{trBundle.catalogueId}}/{{trBundle.trainingResource.resourceOwner}}/training-resource/view/{{trBundle.id}}"
                           class="uk-button uk-button-link" style="">
                           <i class="fa fa-eye fa-lg uk-margin-small-right" aria-hidden="true"></i>
                           View Training Resource
@@ -374,7 +374,7 @@
                       <hr class="uk-margin-top">
                       <div class="uk-align-right">
                         <button
-                          routerLink="/provider/{{pidHandler.customEncodeURIComponent(trBundle.trainingResource.owner)}}/training-resource/update/{{pidHandler.customEncodeURIComponent(trBundle.id)}}"
+                          routerLink="/provider/{{pidHandler.customEncodeURIComponent(trBundle.trainingResource.resourceOwner)}}/training-resource/update/{{pidHandler.customEncodeURIComponent(trBundle.id)}}"
                           class="uk-button uk-button-link"
                           style="">
                           <i class="fa fa-pencil fa-lg uk-margin-small-right" aria-hidden="true"></i>
@@ -412,7 +412,7 @@
                                 </li>
                                 <li class="uk-nav-divider"></li>
                               </ng-container>
-                              @if (isProviderActive(trBundle.trainingResource.owner) ) {
+                              @if (isProviderActive(trBundle.trainingResource.resourceOwner) ) {
                                 <div>
                                   <li class="uk-button uk-button-link uk-padding-small"
                                     (click)="toggleService(trBundle)">
@@ -612,7 +612,7 @@
     <div class="uk-modal-dialog uk-modal-body uk-margin-auto-vertical">
       @if (selectedTrainingResource) {
         <div>
-          <p>Training Resource "{{ selectedTrainingResource.trainingResource.title }}" is currently managed by provider "{{ selectedTrainingResource.trainingResource.owner }}."</p>
+          <p>Training Resource "{{ selectedTrainingResource.trainingResource.title }}" is currently managed by provider "{{ selectedTrainingResource.trainingResource.resourceOwner }}."</p>
           <p>Choose another provider to move "{{ selectedTrainingResource.trainingResource.title }}".</p>
           <p style="color: grey">The initial {{serviceORresource | lowercase}} will be deleted from its current provider.</p>
           <form [formGroup]="providersDropdownForm">

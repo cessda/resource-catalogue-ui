@@ -241,7 +241,7 @@
                                     <span class="statusLabel">ID: </span>{{ guidelineBundle.id }}
                                   </div>
                                   <div class="uk-margin-small-top">
-                                    <span class="statusLabel">Provider ID: </span>{{ guidelineBundle.interoperabilityRecord.owner }}
+                                    <span class="statusLabel">Provider ID: </span>{{ guidelineBundle.interoperabilityRecord.resourceOwner }}
                                   </div>
                                   <div class="uk-margin-small-top">
                                     <span class="statusLabel">Catalogue ID: </span>{{ guidelineBundle.catalogueId }}
@@ -302,7 +302,7 @@
                   <div class="uk-align-right uk-margin-bottom">
                     @if (guidelineBundle.catalogueId===catalogueConfigId) {
                       <button
-                        routerLink="/guidelines/{{pidHandler.customEncodeURIComponent(guidelineBundle.interoperabilityRecord.owner)}}/update/{{pidHandler.customEncodeURIComponent(guidelineBundle.id)}}"
+                        routerLink="/guidelines/{{pidHandler.customEncodeURIComponent(guidelineBundle.interoperabilityRecord.resourceOwner)}}/update/{{pidHandler.customEncodeURIComponent(guidelineBundle.id)}}"
                         class="uk-button uk-button-link"
                         style="">
                         <i class="fa fa-pencil fa-lg uk-margin-small-right" aria-hidden="true"></i>

@@ -169,7 +169,7 @@
               </div>
               <div class="uk-width-2-3">
                 <h4 class="uk-margin-remove">
-                  <a [routerLink]="['/dashboard', serviceBundle.catalogueId, serviceBundle.service.owner, 'resource-dashboard', serviceBundle.id]" data-uk-tooltip title="Go to the service dashboard">
+                  <a [routerLink]="['/dashboard', serviceBundle.catalogueId, serviceBundle.service.resourceOwner, 'resource-dashboard', serviceBundle.id]" data-uk-tooltip title="Go to the service dashboard">
                     {{ serviceBundle.service.name }}
                   </a>
                 </h4>
@@ -212,7 +212,7 @@
           <hr class="uk-margin-top">
           <div class="uk-align-right">
             <button
-              routerLink="/provider/{{serviceBundle.catalogueId}}/{{serviceBundle.service.owner}}/resource/view/{{serviceBundle.id}}"
+              routerLink="/provider/{{serviceBundle.catalogueId}}/{{serviceBundle.service.resourceOwner}}/resource/view/{{serviceBundle.id}}"
               class="uk-button uk-button-link" style="">
               <i class="fa fa-eye fa-lg uk-margin-small-right" aria-hidden="true"></i>
               View {{serviceORresource}}

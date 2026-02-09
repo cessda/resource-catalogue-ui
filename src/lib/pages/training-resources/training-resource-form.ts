@@ -189,7 +189,7 @@ export class TrainingResourceForm implements OnInit {
           // console.log(_service);
           this.showLoader = false;
           // return this.router.dashboardDraftResources(this.providerId); // navigate to draft list
-          return this.router.go('/provider/' + _service.owner + '/draft-resource/update/' + _service.id);
+          return this.router.go('/provider/' + _service.resourceOwner + '/draft-resource/update/' + _service.id);
         },
         err => {
           this.showLoader = false;
@@ -246,7 +246,7 @@ export class TrainingResourceForm implements OnInit {
           // console.log(_service);
           this.showLoader = false;
           // return this.router.dashboardDraftResources(this.providerId); // navigate to draft list
-          return this.router.go('/provider/' + _service.owner + '/draft-resource/update/' + _service.id);
+          return this.router.go('/provider/' + _service.resourceOwner + '/draft-resource/update/' + _service.id);
         },
         err => {
           this.showLoader = false;
@@ -314,7 +314,7 @@ export class TrainingResourceForm implements OnInit {
             'answer': {
               trainingResource:
                 {
-                  'owner': decodeURIComponent(this.providerId),
+                  'resourceOwner': decodeURIComponent(this.providerId),
                   'type': "Training Material",
                   'catalogueId': this.catalogueConfigId
                 }
