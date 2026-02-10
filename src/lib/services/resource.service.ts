@@ -175,113 +175,55 @@ export class ResourceService {
   }
 
   /** STATS **/
-  getVisitsForProvider(provider: string, period?: string) {
-    let params = new HttpParams();
-    if (period) {
-      params = params.append('by', period);
-      return this.http.get(this.base + `/stats/provider/visits/${provider}`, {params});
-    } else {
-      return this.http.get(this.base + `/stats/provider/visits/${provider}`);
-    }
-  }
+  //TODO: enable when back transitions its API calls
+
+  // getVisitsForProvider(provider: string, period?: string) {
+  //   let params = new HttpParams();
+  //   if (period) {
+  //     params = params.append('by', period);
+  //     return this.http.get(this.base + `/stats/provider/visits/${provider}`, {params});
+  //   } else {
+  //     return this.http.get(this.base + `/stats/provider/visits/${provider}`);
+  //   }
+  // }
+
+  // getAddsToProjectForProvider(provider: string, period?: string) {
+  //   let params = new HttpParams();
+  //   if (period) {
+  //     params = params.append('by', period);
+  //     return this.http.get(this.base + `/stats/provider/addToProject/${provider}`, {params});
+  //   } else {
+  //     return this.http.get(this.base + `/stats/provider/addToProject/${provider}`);
+  //   }
+  // }
 
   getCategoriesPerServiceForProvider(provider?: string) {
     let params = new HttpParams();
     if (provider) {
-      params = params.append('providerId', provider);
-      return this.http.get(this.base + `/stats/provider/mapServicesToVocabulary?vocabulary=SUBCATEGORY`, {params});
+      params = params.append('providerId', decodeURIComponent(provider));
+      return this.http.get(this.base + `/stats/provider/mapServicesToVocabulary?vocabulary=subcategories`, {params});
     } else {
-      return this.http.get(this.base + `/stats/provider/mapServicesToVocabulary?vocabulary=SUBCATEGORY`);
+      return this.http.get(this.base + `/stats/provider/mapServicesToVocabulary?vocabulary=subcategories`);
     }
   }
 
   getDomainsPerServiceForProvider(provider?: string) {
     let params = new HttpParams();
     if (provider) {
-      params = params.append('providerId', provider);
-      return this.http.get(this.base + `/stats/provider/mapServicesToVocabulary?vocabulary=SCIENTIFIC_SUBDOMAIN`, {params});
+      params = params.append('providerId', decodeURIComponent(provider));
+      return this.http.get(this.base + `/stats/provider/mapServicesToVocabulary?vocabulary=scientific_subdomains`, {params});
     } else {
-      return this.http.get(this.base + `/stats/provider/mapServicesToVocabulary?vocabulary=SCIENTIFIC_SUBDOMAIN`);
-    }
-  }
-
-  getTargetUsersPerServiceForProvider(provider?: string) {
-    let params = new HttpParams();
-    if (provider) {
-      params = params.append('providerId', provider);
-      return this.http.get(this.base + `/stats/provider/mapServicesToVocabulary?vocabulary=TARGET_USERS`, {params});
-    } else {
-      return this.http.get(this.base + `/stats/provider/mapServicesToVocabulary?vocabulary=TARGET_USERS`);
-    }
-  }
-
-  getAccessModesPerServiceForProvider(provider?: string) {
-    let params = new HttpParams();
-    if (provider) {
-      params = params.append('providerId', provider);
-      return this.http.get(this.base + `/stats/provider/mapServicesToVocabulary?vocabulary=ACCESS_MODES`, {params});
-    } else {
-      return this.http.get(this.base + `/stats/provider/mapServicesToVocabulary?vocabulary=ACCESS_MODES`);
-    }
-  }
-
-  getAccessTypesPerServiceForProvider(provider?: string) {
-    let params = new HttpParams();
-    if (provider) {
-      params = params.append('providerId', provider);
-      return this.http.get(this.base + `/stats/provider/mapServicesToVocabulary?vocabulary=ACCESS_TYPES`, {params});
-    } else {
-      return this.http.get(this.base + `/stats/provider/mapServicesToVocabulary?vocabulary=ACCESS_TYPES`);
+      return this.http.get(this.base + `/stats/provider/mapServicesToVocabulary?vocabulary=scientific_subdomains`);
     }
   }
 
   getOrderTypesPerServiceForProvider(provider?: string) {
     let params = new HttpParams();
     if (provider) {
-      params = params.append('providerId', provider);
-      return this.http.get(this.base + `/stats/provider/mapServicesToVocabulary?vocabulary=ORDER_TYPE`, {params});
+      params = params.append('providerId', decodeURIComponent(provider));
+      return this.http.get(this.base + `/stats/provider/mapServicesToVocabulary?vocabulary=order_type`, {params});
     } else {
-      return this.http.get(this.base + `/stats/provider/mapServicesToVocabulary?vocabulary=ORDER_TYPE`);
-    }
-  }
-
-  getMapDistributionOfServices(provider?: string) {
-    let params = new HttpParams();
-    if (provider) {
-      params = params.append('providerId', provider);
-      return this.http.get(this.base + `/stats/provider/mapServicesToGeographicalAvailability`, {params});
-    } else {
-      return this.http.get(this.base + `/stats/provider/mapServicesToGeographicalAvailability`);
-    }
-  }
-
-  getFavouritesForProvider(provider: string, period?: string) {
-    let params = new HttpParams();
-    if (period) {
-      params = params.append('by', period);
-      return this.http.get(this.base + `/stats/provider/favourites/${provider}`, {params});
-    } else {
-      return this.http.get(this.base + `/stats/provider/favourites/${provider}`);
-    }
-  }
-
-  getAddsToProjectForProvider(provider: string, period?: string) {
-    let params = new HttpParams();
-    if (period) {
-      params = params.append('by', period);
-      return this.http.get(this.base + `/stats/provider/addToProject/${provider}`, {params});
-    } else {
-      return this.http.get(this.base + `/stats/provider/addToProject/${provider}`);
-    }
-  }
-
-  getOrdersForProvider(provider: string, period?: string) {
-    let params = new HttpParams();
-    if (period) {
-      params = params.append('by', period);
-      return this.http.get(this.base + `/stats/provider/orders/${provider}`, {params});
-    } else {
-      return this.http.get(this.base + `/stats/provider/orders/${provider}`);
+      return this.http.get(this.base + `/stats/provider/mapServicesToVocabulary?vocabulary=order_type`);
     }
   }
 
@@ -293,23 +235,25 @@ export class ResourceService {
   //   return this.getServicesOfferedByProvider(provider);
   // }
 
-  getVisitsForService(service: string, period?: string) {
-    let params = new HttpParams();
-    if (period) {
-      params = params.append('by', period);
-      return this.http.get(this.base + `/stats/service/visits/${service}`, {params});
-    }
-    return this.http.get(this.base + `/stats/service/visits/${service}`);
-  }
+  //TODO: enable when back transitions its API calls
 
-  getAddToProjectForService(service: string, period?: string) {
-    let params = new HttpParams();
-    if (period) {
-      params = params.append('by', period);
-      return this.http.get(this.base + `/stats/service/addToProject/${service}`, {params});
-    }
-    return this.http.get(this.base + `/stats/service/addToProject/${service}`);
-  }
+  // getVisitsForService(service: string, period?: string) {
+  //   let params = new HttpParams();
+  //   if (period) {
+  //     params = params.append('by', period);
+  //     return this.http.get(this.base + `/stats/service/visits/${service}`, {params});
+  //   }
+  //   return this.http.get(this.base + `/stats/service/visits/${service}`);
+  // }
+
+  // getAddToProjectForService(service: string, period?: string) {
+  //   let params = new HttpParams();
+  //   if (period) {
+  //     params = params.append('by', period);
+  //     return this.http.get(this.base + `/stats/service/addToProject/${service}`, {params});
+  //   }
+  //   return this.http.get(this.base + `/stats/service/addToProject/${service}`);
+  // }
   /** STATS **/
 
   /** Indicators **/

@@ -145,42 +145,31 @@ export class ProviderStatsComponent implements OnInit {
         );
     }
 
-    this.resourceService.getVisitsForProvider(this.providerId, period).pipe(
-      map(data => {
-        // THESE 3 weird lines should be deleted when pgl makes everything ok :)
-        return Object.entries(data).map((d) => {
-          return [new Date(d[0]).getTime(), d[1]];
-        }).sort((l, r) => l[0] - r[0]);
-      })).subscribe(
-      data => this.setVisitsForProvider(data),
-      err => {
-        this.errorMessage = 'An error occurred while retrieving visits for this provider. ' + err.error;
-      }
-    );
+    //TODO: enable when back transitions its API calls
+
+    // this.resourceService.getVisitsForProvider(this.providerId, period).pipe(
+    //   map(data => {
+    //     // THESE 3 weird lines should be deleted when pgl makes everything ok :)
+    //     return Object.entries(data).map((d) => {
+    //       return [new Date(d[0]).getTime(), d[1]];
+    //     }).sort((l, r) => l[0] - r[0]);
+    //   })).subscribe(
+    //   data => this.setVisitsForProvider(data),
+    //   err => {
+    //     this.errorMessage = 'An error occurred while retrieving visits for this provider. ' + err.error;
+    //   }
+    // );
 
     if (this.catalogueName === 'EOSC') {
 
-      this.resourceService.getAddsToProjectForProvider(this.providerId, period).pipe(
-        map(data => {
-          // THESE 3 weird lines should be deleted when pgl makes everything ok :)
-          return Object.entries(data).map((d) => {
-            return [new Date(d[0]).getTime(), d[1]];
-          }).sort((l, r) => l[0] - r[0]);
-        })).subscribe(
-        data => this.setAddsToProjectOptions(data),
-        err => {
-          this.errorMessage = 'An error occurred while retrieving favourites for this provider. ' + err.error;
-        }
-      );
-
-      // this.resourceService.getOrdersForProvider(this.providerId, period).pipe(
+      // this.resourceService.getAddsToProjectForProvider(this.providerId, period).pipe(
       //   map(data => {
       //     // THESE 3 weird lines should be deleted when pgl makes everything ok :)
       //     return Object.entries(data).map((d) => {
       //       return [new Date(d[0]).getTime(), d[1]];
       //     }).sort((l, r) => l[0] - r[0]);
       //   })).subscribe(
-      //   data => this.setOrdersOptions(data),
+      //   data => this.setAddsToProjectOptions(data),
       //   err => {
       //     this.errorMessage = 'An error occurred while retrieving favourites for this provider. ' + err.error;
       //   }
@@ -223,57 +212,6 @@ export class ProviderStatsComponent implements OnInit {
       }
     );
 
-    this.resourceService.getTargetUsersPerServiceForProvider(this.providerId).subscribe(
-      data => {
-        const barChartCategories: string[] = [];
-        const barChartData: number[] = [];
-        for (let i = 0; i < Object.keys(data).length; i++) {
-          const str = (Object.values(data[i])[0]).toString();
-          const key = str.substring(str.lastIndexOf('-') + 1).replace(/_/g, ' ').replace(/^\w/, c => c.toUpperCase());
-          barChartCategories.push(key);
-          barChartData.push(Object.keys(Object.values(data[i])[1]).length);
-        }
-        this.setTargetUsersPerServiceForProvider(barChartCategories, barChartData);
-      },
-      err => {
-        this.errorMessage = 'An error occurred while retrieving target users for this provider. ' + err.error;
-      }
-    );
-
-    this.resourceService.getAccessModesPerServiceForProvider(this.providerId).subscribe(
-      data => {
-        const barChartCategories: string[] = [];
-        const barChartData: number[] = [];
-        for (let i = 0; i < Object.keys(data).length; i++) {
-          const str = (Object.values(data[i])[0]).toString();
-          const key = str.substring(str.lastIndexOf('-') + 1).replace(/_/g, ' ').replace(/^\w/, c => c.toUpperCase());
-          barChartCategories.push(key);
-          barChartData.push(Object.keys(Object.values(data[i])[1]).length);
-        }
-        this.setAccessModesPerServiceForProvider(barChartCategories, barChartData);
-      },
-      err => {
-        this.errorMessage = 'An error occurred while retrieving access modes for this provider. ' + err.error;
-      }
-    );
-
-    this.resourceService.getAccessTypesPerServiceForProvider(this.providerId).subscribe(
-      data => {
-        const barChartCategories: string[] = [];
-        const barChartData: number[] = [];
-        for (let i = 0; i < Object.keys(data).length; i++) {
-          const str = (Object.values(data[i])[0]).toString();
-          const key = str.substring(str.lastIndexOf('-') + 1).replace(/_/g, ' ').replace(/^\w/, c => c.toUpperCase());
-          barChartCategories.push(key);
-          barChartData.push(Object.keys(Object.values(data[i])[1]).length);
-        }
-        this.setAccessTypesPerServiceForProvider(barChartCategories, barChartData);
-      },
-      err => {
-        this.errorMessage = 'An error occurred while retrieving access types for this provider. ' + err.error;
-      }
-    );
-
     this.resourceService.getOrderTypesPerServiceForProvider(this.providerId).subscribe(
       data => {
         const barChartCategories: string[] = [];
@@ -308,20 +246,6 @@ export class ProviderStatsComponent implements OnInit {
         }
       );
     }
-
-    this.resourceService.getMapDistributionOfServices(this.providerId).subscribe(
-      data => {
-        this.geographicalDistributionMap = new Map();
-
-        for (const [key, value] of Object.entries(data)) {
-          this.geographicalDistributionMap.set(value.key.toLowerCase(), value.values);
-        }
-        this.setMapDistributionOfServices(data);
-      },
-      err => {
-        this.errorMessage = 'An error occurred while retrieving geographical distribution of services for this provider. ' + err.error;
-      }
-    );
 
     /** Recommendations -> **/
     // this.recommendationsService.getRecommendationsOverTime(this.catalogueId.concat('.',this.providerId)).subscribe(

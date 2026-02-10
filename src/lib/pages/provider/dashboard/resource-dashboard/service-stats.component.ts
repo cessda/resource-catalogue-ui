@@ -93,33 +93,35 @@ export class ServiceStatsComponent implements OnInit, OnDestroy {
 
     // this.setCountriesForService(this.service.geographicalAvailabilities);
 
-    this.resourceService.getVisitsForService(this.service.id, period).pipe(
-      map(data => {
-        // THESE 3 weird lines should be deleted when pgl makes everything ok :)
-        return Object.entries(data).map((d) => {
-          return [new Date(d[0]).getTime(), d[1]];
-        }).sort((l, r) => l[0] - r[0]);
-      })).subscribe(
-      data => this.setVisitsForService(data),
-      err => {
-        this.errorMessage = 'An error occurred while retrieving visits for this service. ' + err.error;
-      }
-    );
+    //TODO: enable when back transitions its API calls
 
-    if (this.catalogueName === 'EOSC') {
-      this.resourceService.getAddToProjectForService(this.service.id, period).pipe(
-        map(data => {
-          // THESE 3 weird lines should be deleted when pgl makes everything ok :)
-          return Object.entries(data).map((d) => {
-            return [new Date(d[0]).getTime(), d[1]];
-          }).sort((l, r) => l[0] - r[0]);
-        })).subscribe(
-        data => this.setAddsToProjectForService(data),
-        err => {
-          this.errorMessage = 'An error occurred while retrieving adds to project for this service. ' + err.error;
-        }
-      );
-    }
+    // this.resourceService.getVisitsForService(this.service.id, period).pipe(
+    //   map(data => {
+    //     // THESE 3 weird lines should be deleted when pgl makes everything ok :)
+    //     return Object.entries(data).map((d) => {
+    //       return [new Date(d[0]).getTime(), d[1]];
+    //     }).sort((l, r) => l[0] - r[0]);
+    //   })).subscribe(
+    //   data => this.setVisitsForService(data),
+    //   err => {
+    //     this.errorMessage = 'An error occurred while retrieving visits for this service. ' + err.error;
+    //   }
+    // );
+    //
+    // if (this.catalogueName === 'EOSC') {
+    //   this.resourceService.getAddToProjectForService(this.service.id, period).pipe(
+    //     map(data => {
+    //       // THESE 3 weird lines should be deleted when pgl makes everything ok :)
+    //       return Object.entries(data).map((d) => {
+    //         return [new Date(d[0]).getTime(), d[1]];
+    //       }).sort((l, r) => l[0] - r[0]);
+    //     })).subscribe(
+    //     data => this.setAddsToProjectForService(data),
+    //     err => {
+    //       this.errorMessage = 'An error occurred while retrieving adds to project for this service. ' + err.error;
+    //     }
+    //   );
+    // }
 
     if (dontGetServices) {
 
