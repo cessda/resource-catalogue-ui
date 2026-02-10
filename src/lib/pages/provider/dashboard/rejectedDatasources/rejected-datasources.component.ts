@@ -96,7 +96,7 @@ export class RejectedDatasourcesComponent implements OnInit {
 
   getRejectedResources() {
     this.providerService.getRejectedResourcesOfProvider(this.providerId, this.dataForm.get('from').value,
-      this.itemsPerPage + '', 'ASC', 'title', 'datasource')
+      this.itemsPerPage + '', 'ASC', 'name', 'datasource')
       .subscribe(res => {
           this.datasourceBundle = res;
           this.total = res['total'];

@@ -76,11 +76,11 @@ export class UpdateTrainingResource extends TrainingResourceForm implements OnIn
               if (window.location.href.indexOf('/add/use-template') > -1) {
                 this.editMode = false;
                 this.serviceForm.get('id').setValue('');
-                this.serviceForm.get('title').setValue('');
+                this.serviceForm.get('name').setValue('');
               }
               if (this.disable) {
                 this.serviceForm.disable();
-                this.serviceName = this.serviceForm.get('title').value;
+                this.serviceName = this.serviceForm.get('name').value;
               } else {
                 // this.initResourceBitSets();
               }
