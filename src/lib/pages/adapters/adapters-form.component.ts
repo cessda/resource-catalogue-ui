@@ -33,6 +33,7 @@ export class AdaptersFormComponent implements OnInit {
   catalogueName: string | null = null;
   serviceORresource = environment.serviceORresource;
   serviceName = '';
+  providerId: string;
   catalogueId: string;
   firstServiceForm = false;
   showLoader = false;
@@ -100,6 +101,7 @@ export class AdaptersFormComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.providerId = this.route.snapshot.paramMap.get('providerId');
     this.catalogueName = this.config.getProperty('catalogueName');
     this.catalogueConfigId = this.config.getProperty('catalogueId');
     // this.showLoader = true;
@@ -114,15 +116,9 @@ export class AdaptersFormComponent implements OnInit {
           this.payloadAnswer = {
             'answer': {
               adapter: {
-                'catalogueId': this.catalogueConfigId,
+                'resourceOwner': decodeURIComponent(this.providerId),
                 'type': "Adapter",
-                'users': [
-                  {
-                    name: currentUser.firstname,
-                    surname: currentUser.lastname,
-                    email: currentUser.email
-                  }
-                ]
+                'catalogueId': this.catalogueConfigId
               }
             }
           };
@@ -142,24 +138,6 @@ export class AdaptersFormComponent implements OnInit {
       );
     }
 
-    if (this._hasUserConsent) {
-      if (this.editMode) {
-        this.adaptersService.hasAdminAcceptedTerms(this.adapterId).subscribe(
-          boolean => { this.agreedToTerms = boolean; },
-          error => console.log(error),
-          () => {
-            if (!this.agreedToTerms) {
-              UIkit.modal('#modal-consent').show();
-            }
-          }
-        );
-      } else {
-        if (!this.agreedToTerms) {
-          UIkit.modal('#modal-consent').show();
-        }
-      }
-    }
-
   }
 
   getIdsFromCurrentPath(){
@@ -176,28 +154,4 @@ export class AdaptersFormComponent implements OnInit {
     };
   }
 
-  /** Terms Modal--> **/
-  toggleTerm(term) {
-    if (term === 'privacyPolicy') {
-      this.privacyPolicy = !this.privacyPolicy;
-    } else if (term === 'authorizedRepresentative') {
-      this.authorizedRepresentative = !this.authorizedRepresentative;
-    }
-    this.checkTerms();
-  }
-
-  checkTerms() {
-    this.agreedToTerms = this.privacyPolicy && this.authorizedRepresentative;
-  }
-
-  acceptTerms() {
-    if (this._hasUserConsent && this.editMode) {
-      this.adaptersService.adminAcceptedTerms(this.adapterId).subscribe(
-        res => {},
-        error => { console.log(error); },
-        () => {}
-      );
-    }
-  }
-  /** <--Terms Modal **/
 }

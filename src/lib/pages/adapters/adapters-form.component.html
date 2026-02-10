@@ -37,37 +37,3 @@
 @if (isDevMode()) {
   <pre>{{this.payloadAnswer|json}}</pre>
 }
-
-<div id="modal-consent" class="uk-flex-top" uk-modal="bg-close: false; esc-close: false;">
-  <div class="uk-modal-dialog uk-modal-body uk-margin-auto-vertical">
-
-    <div class="uk-margin-medium-bottom">
-      In order to be able to register an Adapter to {{catalogueName}} you need to agree to the following:
-    </div>
-
-    <div class="uk-margin-medium-bottom">
-      <div class="uk-form-controls uk-margin-bottom">
-        <label>
-          <input class="uk-checkbox" type="checkbox" id="privacyPolicy"  value="true"
-                 (change)="toggleTerm('privacyPolicy')">
-          <span class="uk-margin-small-left">I agree to the <a href="{{privacyPolicyURL}}" target="_blank">Privacy Policy</a></span>
-        </label>
-      </div>
-      <div class="uk-form-controls uk-margin-bottom">
-        <label>
-          <input class="uk-checkbox" type="checkbox" id="authorizedRepresentative"  value="true"
-                 (change)="toggleTerm('authorizedRepresentative')">
-          <span class="uk-margin-small-left">I assert that I am an authorized representative of this Adapter.</span>
-        </label>
-      </div>
-    </div>
-
-    <div class="uk-text-right">
-      <button class="uk-button uk-button-default uk-modal-close uk-margin-small-right" type="button" routerLink="/home">Cancel</button>
-      <button class="uk-button  uk-modal-close" type="button" (click)="acceptTerms()"
-              [ngClass]="{'uk-disabled' : !agreedToTerms, 'uk-button-secondary' : !agreedToTerms, 'uk-button-primary': agreedToTerms}">
-        Apply</button>
-    </div>
-
-  </div>
-</div>
