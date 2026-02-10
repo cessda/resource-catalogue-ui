@@ -114,7 +114,7 @@ const providerRoutes: Routes = [
     component: RejectedDeployableServicesComponent,
     canActivate: [CanActivateViaAuthGuard],
     data: {
-      breadcrumb: 'Rejected Deployable Services'
+      breadcrumb: 'Rejected Deployable Software'
     }
   },
   {
@@ -138,7 +138,7 @@ const providerRoutes: Routes = [
     component: AddFirstDeployableServiceComponent,
     canActivate: [CanActivateViaAuthGuard],
     data: {
-      breadcrumb: 'Add Deployable Service Template'
+      breadcrumb: 'Add Deployable Software Template'
     }
   },
   {
@@ -178,7 +178,7 @@ const providerRoutes: Routes = [
     component: DeployableServiceForm,
     canActivate: [CanActivateViaAuthGuard],
     data: {
-      breadcrumb: 'Add Deployable Service'
+      breadcrumb: 'Add Deployable Software'
     }
   },
   {
@@ -234,7 +234,7 @@ const providerRoutes: Routes = [
     component: UpdateDeployableService,
     canActivate: [CanActivateViaAuthGuard],
     data: {
-      breadcrumb: 'Add Deployable Service Resource'
+      breadcrumb: 'Add Deployable Software Resource'
     }
   },
   {
@@ -266,7 +266,7 @@ const providerRoutes: Routes = [
     component: UpdateDeployableService,
     canActivate: [CanActivateViaAuthGuard],
     data: {
-      breadcrumb: 'Edit Deployable Service'
+      breadcrumb: 'Edit Deployable Software'
     }
   },
   {
@@ -378,7 +378,7 @@ const providerRoutes: Routes = [
     component: DeployableServicesListComponent,
     canActivate: [CanActivateViaAuthGuard],
     data: {
-      breadcrumb: 'All Deployable Services'
+      breadcrumb: 'All Deployable Software'
     }
   }
 ];

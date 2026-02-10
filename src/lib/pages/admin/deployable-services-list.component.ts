@@ -334,7 +334,7 @@ export class DeployableServicesListComponent implements OnInit {
   }
 
   getResources() {
-    this.loadingMessage = 'Loading deployable services';
+    this.loadingMessage = 'Loading deployable software';
     this.deployableServiceBundles = [];
     this.deployableServiceService.getResourceBundles(this.dataForm.get('from').value, this.dataForm.get('quantity').value,
       this.dataForm.get('sort').value, this.dataForm.get('order').value, this.dataForm.get('query').value,
@@ -358,7 +358,7 @@ export class DeployableServicesListComponent implements OnInit {
   }
 
   getRandomResources(quantity: string) {
-    this.loadingMessage = 'Loading ' + quantity + ' random Deployable Services';
+    this.loadingMessage = 'Loading ' + quantity + ' random Deployable Software';
     this.deployableServicesForAudit = [];
     this.resourceService.getRandomResources(quantity).subscribe(
       res => {
@@ -552,7 +552,7 @@ export class DeployableServicesListComponent implements OnInit {
   /** resourceExtras--> **/
   /*toggleHorizontalService(dsBundle: DeployableServiceBundle) {
     UIkit.modal('#spinnerModal').show();
-    this.resourceExtrasService.updateHorizontalService(dsBundle.id, 'deployable_service', dsBundle.catalogueId, !dsBundle?.resourceExtras?.horizontalService).subscribe(
+    this.resourceExtrasService.updateHorizontalService(dsBundle.id, 'deployable_software', dsBundle.catalogueId, !dsBundle?.resourceExtras?.horizontalService).subscribe(
       res => {},
       err => {
         UIkit.modal('#spinnerModal').hide();
@@ -585,7 +585,7 @@ export class DeployableServicesListComponent implements OnInit {
 
   updateResearchCategories(dsBundle: DeployableServiceBundle) {
     UIkit.modal('#spinnerModal').show();
-    this.resourceExtrasService.updateResearchCategories(dsBundle.id, 'deployable_service', dsBundle.catalogueId, this.extrasForm.value.researchCategories).subscribe(
+    this.resourceExtrasService.updateResearchCategories(dsBundle.id, 'deployable_software', dsBundle.catalogueId, this.extrasForm.value.researchCategories).subscribe(
       res => {},
       err => {
         UIkit.modal('#spinnerModal').hide();
@@ -600,7 +600,7 @@ export class DeployableServicesListComponent implements OnInit {
 
   updateEoscIFGuidelines(dsBundle: DeployableServiceBundle) {
     UIkit.modal('#spinnerModal').show();
-    this.resourceExtrasService.updateEoscIFGuidelines(dsBundle.id, 'deployable_service', dsBundle.catalogueId, this.extrasForm.value.eoscIFGuidelines).subscribe(
+    this.resourceExtrasService.updateEoscIFGuidelines(dsBundle.id, 'deployable_software', dsBundle.catalogueId, this.extrasForm.value.eoscIFGuidelines).subscribe(
       res => {},
       err => {
         UIkit.modal('#spinnerModal').hide();

@@ -24,7 +24,7 @@
 
       @if (deployableServiceBundle && deployableServiceBundle?.results?.length === 0) {
         <div>
-          <p>No rejected Deployable Services found</p>
+          <p>No rejected Deployable Software found</p>
         </div>
       }
 
@@ -32,7 +32,7 @@
         <div>
           <div class="uk-flex uk-flex-middle uk-flex-between">
             <div class="resultsInfo">
-              <span class="number">{{total}}</span> REJECTED DEPLOYABLE SERVICES, PAGE <span class="number">{{currentPage}}</span> OF <span class="number">{{pageTotal}}</span>
+              <span class="number">{{total}}</span> REJECTED DEPLOYABLE SOFTWARE, PAGE <span class="number">{{currentPage}}</span> OF <span class="number">{{pageTotal}}</span>
             </div>
             <ul class="uk-pagination" uk-margin>
               <li><a (click)="previousPage()"><span uk-pagination-previous></span></a></li>
@@ -51,21 +51,21 @@
                 <div class="uk-card-body">
                   <div class="uk-grid uk-flex-middle">
                     <!--                <div class="uk-width-1-6">-->
-                    <!--                  <img src="{{dsBundle.deployableService.logo ? dsBundle.deployableService.logo : '/assets/images/broken_image-black-48dp.svg'}}">-->
+                    <!--                  <img src="{{dsBundle.deployableSoftware.logo ? dsBundle.deployableSoftware.logo : '/assets/images/broken_image-black-48dp.svg'}}">-->
                   <!--                </div>-->
                   <div class="uk-width-2-3">
-                    <h4 class="uk-margin-remove">{{dsBundle.deployableService.name}}</h4>
-                    @if (dsBundle.deployableService.description) {
-                      <span class="uk-margin-small-top"><markdown [data]="dsBundle.deployableService.description"></markdown></span>
+                    <h4 class="uk-margin-remove">{{dsBundle.deployableSoftware.name}}</h4>
+                    @if (dsBundle.deployableSoftware.description) {
+                      <span class="uk-margin-small-top"><markdown [data]="dsBundle.deployableSoftware.description"></markdown></span>
                     }
                   </div>
                   <div class="uk-width-1-6">
                     <div class="action-buttons">
                       <button class="uk-button uk-button-action uk-display-block" (click)="navigate(dsBundle.id)">
-                        <i class="fa fa-pencil fa-lg"></i> Edit deployable service
+                        <i class="fa fa-pencil fa-lg"></i> Edit deployable software
                       </button>
                       <button class="uk-button uk-button-action uk-display-block uk-margin-small-top" (click)="setSelectedDeployableService(dsBundle)">
-                        <i class="fa fa-trash fa-lg" aria-hidden="true"></i> Delete deployable service
+                        <i class="fa fa-trash fa-lg" aria-hidden="true"></i> Delete deployable software
                       </button>
                     </div>
                   </div>
@@ -100,7 +100,7 @@
 <div id="actionModal" uk-modal>
   <div class="uk-modal-dialog uk-modal-body uk-margin-auto-vertical">
     @if (selectedDeployableService) {
-      <h6>Are you sure you want to delete the deployable service '{{selectedDeployableService.deployableService.name}}'?</h6>
+      <h6>Are you sure you want to delete the deployable software '{{selectedDeployableService.deployableSoftware.name}}'?</h6>
     }
     <div class="uk-text-right">
       <button class="uk-button uk-button-default uk-modal-close uk-margin-small-right" type="button">Cancel</button>

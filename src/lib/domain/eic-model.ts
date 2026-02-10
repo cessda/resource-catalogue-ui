@@ -142,7 +142,7 @@ export class TrainingResourceBundle extends Bundle<TrainingResource> {
 export class DeployableServiceBundle extends Bundle<DeployableService> {
   status: string;
   auditState: string;
-  deployableService: DeployableService;
+  deployableSoftware: DeployableService;
 }
 
 export class LoggingInfo {

@@ -98,7 +98,7 @@
                                                   <a routerLink="{{ getLinkToFirstTrainingResource(pidHandler.customEncodeURIComponent(providerBundle.id)) }}">Add First Training Resource</a>
                                                 </li>
                                                 <li class="uk-active">
-                                                  <a routerLink="{{ getLinkToFirstDeployableService(pidHandler.customEncodeURIComponent(providerBundle.id)) }}">Add First Deployable Service</a>
+                                                  <a routerLink="{{ getLinkToFirstDeployableService(pidHandler.customEncodeURIComponent(providerBundle.id)) }}">Add First Deployable Software</a>
                                                 </li>
                                                 @if (checkForDraftServices(providerBundle.id)) {
                                                   <li class="uk-active">
@@ -131,7 +131,7 @@
                                                 @if (checkForRejectedDeployableServices(providerBundle.id)) {
                                                   <li class="uk-active">
                                                     <a [routerLink]="['/provider/rejected-deployable-services/' + pidHandler.customEncodeURIComponent(providerBundle.id)] ">
-                                                      Select from rejected deployable services
+                                                      Select from rejected deployable software
                                                     </a>
                                                   </li>
                                                 }

@@ -20,7 +20,7 @@ export class DeployableServiceHistoryComponent implements OnInit, OnDestroy {
   serviceORresource = environment.serviceORresource;
 
   public catalogueId: string;
-  public deployableService: DeployableService;
+  public deployableSoftware: DeployableService;
   public errorMessage: string;
   private sub: Subscription;
   public pidHandler: pidHandler;
@@ -39,7 +39,7 @@ export class DeployableServiceHistoryComponent implements OnInit, OnDestroy {
       zip(
         this.deployableServiceService.getService(params['deployableServiceId'], params['catalogueId'])
       ).subscribe(suc => {
-          this.deployableService = <DeployableService>suc[0];
+          this.deployableSoftware = <DeployableService>suc[0];
           this.getDataForDeployableService();
 
         },
@@ -47,17 +47,17 @@ export class DeployableServiceHistoryComponent implements OnInit, OnDestroy {
           if (err.status === 404) {
             this.navigator.go('/404');
           }
-          this.errorMessage = 'An error occurred while retrieving data for this deployable service. ' + err.error;
+          this.errorMessage = 'An error occurred while retrieving data for this deployable software. ' + err.error;
         }
       );
     });
   }
 
   getDataForDeployableService() {
-    this.deployableServiceService.getServiceLoggingInfoHistory(this.deployableService.id, this.catalogueId).subscribe(
+    this.deployableServiceService.getServiceLoggingInfoHistory(this.deployableSoftware.id, this.catalogueId).subscribe(
       res => this.deployableServiceHistory = res,
       err => {
-        this.errorMessage = 'An error occurred while retrieving the history of this deployable service. ' + err.error;
+        this.errorMessage = 'An error occurred while retrieving the history of this deployable software. ' + err.error;
       }
     );
   }
@@ -67,7 +67,7 @@ export class DeployableServiceHistoryComponent implements OnInit, OnDestroy {
   }
 
   handleError(error) {
-    this.errorMessage = 'System error retrieving deployable service (Server responded: ' + error + ')';
+    this.errorMessage = 'System error retrieving deployable software (Server responded: ' + error + ')';
   }
 
 }

@@ -127,7 +127,7 @@ export class MyServiceProvidersComponent implements OnInit {
                     }
                   }
                 );
-                this.serviceProviderService.getRejectedResourcesOfProvider(p.id, '0', '50', 'ASC', 'name', 'deployable_service').subscribe(
+                this.serviceProviderService.getRejectedResourcesOfProvider(p.id, '0', '50', 'ASC', 'name', 'deployable_software').subscribe(
                   res => {
                     if (res.results?.length > 0) {
                       this.hasRejectedDeployableServices.push({id: p.id, flag: true});
@@ -172,7 +172,7 @@ export class MyServiceProvidersComponent implements OnInit {
   hasCreatedFirstDeployableService(providerId: string) {
     for (let i = 0; i < this.serviceTemplatePerProvider.length; i++) {
       if (this.serviceTemplatePerProvider[i].providerId == providerId) {
-        if (this.serviceTemplatePerProvider[i].deployableService) {
+        if (this.serviceTemplatePerProvider[i].deployableSoftware) {
           return true;
         }
       }

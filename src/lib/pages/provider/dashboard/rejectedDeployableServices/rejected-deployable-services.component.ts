@@ -97,14 +97,14 @@ export class RejectedDeployableServicesComponent implements OnInit {
 
   getRejectedResources() {
     this.providerService.getRejectedResourcesOfProvider(this.providerId, this.dataForm.get('from').value,
-      this.itemsPerPage + '', 'ASC', 'name', 'deployable_service')
+      this.itemsPerPage + '', 'ASC', 'name', 'deployable_software')
       .subscribe(res => {
           this.deployableServiceBundle = res;
           this.total = res['total'];
           this.paginationInit();
         },
         err => {
-          this.errorMessage = 'An error occurred while retrieving the deployable services of this provider. ' + err.error;
+          this.errorMessage = 'An error occurred while retrieving the deployable software of this provider. ' + err.error;
         },
         () => {}
       );

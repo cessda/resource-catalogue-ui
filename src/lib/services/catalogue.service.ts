@@ -147,7 +147,7 @@ export class CatalogueService {
         params = params.append('status', statusValue);
       }
     }
-    return this.http.get<any>(this.base + `/deployableService/byCatalogue/${id}?from=${from}&quantity=${quantity}&order=${order}&sort=${sort}&keyword=${query}`, {params});
+    return this.http.get<any>(this.base + `/deployableSoftware/byCatalogue/${id}?from=${from}&quantity=${quantity}&order=${order}&sort=${sort}&keyword=${query}`, {params});
   }
 
   getDatasourcesOfCatalogue(id: string, from: string, quantity: string, order: string, sort: string, active: string, status?: string, query?: string) {

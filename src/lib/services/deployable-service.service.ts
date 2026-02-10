@@ -73,7 +73,7 @@ export class DeployableServiceService {
     // const questionMark = urlParameters.length > 0 ? '?' : '';
     // return this.http.get<SearchResults<RichService>>(this.base + `/service/rich/all${questionMark}${searchQuery.toString()}`, this.options)
     return this.http.get<Paging<RichService>>(
-      this.base + `/deployableService/rich/all?sort=title&order=asc&${searchQuery.toString()}`, this.options);
+      this.base + `/deployableSoftware/rich/all?sort=title&order=asc&${searchQuery.toString()}`, this.options);
   }
 
   getAllVocabulariesByType() {
@@ -93,36 +93,36 @@ export class DeployableServiceService {
   }
 
   getServices() {
-    return this.http.get(this.base + '/deployableService/by/ID/'); // needs capitalized 'ID' after back changes
+    return this.http.get(this.base + '/deployableSoftware/by/ID/'); // needs capitalized 'ID' after back changes
   }
 
   getService(id: string, catalogueId?: string) {
     id = decodeURIComponent(id);
     if (!catalogueId) catalogueId = this.catalogueConfigId;
     if (catalogueId === this.catalogueConfigId)
-      return this.http.get<DeployableService>(this.base + `/deployableService/${id}?catalogue_id=${catalogueId}`, this.options);
+      return this.http.get<DeployableService>(this.base + `/deployableSoftware/${id}?catalogue_id=${catalogueId}`, this.options);
     else
-      return this.http.get<Service>(this.base + `/catalogue/${catalogueId}/deployableService/${id}`, this.options);
+      return this.http.get<Service>(this.base + `/catalogue/${catalogueId}/deployableSoftware/${id}`, this.options);
   }
 
   getDeployableServiceBundle(id: string, catalogueId?:string) { //old rich
     id = decodeURIComponent(id);
     if (!catalogueId) catalogueId = this.catalogueConfigId;
     if (catalogueId === this.catalogueConfigId)
-      return this.http.get<DeployableServiceBundle>(this.base + `/deployableService/bundle/${id}?catalogue_id=${catalogueId}`, this.options);
+      return this.http.get<DeployableServiceBundle>(this.base + `/deployableSoftware/bundle/${id}?catalogue_id=${catalogueId}`, this.options);
     else
-      return this.http.get<DeployableServiceBundle>(this.base + `/catalogue/${catalogueId}/deployableService/bundle/${id}`, this.options);
+      return this.http.get<DeployableServiceBundle>(this.base + `/catalogue/${catalogueId}/deployableSoftware/bundle/${id}`, this.options);
   }
 
   getSelectedServices(ids: string[]) {
     /*return this.getSome("service", ids).map(res => <Service[]> <any> res);*/
     // return this.getSome('service/rich', ids).subscribe(res => <RichService[]><any>res);
-    return this.http.get<RichService[]>(this.base + `/deployableService/rich/ids/${ids.toString()}/`, this.options);
+    return this.http.get<RichService[]>(this.base + `/deployableSoftware/rich/ids/${ids.toString()}/`, this.options);
   }
 
   deleteDeployableService(id: string) {
     id = decodeURIComponent(id);
-    return this.http.delete(this.base + '/deployableService/' + id, this.options);
+    return this.http.delete(this.base + '/deployableSoftware/' + id, this.options);
   }
 
   getResourceBundles(from: string, quantity: string, sort: string, order: string, query: string, active: string, suspended: string,
@@ -165,17 +165,17 @@ export class DeployableServiceService {
     // } else {
     //   params = params.append('catalogue_id', 'all');
     // }
-    return this.http.get<DeployableServiceBundle>(this.base + `/deployableService/bundle/all`, {params});
+    return this.http.get<DeployableServiceBundle>(this.base + `/deployableSoftware/bundle/all`, {params});
   }
 
   getRandomResources(quantity: string) {
-    return this.http.get<ServiceBundle[]>(this.base + `/deployableService/random?quantity=${quantity}`, this.options);
+    return this.http.get<ServiceBundle[]>(this.base + `/deployableSoftware/random?quantity=${quantity}`, this.options);
   }
 
   getSharedServicesByProvider(id: string, from: string, quantity: string, order: string, sort: string) {
     id = decodeURIComponent(id);
     return this.http.get<Paging<ServiceBundle>>(this.base +
-      `/deployableService/getSharedResources/${id}?from=${from}&quantity=${quantity}&order=${order}&sort=${sort}`);
+      `/deployableSoftware/getSharedResources/${id}?from=${from}&quantity=${quantity}&order=${order}&sort=${sort}`);
   }
 
   getEU() {
@@ -201,14 +201,14 @@ export class DeployableServiceService {
     return places;
   }
 
-  submitService(deployableService: DeployableService, shouldPut: boolean, comment: string) {
+  submitService(deployableSoftware: DeployableService, shouldPut: boolean, comment: string) {
     // console.log(JSON.stringify(service));
     // console.log(`knocking on: ${this.base}/service`);
-    if (!comment && shouldPut) return this.http.put<DeployableService>(this.base + `/deployableService`, deployableService, this.options);
+    if (!comment && shouldPut) return this.http.put<DeployableService>(this.base + `/deployableSoftware`, deployableSoftware, this.options);
     if (shouldPut) {
-      return this.http.put<DeployableService>(this.base + `/deployableService?comment=${comment}`, deployableService, this.options);
+      return this.http.put<DeployableService>(this.base + `/deployableSoftware?comment=${comment}`, deployableSoftware, this.options);
     } else {
-      return this.http.post<DeployableService>(this.base + `/deployableService?comment=${comment}`, deployableService, this.options);
+      return this.http.post<DeployableService>(this.base + `/deployableSoftware?comment=${comment}`, deployableSoftware, this.options);
     }
   }
 
@@ -217,8 +217,8 @@ export class DeployableServiceService {
     return this.http.put<Service>(this.base + '/pendingService/pending', service, this.options);
   }
 
-  submitPendingService(deployableService: DeployableService, shouldPut: boolean, comment: string) {
-    return this.http.put<DeployableService>(this.base + '/pendingService/transform/resource', deployableService, this.options);
+  submitPendingService(deployableSoftware: DeployableService, shouldPut: boolean, comment: string) {
+    return this.http.put<DeployableService>(this.base + '/pendingService/transform/resource', deployableSoftware, this.options);
   }
 
   getDraftServicesByProvider(id: string, from: string, quantity: string, order: string, sort: string) {
@@ -241,28 +241,28 @@ export class DeployableServiceService {
   getServiceLoggingInfoHistory(serviceId: string, catalogue_id: string) {
     serviceId = decodeURIComponent(serviceId);
     if (catalogue_id === this.catalogueConfigId)
-      return this.http.get<LoggingInfo[]>(this.base + `/deployableService/loggingInfoHistory/${serviceId}?catalogue_id=${catalogue_id}`);
+      return this.http.get<LoggingInfo[]>(this.base + `/deployableSoftware/loggingInfoHistory/${serviceId}?catalogue_id=${catalogue_id}`);
     else
-      return this.http.get<LoggingInfo[]>(this.base + `/catalogue/${catalogue_id}/deployableService/loggingInfoHistory/${serviceId}`);
+      return this.http.get<LoggingInfo[]>(this.base + `/catalogue/${catalogue_id}/deployableSoftware/loggingInfoHistory/${serviceId}`);
   }
 
   auditDeployableService(id: string, action: string, catalogueId: string, comment: string) {
     id = decodeURIComponent(id);
     if(!catalogueId) catalogueId = this.catalogueConfigId;
     if (catalogueId === this.catalogueConfigId)
-      return this.http.patch(this.base + `/deployableService/audit/${id}?actionType=${action}&catalogueId=${catalogueId}&comment=${comment}`, this.options);
+      return this.http.patch(this.base + `/deployableSoftware/audit/${id}?actionType=${action}&catalogueId=${catalogueId}&comment=${comment}`, this.options);
     else
-      return this.http.patch(this.base + `/catalogue/${catalogueId}/deployableService/audit/${id}?actionType=${action}&comment=${comment}`, this.options);
+      return this.http.patch(this.base + `/catalogue/${catalogueId}/deployableSoftware/audit/${id}?actionType=${action}&comment=${comment}`, this.options);
   }
 
   verifyDeployableService(id: string, active: boolean, status: string) { // for 1st service
     id = decodeURIComponent(id);
-    return this.http.patch(this.base + `/deployableService/verify/${id}?active=${active}&status=${status}`, {}, this.options);
+    return this.http.patch(this.base + `/deployableSoftware/verify/${id}?active=${active}&status=${status}`, {}, this.options);
   }
 
   getServiceTemplate(id: string) {  // gets oldest(?) pending resource of the provider // replaced with /resourceTemplate/templates?id=testprovidertemplate
     id = decodeURIComponent(id);
-    return this.http.get<Service[]>(this.base + `/deployableService/getServiceTemplate/${id}`);
+    return this.http.get<Service[]>(this.base + `/deployableSoftware/getServiceTemplate/${id}`);
   }
 
   getResourceTemplateOfProvider(id: string) {  // returns the template, service or datasource
@@ -272,12 +272,12 @@ export class DeployableServiceService {
 
   sendEmailForOutdatedDeployableService(id: string) {
     id = decodeURIComponent(id);
-    return this.http.get(this.base + `/deployableService/sendEmailForOutdatedResource/${id}`);
+    return this.http.get(this.base + `/deployableSoftware/sendEmailForOutdatedResource/${id}`);
   }
 
   moveDeployableServiceToProvider(resourceId: string, providerId: string, comment: string) {
     resourceId = decodeURIComponent(resourceId);
-    return this.http.put(this.base + `/deployableService/changeProvider?resourceId=${resourceId}&newProvider=${providerId}&comment=${comment}`, this.options);
+    return this.http.put(this.base + `/deployableSoftware/changeProvider?resourceId=${resourceId}&newProvider=${providerId}&comment=${comment}`, this.options);
   }
 
   public handleError(error: HttpErrorResponse) {
@@ -301,12 +301,12 @@ export class DeployableServiceService {
 
   activateDeployableService(id: string, active: boolean) { // toggles active/inactive service
     id = decodeURIComponent(id);
-    return this.http.patch(this.base + `/deployableService/setActive/${id}?active=${active}`, this.options);
+    return this.http.patch(this.base + `/deployableSoftware/setActive/${id}?active=${active}`, this.options);
   }
 
   suspendDeployableService(deployableServiceId: string, catalogueId: string, suspend: boolean) {
     deployableServiceId = decodeURIComponent(deployableServiceId);
-    return this.http.put<DeployableServiceBundle>(this.base + `/deployableService/suspend?id=${deployableServiceId}&catalogueId=${catalogueId}&suspend=${suspend}`, this.options);
+    return this.http.put<DeployableServiceBundle>(this.base + `/deployableSoftware/suspend?id=${deployableServiceId}&catalogueId=${catalogueId}&suspend=${suspend}`, this.options);
   }
 
   getFormModelById(id: string) {
@@ -330,13 +330,13 @@ export class DeployableServiceService {
     if (catalogue_id === this.catalogueConfigId) {
       if (active === 'statusAll') {
         return this.http.get<Paging<DeployableServiceBundle>>(this.base +
-            `/deployableService/byProvider/${id}?catalogue_id=${catalogue_id}&from=${from}&quantity=${quantity}&order=${order}&sort=${sort}&keyword=${query}`, {params});
+            `/deployableSoftware/byProvider/${id}?catalogue_id=${catalogue_id}&from=${from}&quantity=${quantity}&order=${order}&sort=${sort}&keyword=${query}`, {params});
       }
       return this.http.get<Paging<DeployableServiceBundle>>(this.base +
-          `/deployableService/byProvider/${id}?catalogue_id=${catalogue_id}&from=${from}&quantity=${quantity}&order=${order}&sort=${sort}&active=${active}&keyword=${query}`, {params});
+          `/deployableSoftware/byProvider/${id}?catalogue_id=${catalogue_id}&from=${from}&quantity=${quantity}&order=${order}&sort=${sort}&active=${active}&keyword=${query}`, {params});
     } else {
       return this.http.get<Paging<DeployableServiceBundle>>(this.base +
-          `/catalogue/${catalogue_id}/${id}/deployableService/bundle/all?from=${from}&quantity=${quantity}&order=${order}&sort=${sort}&keyword=${query}`, {params});
+          `/catalogue/${catalogue_id}/${id}/deployableSoftware/bundle/all?from=${from}&quantity=${quantity}&order=${order}&sort=${sort}&keyword=${query}`, {params});
     }
   }
 }

@@ -64,7 +64,7 @@
             <li [routerLinkActive]="['current_section']" #deployableServices="routerLinkActive">
               <a [routerLink]="['/dashboard', catalogueId, providerId, 'deployable-services']">
                 <img src="{{deployableServices.isActive ? 'assets/images/new-icons/services-active.svg' : 'assets/images/new-icons/services.svg'}}" class="uk-margin-small-right">
-                Deployable Services
+                Deployable Software
               </a>
             </li>
           }
@@ -96,7 +96,7 @@
             <li [routerLinkActive]="['current_section']" #deployableServices="routerLinkActive">
               <a [routerLink]="['/dashboard', catalogueId, providerId, 'deployable-services']">
                 <img src="{{deployableServices.isActive ? 'assets/images/new-icons/services-active.svg' : 'assets/images/new-icons/services.svg'}}" class="uk-margin-small-right">
-                Deployable Services
+                Deployable Software
               </a>
             </li>
             <li [routerLinkActive]="['current_section']" #guidelines="routerLinkActive">
@@ -138,7 +138,7 @@
             <li>
               <a [routerLink]="['/provider/' + pidHandler.customEncodeURIComponent(providerId) + '/add-first-deployable-service/']">
                 <img src="../../../../assets/images/new-icons/add-service.svg" class="uk-margin-small-right">
-                Add first Deployable Service
+                Add first Deployable Software
               </a>
             </li>
           }
@@ -150,7 +150,7 @@
               <a><img src="../../../../assets/images/new-icons/add-service.svg" class="uk-margin-small-right"> Add first Training Resource</a>
             </li>
             <li uk-tooltip="Disabled until provider gets approved.">
-              <a><img src="../../../../assets/images/new-icons/add-service.svg" class="uk-margin-small-right"> Add first Deployable Service</a>
+              <a><img src="../../../../assets/images/new-icons/add-service.svg" class="uk-margin-small-right"> Add first Deployable Software</a>
             </li>
           }
           <!--            this can be omitted unless told otherwise
@@ -178,7 +178,7 @@
             <li>
               <a [routerLink]="['/provider/' + providerId + '/deployable-service/add/']">
                 <img src="../../../../assets/images/new-icons/add-service.svg" class="uk-margin-small-right">
-                Add new Deployable Service
+                Add new Deployable Software
               </a>
             </li>
           }

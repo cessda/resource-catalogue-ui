@@ -11,7 +11,7 @@ const deployableServiceDashboardRoutes: Routes = [
     component: DeployableServiceDashboardComponent,
     canActivate: [CanActivateViaAuthGuard],
     data: {
-      breadcrumb: 'Deployable Service Dashboard'
+      breadcrumb: 'Deployable Software Dashboard'
     },
     children : [
       {
