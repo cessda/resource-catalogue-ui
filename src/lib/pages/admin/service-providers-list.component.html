@@ -483,7 +483,7 @@
                                     <li class="uk-active" (click)="templateAction(providerBundle.id, true, 'approved', 'service')">
                                       <a class="uk-margin-small-top"><i class="fa fa-thumbs-up"></i> Approve First {{serviceORresource}}</a>
                                     </li>
-                                    <li class="uk-active" (click)="templateAction(providerBundle.id, true, 'rejected', 'service')">
+                                    <li class="uk-active" (click)="templateAction(providerBundle.id, false, 'rejected', 'service')">
                                       <a class="uk-margin-small-top"><i class="fa fa-thumbs-down"></i> Reject First {{serviceORresource}}</a>
                                     </li>
                                   </ng-container>
@@ -503,7 +503,7 @@
                                     <li class="uk-active" (click)="templateAction(providerBundle.id, true, 'approved', 'trainingResource')">
                                       <a class="uk-margin-small-top"><i class="fa fa-thumbs-up"></i> Approve First Training Resource</a>
                                     </li>
-                                    <li class="uk-active" (click)="templateAction(providerBundle.id, true, 'rejected', 'trainingResource')">
+                                    <li class="uk-active" (click)="templateAction(providerBundle.id, false, 'rejected', 'trainingResource')">
                                       <a class="uk-margin-small-top"><i class="fa fa-thumbs-down"></i> Reject First Training Resource</a>
                                     </li>
                                   </ng-container>

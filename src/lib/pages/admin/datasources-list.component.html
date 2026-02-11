@@ -300,7 +300,7 @@
             <li class="uk-active" (click)="verifyDatasource(datasourceBundlePlus.id, true, 'approved')">
               <a class="uk-margin-small-top"><i class="fa fa-thumbs-up"></i> Approve </a>
             </li>
-            <li class="uk-active" (click)="verifyDatasource(datasourceBundlePlus.id, true, 'rejected')">
+            <li class="uk-active" (click)="verifyDatasource(datasourceBundlePlus.id, false, 'rejected')">
               <a class="uk-margin-small-top"><i class="fa fa-thumbs-down"></i> Reject </a>
             </li>
             <!--                              <li *ngIf="(datasourceBundle.status === 'approved datasource') && (!datasourceBundle.active)"
