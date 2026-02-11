@@ -492,7 +492,7 @@ export class ResearchProductMetadataLicensing {
 
 export class TrainingResource implements Identifiable {
   id: string;
-  title: string;
+  name: string;
   resourceOwner: string; // like service
   serviceProviders: string[]; // like service
   authors: string[];
@@ -535,7 +535,7 @@ export class InteroperabilityRecord implements Identifiable {
   providerId: string;
   identifierInfo: IdentifierInfo; //like location
   creators: Creator[]; //like location
-  title: string;
+  name: string;
   publicationYear: number;
   resourceTypesInfo: ResourceTypeInfo[]; //title~scientific domain
   created: string;

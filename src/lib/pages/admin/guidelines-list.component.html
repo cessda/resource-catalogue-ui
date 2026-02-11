@@ -233,7 +233,7 @@
                           <div class="uk-grid">
                             <div class="uk-width-4-5" style="padding-left: 100px;">
                               <div class="providerName uk-margin-bottom">
-                                {{ guidelineBundle.interoperabilityRecord.title }}
+                                {{ guidelineBundle.interoperabilityRecord.name }}
                               </div>
                               <div class="uk-grid uk-child-width-1-2">
                                 <div>
@@ -364,7 +364,7 @@
                     <div>
                       <!--                            <hr>-->
                       <div>
-                        <p>You are about to audit "{{ selectedGuideline.interoperabilityRecord.title }}".</p>
+                        <p>You are about to audit "{{ selectedGuideline.interoperabilityRecord.name }}".</p>
                         <p>Please fill in the reason(s) of your action. <span style="color: grey">(optional)</span></p>
                       </div>
                       <form>
@@ -453,7 +453,7 @@
   @if (!loadingMessage) {
     <div class="uk-modal-dialog uk-modal-body uk-margin-auto-vertical">
       @if (selectedGuideline) {
-        <h6 class="uk-margin-medium-bottom">Are you sure you want to {{selectedGuideline.suspended==true ? 'un' : ''}}suspend "{{ selectedGuideline.interoperabilityRecord.title }}"?</h6>
+        <h6 class="uk-margin-medium-bottom">Are you sure you want to {{selectedGuideline.suspended==true ? 'un' : ''}}suspend "{{ selectedGuideline.interoperabilityRecord.name }}"?</h6>
         <div class="uk-text-right">
           <button class="uk-button uk-button-default uk-modal-close uk-margin-small-right" type="button">Cancel</button>
           <button class="uk-button uk-button-danger uk-modal-close" type="button" (click)="suspendInteroperabilityRecord()">

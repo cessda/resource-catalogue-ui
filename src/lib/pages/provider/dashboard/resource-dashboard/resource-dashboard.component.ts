@@ -92,7 +92,7 @@ export class ResourceDashboardComponent implements OnInit {
   }
 
   getGuidelineName(id: string): string {
-    return this.guidelines?.find(g => g.id === id)?.title || id;
+    return this.guidelines?.find(g => g.id === id)?.name || id;
   }
 
   showDatasourceDeletionModal() {
