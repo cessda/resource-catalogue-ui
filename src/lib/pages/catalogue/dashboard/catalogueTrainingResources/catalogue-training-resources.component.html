@@ -171,7 +171,7 @@
                   <a [routerLink]="['/dashboard', bundle.trainingResource.catalogueId, bundle.trainingResource.resourceOwner, 'training-resource-dashboard', bundle.id]" data-uk-tooltip title="Go to the training resource dashboard">
                     {{ bundle.trainingResource.title }}
                   </a>
-                  <!--                    <a (click)="navigate(bundle.id)">{{bundle.trainingResource.title}}</a>-->
+                  <!--                    <a (click)="navigate(bundle.id)">{{bundle.trainingResource.name}}</a>-->
                 </h4>
                 <div class="uk-margin-small-top">
                   @if (bundle.trainingResource.description) {
@@ -250,7 +250,7 @@
 <div id="actionModal" uk-modal>
   <div class="uk-modal-dialog uk-modal-body uk-margin-auto-vertical">
     @if (selectedTrainingResource) {
-      <h6 class="uk-margin-bottom">Are you sure you want to delete the Training Resource '{{selectedTrainingResource.trainingResource.title}}'?</h6>
+      <h6 class="uk-margin-bottom">Are you sure you want to delete the Training Resource '{{selectedTrainingResource.trainingResource.name}}'?</h6>
     }
     <div class="uk-text-right">
       <button class="uk-button uk-button-default uk-modal-close uk-margin-small-right" type="button">Cancel</button>
