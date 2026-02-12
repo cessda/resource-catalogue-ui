@@ -99,6 +99,12 @@
                 Deployable Software
               </a>
             </li>
+            <li [routerLinkActive]="['current_section']" #adapters="routerLinkActive">
+              <a [routerLink]="['/dashboard', catalogueId, providerId, 'adapters']">
+                <img src="{{adapters.isActive ? 'assets/images/new-icons/services-active.svg' : 'assets/images/new-icons/services.svg'}}" class="uk-margin-small-right">
+                Adapters
+              </a>
+            </li>
             <li [routerLinkActive]="['current_section']" #guidelines="routerLinkActive">
               <a [routerLink]="['/dashboard', catalogueId, providerId, 'guidelines']">
                 <img src="{{guidelines.isActive ? 'assets/images/new-icons/services-active.svg' : 'assets/images/new-icons/services.svg'}}" class="uk-margin-small-right">

@@ -2,9 +2,10 @@ import {Injectable} from '@angular/core';
 import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http';
 import {AuthenticationService} from './authentication.service';
 import {environment} from '../../environments/environment';
-import {Adapter, AdapterBundle} from '../domain/eic-model';
+import {Adapter, AdapterBundle, InteroperabilityRecordBundle} from '../domain/eic-model';
 import {Model} from "../../dynamic-catalogue/domain/dynamic-form-model";
 import {ConfigService} from "./config.service";
+import {Paging} from "../domain/paging";
 
 @Injectable()
 export class AdaptersService {
@@ -18,6 +19,13 @@ export class AdaptersService {
   }
   base = environment.API_ENDPOINT;
   private options = {withCredentials: true};
+
+  getAdaptersOfProvider(id: string, from: string, quantity: string, order: string, sort: string, query: string, status: string) {
+    id = decodeURIComponent(id);
+    if (!query) { query = '';}
+    if (!status) { return this.http.get<Paging<AdapterBundle>>(this.base + `/adapter/byProvider/${id}?from=${from}&quantity=${quantity}&order=${order}&sort=${sort}&keyword=${query}`); }
+    return this.http.get<Paging<AdapterBundle>>(this.base + `/adapter/byProvider/${id}?from=${from}&quantity=${quantity}&order=${order}&sort=${sort}&keyword=${query}&status=${status}`);
+  }
 
   uploadAdapter(adapter: Adapter, shouldPut: boolean) {
     if (shouldPut) {
