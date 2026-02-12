@@ -131,7 +131,7 @@ export class AdaptersFormComponent implements OnInit {
         res => { if(res!=null) {
           this.adapter = res;
           this.editMode = true;
-          this.payloadAnswer = {'answer': {Adapter: res}};
+          this.payloadAnswer = {'answer': {adapter: res}};
         }
         },
         err => { console.log(err); }
