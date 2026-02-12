@@ -63,12 +63,6 @@ export class AdaptersFormComponent implements OnInit {
   resourceService: ResourceService = this.injector.get(ResourceService);
   navigator: NavigationService = this.injector.get(NavigationService);
 
-  _hasUserConsent = environment.hasUserConsent;
-  privacyPolicyURL = environment.privacyPolicyURL;
-  privacyPolicy = false;
-  authorizedRepresentative = false;
-  agreedToTerms: boolean;
-
   protected readonly isDevMode = isDevMode;
 
   constructor(protected injector: Injector,
@@ -131,7 +125,7 @@ export class AdaptersFormComponent implements OnInit {
         res => { if(res!=null) {
           this.adapter = res;
           this.editMode = true;
-          this.payloadAnswer = {'answer': {Adapter: res}};
+          this.payloadAnswer = {'answer': {adapter: res}};
         }
         },
         err => { console.log(err); }

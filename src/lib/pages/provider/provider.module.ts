@@ -30,6 +30,8 @@ import {DeployableServicesListComponent} from "../admin/deployable-services-list
 import {DeployableServiceForm} from "../deployable-services/deployable-service-form";
 import {UpdateDeployableService} from "../deployable-services/update-deployable-service";
 import {AddFirstDeployableServiceComponent} from "../deployable-services/add-first-deployable-service.component";
+import {AdaptersFormComponent} from "../adapters/adapters-form.component";
+import {AdaptersListComponent} from "../admin/adapters-list.component";
 
 
 @NgModule({
@@ -57,6 +59,7 @@ import {AddFirstDeployableServiceComponent} from "../deployable-services/add-fir
     DatasourcesListComponent,
     TrainingListComponent,
     DeployableServicesListComponent,
+    AdaptersListComponent,
     SelectSubprofileComponent,
     DatasourceMetricsComponent,
     // FORMS
@@ -68,7 +71,8 @@ import {AddFirstDeployableServiceComponent} from "../deployable-services/add-fir
     TrainingResourceForm,
     UpdateTrainingResource,
     DeployableServiceForm,
-    UpdateDeployableService
+    UpdateDeployableService,
+    AdaptersFormComponent
   ]
 })
 

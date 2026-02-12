@@ -106,11 +106,6 @@ const appRoutes: Routes = [
     canActivate: [CanActivateViaAuthGuard]
   },
   {
-    path: 'adapters',
-    loadChildren: () => import('../lib/pages/adapters/adapters.module').then(m => m.AdaptersModule),
-    canActivate: [CanActivateViaAuthGuard]
-  },
-  {
     path: 'vocabulary-requests',
     component: VocabularyRequestsComponent,
     canActivate: [CanActivateViaAuthGuard],

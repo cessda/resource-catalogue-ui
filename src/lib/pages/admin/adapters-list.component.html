@@ -290,7 +290,7 @@
                           <div class="uk-align-right uk-margin-bottom">
                             @if (adapterBundle.catalogueId===catalogueConfigId) {
                               <button
-                                routerLink="/adapters/update/{{pidHandler.customEncodeURIComponent(adapterBundle.id)}}"
+                                routerLink="/provider/{{pidHandler.customEncodeURIComponent(adapterBundle.adapter.resourceOwner)}}/adapter/update/{{pidHandler.customEncodeURIComponent(adapterBundle.id)}}"
                                 class="uk-button uk-button-link"
                                 style="">
                                 <i class="fa fa-pencil fa-lg uk-margin-small-right" aria-hidden="true"></i>

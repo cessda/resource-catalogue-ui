@@ -33,6 +33,8 @@ import {
   RejectedDeployableServicesComponent
 } from "./dashboard/rejectedDeployableServices/rejected-deployable-services.component";
 import {RejectedDatasourcesComponent} from "./dashboard/rejectedDatasources/rejected-datasources.component";
+import {AdaptersFormComponent} from "../adapters/adapters-form.component";
+import {AdaptersListComponent} from "../admin/adapters-list.component";
 
 const providerRoutes: Routes = [
 
@@ -182,6 +184,14 @@ const providerRoutes: Routes = [
     }
   },
   {
+    path: ':providerId/adapter/add',
+    component: AdaptersFormComponent,
+    canActivate: [CanActivateViaAuthGuard],
+    data: {
+      breadcrumb: 'Add Adapter'
+    }
+  },
+  {
     path: ':providerId/service/:resourceId/select-subprofile', //for eosc only
     component: SelectSubprofileComponent,
     canActivate: [CanActivateViaAuthGuard],
@@ -267,6 +277,14 @@ const providerRoutes: Routes = [
     canActivate: [CanActivateViaAuthGuard],
     data: {
       breadcrumb: 'Edit Deployable Software'
+    }
+  },
+  {
+    path: ':providerId/adapter/update/:adapterId',
+    component: AdaptersFormComponent,
+    canActivate: [CanActivateViaAuthGuard],
+    data: {
+      breadcrumb: 'Edit Adapter'
     }
   },
   {
@@ -379,6 +397,14 @@ const providerRoutes: Routes = [
     canActivate: [CanActivateViaAuthGuard],
     data: {
       breadcrumb: 'All Deployable Software'
+    }
+  },
+  {
+    path: 'adapter/all',
+    component: AdaptersListComponent,
+    canActivate: [CanActivateViaAuthGuard],
+    data: {
+      breadcrumb: 'All Adapters'
     }
   }
 ];

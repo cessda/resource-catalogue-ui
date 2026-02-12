@@ -181,6 +181,12 @@
                 Add new Deployable Software
               </a>
             </li>
+            <li>
+              <a [routerLink]="['/provider/' + providerId + '/adapter/add/']">
+                <img src="../../../../assets/images/new-icons/add-service.svg" class="uk-margin-small-right">
+                Add new Adapter
+              </a>
+            </li>
           }
           <!--            <ng-container *ngIf="providerBundle?.templateStatus !== 'approved template'">
           <li uk-tooltip="Disabled until first resource approval.">
