@@ -1,21 +1,21 @@
 import {Component, OnInit} from '@angular/core';
-import {Datasource, ProviderBundle} from '../../../../domain/eic-model';
-import {ServiceProviderService} from '../../../../services/service-provider.service';
+import {Datasource, ProviderBundle} from '../../domain/eic-model';
+import {ServiceProviderService} from '../../services/service-provider.service';
 import {ActivatedRoute, Router} from '@angular/router';
-import {ResourceService} from '../../../../services/resource.service';
-import {Paging} from '../../../../domain/paging';
+import {ResourceService} from '../../services/resource.service';
+import {Paging} from '../../domain/paging';
 import {FormArray, UntypedFormBuilder, UntypedFormGroup} from '@angular/forms';
-import {URLParameter} from '../../../../domain/url-parameter';
-import {environment} from '../../../../../environments/environment';
-import {DatasourceService} from "../../../../services/datasource.service";
-import {NavigationService} from "../../../../services/navigation.service";
+import {URLParameter} from '../../domain/url-parameter';
+import {environment} from '../../../environments/environment';
+import {DatasourceService} from "../../services/datasource.service";
+import {NavigationService} from "../../services/navigation.service";
 
 declare var UIkit: any;
 
 @Component({
     selector: 'app-datasource-select',
     templateUrl: './datasource-select.component.html',
-    styleUrls: ['../services/service.component.css'],
+    styleUrls: ['../provider/dashboard/services/service.component.css'],
     standalone: false
 })
 

@@ -1,32 +1,32 @@
 import {UntypedFormArray, UntypedFormBuilder, FormControl, UntypedFormGroup, Validators} from '@angular/forms';
 import {Component, Injector, isDevMode, OnInit, ViewChild} from '@angular/core';
-import {AuthenticationService} from '../../../services/authentication.service';
-import {NavigationService} from '../../../services/navigation.service';
-import {ResourceService} from '../../../services/resource.service';
-import {ServiceExtensionsService} from '../../../services/service-extensions.service';
-import {Provider, Service, Datasource, Vocabulary, Type} from '../../../domain/eic-model';
-import {Paging} from '../../../domain/paging';
-import {URLValidator} from '../../../shared/validators/generic.validator';
-import {environment} from '../../../../environments/environment';
+import {AuthenticationService} from '../../services/authentication.service';
+import {NavigationService} from '../../services/navigation.service';
+import {ResourceService} from '../../services/resource.service';
+import {ServiceExtensionsService} from '../../services/service-extensions.service';
+import {Provider, Service, Datasource, Vocabulary, Type} from '../../domain/eic-model';
+import {Paging} from '../../domain/paging';
+import {URLValidator} from '../../shared/validators/generic.validator';
+import {environment} from '../../../environments/environment';
 import {ActivatedRoute} from '@angular/router';
-import {DatasourceService} from "../../../services/datasource.service";
+import {DatasourceService} from "../../services/datasource.service";
 import BitSet from "bitset";
-import {PremiumSortPipe} from "../../../shared/pipes/premium-sort.pipe";
-import {SurveyComponent} from "../../../../dynamic-catalogue/pages/dynamic-form/survey.component";
-import {Model} from "../../../../dynamic-catalogue/domain/dynamic-form-model";
-import {FormControlService} from "../../../../dynamic-catalogue/services/form-control.service";
+import {PremiumSortPipe} from "../../shared/pipes/premium-sort.pipe";
+import {SurveyComponent} from "../../../dynamic-catalogue/pages/dynamic-form/survey.component";
+import {Model} from "../../../dynamic-catalogue/domain/dynamic-form-model";
+import {FormControlService} from "../../../dynamic-catalogue/services/form-control.service";
 import {zip} from "rxjs";
-import {ConfigService} from "../../../services/config.service";
+import {ConfigService} from "../../services/config.service";
 
 declare var UIkit: any;
 
 @Component({
-    selector: 'app-datasource-subprofile-form',
-    templateUrl: './datasource-subprofile-form.component.html',
-    styleUrls: ['../../provider/service-provider-form.component.css'],
+    selector: 'app-datasource-form',
+    templateUrl: './datasource-form.component.html',
+    styleUrls: ['../provider/service-provider-form.component.css'],
     standalone: false
 })
-export class DatasourceSubprofileFormComponent implements OnInit {
+export class DatasourceFormComponent implements OnInit {
   @ViewChild(SurveyComponent) child: SurveyComponent
   model: Model = null;
   payloadAnswer: object = null;
@@ -278,7 +278,8 @@ export class DatasourceSubprofileFormComponent implements OnInit {
                 'id': this.openaireId,
                 'type': "Service@DataSource",
                 'serviceId': decodeURIComponent(this.resourceId),
-                'catalogueId': this.catalogueConfigId
+                'catalogueId': this.catalogueConfigId,
+                'resourceOwner': decodeURIComponent(this.providerId)
               }
             }
           };

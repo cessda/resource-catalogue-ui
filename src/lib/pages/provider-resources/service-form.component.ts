@@ -203,7 +203,6 @@ export class ServiceFormComponent implements OnInit {
         _service => {
           this.showLoader = false;
           return this.navigator.resourceDashboard(this.providerId, _service.id);  // navigate to resource-dashboard
-          // if (!this.editMode) return this.navigator.selectSubprofile(this.providerId, _service.id);  // navigate to select-subprofile
           // return this.router.dashboardResources(this.providerId);                  // navigate to provider dashboard -> resource list
           // return window.location.href = this._marketplaceServicesURL + _service.id; // navigate to marketplace
         },

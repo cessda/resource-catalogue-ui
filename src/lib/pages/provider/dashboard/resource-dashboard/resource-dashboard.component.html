@@ -45,22 +45,22 @@
 
       @if (resourceBundle?.status === 'approved') {
         <div class="menu_section border_top">
-          <div class="sidebar_heading">DATASOURCE SUBPROFILE</div>
+          <div class="sidebar_heading">DATASOURCE</div>
           <ul>
             <li>
               @if (!datasourceId) {
                 <a [routerLink]="['/provider/' + pidHandler.customEncodeURIComponent(providerPID) + '/resource/' + pidHandler.customEncodeURIComponent(resourcePID) + '/datasource/select']">
-                  <img src="../../../../../assets/images/new-icons/add-service.svg" class="uk-margin-small-right"> Enable Datasource Subprofile
+                  <img src="../../../../../assets/images/new-icons/add-service.svg" class="uk-margin-small-right"> Enable Datasource
                 </a>
               }
               @if (datasourceId) {
-                <a [routerLink]="['/provider/' + pidHandler.customEncodeURIComponent(providerPID) + '/resource/' + pidHandler.customEncodeURIComponent(resourcePID) + '/subprofile/datasource']">
-                  <img src="../../../../../assets/images/new-icons/update-service.svg" class="uk-margin-small-right"> Edit Datasource Subprofile
+                <a [routerLink]="['/provider/' + pidHandler.customEncodeURIComponent(providerPID) + '/resource/' + pidHandler.customEncodeURIComponent(resourcePID) + '/datasource']">
+                  <img src="../../../../../assets/images/new-icons/update-service.svg" class="uk-margin-small-right"> Edit Datasource
                 </a>
               }
               @if (datasourceId) {
                 <a (click)="showDatasourceDeletionModal()">
-                  <img src="../../../../../assets/images/new-icons/trashcan.svg" class="uk-margin-small-right"> Delete Datasource Subprofile
+                  <img src="../../../../../assets/images/new-icons/trashcan.svg" class="uk-margin-small-right"> Delete Datasource
                 </a>
               }
               <!--            <ng-container *ngIf="datasourceId">-->
@@ -75,14 +75,14 @@
 
   @if (resourceBundle?.status !== 'approved') {
     <div class="menu_section border_top" uk-tooltip="Disabled until first service approval.">
-      <div class="sidebar_heading">DATASOURCE SUBPROFILE</div>
+      <div class="sidebar_heading">DATASOURCE</div>
       <ul class="uk-disabled">
         <li>
           @if (!datasourceId) {
-            <a><img src="../../../../../assets/images/new-icons/add-service.svg" class="uk-margin-small-right"> Enable Datasource Subprofile</a>
+            <a><img src="../../../../../assets/images/new-icons/add-service.svg" class="uk-margin-small-right"> Enable Datasource</a>
           }
           @if (datasourceId) {
-            <a><img src="../../../../../assets/images/new-icons/add-service.svg" class="uk-margin-small-right"> Edit Datasource Subprofile</a>
+            <a><img src="../../../../../assets/images/new-icons/add-service.svg" class="uk-margin-small-right"> Edit Datasource</a>
           }
         </li>
       </ul>
@@ -213,7 +213,7 @@
 </div>
 
 <div id="datasourceDeletionModal" uk-modal>
-  <div class="uk-modal-dialog uk-modal-header uk-h4">Delete Datasource Subprofile</div>
+  <div class="uk-modal-dialog uk-modal-header uk-h4">Delete Datasource</div>
   <div class="uk-modal-dialog uk-modal-body uk-margin-auto-vertical">
     <div class="uk-margin-medium-bottom">
       <p>You are about to delete the datasource</p>

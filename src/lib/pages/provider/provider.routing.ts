@@ -12,10 +12,10 @@ import {ServiceEditComponent} from '../provider-resources/service-edit.component
 import {ServiceUploadComponent} from '../provider-resources/service-upload.component';
 import {MonitoringExtensionFormComponent} from "../provider-resources/monitoring-extension/monitoring-extension-form.component";
 import {HelpdeskExtensionFormComponent} from "../provider-resources/helpdesk-extension/helpdesk-extension-form.component";
-import {DatasourceSubprofileFormComponent} from "../provider-resources/service-subprofiles/datasource-subprofile-form.component";
+import {DatasourceFormComponent} from "../datasource/datasource-form.component";
 import {environment} from '../../../environments/environment';
 import {RejectedServicesComponent} from './dashboard/rejectedServices/rejected-services.component';
-import {DatasourceSelectComponent} from "./dashboard/datasources/datasource-select.component";
+import {DatasourceSelectComponent} from "../datasource/datasource-select.component";
 import {RejectedTrainingResourcesComponent} from "./dashboard/rejectedTrainingResources/rejected-training-resources.component";
 // import {ResourceGuidelinesFormComponent} from "../provider-resources/resource-guidelines/resource-guidelines-form.component";
 import {TrainingResourceForm} from "../training-resources/training-resource-form";
@@ -23,7 +23,6 @@ import {UpdateTrainingResource} from "../training-resources/update-training-reso
 import {TrainingListComponent} from "../admin/training-list.component";
 import {AddFirstTrainingResourceComponent} from "../training-resources/add-first-training-resource.component";
 import {DatasourcesListComponent} from "../admin/datasources-list.component";
-import {SelectSubprofileComponent} from "../provider-resources/service-subprofiles/select-subprofile.component";
 import {DatasourceMetricsComponent} from "../provider-resources/service-subprofiles/datasource-metrics.component";
 import {DeployableServicesListComponent} from "../admin/deployable-services-list.component";
 import {DeployableServiceForm} from "../deployable-services/deployable-service-form";
@@ -192,15 +191,7 @@ const providerRoutes: Routes = [
     }
   },
   {
-    path: ':providerId/service/:resourceId/select-subprofile', //for eosc only
-    component: SelectSubprofileComponent,
-    canActivate: [CanActivateViaAuthGuard],
-    data: {
-      breadcrumb: 'Select Subprofile'
-    }
-  },
-  {
-    path: ':providerId/resource/:resourceId/datasource/select',
+    path: ':providerId/datasource/select',
     component: DatasourceSelectComponent,
     canActivate: [CanActivateViaAuthGuard],
     data: {
@@ -208,16 +199,16 @@ const providerRoutes: Routes = [
     }
   },
   {
-    path: ':providerId/resource/:resourceId/subprofile/datasource',
-    component: DatasourceSubprofileFormComponent,
+    path: ':providerId/datasource/add',
+    component: DatasourceFormComponent,
     canActivate: [CanActivateViaAuthGuard],
     data: {
       breadcrumb: 'Add Datasource'
     }
   },
   {
-    path: ':providerId/resource/:resourceId/subprofile/datasource/addOpenAIRE/:openaireId',
-    component: DatasourceSubprofileFormComponent,
+    path: ':providerId/datasource/addOpenAIRE/:openaireId',
+    component: DatasourceFormComponent,
     canActivate: [CanActivateViaAuthGuard],
     data: {
       breadcrumb: 'Add Datasource'
