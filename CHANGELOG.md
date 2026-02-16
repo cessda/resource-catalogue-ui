@@ -49,6 +49,43 @@
 
 
 
+## [5.4.0](https://github.com/madgeek-arc/resource-catalogue-ui/compare/v5.3.0...v5.4.0) (2025-12-23)
+
+
+### Features
+
+* login functionality rework ([95dd660](https://github.com/madgeek-arc/resource-catalogue-ui/commit/95dd660719eb56758bc7dee8499376262906f249))
+
+
+### Bug Fixes
+
+* configuration templates submission error ([2c332a0](https://github.com/madgeek-arc/resource-catalogue-ui/commit/2c332a0e88146586fe094c41e668d698a1aa2dcd))
+* header renders correctly when logging in ([9ba1fc3](https://github.com/madgeek-arc/resource-catalogue-ui/commit/9ba1fc30909aa2900a41c4fa0dd710d80f1288d3))
+* Re-import CommonModule ([4356999](https://github.com/madgeek-arc/resource-catalogue-ui/commit/4356999c076a23846a8ca88dfe5948d3c433e3b5))
+* Strip time from ISO strings to handle partial date values ([5410f8f](https://github.com/madgeek-arc/resource-catalogue-ui/commit/5410f8ff7fd58a181236a6d2504c86abba946cf1))
+* update wildcard paths on proxy.conf.json ([ddff569](https://github.com/madgeek-arc/resource-catalogue-ui/commit/ddff56988e21f793fd8d3171888a5ee3b83bd52b))
+
+## [5.3.0](https://github.com/madgeek-arc/resource-catalogue-ui/compare/v5.2.0...v5.3.0) (2025-11-06)
+
+
+### Features
+
+* add accounting metrics ([e017906](https://github.com/madgeek-arc/resource-catalogue-ui/commit/e017906b7854bb395fbd8843f24c9493ffd8126a))
+* add date range for accounting metrics ([b0ca4c5](https://github.com/madgeek-arc/resource-catalogue-ui/commit/b0ca4c53be118ba7488efe4183a73da2267c5a4e))
+* add global helpdesk button ([6adbcb3](https://github.com/madgeek-arc/resource-catalogue-ui/commit/6adbcb3ce92dddd761c7a65eb6fe2f06651fbfb0))
+* Complete helpdesk implementation with Zammad integration ([7f07ef3](https://github.com/madgeek-arc/resource-catalogue-ui/commit/7f07ef3db92afb76f1b03d60f01bf53d417ecf84))
+* display id labels ([72bc977](https://github.com/madgeek-arc/resource-catalogue-ui/commit/72bc977d2a312fd00c16f61ef67044971a621080))
+* implement GDPR-compliant helpdesk ticket system ([25fcfae](https://github.com/madgeek-arc/resource-catalogue-ui/commit/25fcfae7de1abc620bdd80ba710c67a2fcf9eb33))
+* Implement GDPR-compliant helpdesk ticket system with Zammad integration ([0f890f3](https://github.com/madgeek-arc/resource-catalogue-ui/commit/0f890f36ae42741f6929f2957bcd53237e32a91e))
+* restore My Tickets functionality and improve helpdesk integration ([9f06e46](https://github.com/madgeek-arc/resource-catalogue-ui/commit/9f06e4651622147d1fe859c233ba0592c0cb4f11))
+
+
+### Bug Fixes
+
+* removes debug logs from production builds ([38fa890](https://github.com/madgeek-arc/resource-catalogue-ui/commit/38fa890b6c81d31108d55f717cda59965f0aa072))
+* Resolve modal and filtering issues in My Tickets ([0d998ab](https://github.com/madgeek-arc/resource-catalogue-ui/commit/0d998ab5dfa3c122cc27f1acb59a753f24b8cc4b))
+* use queryParams instead of matrix params in breadcrumbs to prevent NG04003 error ([4ffba37](https://github.com/madgeek-arc/resource-catalogue-ui/commit/4ffba37a4e83173a62e5bfad17fe790508c6aba1))
+
 ## [5.2.0](https://github.com/madgeek-arc/resource-catalogue-ui/compare/v5.1.0...v5.2.0) (2025-09-15)
 
 

@@ -14,8 +14,9 @@ import {GuidelinesService} from "../../../../services/guidelines.service";
 declare var UIkit: any;
 
 @Component({
-  selector: 'app-resource-dashboard',
-  templateUrl: './resource-dashboard.component.html',
+    selector: 'app-resource-dashboard',
+    templateUrl: './resource-dashboard.component.html',
+    standalone: false
 })
 export class ResourceDashboardComponent implements OnInit {
 
@@ -76,14 +77,12 @@ export class ResourceDashboardComponent implements OnInit {
         this.guidelinesService.getGuidelinesOfResource(this.resourceId).subscribe(
           res => {
             if (res != null) this.resourceGuidelines = res;
-            console.log(res);
           },
           err => console.log(err),
           () => {
             this.guidelinesService.getInteroperabilityRecords('0', '9999').subscribe(
               res => {
                 if (res != null) this.guidelines = res['results'];
-                console.log(this.guidelines);
               }
             );
           }

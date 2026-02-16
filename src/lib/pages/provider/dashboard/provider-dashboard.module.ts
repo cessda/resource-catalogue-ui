@@ -10,13 +10,14 @@ import {ServicesComponent} from './services/services.component';
 import {MessagesComponent} from './messages/messages.component';
 import {DashboardComponent} from './dashboard.component';
 import {ServiceStatsComponent} from './resource-dashboard/service-stats.component';
-import {MarkdownModule} from 'ngx-markdown';
+// import {MarkdownModule} from 'ngx-markdown';
 import {ProviderHistoryComponent} from './providerHistory/provider-history.component';
 import {ProviderFullHistoryComponent} from './providerHistory/provider-full-history.component';
 import {HighchartsChartModule} from "highcharts-angular";
 import {TrainingResourcesComponent} from "./trainingResources/training-resources.component";
 import {GuidelinesComponent} from "./guidelines/guidelines.component";
 import {DeployableServicesComponent} from "./deployable-services/deployable-services.component";
+import {ProviderAccountingStatsComponent} from "./providerAccountingStats/provider-accounting-stats.component";
 
 @NgModule({
   imports: [
@@ -27,12 +28,13 @@ import {DeployableServicesComponent} from "./deployable-services/deployable-serv
     ProviderDashboardRouting,
     ReusableComponentsModule,
     HighchartsChartModule,
-    MarkdownModule.forChild(),
+    // MarkdownModule.forChild(),
 
   ],
   declarations: [
     DashboardComponent,
     ProviderStatsComponent,
+    ProviderAccountingStatsComponent,
     ProviderHistoryComponent,
     ProviderFullHistoryComponent,
     ProviderInfoComponent,

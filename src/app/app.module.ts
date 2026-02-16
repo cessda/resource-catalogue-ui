@@ -1,6 +1,6 @@
-import {NgModule, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, APP_INITIALIZER} from '@angular/core';
+import { NgModule, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, inject, provideAppInitializer } from '@angular/core';
 import {CommonModule, DatePipe} from '@angular/common';
-import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
+import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {AppComponent} from './app.component';
 // import {HomeComponent} from '../lib/pages/home/home.component';
@@ -36,7 +36,7 @@ import {EmailService} from '../lib/services/email.service';
 import {EOSCTopMenuComponent} from './shared/topmenu/topmenu.component';
 import {BecomeAProviderComponent} from './pages/serviceprovider/become-a-provider.component';
 import {VocabularyRequestsComponent} from '../lib/pages/admin/vocabulary-requests.component';
-import {MarkdownModule} from "ngx-markdown";
+// import {MarkdownModule} from "ngx-markdown";
 import {HighchartsChartModule} from "highcharts-angular";
 import {environment} from '../environments/environment';
 import {HomeComponent} from './pages/home/home.component';
@@ -51,8 +51,10 @@ import {GuidelinesService} from "../lib/services/guidelines.service";
 import {pidHandler} from "../lib/shared/pid-handler/pid-handler.service";
 import {FormControlService} from "../dynamic-catalogue/services/form-control.service";
 import {AdaptersService} from "../lib/services/adapters.service";
+import {HelpdeskService} from "./services/helpdesk.service";
 import {DeployableServiceService} from "../lib/services/deployable-service.service";
 import {ConfigService} from '../lib/services/config.service';
+import {AccountingStatsService} from "../lib/services/accounting-stats.service";
 
 declare var require: any;
 
@@ -73,96 +75,90 @@ export function highchartsFactory() {
   return hc;
 }
 
-@NgModule({
-  declarations: [
-    // MAIN
-    AppComponent,
-    HomeComponent,
-    ProvidersStatsComponent,
-    ResourcesStatsComponent,
-    BecomeAProviderComponent,
-    // PERSISTENT
-    EOSCTopMenuComponent,
-    // BreadcrumbsComponent,
-    FeedbackComponent,
-    // USER
-    // DashboardComponent,
-    // ServiceStatsComponent,
-    // // SERVICE PROVIDER ADMIN
-    // ServiceProviderFormComponent,
-    // ServiceProviderInfoComponent,
-    // UpdateServiceProviderComponent,
-    // AddFirstServiceComponent,
-    // MyServiceProvidersComponent,
-    // ADMIN
-    VocabularyRequestsComponent,
-    // ServiceProvidersListComponent,
-    // FORMS
-    // ServiceEditComponent,
-    // ServiceFormComponent,
-    // ServiceUploadComponent,
-    // EoscCommonMainHeader,
-    // EoscCommonMainFooter
-  ],
-  imports: [
-    RouterModule,
-    CommonModule,
-    HttpClientModule,
-    FormsModule,
-    ReactiveFormsModule,
-    ReusableComponentsModule,
-    SharedModule,
-    // StarRatingModule.forRoot(),
-    SupportModule,
-    // ProviderModule,
-    // ProviderDashboardModule,
-    HighchartsChartModule,
-    CookieLawModule,
-    MarkdownModule.forRoot(),
-    AppRoutingModule,
-  ],
-  schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
-  providers: [
-    {
-      provide: HTTP_INTERCEPTORS,
-      useClass: AuthenticationInterceptor,
-      multi: true
-    },
-    {
-      provide: APP_INITIALIZER,
-      useFactory: initConfig,
-      deps: [ConfigService],
-      multi: true
-    },
-    AuthenticationService,
-    CanActivateViaAuthGuard,
-    CanActivateViaPubGuard,
-    NavigationService,
-    ResourceService,
-    DatasourceService,
-    TrainingResourceService,
-    DeployableServiceService,
-    ServiceProviderService,
-    ServiceExtensionsService,
-    ResourceExtrasService,
-    GuidelinesService,
-    CatalogueService,
-    EmailService,
-    DatePipe,
-    RecommendationsService,
-    pidHandler,
-    FormControlService,
-    AdaptersService
-  ],
-  exports: [
-    // FooterComponent,
-    // TopMenuComponent,
-    EOSCTopMenuComponent,
-    BreadcrumbsComponent,
-    DashboardBreadcrumbsComponent,
-    FeedbackComponent
-  ],
-  bootstrap: [AppComponent]
-})
+@NgModule({ declarations: [
+        // MAIN
+        AppComponent,
+        HomeComponent,
+        ProvidersStatsComponent,
+        ResourcesStatsComponent,
+        BecomeAProviderComponent,
+        // PERSISTENT
+        EOSCTopMenuComponent,
+        // BreadcrumbsComponent,
+        FeedbackComponent,
+        // USER
+        // DashboardComponent,
+        // ServiceStatsComponent,
+        // // SERVICE PROVIDER ADMIN
+        // ServiceProviderFormComponent,
+        // ServiceProviderInfoComponent,
+        // UpdateServiceProviderComponent,
+        // AddFirstServiceComponent,
+        // MyServiceProvidersComponent,
+        // ADMIN
+        VocabularyRequestsComponent,
+        // ServiceProvidersListComponent,
+        // FORMS
+        // ServiceEditComponent,
+        // ServiceFormComponent,
+        // ServiceUploadComponent,
+        // EoscCommonMainHeader,
+        // EoscCommonMainFooter
+    ],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
+    exports: [
+        // FooterComponent,
+        // TopMenuComponent,
+        EOSCTopMenuComponent,
+        BreadcrumbsComponent,
+        DashboardBreadcrumbsComponent,
+        FeedbackComponent
+    ],
+    bootstrap: [AppComponent], imports: [RouterModule,
+        CommonModule,
+        FormsModule,
+        ReactiveFormsModule,
+        ReusableComponentsModule,
+        SharedModule,
+        // StarRatingModule.forRoot(),
+        SupportModule,
+        // ProviderModule,
+        // ProviderDashboardModule,
+        HighchartsChartModule,
+        CookieLawModule,
+        // MarkdownModule.forRoot(),
+        AppRoutingModule], providers: [
+        {
+            provide: HTTP_INTERCEPTORS,
+            useClass: AuthenticationInterceptor,
+            multi: true
+        },
+        provideAppInitializer(() => {
+        const initializerFn = (initConfig)(inject(ConfigService));
+        return initializerFn();
+      }),
+        AuthenticationService,
+        CanActivateViaAuthGuard,
+        CanActivateViaPubGuard,
+        NavigationService,
+        ResourceService,
+        DatasourceService,
+        TrainingResourceService,
+        DeployableServiceService,
+        ServiceProviderService,
+        ServiceExtensionsService,
+        ResourceExtrasService,
+        GuidelinesService,
+        CatalogueService,
+        EmailService,
+        DatePipe,
+        RecommendationsService,
+        pidHandler,
+        FormControlService,
+        AdaptersService,
+        HelpdeskService,
+        AccountingStatsService,
+        provideHttpClient(withInterceptorsFromDi())
+    ] })
 export class AppModule {
 }
