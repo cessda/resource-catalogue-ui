@@ -236,10 +236,11 @@
                 </div>
                 <div class="uk-width-4-5" style="padding-left: 100px;">
                   <div class="providerName uk-margin-bottom">
-                    <a [routerLink]="['/dashboard', datasourceBundle.catalogueId, datasourceBundle.resourceOrganisation, 'resource-dashboard', datasourceBundle.datasource.serviceId]"
-                      data-uk-tooltip title="Go to the service dashboard">
-                    {{ datasourceBundle.name }}
-                  </a>
+<!--                    <a [routerLink]="['/dashboard', datasourceBundle.catalogueId, datasourceBundle.resourceOrganisation, 'resource-dashboard', datasourceBundle.datasource.serviceId]"-->
+<!--                      data-uk-tooltip title="Go to the service dashboard">-->
+<!--                    </a>-->
+                    {{ datasourceBundle.datasource.name }}
+
                 </div>
                 <!--                          <div class="uk-margin-small-top">-->
                 <!--                            <span class="statusLabel">Datasource ID: </span>{{ datasourceBundle.id }}-->
@@ -277,7 +278,7 @@
     <div class="uk-align-right uk-margin-bottom">
       @if (datasourceBundle.catalogueId===catalogueConfigId) {
         <button
-          routerLink="/provider/{{pidHandler.customEncodeURIComponent(datasourceBundle.datasource.resourceOwner)}}/datasource/{{pidHandler.customEncodeURIComponent(datasourceBundle.id)}}"
+          routerLink="/provider/{{pidHandler.customEncodeURIComponent(datasourceBundle.datasource.resourceOwner)}}/datasource/update/{{pidHandler.customEncodeURIComponent(datasourceBundle.id)}}"
           class="uk-button uk-button-link"
           style="">
           <i class="fa fa-pencil fa-lg uk-margin-small-right" aria-hidden="true"></i>

@@ -279,6 +279,14 @@ const providerRoutes: Routes = [
     }
   },
   {
+    path: ':providerId/datasource/update/:datasourceId',
+    component: DatasourceFormComponent,
+    canActivate: [CanActivateViaAuthGuard],
+    data: {
+      breadcrumb: 'Edit Datasource'
+    }
+  },
+  {
     path: ':catalogueId/:providerId/resource/view/:resourceId',
     component: ServiceEditComponent,
     canActivate: [CanActivateViaAuthGuard],

@@ -62,9 +62,9 @@ export class ResourceDashboardComponent implements OnInit {
       res => { if (res!=null) this.resourceBundle = res },
       error => {},
       () => {
-        this.datasourceService.getDatasourceByServiceId(this.resourceId, this.catalogueId).subscribe(
+/*        this.datasourceService.getDatasourceByServiceId(this.resourceId, this.catalogueId).subscribe( // TODO check
           res => { if (res!=null) this.datasourceId = res.id }
-        );
+        );*/
         if (this.catalogueId === this.catalogueConfigId){
           this.serviceExtensionsService.getMonitoringByServiceId(this.resourceId).subscribe(
             res => { if (res!=null) this.monitoringId = res.id }

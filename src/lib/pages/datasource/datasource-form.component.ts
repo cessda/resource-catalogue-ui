@@ -288,25 +288,16 @@ export class DatasourceFormComponent implements OnInit {
       }
     );
 
-    if (this.route.snapshot.paramMap.get('resourceId')) {
-      this.serviceId = this.route.snapshot.paramMap.get('resourceId');
-      this.resourceType = 'service';
-    }
     if (this.route.snapshot.paramMap.get('datasourceId')) {
-      this.serviceId = this.route.snapshot.paramMap.get('datasourceId');
+      this.datasourceId = this.route.snapshot.paramMap.get('datasourceId');
       this.resourceType = 'datasource';
     }
-    if (this.route.snapshot.paramMap.get('trainingResourceId')) {
-      this.serviceId = this.route.snapshot.paramMap.get('trainingResourceId');
-      this.resourceType = 'training_resource';
-    }
-    this.serviceForm.get('serviceId').setValue(decodeURIComponent(this.serviceId)); // revisit?
 
     if (!this.addOpenAIRE) {
-      this.datasourceService.getDatasourceByServiceId(this.serviceId).subscribe(
+      this.datasourceService.getDatasourceBundleById(this.datasourceId, this.catalogueConfigId).subscribe( //TODO check
         res => {
           if (res != null) {
-            this.datasource = res;
+            this.datasource = res.datasource;
             this.editMode = true;
           }
         },
@@ -315,13 +306,14 @@ export class DatasourceFormComponent implements OnInit {
         },
         () => {
           if (this.datasource) { //fill the form -->
-            const parsedDatasource = { ...this.datasource };
+            console.log(this.datasource);
+/*            const parsedDatasource = { ...this.datasource };
             ['versionControl', 'thematic', 'harvestable'].forEach(field => {
               if (typeof parsedDatasource[field] === 'boolean') {
                 parsedDatasource[field] = parsedDatasource[field].toString();
               }
-            });
-            this.payloadAnswer = { 'answer': { datasource: parsedDatasource } };
+            });*/
+            this.payloadAnswer = { 'answer': { datasource: this.datasource } };
           }
         }
       );

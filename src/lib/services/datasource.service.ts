@@ -115,7 +115,7 @@ export class DatasourceService {
     return this.http.patch(this.base + `/datasource/audit/${id}?actionType=${action}&comment=${comment}`, this.options);
   }
 
-  getDatasourceByServiceId(serviceId: string, catalogueId?:string){
+/*  getDatasourceByServiceId(serviceId: string, catalogueId?:string){
     serviceId = decodeURIComponent(serviceId);
 
     if(!catalogueId) catalogueId = this.catalogueConfigId;
@@ -124,7 +124,7 @@ export class DatasourceService {
       return this.http.get<Datasource>(this.base + `/datasource/byService/${serviceId}?catalogue_id=${catalogueId}`, this.options);
     else
       return this.http.get<Datasource>(this.base + `/catalogue/${catalogueId}/datasource/${serviceId}`, this.options);
-  }
+  }*/
 
   getOpenAIREMetrics(datasourceId: string) {
     datasourceId = decodeURIComponent(datasourceId);
