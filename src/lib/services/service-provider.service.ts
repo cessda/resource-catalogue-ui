@@ -9,7 +9,7 @@ import {
   ProviderBundle,
   ProviderRequest,
   ServiceHistory,
-  VocabularyCuration, TrainingResourceBundle
+  VocabularyCuration, TrainingResourceBundle, DatasourceBundle
 } from '../domain/eic-model';
 import {environment} from '../../environments/environment';
 import {Observable} from 'rxjs';
@@ -165,10 +165,10 @@ export class ServiceProviderService {
       }
     }
     if (active === 'statusAll') {
-      return this.http.get<Paging<Datasource>>(this.base +
+      return this.http.get<Paging<DatasourceBundle>>(this.base +
         `/datasource/byProvider/${id}?from=${from}&quantity=${quantity}&order=${order}&sort=${sort}&status=${status}&keyword=${query}`);
     }
-    return this.http.get<Paging<Datasource>>(this.base +
+    return this.http.get<Paging<DatasourceBundle>>(this.base +
       `/datasource/byProvider/${id}?from=${from}&quantity=${quantity}&order=${order}&sort=${sort}&active=${active}&status=${status}&keyword=${query}`);
   }
 

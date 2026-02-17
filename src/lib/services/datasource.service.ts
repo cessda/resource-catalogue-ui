@@ -30,11 +30,6 @@ export class DatasourceService {
     return this.http.delete(this.base + '/datasource/' + id, this.options);
   }
 
-  deleteDatasourceWithoutAdminRights(catalogueId: string, serviceId: string) {
-    serviceId = decodeURIComponent(serviceId);
-    return this.http.delete(this.base + `/datasource/${catalogueId}/${serviceId}`, this.options);
-  }
-
   getDatasourceBundles(from: string, quantity: string, sort: string, order: string, query: string,
                        status: string, catalogue_id: string[], service_id: string[]) {
     let params = new HttpParams();
@@ -102,12 +97,9 @@ export class DatasourceService {
     return this.http.patch(this.base + `/datasource/verify/${id}?active=${active}&status=${status}`, {}, this.options);
   }
 
-  activateDatasource(id: string, version: string, active: boolean) { // toggles active/inactive datasource
+  activateDatasource(id: string, active: boolean) { // toggles active/inactive datasource
     id = decodeURIComponent(id);
-    if (version === null) {
-      return this.http.patch(this.base + `/datasource/setActive/${id}?active=${active}`, this.options);
-    }
-    return this.http.patch(this.base + `/datasource/setActive/${id}?active=${active}&version=${version}`, this.options); // copy for provider without version
+    return this.http.patch(this.base + `/datasource/setActive/${id}?active=${active}`, this.options);
   }
 
   auditDatasource(id: string, action: string, comment: string) {

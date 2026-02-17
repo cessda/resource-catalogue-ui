@@ -520,16 +520,16 @@ export class DatasourceFormComponent implements OnInit {
 
   deleteDatasource() {
     this.showLoader = true;
-    this.datasourceService.deleteDatasourceWithoutAdminRights(this.datasource.catalogueId, this.datasource.serviceId).subscribe(
+    this.datasourceService.deleteDatasource(this.datasource.catalogueId).subscribe( // old deleteDatasourceWithoutAdminRights
       res => {},
       error => {
         this.showLoader = false;
         this.errorMessage = 'Something went bad. ' + error.error ;
-        return this.navigator.resourceDashboard(this.providerId, this.datasource.serviceId); // fixme: Datasource providerId -2test
+        // return this.navigator.resourceDashboard(this.providerId, this.datasource.serviceId); // fixme: Datasource providerId -2test
       },
       () => {
         this.showLoader = false;
-        return this.navigator.resourceDashboard(this.providerId, this.datasource.serviceId); // fixme: Datasource providerId -2test
+        // return this.navigator.resourceDashboard(this.providerId, this.datasource.serviceId); // fixme: Datasource providerId -2test
       }
     );
   }
