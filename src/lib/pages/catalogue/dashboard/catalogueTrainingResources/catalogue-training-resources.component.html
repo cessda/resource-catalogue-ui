@@ -9,7 +9,7 @@
           </div>
           <div class="uk-margin-medium-left">
             <h3 class="uk-margin-remove">{{catalogueBundle.catalogue.name}}</h3>
-            <div><span class="status-label">Catalogue Status: </span>{{ catalogueBundle.status.substr(0,catalogueBundle.status.indexOf(' ')) | titlecase }}</div>
+            <div><span class="status-label">Catalogue Status: </span>{{ catalogueBundle.status | titlecase }}</div>
           </div>
         </div>
       }
