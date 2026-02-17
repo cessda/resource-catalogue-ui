@@ -45,19 +45,6 @@ export class DeployableServicesListComponent implements OnInit {
   };
   dataForm: UntypedFormGroup;
 
-  extrasFormPrepare = {
-    researchCategories: this.fb.array([this.fb.control('')]),
-    eoscIFGuidelines: this.fb.array([
-      this.fb.group({
-        label: [''],
-        pid: [''],
-        semanticRelationship: [''],
-        url: ['']
-      })
-    ])
-  };
-  extrasForm: UntypedFormGroup;
-
   urlParams: URLParameter[] = [];
 
   commentAuditControl = new UntypedFormControl();
@@ -124,7 +111,6 @@ export class DeployableServicesListComponent implements OnInit {
     } else {
       this.dataForm = this.fb.group(this.formPrepare);
       this.providersDropdownForm = this.fb.group(this.providersFormPrepare);
-      this.extrasForm = this.fb.group(this.extrasFormPrepare);
 
       this.urlParams = [];
       this.route.queryParams
@@ -548,133 +534,6 @@ export class DeployableServicesListComponent implements OnInit {
         }
       );
   }
-
-  /** resourceExtras--> **/
-  /*toggleHorizontalService(dsBundle: DeployableServiceBundle) {
-    UIkit.modal('#spinnerModal').show();
-    this.resourceExtrasService.updateHorizontalService(dsBundle.id, 'deployable_software', dsBundle.catalogueId, !dsBundle?.resourceExtras?.horizontalService).subscribe(
-      res => {},
-      err => {
-        UIkit.modal('#spinnerModal').hide();
-        console.log(err)
-      },
-      () => {
-        UIkit.modal('#spinnerModal').hide();
-        location.reload();
-      }
-    );
-  }
-
-  showResourceCategories(dsBundle: DeployableServiceBundle) {
-    this.selectedDeployableService = dsBundle;
-    if (this.selectedDeployableService) {
-      this.extrasFormPrep(this.selectedDeployableService);
-      this.extrasForm.patchValue(this.selectedDeployableService.resourceExtras);
-      UIkit.modal('#researchCategoriesModal').show();
-    }
-  }
-
-  showEoscIFGuidelines(dsBundle: DeployableServiceBundle) {
-    this.selectedDeployableService = dsBundle;
-    if (this.selectedDeployableService) {
-      this.extrasFormPrep(this.selectedDeployableService);
-      this.extrasForm.patchValue(this.selectedDeployableService.resourceExtras);
-      UIkit.modal('#eoscIFGuidelinesModal').show();
-    }
-  }
-
-  updateResearchCategories(dsBundle: DeployableServiceBundle) {
-    UIkit.modal('#spinnerModal').show();
-    this.resourceExtrasService.updateResearchCategories(dsBundle.id, 'deployable_software', dsBundle.catalogueId, this.extrasForm.value.researchCategories).subscribe(
-      res => {},
-      err => {
-        UIkit.modal('#spinnerModal').hide();
-        console.log(err);
-      },
-      () => {
-        UIkit.modal('#spinnerModal').hide();
-        location.reload();
-      }
-    );
-  }
-
-  updateEoscIFGuidelines(dsBundle: DeployableServiceBundle) {
-    UIkit.modal('#spinnerModal').show();
-    this.resourceExtrasService.updateEoscIFGuidelines(dsBundle.id, 'deployable_software', dsBundle.catalogueId, this.extrasForm.value.eoscIFGuidelines).subscribe(
-      res => {},
-      err => {
-        UIkit.modal('#spinnerModal').hide();
-        console.log(err);
-      },
-      () => {
-        UIkit.modal('#spinnerModal').hide();
-        location.reload();
-      }
-    );
-  }
-
-  extrasFormPrep(dsBundle: DeployableServiceBundle){
-    //resets the 2 parts of the form and then fills them
-    this.extrasForm.setControl('researchCategories', this.fb.array([this.fb.control('')]));
-    this.extrasForm.setControl('eoscIFGuidelines',
-      this.fb.array([this.fb.group({
-        label: [''],
-        pid: [''],
-        semanticRelationship: [''],
-        url: ['']
-      })
-      ]));
-    if ( dsBundle?.resourceExtras?.researchCategories ) {
-      for (let i = 0; i < dsBundle.resourceExtras.researchCategories.length - 1; i++) {
-        this.push('researchCategories');
-      }
-    }
-    if ( dsBundle?.resourceExtras?.eoscIFGuidelines ) {
-      for (let i = 0; i < dsBundle.resourceExtras.eoscIFGuidelines.length - 1; i++) {
-        this.pushEoscIFGuidelines();
-      }
-    }
-  }*/
-  /** <--resourceExtras **/
-
-  /** eoscIFGuidelines--> **/
-  /*newEoscIFGuidelines(): FormGroup {
-    return this.fb.group({
-      label: [''],
-      pid: [''],
-      semanticRelationship: [''],
-      url: ['']
-    });
-  }
-
-  get eoscIFGuidelinesArray() {
-    return this.extrasForm.get('eoscIFGuidelines') as FormArray;
-  }
-
-  pushEoscIFGuidelines() {
-    this.eoscIFGuidelinesArray.push(this.newEoscIFGuidelines());
-  }
-
-  removeEoscIFGuidelines(index: number) {
-    this.eoscIFGuidelinesArray.removeAt(index);
-  }
-*/
-  /** <--eoscIFGuidelines **/
-
-  /** manage form arrays--> **/
-  getFieldAsFormArray(field: string) {
-    return this.extrasForm.get(field) as UntypedFormArray;
-  }
-
-  push(field: string) {
-    this.getFieldAsFormArray(field).push(this.fb.control(''));
-  }
-
-  remove(field: string, i: number) {
-    this.getFieldAsFormArray(field).removeAt(i);
-  }
-
-  /** <--manage form arrays **/
 
   toggleService(dsBundle: DeployableServiceBundle) {
     UIkit.modal('#spinnerModal').show();

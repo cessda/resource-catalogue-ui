@@ -506,13 +506,6 @@
                                     <li class="uk-nav-divider"></li>
                                   </ng-container>
 
-                                  <ng-container class="uk-margin-small-bottom">
-                                    <li (click)="showEoscIFGuidelines(serviceBundle)">
-                                      <a><i class="fa fa-edit fa-lg uk-margin-small-right"></i>Update EOSC IF Guidelines</a>
-                                    </li>
-                                    <li class="uk-nav-divider"></li>
-                                  </ng-container>
-
                                   <ng-container *ngIf="isProviderActive(serviceBundle.service.resourceOwner) ; else elseBlockList">
                                     <div>
                                       <li class="uk-button uk-button-link uk-padding-small"
@@ -719,90 +712,6 @@
       {{ loadingMessage }}
     </div>
     <!--    <div class="whiteFilm"></div>-->
-  </div>
-</div>
-
-<div id="eoscIFGuidelinesModal" uk-modal>
-  <div *ngIf="!loadingMessage" class="uk-modal-dialog uk-modal-body uk-margin-auto-vertical">
-    <div *ngIf="selectedService">
-
-      <div class="uk-h3 uk-padding uk-text-center">{{selectedService.service.name}}</div>
-
-      <form [formGroup]="extrasForm" role="form" class="uk-form uk-margin uk-width-1-1">
-        <div class="uk-margin-large-bottom">
-          <label class="uk-form-label uk-text-right">EOSC Guidelines</label>
-          <div class="uk-form-controls uk-margin-top">
-            <div formArrayName="eoscIFGuidelines"
-                 *ngFor="let guidelines of eoscIFGuidelinesArray.controls; let i = index">
-              <div [formGroupName]="i"
-                   class="uk-margin-bottom formGroupElement uk-width-1-1 uk-display-inline-block">
-
-                <div class="uk-margin-bottom">
-                  <label class="uk-form-label uk-text-right" for="label">
-                     Label (*)
-                  </label>
-                  <div class="uk-form-controls uk-margin-medium-top">
-                    <input id="label" class="uk-input uk-width-9-10" type="text" formControlName="label">
-                  </div>
-                </div>
-
-                <div class="uk-margin-bottom">
-                  <label class="uk-form-label uk-text-right" for="pid">
-                    Pid (*)
-                  </label>
-                  <div class="uk-form-controls uk-margin-medium-top">
-                    <input id="pid" class="uk-input uk-width-9-10" type="text" formControlName="pid">
-                  </div>
-                </div>
-
-                <div class="uk-margin-bottom">
-                  <label class="uk-form-label uk-text-right" for="semanticRelationship">
-                    Semantic Relationship (*)
-                  </label>
-                  <div class="uk-form-controls uk-margin-medium-top">
-                    <ng-select *ngIf="semanticRelationshipVoc" class="uk-width-9-10" id="semanticRelationship"
-                               [items]="semanticRelationshipVoc"
-                               bindLabel="name"
-                               bindValue="id"
-                               clearAllText="Clear"
-                               formControlName="semanticRelationship">
-                    </ng-select>
-                  </div>
-                </div>
-
-                <div class="uk-margin-bottom">
-                  <label class="uk-form-label uk-text-right" for="url">
-                    URL (optional)
-                  </label>
-                  <div class="uk-form-controls uk-margin-medium-top">
-                    <input id="url" class="uk-input uk-width-9-10" type="text" formControlName="url" placeholder="use http:// or https://">
-                    <div *ngIf="eoscIFGuidelinesArray.controls[i].get('url').value" class="uk-icon">
-                      <a href="{{eoscIFGuidelinesArray.controls[i].get('url').value}}" target="_blank">&nbsp;&nbsp;<i class="fa fa-external-link"></i></a>
-                    </div>
-                  </div>
-                </div>
-
-              </div>
-              <a *ngIf="getFieldAsFormArray('eoscIFGuidelines').length > 1"
-                 class="remove-element uk-padding-small uk-display-inline-block"
-                 (click)="removeEoscIFGuidelines(i)">
-                <i class="fa fa-times" aria-hidden="true"></i>
-              </a>
-            </div>
-          </div>
-          <div class="uk-width-9-10 uk-text-center uk-margin-top">
-            <a class="add-new-element" (click)="pushEoscIFGuidelines()">
-              <i class="fa fa-plus" aria-hidden="true"></i> Add EOSC Guidelines
-            </a>
-          </div>
-        </div>
-      </form>
-<!--      <pre>{{selectedService.resourceExtras|json}}</pre>-->
-<!--      <pre>{{extrasForm.value|json}}</pre>-->
-    </div>
-
-    <button class="uk-button uk-button-primary uk-modal-close uk-margin-small-right" type="button" (click)="updateEoscIFGuidelines(selectedService)">Submit</button>
-    <button class="uk-button uk-button-secondary uk-modal-close" type="button">Cancel</button>
   </div>
 </div>
 

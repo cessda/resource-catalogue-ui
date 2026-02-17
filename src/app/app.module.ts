@@ -42,7 +42,6 @@ import {HomeComponent} from './pages/home/home.component';
 import { RouterModule } from '@angular/router';
 import {CatalogueService} from "../lib/services/catalogue.service";
 import {ServiceExtensionsService} from "../lib/services/service-extensions.service";
-import {ResourceExtrasService} from "../lib/services/resource-extras.service";
 import {DatasourceService} from "../lib/services/datasource.service";
 import {TrainingResourceService} from "../lib/services/training-resource.service";
 import {RecommendationsService} from "../lib/services/recommendations.service";
@@ -146,7 +145,6 @@ export function highchartsFactory() {
         DeployableServiceService,
         ServiceProviderService,
         ServiceExtensionsService,
-        ResourceExtrasService,
         GuidelinesService,
         CatalogueService,
         EmailService,

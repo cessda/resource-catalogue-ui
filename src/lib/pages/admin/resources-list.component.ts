@@ -18,7 +18,6 @@ import {UntypedFormArray, UntypedFormBuilder, UntypedFormControl, UntypedFormGro
 import {URLParameter} from '../../domain/url-parameter';
 import {NavigationService} from '../../services/navigation.service';
 import {Paging} from '../../domain/paging';
-import {ResourceExtrasService} from '../../services/resource-extras.service';
 import {ServiceExtensionsService} from '../../services/service-extensions.service';
 import {pidHandler} from "../../shared/pid-handler/pid-handler.service";
 
@@ -49,18 +48,6 @@ export class ResourcesListComponent implements OnInit {
     catalogue_id: new UntypedFormArray([])
   };
   dataForm: UntypedFormGroup;
-
-  extrasFormPrepare = {
-    eoscIFGuidelines: this.fb.array([
-      this.fb.group({
-        label: [''],
-        pid: [''],
-        semanticRelationship: [''],
-        url: ['']
-      })
-    ])
-  };
-  extrasForm: UntypedFormGroup;
 
   urlParams: URLParameter[] = [];
 
@@ -119,7 +106,6 @@ export class ResourcesListComponent implements OnInit {
 
   constructor(private resourceService: ResourceService,
               private providerService: ServiceProviderService,
-              private resourceExtrasService: ResourceExtrasService,
               private authenticationService: AuthenticationService,
               private route: ActivatedRoute,
               private router: Router,
@@ -138,7 +124,6 @@ export class ResourcesListComponent implements OnInit {
     } else {
       this.dataForm = this.fb.group(this.formPrepare);
       this.providersDropdownForm = this.fb.group(this.providersFormPrepare);
-      this.extrasForm = this.fb.group(this.extrasFormPrepare);
 
       this.urlParams = [];
       this.route.queryParams
@@ -581,75 +566,8 @@ export class ResourcesListComponent implements OnInit {
       );
   }
 
-  /** resourceExtras--> **/
-  showEoscIFGuidelines(bundle: ServiceBundle) {
-    this.selectedService = bundle;
-    if (this.selectedService) {
-      this.extrasFormPrep(this.selectedService);
-      this.extrasForm.patchValue(this.selectedService.resourceExtras);
-      UIkit.modal('#eoscIFGuidelinesModal').show();
-    }
-  }
-
-  updateEoscIFGuidelines(bundle: ServiceBundle) {
-    UIkit.modal('#spinnerModal').show();
-    this.resourceExtrasService.updateEoscIFGuidelines(bundle.id, 'service', bundle.catalogueId, this.extrasForm.value.eoscIFGuidelines).subscribe(
-      res => {},
-      err => {
-        UIkit.modal('#spinnerModal').hide();
-        console.log(err);
-      },
-      () => {
-        UIkit.modal('#spinnerModal').hide();
-        location.reload();
-      }
-    );
-  }
-
-  extrasFormPrep(bundle: ServiceBundle){
-    //resets the 2 parts of the form and then fills them
-    this.extrasForm.setControl('eoscIFGuidelines',
-      this.fb.array([this.fb.group({
-        label: [''],
-        pid: [''],
-        semanticRelationship: [''],
-        url: ['']
-      })
-      ]));
-    if ( bundle?.resourceExtras?.eoscIFGuidelines ) {
-      for (let i = 0; i < bundle.resourceExtras.eoscIFGuidelines.length - 1; i++) {
-        this.pushEoscIFGuidelines();
-      }
-    }
-  }
-  /** <--resourceExtras **/
-
-  /** eoscIFGuidelines--> **/
-  newEoscIFGuidelines(): UntypedFormGroup {
-    return this.fb.group({
-      label: [''],
-      pid: [''],
-      semanticRelationship: [''],
-      url: ['']
-    });
-  }
-
-  get eoscIFGuidelinesArray() {
-    return this.extrasForm.get('eoscIFGuidelines') as UntypedFormArray;
-  }
-
-  pushEoscIFGuidelines() {
-    this.eoscIFGuidelinesArray.push(this.newEoscIFGuidelines());
-  }
-
-  removeEoscIFGuidelines(index: number) {
-    this.eoscIFGuidelinesArray.removeAt(index);
-  }
-
-  /** <--eoscIFGuidelines **/
-
   /** manage form arrays--> **/
-  getFieldAsFormArray(field: string) {
+/*  getFieldAsFormArray(field: string) {
     return this.extrasForm.get(field) as UntypedFormArray;
   }
 
@@ -659,7 +577,7 @@ export class ResourcesListComponent implements OnInit {
 
   remove(field: string, i: number) {
     this.getFieldAsFormArray(field).removeAt(i);
-  }
+  }*/
 
   /** <--manage form arrays **/
 

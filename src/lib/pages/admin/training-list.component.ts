@@ -23,7 +23,6 @@ import {PremiumSortFacetsPipe} from '../../shared/pipes/premium-sort.pipe';
 import {statusChangeMap} from '../../domain/service-provider-status-list';
 import {zip} from 'rxjs';
 import {Paging} from '../../domain/paging';
-import {ResourceExtrasService} from "../../services/resource-extras.service";
 import {TrainingResourceService} from "../../services/training-resource.service";
 import {pidHandler} from "../../shared/pid-handler/pid-handler.service";
 
@@ -54,19 +53,6 @@ export class TrainingListComponent implements OnInit {
     catalogue_id: new UntypedFormArray([])
   };
   dataForm: UntypedFormGroup;
-
-  extrasFormPrepare = {
-    researchCategories: this.fb.array([this.fb.control('')]),
-    eoscIFGuidelines: this.fb.array([
-      this.fb.group({
-        label: [''],
-        pid: [''],
-        semanticRelationship: [''],
-        url: ['']
-      })
-    ])
-  };
-  extrasForm: UntypedFormGroup;
 
   urlParams: URLParameter[] = [];
 
@@ -123,7 +109,6 @@ export class TrainingListComponent implements OnInit {
   constructor(private resourceService: ResourceService,
               private trainingResourceService: TrainingResourceService,
               private serviceProviderService: ServiceProviderService,
-              private resourceExtrasService: ResourceExtrasService,
               private authenticationService: AuthenticationService,
               private route: ActivatedRoute,
               private router: Router,
@@ -141,7 +126,6 @@ export class TrainingListComponent implements OnInit {
     } else {
       this.dataForm = this.fb.group(this.formPrepare);
       this.providersDropdownForm = this.fb.group(this.providersFormPrepare);
-      this.extrasForm = this.fb.group(this.extrasFormPrepare);
 
       this.urlParams = [];
       this.route.queryParams
@@ -565,133 +549,6 @@ export class TrainingListComponent implements OnInit {
         }
       );
   }
-
-  /** resourceExtras--> **/
-  /*toggleHorizontalService(trBundle: TrainingResourceBundle) {
-    UIkit.modal('#spinnerModal').show();
-    this.resourceExtrasService.updateHorizontalService(trBundle.id, 'training_resource', trBundle.catalogueId, !trBundle?.resourceExtras?.horizontalService).subscribe(
-      res => {},
-      err => {
-        UIkit.modal('#spinnerModal').hide();
-        console.log(err)
-      },
-      () => {
-        UIkit.modal('#spinnerModal').hide();
-        location.reload();
-      }
-    );
-  }
-
-  showResourceCategories(trBundle: TrainingResourceBundle) {
-    this.selectedTrainingResource = trBundle;
-    if (this.selectedTrainingResource) {
-      this.extrasFormPrep(this.selectedTrainingResource);
-      this.extrasForm.patchValue(this.selectedTrainingResource.resourceExtras);
-      UIkit.modal('#researchCategoriesModal').show();
-    }
-  }
-
-  showEoscIFGuidelines(trBundle: TrainingResourceBundle) {
-    this.selectedTrainingResource = trBundle;
-    if (this.selectedTrainingResource) {
-      this.extrasFormPrep(this.selectedTrainingResource);
-      this.extrasForm.patchValue(this.selectedTrainingResource.resourceExtras);
-      UIkit.modal('#eoscIFGuidelinesModal').show();
-    }
-  }
-
-  updateResearchCategories(trBundle: TrainingResourceBundle) {
-    UIkit.modal('#spinnerModal').show();
-    this.resourceExtrasService.updateResearchCategories(trBundle.id, 'training_resource', trBundle.catalogueId, this.extrasForm.value.researchCategories).subscribe(
-      res => {},
-      err => {
-        UIkit.modal('#spinnerModal').hide();
-        console.log(err);
-      },
-      () => {
-        UIkit.modal('#spinnerModal').hide();
-        location.reload();
-      }
-    );
-  }
-
-  updateEoscIFGuidelines(trBundle: TrainingResourceBundle) {
-    UIkit.modal('#spinnerModal').show();
-    this.resourceExtrasService.updateEoscIFGuidelines(trBundle.id, 'training_resource', trBundle.catalogueId, this.extrasForm.value.eoscIFGuidelines).subscribe(
-      res => {},
-      err => {
-        UIkit.modal('#spinnerModal').hide();
-        console.log(err);
-      },
-      () => {
-        UIkit.modal('#spinnerModal').hide();
-        location.reload();
-      }
-    );
-  }
-
-  extrasFormPrep(trBundle: TrainingResourceBundle){
-    //resets the 2 parts of the form and then fills them
-    this.extrasForm.setControl('researchCategories', this.fb.array([this.fb.control('')]));
-    this.extrasForm.setControl('eoscIFGuidelines',
-      this.fb.array([this.fb.group({
-        label: [''],
-        pid: [''],
-        semanticRelationship: [''],
-        url: ['']
-      })
-      ]));
-    if ( trBundle?.resourceExtras?.researchCategories ) {
-      for (let i = 0; i < trBundle.resourceExtras.researchCategories.length - 1; i++) {
-        this.push('researchCategories');
-      }
-    }
-    if ( trBundle?.resourceExtras?.eoscIFGuidelines ) {
-      for (let i = 0; i < trBundle.resourceExtras.eoscIFGuidelines.length - 1; i++) {
-        this.pushEoscIFGuidelines();
-      }
-    }
-  }*/
-  /** <--resourceExtras **/
-
-  /** eoscIFGuidelines--> **/
-  /*newEoscIFGuidelines(): FormGroup {
-    return this.fb.group({
-      label: [''],
-      pid: [''],
-      semanticRelationship: [''],
-      url: ['']
-    });
-  }
-
-  get eoscIFGuidelinesArray() {
-    return this.extrasForm.get('eoscIFGuidelines') as FormArray;
-  }
-
-  pushEoscIFGuidelines() {
-    this.eoscIFGuidelinesArray.push(this.newEoscIFGuidelines());
-  }
-
-  removeEoscIFGuidelines(index: number) {
-    this.eoscIFGuidelinesArray.removeAt(index);
-  }
-*/
-  /** <--eoscIFGuidelines **/
-
-  /** manage form arrays--> **/
-  getFieldAsFormArray(field: string) {
-    return this.extrasForm.get(field) as UntypedFormArray;
-  }
-
-  push(field: string) {
-    this.getFieldAsFormArray(field).push(this.fb.control(''));
-  }
-
-  remove(field: string, i: number) {
-    this.getFieldAsFormArray(field).removeAt(i);
-  }
-
-  /** <--manage form arrays **/
 
   toggleService(trBundle: TrainingResourceBundle) {
     UIkit.modal('#spinnerModal').show();

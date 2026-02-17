@@ -71,13 +71,6 @@ export class EmailMessage {
   message: string;
 }
 
-export class EOSCIFGuidelines {
-  label: string;
-  pid: string;
-  semanticRelationship: string;
-  url: string;
-}
-
 export class Event implements Identifiable {
   id: string;
   instant: number;
@@ -127,7 +120,6 @@ export class AlternativeIdentifier {
 
 export class ServiceBundle extends Bundle<Service> {
   service: Service;
-  resourceExtras: ResourceExtras;
 }
 
 export class DatasourceBundle extends Bundle<Datasource> {
@@ -517,11 +509,6 @@ export class TrainingResource implements Identifiable {
   scientificDomains: ServiceProviderDomain[]; // like service
   contact: ServiceMainContact; // like service
   catalogueId: string;
-}
-
-export class ResourceExtras {
-  eoscIFGuidelines: EOSCIFGuidelines[];
-  serviceType: string;
 }
 
 export class InteroperabilityRecordBundle extends Bundle<InteroperabilityRecord> {
