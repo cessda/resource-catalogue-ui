@@ -42,54 +42,7 @@
         </ul>
       </div>
 
-
-      @if (resourceBundle?.status === 'approved') {
-        <div class="menu_section border_top">
-          <div class="sidebar_heading">DATASOURCE</div>
-          <ul>
-            <li>
-              @if (!datasourceId) {
-                <a [routerLink]="['/provider/' + pidHandler.customEncodeURIComponent(providerPID) + '/resource/' + pidHandler.customEncodeURIComponent(resourcePID) + '/datasource/select']">
-                  <img src="../../../../../assets/images/new-icons/add-service.svg" class="uk-margin-small-right"> Enable Datasource
-                </a>
-              }
-              @if (datasourceId) {
-                <a [routerLink]="['/provider/' + pidHandler.customEncodeURIComponent(providerPID) + '/resource/' + pidHandler.customEncodeURIComponent(resourcePID) + '/datasource']">
-                  <img src="../../../../../assets/images/new-icons/update-service.svg" class="uk-margin-small-right"> Edit Datasource
-                </a>
-              }
-              @if (datasourceId) {
-                <a (click)="showDatasourceDeletionModal()">
-                  <img src="../../../../../assets/images/new-icons/trashcan.svg" class="uk-margin-small-right"> Delete Datasource
-                </a>
-              }
-              <!--            <ng-container *ngIf="datasourceId">-->
-              <!--              <a [routerLink]="['/provider/' + providerId + '/resource/' + resourceId + '/datasource/metrics']"> &lt;!&ndash; need to change to dashboard route &ndash;&gt;-->
-              <!--                <img src="assets/images/new-icons/stats.svg" class="uk-margin-small-right"> Research Products Accounting-->
-            <!--              </a>-->
-          <!--            </ng-container>-->
-        </li>
-      </ul>
-    </div>
-  }
-
-  @if (resourceBundle?.status !== 'approved') {
-    <div class="menu_section border_top" uk-tooltip="Disabled until first service approval.">
-      <div class="sidebar_heading">DATASOURCE</div>
-      <ul class="uk-disabled">
-        <li>
-          @if (!datasourceId) {
-            <a><img src="../../../../../assets/images/new-icons/add-service.svg" class="uk-margin-small-right"> Enable Datasource</a>
-          }
-          @if (datasourceId) {
-            <a><img src="../../../../../assets/images/new-icons/add-service.svg" class="uk-margin-small-right"> Edit Datasource</a>
-          }
-        </li>
-      </ul>
-    </div>
-  }
-
-  @if (catalogueId === catalogueConfigId) {
+  <!--@if (catalogueId === catalogueConfigId) {
     <div class="menu_section border_top">
       <div class="sidebar_heading">EXTENSIONS</div>
       <ul>
@@ -117,7 +70,7 @@
         }
       </ul>
     </div>
-  }
+  }-->
 
   <div class="menu_section border_top">
     <div class="sidebar_heading">GUIDELINES</div>
