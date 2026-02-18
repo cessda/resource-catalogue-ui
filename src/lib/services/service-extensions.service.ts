@@ -62,9 +62,11 @@ export class ServiceExtensionsService {
 
   getMonitoringStatus(serviceId: string, showAllStatuses?: boolean) {
     serviceId = decodeURIComponent(serviceId);
-    if (showAllStatuses) return this.http.get<MonitoringStatus[]>(this.base + `/service-extensions/monitoring/monitoringStatus/${serviceId}?allStatuses=true`, this.options);
-      return null
-    // return this.http.get<MonitoringStatus[]>(this.base + `/service-extensions/monitoring/monitoringStatus/${serviceId}`, this.options); //current status
+    if (showAllStatuses) {
+      return this.http.get<MonitoringStatus[]>(this.base + `/service-extensions/monitoring/monitoringStatus/${serviceId}?allStatuses=true`, this.options);
+    } else {
+      return this.http.get<MonitoringStatus[]>(this.base + `/service-extensions/monitoring/monitoringStatus/${serviceId}`, this.options); //current status
+    }
   }
 
   getMonitoringAvailability(serviceId: string) {
