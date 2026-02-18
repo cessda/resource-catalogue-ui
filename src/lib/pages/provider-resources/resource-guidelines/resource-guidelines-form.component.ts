@@ -40,7 +40,6 @@ export class ResourceGuidelinesFormComponent implements OnInit {
   formGroupMeta = {
     id: [''],
     resourceId: [''],
-    catalogueId: [this.catalogueConfigId],
     interoperabilityRecordIds: this.fb.array([this.fb.control('')]),
   };
 
