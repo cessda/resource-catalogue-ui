@@ -328,7 +328,7 @@ export class ResourcesListComponent implements OnInit {
       () => {
         this.providers.forEach(
           p => {
-            if (p.templateStatus === 'pending template') {
+            if (p.templateStatus === 'pending template' || p.templateStatus === 'approved template') {
               this.resourceService.getResourceTemplateOfProvider(p.id).subscribe(
                 res => {
                   if (res) {
