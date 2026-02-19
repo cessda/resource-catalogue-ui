@@ -232,6 +232,14 @@ const providerRoutes: Routes = [
     }
   },
   {
+    path: ':providerId/datasource/select-first',
+    component: DatasourceSelectComponent,
+    canActivate: [CanActivateViaAuthGuard],
+    data: {
+      breadcrumb: 'Select Datasource'
+    }
+  },
+  {
     path: ':providerId/datasource/add',
     component: DatasourceFormComponent,
     canActivate: [CanActivateViaAuthGuard],
@@ -245,6 +253,14 @@ const providerRoutes: Routes = [
     canActivate: [CanActivateViaAuthGuard],
     data: {
       breadcrumb: 'Add Datasource'
+    }
+  },
+  {
+    path: ':providerId/add-first-datasource/addOpenAIRE/:openaireId',
+    component: AddFirstDatasourceComponent,
+    canActivate: [CanActivateViaAuthGuard],
+    data: {
+      breadcrumb: 'Add Datasource Template'
     }
   },
   {

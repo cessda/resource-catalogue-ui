@@ -21,7 +21,7 @@
         <a href="http://re3data.org/" target="_blank">re3data.org</a>,
         <a href="https://v2.sherpa.ac.uk/opendoar/" target="_blank">OpenDOAR</a>, and
         <a href="http://fairsharing.org/" target="_blank">fairsharing.org</a>
-        or create a new one by filling this <a [routerLink]="['/provider/' + providerId + '/datasource/add']">form</a>.
+        or create a new one by filling this <a [routerLink]="['/provider/' + providerId + ( isTemplate ? '/add-first-datasource' : '/datasource/add')]">form</a>.
         <!--        {{providerBundle?.provider?.name ? 'for ' + providerBundle?.provider?.name : ''}}-->
       </h5>
     </div>
@@ -130,7 +130,12 @@
                     </div>
                     <div class="uk-width-2-3">
                       <h4 class="uk-margin-remove">
-                        <a [routerLink]="['/provider/'+providerId+'/datasource/addOpenAIRE/'+datasource.id]">{{datasource.id}}</a>
+                        @if (isTemplate) {
+                          <a [routerLink]="['/provider/'+providerId+'/add-first-datasource/addOpenAIRE/'+datasource.id]">{{datasource.id}}</a>
+                        }
+                        @if (!isTemplate) {
+                          <a [routerLink]="['/provider/'+providerId+'/datasource/addOpenAIRE/'+datasource.id]">{{datasource.id}}</a>
+                        }
                       </h4>
                       <!--                  <div class="uk-margin-small-top">-->
                       <!--                    <span class="">Id: </span>{{ datasource.id }}-->

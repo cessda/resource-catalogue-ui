@@ -33,6 +33,7 @@ export class DatasourceSelectComponent implements OnInit {
 
   dataForm: UntypedFormGroup;
 
+  isTemplate = false; // true on add first datasource
   errorMessage = '';
   showLoader = false;
   urlParams: URLParameter[] = [];
@@ -61,6 +62,7 @@ export class DatasourceSelectComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.isTemplate = this.router.url.includes('select-first');
     this.providerId = this.route.snapshot.paramMap.get('providerId');
     this.resourceId = this.route.snapshot.paramMap.get('resourceId');
 
