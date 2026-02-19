@@ -66,12 +66,12 @@ export class ResourceDashboardComponent implements OnInit {
           res => { if (res!=null) this.datasourceId = res.id }
         );*/
         if (this.catalogueId === this.catalogueConfigId){
-          this.serviceExtensionsService.getMonitoringByServiceId(this.resourceId).subscribe(
-            res => { if (res!=null) this.monitoringId = res.id }
-          );
-          this.serviceExtensionsService.getHelpdeskByServiceId(this.resourceId).subscribe(
-            res => { if (res!=null) this.helpdeskId = res.id }
-          );
+          // this.serviceExtensionsService.getMonitoringByServiceId(this.resourceId).subscribe(
+          //   res => { if (res!=null) this.monitoringId = res.id }
+          // );
+          // this.serviceExtensionsService.getHelpdeskByServiceId(this.resourceId).subscribe(
+          //   res => { if (res!=null) this.helpdeskId = res.id }
+          // );
         }
 
         this.guidelinesService.getGuidelinesOfResource(this.resourceId).subscribe(
