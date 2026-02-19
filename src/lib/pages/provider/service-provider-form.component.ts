@@ -17,11 +17,11 @@ import {SurveyComponent} from "../../../dynamic-catalogue/pages/dynamic-form/sur
 declare var UIkit: any;
 
 @Component({
-    selector: 'app-new-service-provider',
-    templateUrl: './service-provider-form.component.html',
-    styleUrls: ['./service-provider-form.component.css'],
-    providers: [FormControlService],
-    standalone: false
+  selector: 'app-new-service-provider',
+  templateUrl: './service-provider-form.component.html',
+  styleUrls: ['./service-provider-form.component.css'],
+  providers: [FormControlService],
+  standalone: false
 })
 export class ServiceProviderFormComponent implements OnInit {
   @ViewChild(SurveyComponent) child: SurveyComponent
@@ -41,7 +41,7 @@ export class ServiceProviderFormComponent implements OnInit {
   displayedCatalogueName: string;
   providerName = '';
   errorMessage = '';
-  userInfo = {sub:'', family_name: '', given_name: '', email: ''};
+  userInfo = {sub: '', family_name: '', given_name: '', email: ''};
   vocabularies: Map<string, Vocabulary[]> = null;
   subVocabularies: Map<string, Vocabulary[]> = null;
   submitMode: 'draft' | 'submit' = 'submit';
@@ -130,14 +130,16 @@ export class ServiceProviderFormComponent implements OnInit {
     // if (path.includes('view/:providerId')) {
     //   this.pendingProvider = true;
     // }
-    if ( !this.router.url.includes('/update/') ) {
+    if (!this.router.url.includes('/update/')) {
       this.saveAsDraftAvailable = true;
     }
 
     if (this._hasUserConsent && path !== 'view/:catalogueId/:providerId') {
       if (this.editMode) {
         this.serviceProviderService.hasAdminAcceptedTerms(this.providerId).subscribe(
-          boolean => { this.agreedToTerms = boolean; },
+          boolean => {
+            this.agreedToTerms = boolean;
+          },
           error => console.log(error),
           () => {
             if (!this.agreedToTerms) {
@@ -154,13 +156,13 @@ export class ServiceProviderFormComponent implements OnInit {
 
     this.isPortalAdmin = this.authService.isAdmin();
 
-    if(this.catalogueId == this.catalogueConfigId) this.displayedCatalogueName = `| Catalogue: ${this.catalogueName}`
-    else if(this.catalogueId) this.showCatalogueName(this.catalogueId)
+    if (this.catalogueId == this.catalogueConfigId) this.displayedCatalogueName = `| Catalogue: ${this.catalogueName}`
+    else if (this.catalogueId) this.showCatalogueName(this.catalogueId)
 
     this.vocabularyEntryForm = this.fb.group(this.suggestionsForm);
   }
 
-  submitForm(formData: any){
+  submitForm(formData: any) {
     let providerValue = formData.value.provider;
     window.scrollTo(0, 0);
 
@@ -174,10 +176,12 @@ export class ServiceProviderFormComponent implements OnInit {
       method = this.editMode ? 'updateServiceProvider' : 'createNewServiceProvider';
     }
 
-    this.cleanArrayProperty(providerValue, 'multimedia');
-    this.cleanArrayProperty(providerValue, 'scientificDomains');
-    this.cleanArrayProperty(providerValue, 'merilScientificDomains');
+    // this.cleanArrayProperty(providerValue, 'multimedia');
+    // this.cleanArrayProperty(providerValue, 'scientificDomains');
+    // this.cleanArrayProperty(providerValue, 'merilScientificDomains');
     // console.log(providerValue);
+
+    providerValue = FormControlService.cleanObjectInPlace(providerValue);
 
     if (this.submitMode === 'draft') {
       this.showLoader = true;
@@ -237,12 +241,17 @@ export class ServiceProviderFormComponent implements OnInit {
   acceptTerms() {
     if (this._hasUserConsent && this.editMode) {
       this.serviceProviderService.adminAcceptedTerms(this.providerId).subscribe(
-        res => {},
-        error => { console.log(error); },
-        () => {}
+        res => {
+        },
+        error => {
+          console.log(error);
+        },
+        () => {
+        }
       );
     }
   }
+
   /** <--Terms Modal **/
 
   /** Submit Comment Modal--> **/
@@ -254,6 +263,7 @@ export class ServiceProviderFormComponent implements OnInit {
       this.submitForm(formData);
     }
   }
+
   /** <--Submit Comment Modal **/
 
   /*submitSuggestion(entryValueName, vocabulary, parent) {
