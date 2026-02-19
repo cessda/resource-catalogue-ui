@@ -33,6 +33,7 @@ import {AdaptersFormComponent} from "../adapters/adapters-form.component";
 import {AdaptersListComponent} from "../admin/adapters-list.component";
 import {DatasourceFormComponent} from "../datasource/datasource-form.component";
 import {DatasourceSelectComponent} from "../datasource/datasource-select.component";
+import {AddFirstDatasourceComponent} from "../datasource/add-first-datasource.component";
 
 
 @NgModule({
@@ -51,6 +52,7 @@ import {DatasourceSelectComponent} from "../datasource/datasource-select.compone
   declarations: [
     MyServiceProvidersComponent,
     AddFirstServiceComponent,
+    AddFirstDatasourceComponent,
     AddFirstTrainingResourceComponent,
     AddFirstDeployableServiceComponent,
     ServiceProviderFormComponent,

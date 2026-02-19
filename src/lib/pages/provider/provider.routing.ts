@@ -34,6 +34,7 @@ import {
 import {RejectedDatasourcesComponent} from "./dashboard/rejectedDatasources/rejected-datasources.component";
 import {AdaptersFormComponent} from "../adapters/adapters-form.component";
 import {AdaptersListComponent} from "../admin/adapters-list.component";
+import {AddFirstDatasourceComponent} from "../datasource/add-first-datasource.component";
 
 const providerRoutes: Routes = [
 
@@ -127,6 +128,14 @@ const providerRoutes: Routes = [
     }
   },
   {
+    path: ':providerId/add-first-datasource',
+    component: AddFirstDatasourceComponent,
+    canActivate: [CanActivateViaAuthGuard],
+    data: {
+      breadcrumb: 'Add Datasource Template'
+    }
+  },
+  {
     path: ':providerId/add-first-training-resource',
     component: AddFirstTrainingResourceComponent,
     canActivate: [CanActivateViaAuthGuard],
@@ -145,6 +154,30 @@ const providerRoutes: Routes = [
   {
     path: ':providerId/resource/update-template/:resourceId',
     component: AddFirstServiceComponent,
+    canActivate: [CanActivateViaAuthGuard],
+    data: {
+      breadcrumb: 'Edit ' + environment.serviceORresource + ' Template'
+    }
+  },
+  {
+    path: ':providerId/datasource/update-template/:resourceId',
+    component: AddFirstServiceComponent,
+    canActivate: [CanActivateViaAuthGuard],
+    data: {
+      breadcrumb: 'Edit ' + environment.serviceORresource + ' Template'
+    }
+  },
+  {
+    path: ':providerId/training-resource/update-template/:resourceId',
+    component: AddFirstTrainingResourceComponent,
+    canActivate: [CanActivateViaAuthGuard],
+    data: {
+      breadcrumb: 'Edit ' + environment.serviceORresource + ' Template'
+    }
+  },
+  {
+    path: ':providerId/deployable-service/update-template/:resourceId',
+    component: AddFirstDeployableServiceComponent,
     canActivate: [CanActivateViaAuthGuard],
     data: {
       breadcrumb: 'Edit ' + environment.serviceORresource + ' Template'

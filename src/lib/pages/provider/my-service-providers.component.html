@@ -76,6 +76,14 @@
                                               Update First {{serviceORresource}}
                                             </button>
                                           }
+                                          @if (hasCreatedFirstDatasource(providerBundle.id)) {
+                                            <!--<ng-container *ngIf="(providerBundle.templateStatus === 'pending template')">-->
+                                            <button class="uk-button uk-button-action uk-margin-small-left"
+                                                    routerLink="{{ getLinkToFirstDatasource(providerBundle.id) }}">
+                                              <i class="fa fa-lg fa-edit"></i>
+                                              Update First Datasource
+                                            </button>
+                                          }
                                           @if (hasCreatedFirstTrainingResource(providerBundle.id)) {
                                             <!--<ng-container *ngIf="(providerBundle.templateStatus === 'pending template')">-->
                                             <button class="uk-button uk-button-action uk-margin-small-left"
@@ -93,6 +101,9 @@
                                               <ul class="uk-nav uk-dropdown-nav">
                                                 <li class="uk-active">
                                                   <a routerLink="{{ getLinkToFirstService(pidHandler.customEncodeURIComponent(providerBundle.id)) }}">Add First {{serviceORresource}}</a>
+                                                </li>
+                                                <li class="uk-active">
+                                                  <a routerLink="{{ getLinkToFirstDatasource(pidHandler.customEncodeURIComponent(providerBundle.id)) }}">Add First Datasource</a>
                                                 </li>
                                                 <li class="uk-active">
                                                   <a routerLink="{{ getLinkToFirstTrainingResource(pidHandler.customEncodeURIComponent(providerBundle.id)) }}">Add First Training Resource</a>
