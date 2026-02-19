@@ -856,7 +856,7 @@ export class ServiceProvidersListComponent implements OnInit {
         }
       );
     }
-    //TODO: could add training
+    //could add training
 /*    if (resourceType === 'trainingResource' && this.hasCreatedFirstDatasource(providerBundleId)) {
       const resourceId = this.serviceTemplatePerProvider.filter(x => x.providerId === providerBundleId)[0].serviceId;
       this.trainingResourceService.getService(resourceId).subscribe(
