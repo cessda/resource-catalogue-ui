@@ -87,7 +87,7 @@ export class DeployableServiceForm implements OnInit {
     this.errorMessage = '';
     this.showLoader = true;
 
-    this.cleanArrayProperty(dsValue, 'scientificDomains');
+    dsValue = FormControlService.cleanObjectInPlace(dsValue);
 
     if (tempSave) {//TODO
       // this.deployableServiceService.saveServiceAsDraft(this.serviceForm.value).subscribe(
@@ -226,22 +226,6 @@ export class DeployableServiceForm implements OnInit {
       }
       return Object.assign(hash, {[obj[key]]: (hash[obj[key]] || []).concat(obj)});
     }, {});
-  }
-
-  cleanArrayProperty(obj: any, property: string): void {
-    if (obj && Array.isArray(obj[property])) {
-      // Filter out elements that are entirely empty:
-      const cleaned = obj[property].filter((element: any) => {
-        if (element && typeof element === 'object') {
-          // Keep the element if at least one property has a non-empty value.
-          return Object.keys(element).some(key => element[key] !== null && element[key] !== '');
-        }
-        // For non-objects, keep the element if it's not null or ''.
-        return element !== null && element !== '';
-      });
-      // If the cleaned array is empty, set the property to null. Otherwise, update it.
-      obj[property] = cleaned.length ? cleaned : null;
-    }
   }
 
   protected readonly environment = environment;

@@ -176,11 +176,6 @@ export class ServiceProviderFormComponent implements OnInit {
       method = this.editMode ? 'updateServiceProvider' : 'createNewServiceProvider';
     }
 
-    // this.cleanArrayProperty(providerValue, 'multimedia');
-    // this.cleanArrayProperty(providerValue, 'scientificDomains');
-    // this.cleanArrayProperty(providerValue, 'merilScientificDomains');
-    // console.log(providerValue);
-
     providerValue = FormControlService.cleanObjectInPlace(providerValue);
 
     if (this.submitMode === 'draft') {
@@ -306,22 +301,6 @@ export class ServiceProviderFormComponent implements OnInit {
       catalogue => this.displayedCatalogueName = `| Catalogue: ${catalogue.name}`,
       error => console.log(error)
     );
-  }
-
-  cleanArrayProperty(obj: any, property: string): void {
-    if (obj && Array.isArray(obj[property])) {
-      // Filter out elements that are entirely empty:
-      const cleaned = obj[property].filter((element: any) => {
-        if (element && typeof element === 'object') {
-          // Keep the element if at least one property has a non-empty value.
-          return Object.keys(element).some(key => element[key] !== null && element[key] !== '');
-        }
-        // For non-objects, keep the element if it's not null or ''.
-        return element !== null && element !== '';
-      });
-      // If the cleaned array is empty, set the property to null. Otherwise, update it.
-      obj[property] = cleaned.length ? cleaned : null;
-    }
   }
 
   getCurrentUserInfo(): { firstname: string; lastname: string; email: string } {

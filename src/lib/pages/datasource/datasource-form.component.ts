@@ -182,9 +182,7 @@ export class DatasourceFormComponent implements OnInit {
     this.errorMessage = '';
     this.showLoader = true;
 
-    this.cleanArrayProperty(datasourceValue, 'persistentIdentitySystems');
-    this.cleanArrayProperty(datasourceValue, 'researchProductLicensings');
-    this.cleanArrayProperty(datasourceValue, 'researchProductMetadataLicensing', true);
+    datasourceValue = FormControlService.cleanObjectInPlace(datasourceValue);
 
     this.datasourceService.submitDatasource(datasourceValue, this.editMode).subscribe(
       _ds => {
@@ -532,30 +530,6 @@ export class DatasourceFormComponent implements OnInit {
         // return this.navigator.resourceDashboard(this.providerId, this.datasource.serviceId); // fixme: Datasource providerId -2test
       }
     );
-  }
-
-  cleanArrayProperty(obj: any, property: string, supportPlainObject = false): void {
-    const value = obj[property];
-
-    if (Array.isArray(value)) {
-      const cleaned = value.filter((element: any) => {
-        if (element && typeof element === 'object' && !Array.isArray(element)) {
-          return Object.keys(element).some(key => {
-            const val = element[key];
-            return val !== null && val !== '' && !(Array.isArray(val) && val.every(v => v === null || v === ''));
-          });
-        }
-        return element !== null && element !== '';
-      });
-
-      obj[property] = cleaned.length ? cleaned : null;
-
-    } else if (supportPlainObject && value && typeof value === 'object') {
-      const allEmpty = Object.values(value).every(val =>
-        val === null || val === '' || (Array.isArray(val) && val.every(v => v === null || v === ''))
-      );
-      if (allEmpty) obj[property] = null;
-    }
   }
 
   protected readonly environment = environment;

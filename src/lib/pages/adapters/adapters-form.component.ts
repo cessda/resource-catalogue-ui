@@ -80,6 +80,7 @@ export class AdaptersFormComponent implements OnInit {
 
   submitForm(formData) {
     window.scrollTo(0, 0);
+    formData = FormControlService.cleanObjectInPlace(formData);
     this.adaptersService.uploadAdapter(formData.value.adapter, this.editMode).subscribe(
       _service => {
         this.showLoader = false;
