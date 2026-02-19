@@ -45,8 +45,6 @@
                 <app-survey #survey
                   [payload]="answersByTemplateId[template.id]"
                   [model]="formModels[template.id]"
-                  [vocabulariesMap]="vocabulariesMap"
-                  [subVocabularies]="subVocabulariesMap"
                   [tabsHeader]=""
                   [activeUsers]="[]"
                   (submit)="saveForm($event, template.id)">

@@ -22,8 +22,6 @@ import {ServiceExtensionsService} from "../../../../services/service-extensions.
 export class ConfigurationTemplatesComponent implements OnInit {
   @ViewChildren('survey') children!: QueryList<SurveyComponent>;
   model: Model = null;
-  vocabulariesMap: Map<string, object[]> = null;
-  subVocabulariesMap: Map<string, object[]> = null;
   payloadAnswer: object = null;
   templates: any = null; // stores templates found for a specific guideline
   formModels: Record<string, any> = {}; // stores each template's form model
@@ -63,7 +61,6 @@ export class ConfigurationTemplatesComponent implements OnInit {
 
   ngOnInitWorkaround() {
     this.resetVariables();
-    this.getServiceTypesAndSetVocabulariesMap();
     this.serviceId = this.route.parent.snapshot.paramMap.get('resourceId');
     this.showLoader = true;
 
@@ -188,19 +185,6 @@ export class ConfigurationTemplatesComponent implements OnInit {
         console.error(`Failed to save template instance for ${templateId}`, err);
       }
     });
-  }
-
-  getServiceTypesAndSetVocabulariesMap() { // adds Vocabulary for Monitoring
-    this.serviceExtensionsService.getServiceTypes().subscribe(
-      res => {
-        const map: { [name: string]: { id: string, name: string }[];  } = {'serviceTypesVoc': []};
-        res.forEach(item => {
-          map['serviceTypesVoc'].push({id: item.id, name: item.name})
-        })
-        this.vocabulariesMap = <Map<string, object[]>><unknown>map;
-      },
-      error => console.log('getServiceTypes error:', JSON.stringify(error.error))
-    );
   }
 
 }
