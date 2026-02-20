@@ -142,7 +142,7 @@ export class DatasourceSelectComponent implements OnInit {
       }
     }
 
-    this.router.navigate([`/provider/${this.providerId}/resource/${this.resourceId}/datasource/select`], {queryParams: map});
+    this.router.navigate([`/provider/${this.providerId}/datasource/select`], {queryParams: map});
   }
 
   paginationInit() {
