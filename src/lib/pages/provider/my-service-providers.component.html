@@ -146,8 +146,6 @@
                                                     </a>
                                                   </li>
                                                 }
-                                                <li class="uk-nav-divider"></li>
-                                                <li class="uk-active"><a routerLink="/developers">Use API</a></li>
                                               </ul>
                                             </div>
                                           }
@@ -170,8 +168,10 @@
                                             <!--                                        Go to Dashboard-->
                                           <!--                                      </a>-->
                                         <!--                                    </ng-container>-->
-                                      </li>
-                                      @if (providerBundle.templateStatus==='approved template') {
+                                            </li>
+                                            <li class="uk-nav-divider"></li>
+                                            <li class="uk-active"><a routerLink="/developers">Use API</a></li>
+<!--                                      @if (providerBundle.templateStatus==='approved template') {
                                         <li class="uk-margin-small-bottom">
                                           <a [routerLink]="['/dashboard', providerBundle.catalogueId, pidHandler.customEncodeURIComponent(providerBundle.id), 'resources']">
                                             View {{serviceORresource}}s
@@ -182,7 +182,7 @@
                                             Add new {{serviceORresource}}
                                           </a>
                                         </li>
-                                      }
+                                      }-->
                                     </ul>
                                   </div>
                                 </div>
