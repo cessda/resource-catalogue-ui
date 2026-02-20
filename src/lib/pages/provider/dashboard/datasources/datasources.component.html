@@ -214,13 +214,13 @@
               class="uk-button uk-button-action uk-display-block uk-margin-small-top">
               <i class="fa fa-pencil fa-lg" aria-hidden="true"></i> Update datasource
             </button>
-            @if (providerBundle.templateStatus === 'approved template') {
+<!--            @if (providerBundle.templateStatus === 'approved template') {
               <button
                 class="uk-button uk-button-action uk-display-block uk-margin-small-top"
                 (click)="useAsTemplate(dsBundle.datasource.id)">
                 <i class="fa fa-copy fa-lg" aria-hidden="true"></i> Use as template
               </button>
-            }
+            }-->
             <button class="uk-button uk-button-action uk-display-block uk-margin-small-top" (click)="toggleDatasource(dsBundle)">
               @if (dsBundle.active) {
                 <i class="fa fa-close fa-lg" aria-hidden="true"></i> Deactivate

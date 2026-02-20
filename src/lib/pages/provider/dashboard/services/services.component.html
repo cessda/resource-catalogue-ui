@@ -214,13 +214,13 @@
                 class="uk-button uk-button-action uk-display-block uk-margin-small-top">
                 <i class="fa fa-pencil fa-lg" aria-hidden="true"></i> Update {{serviceORresource | lowercase}}
               </button>
-              @if (providerBundle.templateStatus === 'approved template' && serviceBundle?.service) {
+<!--              @if (providerBundle.templateStatus === 'approved template' && serviceBundle?.service) {
                 <button
                   class="uk-button uk-button-action uk-display-block uk-margin-small-top"
                   (click)="useAsTemplate(serviceBundle.id)">
                   <i class="fa fa-copy fa-lg" aria-hidden="true"></i> Use as template
                 </button>
-              }
+              }-->
               <button class="uk-button uk-button-action uk-display-block uk-margin-small-top" (click)="toggleService(serviceBundle)">
                 @if (serviceBundle.active) {
                   <i class="fa fa-close fa-lg" aria-hidden="true"></i> Deactivate
