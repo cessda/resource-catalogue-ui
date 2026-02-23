@@ -238,34 +238,33 @@ export class MyServiceProvidersComponent implements OnInit {
 
   getLinkToFirstService(id: string) {
     if (this.hasCreatedFirstService(id)) {
-      return '/provider/' + id + '/resource/update/' + this.serviceTemplatePerProvider.filter(x => x.providerId === id)[0].serviceId;
+      return '/provider/' + this.pidHandler.customEncodeURIComponent(id) + '/resource/update/' + this.pidHandler.customEncodeURIComponent(this.serviceTemplatePerProvider.filter(x => x.providerId === id)[0].serviceId);
     } else {
-      return '/provider/' + id + '/add-first-service';
+      return '/provider/' + this.pidHandler.customEncodeURIComponent(id) + '/add-first-service';
     }
   }
 
   getLinkToFirstDatasource(id: string) {
     if (this.hasCreatedFirstDatasource(id)) {
-      return '/provider/' + id + '/datasource/update/' + this.serviceTemplatePerProvider.filter(x => x.providerId === id)[0].serviceId;
+      return '/provider/' + this.pidHandler.customEncodeURIComponent(id) + '/datasource/update/' + this.pidHandler.customEncodeURIComponent(this.serviceTemplatePerProvider.filter(x => x.providerId === id)[0].serviceId);
     } else {
-      return  '/provider/' + id + '/datasource/select-first';
-      // return '/provider/' + id + '/add-first-datasource';
+      return  '/provider/' + this.pidHandler.customEncodeURIComponent(id) + '/datasource/select-first';
     }
   }
 
   getLinkToFirstTrainingResource(id: string) {
     if (this.hasCreatedFirstTrainingResource(id)) {
-      return '/provider/' + id + '/training-resource/update/' + this.serviceTemplatePerProvider.filter(x => x.providerId === id)[0].serviceId;
+      return '/provider/' + this.pidHandler.customEncodeURIComponent(id) + '/training-resource/update/' + this.pidHandler.customEncodeURIComponent(this.serviceTemplatePerProvider.filter(x => x.providerId === id)[0].serviceId);
     } else {
-      return '/provider/' + id + '/add-first-training-resource';
+      return '/provider/' + this.pidHandler.customEncodeURIComponent(id) + '/add-first-training-resource';
     }
   }
 
   getLinkToFirstDeployableService(id: string) {
     if (this.hasCreatedFirstDeployableService(id)) {
-      return '/provider/' + id + '/deployable-service/update/' + this.serviceTemplatePerProvider.filter(x => x.providerId === id)[0].serviceId;
+      return '/provider/' + this.pidHandler.customEncodeURIComponent(id) + '/deployable-service/update/' + this.pidHandler.customEncodeURIComponent(this.serviceTemplatePerProvider.filter(x => x.providerId === id)[0].serviceId);
     } else {
-      return '/provider/' + id + '/add-first-deployable-service';
+      return '/provider/' + this.pidHandler.customEncodeURIComponent(id) + '/add-first-deployable-service';
     }
   }
 

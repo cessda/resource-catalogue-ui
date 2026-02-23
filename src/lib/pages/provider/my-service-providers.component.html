@@ -92,7 +92,7 @@
                                               Update First Training Resource
                                             </button>
                                           }
-                                          @if (!hasCreatedFirstService(providerBundle.id) && !hasCreatedFirstTrainingResource(providerBundle.id)) {
+                                          @if (!hasCreatedFirstService(providerBundle.id) && !hasCreatedFirstDatasource(providerBundle.id) && !hasCreatedFirstTrainingResource(providerBundle.id) && !hasCreatedFirstDeployableService(providerBundle.id)) {
                                             <button class="uk-button uk-button-action uk-margin-small-left">
                                               <i class="fa fa-plus"></i>
                                               Add First {{serviceORresource}}

@@ -187,7 +187,7 @@ export class DatasourceFormComponent implements OnInit {
     this.datasourceService.submitDatasource(datasourceValue, this.editMode).subscribe(
       _ds => {
         this.showLoader = false;
-        if (this.addOpenAIRE) return this.navigator.datasourceSubmitted(_ds.id);
+        // if (this.addOpenAIRE) return this.navigator.datasourceSubmitted(_ds.id);
         return this.navigator.datasourceDashboard(this.providerId, this.datasourceId); // TODO: check if catalogueId param is needed
       },
       err => {
@@ -197,63 +197,6 @@ export class DatasourceFormComponent implements OnInit {
       }
     );
 }
-
-
-  onSubmit() {
-    if (!this.authenticationService.isLoggedIn()) {
-      sessionStorage.setItem('service', JSON.stringify(this.serviceForm.value));
-      this.authenticationService.login();
-    }
-
-    this.errorMessage = '';
-    this.showLoader = true;
-
-    for (let i = 0; i < this.licensingArray.length; i++) {
-      if ((this.licensingArray.controls[i].get('researchProductLicenseName').value === '' || this.licensingArray.controls[i].get('researchProductLicenseName').value === null)
-        && (this.licensingArray.controls[i].get('researchProductLicenseURL').value === '' || this.licensingArray.controls[i].get('researchProductLicenseURL').value === null)) {
-        this.removeLicensing(i);
-      }
-    }
-    if ((this.metadataLicensingArray?.get('researchProductMetadataLicenseURL')?.value === '')
-      && (this.metadataLicensingArray?.get('researchProductMetadataLicenseName')?.value === '')) {
-      this.serviceForm.setControl('researchProductMetadataLicensing', this.fb.control(null));
-    }
-    for (let i = 0; i < this.persistentIdentitySystemArray.length; i++) {
-      // console.log(this.persistentIdentitySystemArray.controls[i].get('persistentIdentityEntityTypeSchemes'));
-      // console.log(this.persistentIdentitySystemArray.controls[i].get('persistentIdentityEntityTypeSchemes').value[0]);
-      //TODO: fix persistentIdentityEntityTypeSchemes ....value[0]
-      if ((this.persistentIdentitySystemArray.controls[i].get('persistentIdentityEntityType').value === '' || this.persistentIdentitySystemArray.controls[i].get('persistentIdentityEntityType').value === null)
-        && (this.persistentIdentitySystemArray.controls[i].get('persistentIdentityEntityTypeSchemes').value[0] === '' || this.persistentIdentitySystemArray.controls[i].get('persistentIdentityEntityTypeSchemes').value[0] === null)) {
-        this.removePersistentIdentitySystem(i);
-      }
-    }
-
-    if (this.serviceForm.valid) {
-      window.scrollTo(0, 0);
-      this.datasourceService.submitDatasource(this.serviceForm.value, this.editMode).subscribe(
-        _ds => {
-          this.showLoader = false;
-          if (this.addOpenAIRE) return this.navigator.datasourceSubmitted(_ds.id);
-          return this.navigator.datasourceDashboard(this.providerId, this.datasourceId); // TODO: check if catalogueId param is needed
-        },
-        err => {
-          this.showLoader = false;
-          window.scrollTo(0, 0);
-          this.errorMessage = 'Something went bad, server responded: ' + JSON.stringify(err.error.message);
-        }
-      );
-    } else {
-      window.scrollTo(0, 0);
-      this.showLoader = false;
-
-      this.serviceForm.markAsDirty();
-      this.serviceForm.updateValueAndValidity();
-      if (!this.serviceForm.valid) {
-        this.errorMessage = 'Please fill in all required fields (marked with an asterisk) ' +
-          'and fix data format.';
-      }
-    }
-  }
 
   ngOnInit() {
     this.showLoader = true;
@@ -304,7 +247,7 @@ export class DatasourceFormComponent implements OnInit {
         },
         () => {
           if (this.datasource) { //fill the form -->
-            console.log(this.datasource);
+            // console.log(this.datasource);
 /*            const parsedDatasource = { ...this.datasource };
             ['versionControl', 'thematic', 'harvestable'].forEach(field => {
               if (typeof parsedDatasource[field] === 'boolean') {
