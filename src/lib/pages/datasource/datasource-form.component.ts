@@ -188,7 +188,7 @@ export class DatasourceFormComponent implements OnInit {
       _ds => {
         this.showLoader = false;
         if (this.addOpenAIRE) return this.navigator.datasourceSubmitted(_ds.id);
-        return this.navigator.resourceDashboard(this.providerId, _ds.serviceId); // fixme: Datasource providerId -2test
+        return this.navigator.datasourceDashboard(this.providerId, this.datasourceId); // TODO: check if catalogueId param is needed
       },
       err => {
         this.showLoader = false;
@@ -234,7 +234,7 @@ export class DatasourceFormComponent implements OnInit {
         _ds => {
           this.showLoader = false;
           if (this.addOpenAIRE) return this.navigator.datasourceSubmitted(_ds.id);
-          return this.navigator.resourceDashboard(this.providerId, _ds.serviceId); // fixme: Datasource providerId -2test
+          return this.navigator.datasourceDashboard(this.providerId, this.datasourceId); // TODO: check if catalogueId param is needed
         },
         err => {
           this.showLoader = false;

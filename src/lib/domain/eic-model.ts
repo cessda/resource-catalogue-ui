@@ -452,7 +452,7 @@ export class DeployableService implements Identifiable {
 
 export class Datasource implements Identifiable {
   id: string;
-  serviceId: string;
+  resourceOwner: string;
   catalogueId: string;
   submissionPolicyURL: URL;
   preservationPolicyURL: URL;

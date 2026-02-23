@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http';
 import {AuthenticationService} from './authentication.service';
 import {environment} from '../../environments/environment';
-import {Datasource, DatasourceBundle, OpenAIREMetrics, ProviderBundle} from '../domain/eic-model';
+import {Datasource, DatasourceBundle, LoggingInfo, OpenAIREMetrics, ProviderBundle} from '../domain/eic-model';
 import {Paging} from '../domain/paging';
 import {ConfigService} from "./config.service";
 
@@ -121,6 +121,14 @@ export class DatasourceService {
   getOpenAIREMetrics(datasourceId: string) {
     datasourceId = decodeURIComponent(datasourceId);
     return this.http.get<OpenAIREMetrics>(this.base + `/datasource/isMetricsValid/${datasourceId}`);
+  }
+
+  getDatasourceLoggingInfoHistory(datasourceId: string, catalogue_id: string) {
+    datasourceId = decodeURIComponent(datasourceId);
+    if (catalogue_id === this.catalogueConfigId)
+      return this.http.get<LoggingInfo[]>(this.base + `/datasource/loggingInfoHistory/${datasourceId}?catalogue_id=${catalogue_id}`);
+    else
+      return this.http.get<LoggingInfo[]>(this.base + `/catalogue/${catalogue_id}/datasource/loggingInfoHistory/${datasourceId}`);
   }
 
 }
