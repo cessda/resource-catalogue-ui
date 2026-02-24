@@ -20,6 +20,7 @@ import {FormControlService} from "../../../dynamic-catalogue/services/form-contr
 import {SurveyComponent} from "../../../dynamic-catalogue/pages/dynamic-form/survey.component";
 import {zip} from "rxjs";
 import {AdaptersService} from "../../services/adapters.service";
+import {pidHandler} from "../../shared/pid-handler/pid-handler.service";
 
 declare var UIkit: any;
 
@@ -77,7 +78,8 @@ export class AdaptersFormComponent implements OnInit {
               protected adaptersService: AdaptersService,
               protected route: ActivatedRoute,
               protected router: Router,
-              protected config: ConfigService
+              protected config: ConfigService,
+              public pidHandler: pidHandler
   ) {
     this.resourceService = this.injector.get(ResourceService);
     this.fb = this.injector.get(UntypedFormBuilder);
@@ -92,7 +94,7 @@ export class AdaptersFormComponent implements OnInit {
     this.adaptersService.uploadAdapter(adapterValue, this.editMode).subscribe(
       _service => {
         this.showLoader = false;
-        this.router.navigate(['/adapters/my']);
+        this.router.navigate(['/dashboard/' + this.catalogueConfigId +'/'+ this.pidHandler.customEncodeURIComponent(this.providerId) +'/adapters/']);
       },
       err => {
         this.showLoader = false;
