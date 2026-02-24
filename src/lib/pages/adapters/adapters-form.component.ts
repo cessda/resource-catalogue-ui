@@ -1,4 +1,11 @@
-import {UntypedFormArray, UntypedFormBuilder, FormControl, UntypedFormGroup, Validators} from '@angular/forms';
+import {
+  UntypedFormArray,
+  UntypedFormBuilder,
+  FormControl,
+  UntypedFormGroup,
+  Validators,
+  FormGroup
+} from '@angular/forms';
 import {Component, Injector, OnInit, ViewChild, isDevMode} from '@angular/core';
 import {AuthenticationService} from '../../services/authentication.service';
 import {NavigationService} from '../../services/navigation.service';
@@ -78,10 +85,11 @@ export class AdaptersFormComponent implements OnInit {
     this.weights[0] = this.authenticationService.getUserEmail().split('@')[0];
   }
 
-  submitForm(formData) {
+  submitForm(formData: FormGroup) {
     window.scrollTo(0, 0);
-    formData = FormControlService.cleanObjectInPlace(formData);
-    this.adaptersService.uploadAdapter(formData.value.adapter, this.editMode).subscribe(
+    let adapterValue = formData.value.adapter;
+    adapterValue = FormControlService.cleanObjectInPlace(adapterValue); // clean form before submission
+    this.adaptersService.uploadAdapter(adapterValue, this.editMode).subscribe(
       _service => {
         this.showLoader = false;
         this.router.navigate(['/adapters/my']);
