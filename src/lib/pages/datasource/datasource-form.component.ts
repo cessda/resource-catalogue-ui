@@ -36,10 +36,11 @@ export class DatasourceFormComponent implements OnInit {
   serviceName = '';
   firstServiceForm = false;
   showLoader = false;
-  pendingService = false;
+  pendingResource = false;
   addOpenAIRE = false; //on addOpenAIRE path
   openaireId: string = null; //datasource OA id
   providerId: string;
+  catalogueId: string;
   editMode = false;
   hasChanges = false;
   serviceForm: UntypedFormGroup;
@@ -170,7 +171,7 @@ export class DatasourceFormComponent implements OnInit {
     this.weights[0] = this.authenticationService.getUserEmail().split('@')[0];
   }
 
-  submitForm(formData: any, tempSave: boolean, pendingService: boolean) {
+  submitForm(formData: any, tempSave: boolean, pendingResource: boolean) {
     let datasourceValue = formData.value.datasource;
     window.scrollTo(0, 0);
 

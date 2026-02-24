@@ -35,6 +35,7 @@ import {RejectedDatasourcesComponent} from "./dashboard/rejectedDatasources/reje
 import {AdaptersFormComponent} from "../adapters/adapters-form.component";
 import {AdaptersListComponent} from "../admin/adapters-list.component";
 import {AddFirstDatasourceComponent} from "../datasource/add-first-datasource.component";
+import {UpdateDatasource} from "../datasource/update-datasource";
 
 const providerRoutes: Routes = [
 
@@ -329,7 +330,7 @@ const providerRoutes: Routes = [
   },
   {
     path: ':providerId/datasource/update/:datasourceId',
-    component: DatasourceFormComponent,
+    component: UpdateDatasource,
     canActivate: [CanActivateViaAuthGuard],
     data: {
       breadcrumb: 'Edit Datasource'

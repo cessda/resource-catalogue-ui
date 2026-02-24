@@ -1,0 +1,63 @@
+import {Component, Injector, OnInit} from '@angular/core';
+import {ActivatedRoute} from '@angular/router';
+import {DatePipe} from '@angular/common';
+import {AuthenticationService} from '../../services/authentication.service';
+import {Subscription} from 'rxjs';
+import {ResourceService} from '../../services/resource.service';
+import {NavigationService} from "../../services/navigation.service";
+import {DatasourceFormComponent} from "./datasource-form.component";
+import {FormControlService} from "../../../dynamic-catalogue/services/form-control.service";
+import {ConfigService} from "../../services/config.service";
+import {DatasourceService} from "../../services/datasource.service";
+
+@Component({
+    selector: 'app-update-datasource',
+    templateUrl: './datasource-form.component.html',
+    styleUrls: ['../provider/service-provider-form.component.css'],
+    standalone: false
+})
+export class UpdateDatasource extends DatasourceFormComponent implements OnInit {
+  private sub: Subscription;
+
+  constructor(public route: ActivatedRoute,
+              public authenticationService: AuthenticationService,
+              protected datasourceService: DatasourceService,
+              protected injector: Injector,
+              public datePipe: DatePipe,
+              public navigator: NavigationService,
+              public dynamicFormService: FormControlService,
+              public config: ConfigService) {
+    super(injector, authenticationService, datasourceService, route, dynamicFormService, config);
+    this.editMode = true;
+  }
+
+  ngOnInit() {
+    const path = this.route.snapshot.routeConfig.path;
+    if (path.includes(':catalogueId')) { this.catalogueId = this.route.snapshot.paramMap.get('catalogueId') }
+    else { this.catalogueId = this.catalogueConfigId }
+    if (path === ':catalogueId/:providerId/datasource/view/:resourceId') this.disable = true; // view-only mode
+    super.ngOnInit();
+    if (sessionStorage.getItem('service')) {
+      sessionStorage.removeItem('service');
+    } else {
+      this.sub = this.route.params.subscribe(params => {
+        // this.datasourceId = params['datasourceId'];
+        this.datasourceId = this.route.snapshot.paramMap.get('datasourceId');
+        const pathName = window.location.pathname;
+        if (pathName.includes('draft-datasource/update')) {
+          this.pendingResource = true;
+        }
+        // this.datasourceService.getService(this.resourceId).subscribe(service => {
+        // this.datasourceService[this.pendingResource ? 'getPendingDatasource' : 'getDatasourceBundleById'](this.datasourceId, this.catalogueId)
+        this.datasourceService.getDatasourceBundleById(this.datasourceId, this.catalogueId)
+          .subscribe(dsBundle => {
+              this.payloadAnswer = {'answer': {datasource: dsBundle.datasource}};
+              ResourceService.removeNulls(dsBundle.datasource);
+            },
+            err => this.errorMessage = 'Could not get the data for the requested service. ' + err.error
+          );
+      });
+    }
+  }
+
+}

@@ -34,6 +34,7 @@ import {AdaptersListComponent} from "../admin/adapters-list.component";
 import {DatasourceFormComponent} from "../datasource/datasource-form.component";
 import {DatasourceSelectComponent} from "../datasource/datasource-select.component";
 import {AddFirstDatasourceComponent} from "../datasource/add-first-datasource.component";
+import {UpdateDatasource} from "../datasource/update-datasource";
 
 
 @NgModule({
@@ -76,6 +77,7 @@ import {AddFirstDatasourceComponent} from "../datasource/add-first-datasource.co
     UpdateTrainingResource,
     DeployableServiceForm,
     UpdateDeployableService,
+    UpdateDatasource,
     AdaptersFormComponent
   ]
 })
