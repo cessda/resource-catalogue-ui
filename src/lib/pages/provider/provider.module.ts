@@ -18,7 +18,6 @@ import {ServiceFormComponent} from '../provider-resources/service-form.component
 import {MonitoringExtensionFormComponent} from "../provider-resources/monitoring-extension/monitoring-extension-form.component";
 import {HelpdeskExtensionFormComponent} from "../provider-resources/helpdesk-extension/helpdesk-extension-form.component";
 import {NgSelectModule} from '@ng-select/ng-select';
-// import {LMarkdownEditorModule} from 'ngx-markdown-editor';
 import {TrainingResourceForm} from "../training-resources/training-resource-form";
 import {UpdateTrainingResource} from "../training-resources/update-training-resource";
 import {AddFirstTrainingResourceComponent} from "../training-resources/add-first-training-resource.component";
@@ -35,6 +34,8 @@ import {DatasourceFormComponent} from "../datasource/datasource-form.component";
 import {DatasourceSelectComponent} from "../datasource/datasource-select.component";
 import {AddFirstDatasourceComponent} from "../datasource/add-first-datasource.component";
 import {UpdateDatasource} from "../datasource/update-datasource";
+import {UpdateAdaptersFormComponent} from "../adapters/update-adapters-form.component";
+// import {LMarkdownEditorModule} from 'ngx-markdown-editor';
 
 
 @NgModule({
@@ -78,7 +79,8 @@ import {UpdateDatasource} from "../datasource/update-datasource";
     DeployableServiceForm,
     UpdateDeployableService,
     UpdateDatasource,
-    AdaptersFormComponent
+    AdaptersFormComponent,
+    UpdateAdaptersFormComponent
   ]
 })
 

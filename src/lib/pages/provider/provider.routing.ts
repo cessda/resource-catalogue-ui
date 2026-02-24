@@ -36,6 +36,7 @@ import {AdaptersFormComponent} from "../adapters/adapters-form.component";
 import {AdaptersListComponent} from "../admin/adapters-list.component";
 import {AddFirstDatasourceComponent} from "../datasource/add-first-datasource.component";
 import {UpdateDatasource} from "../datasource/update-datasource";
+import {UpdateAdaptersFormComponent} from "../adapters/update-adapters-form.component";
 
 const providerRoutes: Routes = [
 
@@ -323,6 +324,14 @@ const providerRoutes: Routes = [
   {
     path: ':providerId/adapter/update/:adapterId',
     component: AdaptersFormComponent,
+    canActivate: [CanActivateViaAuthGuard],
+    data: {
+      breadcrumb: 'Edit Adapter'
+    }
+  },
+  {
+    path: ':providerId/adapter/update/:adapterId',
+    component: UpdateAdaptersFormComponent,
     canActivate: [CanActivateViaAuthGuard],
     data: {
       breadcrumb: 'Edit Adapter'
