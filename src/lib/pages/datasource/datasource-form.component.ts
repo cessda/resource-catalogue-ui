@@ -188,6 +188,9 @@ export class DatasourceFormComponent implements OnInit {
       _ds => {
         this.showLoader = false;
         // if (this.addOpenAIRE) return this.navigator.datasourceSubmitted(_ds.id);
+        if(window.location.pathname.includes('first-datasource')) {
+          this.datasourceId = _ds['id'];
+        }
         return this.navigator.datasourceDashboard(this.providerId, this.datasourceId); // TODO: check if catalogueId param is needed
       },
       err => {
@@ -232,53 +235,6 @@ export class DatasourceFormComponent implements OnInit {
     if (this.route.snapshot.paramMap.get('datasourceId')) {
       this.datasourceId = this.route.snapshot.paramMap.get('datasourceId');
       this.resourceType = 'datasource';
-    }
-
-    if (!this.addOpenAIRE) {
-      this.datasourceService.getDatasourceBundleById(this.datasourceId, this.catalogueConfigId).subscribe( //TODO check
-        res => {
-          if (res != null) {
-            this.datasource = res.datasource;
-            this.editMode = true;
-          }
-        },
-        err => {
-          console.log(err);
-        },
-        () => {
-          if (this.datasource) { //fill the form -->
-            // console.log(this.datasource);
-/*            const parsedDatasource = { ...this.datasource };
-            ['versionControl', 'thematic', 'harvestable'].forEach(field => {
-              if (typeof parsedDatasource[field] === 'boolean') {
-                parsedDatasource[field] = parsedDatasource[field].toString();
-              }
-            });*/
-            this.payloadAnswer = { 'answer': { datasource: this.datasource } };
-          }
-        }
-      );
-    }
-
-    if (this.addOpenAIRE) {
-      console.log(this.openaireId);
-      this.datasourceService.getOpenAIREDatasourcesById(this.openaireId).subscribe(
-        res => { if(res!=null) {
-          this.datasource = res;
-          this.editMode = false;
-          }
-        },
-        err => { console.log(err); },
-        () => {
-          if (this.datasource) { //fill the form -->
-            this.formPrepare(this.datasource);
-            this.serviceForm.patchValue(this.datasource);
-            this.serviceForm.get('serviceId').setValue(decodeURIComponent(this.serviceId));
-            this.serviceForm.get('catalogueId').setValue(this.catalogueConfigId);
-
-          }
-        }
-      );
     }
 
   }
