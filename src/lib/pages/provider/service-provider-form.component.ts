@@ -163,7 +163,7 @@ export class ServiceProviderFormComponent implements OnInit {
   }
 
   submitForm(formData: any) {
-    let providerValue = formData.value.provider;
+    let providerValue = formData.value.organisation;
     window.scrollTo(0, 0);
 
     this.errorMessage = '';
