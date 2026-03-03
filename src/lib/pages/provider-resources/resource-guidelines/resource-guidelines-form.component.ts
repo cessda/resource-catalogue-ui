@@ -200,4 +200,5 @@ export class ResourceGuidelinesFormComponent implements OnInit {
     }
   }
 
+  protected readonly decodeURIComponent = decodeURIComponent;
 }

@@ -9,7 +9,7 @@
               Guidelines
             </div>
             <div class="providerName uk-margin-small-top">
-              <strong>Service id: {{serviceId}}</strong> {{hasChanges ? '(unsaved changes)' : ''}}
+              <strong>Service id: {{decodeURIComponent(serviceId)}}</strong> {{hasChanges ? '(unsaved changes)' : ''}}
             </div>
           </div>
           <div class="uk-flex uk-flex-middle">
@@ -112,9 +112,9 @@
                         <!--                                                                          {{guidelinesForm.value | json}}-->
                         <!--                                                                          {{guidelines|json}}-->
                       <!--                                                                        </pre>-->
-                    </div>
+                      </div>
 
-                  </form>
+                    </form>
 
                 </div>
 
@@ -122,7 +122,8 @@
             </div>
 
           </div>
-        </div>        </div>
+        </div>
+        </div>
       </div>
     </div>
   </div>

@@ -64,8 +64,7 @@ export class GuidelinesFormComponent implements OnInit {
                 {
                   'resourceOwner': decodeURIComponent(this.providerId),
                   'type': "Interoperability Guidelines",
-                  'catalogueId': this.catalogueConfigId,
-                  'resourceTypeGeneral': "Guideline"
+                  'catalogueId': this.catalogueConfigId
                 }
             }
           };
