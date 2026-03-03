@@ -336,11 +336,14 @@
                                     <span class="statusLabel">{{serviceORresource}} Status: </span>{{labels[statuses.indexOf(serviceBundle.status)]}}
                                   </div>
                                   <div class="uk-margin-small-top">
-                                    <span class="statusLabel">Resource Organisation: </span>{{ providersPage?.results ? getProviderNameWithId(serviceBundle.service.resourceOwner) : ''}}
+                                    <span class="statusLabel">Catalogue id: </span>{{ serviceBundle.catalogueId }}
                                   </div>
                                   <div class="uk-margin-small-top">
-                                    <span class="statusLabel">Resource Providers: </span>{{ providersPage?.results ? getProviderNamesWithIds(serviceBundle.service.serviceProviders) : ''}}
+                                    <span class="statusLabel">Resource Organisation: </span>{{ providersPage?.results ? getProviderNameWithId(serviceBundle.service.resourceOwner) : ''}}
                                   </div>
+<!--                                  <div class="uk-margin-small-top">-->
+<!--                                    <span class="statusLabel">Service Providers: </span>{{ providersPage?.results ? getProviderNamesWithIds(serviceBundle.service.serviceProviders) : ''}}-->
+<!--                                  </div>-->
                                   <!--                              <div class="uk-margin-small-top">-->
                                   <!--                                <span class="statusLabel">Status: </span>{{ serviceBundle.active ? 'Active' : 'Inactive' }}-->
                                   <!--                              </div>-->
@@ -363,9 +366,6 @@
                                       by {{ serviceBundle.latestAuditInfo.userFullName}}
                                     </ng-container>
                                     <ng-container *ngIf="!serviceBundle.latestAuditInfo"><i>Never audited</i></ng-container>
-                                  </div>
-                                  <div class="uk-margin-small-top">
-                                    <span class="statusLabel">Catalogue id: </span>{{ serviceBundle.catalogueId }}
                                   </div>
                                 </div>
 
