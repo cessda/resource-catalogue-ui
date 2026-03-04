@@ -36,10 +36,11 @@
 
                 <h5 class="uk-padding-small uk-padding-remove-left uk-margin-remove">On this page you can assign Guidelines to your {{serviceORresource}}. </h5>
 
-                <span>Only approved guidelines are shown. If your guideline isn’t listed, please ensure it is registered and approved.</span>
+                <div>Please add the guidelines you wish to include and submit the form.</div>
+                <div class="uk-text-meta">Only approved guidelines are shown. If your guideline isn’t listed, please ensure it is registered and approved.</div>
 
                 @if (guidelines.length==0) {
-                  <div class="uk-padding uk-text-meta">No guidelines available.</div>
+                  <div class="uk-padding">No guidelines available.</div>
                 }
 
                 @if (guidelines.length) {
