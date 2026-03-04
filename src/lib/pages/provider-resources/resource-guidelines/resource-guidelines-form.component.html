@@ -34,91 +34,99 @@
 
               <div [ngClass]="{'blur-filter': showLoader}">
 
-                <h5 class="uk-padding-small uk-margin-remove">On this page you can assign Guidelines to your {{serviceORresource}}. </h5>
+                <h5 class="uk-padding-small uk-padding-remove-left uk-margin-remove">On this page you can assign Guidelines to your {{serviceORresource}}. </h5>
 
-                <div id="guidelinesForm">
+                <span>Only approved guidelines are shown. If your guideline isn’t listed, please ensure it is registered and approved.</span>
 
-                  <div class="uk-margin-bottom uk-flex uk-flex-right">
-                    <div>
-                      <button class="uk-button uk-button-link" type="button">Do you need help?</button>
-                      <div uk-drop="pos: bottom-left">
-                        <div class="uk-card uk-card-body uk-card-default">
-                          <p class="uk-margin-remove-bottom">For questions related to the information that needs to be
-                            filled in and suggestions on the portal, please contact us in <a [href]="'mailto:' + catalogueSupportEmail">{{ catalogueSupportEmail }}</a>
-                          </p>
+                @if (guidelines.length==0) {
+                  <div class="uk-padding uk-text-meta">No guidelines available.</div>
+                }
+
+                @if (guidelines.length) {
+                  <div id="guidelinesForm">
+
+                    <div class="uk-margin-bottom uk-flex uk-flex-right">
+                      <div>
+                        <button class="uk-button uk-button-link" type="button">Do you need help?</button>
+                        <div uk-drop="pos: bottom-left">
+                          <div class="uk-card uk-card-body uk-card-default">
+                            <p class="uk-margin-remove-bottom">For questions related to the information that needs to be
+                              filled in and suggestions on the portal, please contact us in <a [href]="'mailto:' + catalogueSupportEmail">{{ catalogueSupportEmail }}</a>
+                            </p>
+                          </div>
                         </div>
                       </div>
+
+                    </div>
+
+                    @if (errorMessage) {
+                      <div data-uk-alert="" class="uk-alert uk-alert-danger">
+                        <p>{{errorMessage}}</p>
+                      </div>
+                    }
+                    @if (successMessage) {
+                      <div data-uk-alert="" class="uk-alert uk-alert-success">
+                        <p>{{successMessage}}</p>
+                      </div>
+                    }
+
+                    <div class="uk-grid">
+
+                      <form [formGroup]="guidelinesForm" role="form" class="uk-form uk-margin uk-width-1-1">
+
+                        <div class="formContainer">
+
+                          <div formArrayName="interoperabilityRecordIds" class="uk-margin-large-bottom">
+                            <label class="uk-form-label uk-text-right" for="interoperabilityRecordIds">
+                              Guidelines
+                            </label>
+                            <div class="uk-form-description uk-margin-top uk-width-9-10">Interoperability records list</div>
+                            <div class="uk-form-controls uk-margin-medium-top">
+                              @for (ir of getFieldAsFormArray('interoperabilityRecordIds').controls; track ir; let i = $index) {
+                                <div
+                                  class="uk-margin-bottom">
+                                  @if (guidelines?.length > 0) {
+                                    <ng-select class="uk-width-9-10" id="interoperabilityRecordIds"
+                                      [items]="guidelines"
+                                      (change)="checkForDuplicates('interoperabilityRecordIds'); unsavedChangesPrompt()"
+                                      bindLabel="name"
+                                      bindValue="id"
+                                      clearAllText="Clear"
+                                      [formControlName]="i">
+                                    </ng-select>
+                                  }
+                                  @if (getFieldAsFormArray('interoperabilityRecordIds').length > 1 && !disable) {
+                                    <a
+                                      class="remove-element uk-padding-small"
+                                      (click)="remove('interoperabilityRecordIds', i); unsavedChangesPrompt()">
+                                      <i class="fa fa-times" aria-hidden="true"></i>
+                                    </a>
+                                  }
+                                </div>
+                              }
+                              @if (!disable) {
+                                <div class="uk-width-9-10 uk-text-center uk-margin-medium-top">
+                                  <a class="add-new-element"
+                                    (click)="push('interoperabilityRecordIds')">
+                                    <i class="fa fa-plus" aria-hidden="true"></i> Add Guideline
+                                  </a>
+                                </div>
+                              }
+                            </div>
+                          </div>
+
+                          <!--                                                                        <pre>-->
+                          <!--                                                                          {{guidelinesForm.value | json}}-->
+                          <!--                                                                          {{guidelines|json}}-->
+                        <!--                                                                        </pre>-->
+                        </div>
+
+                      </form>
+
                     </div>
 
                   </div>
-
-                  @if (errorMessage) {
-                    <div data-uk-alert="" class="uk-alert uk-alert-danger">
-                      <p>{{errorMessage}}</p>
-                    </div>
-                  }
-                  @if (successMessage) {
-                    <div data-uk-alert="" class="uk-alert uk-alert-success">
-                      <p>{{successMessage}}</p>
-                    </div>
-                  }
-
-                  <div class="uk-grid">
-
-                    <form [formGroup]="guidelinesForm" role="form" class="uk-form uk-margin uk-width-1-1">
-
-                      <div class="formContainer">
-
-                        <div formArrayName="interoperabilityRecordIds" class="uk-margin-large-bottom">
-                          <label class="uk-form-label uk-text-right" for="interoperabilityRecordIds">
-                            Guidelines
-                          </label>
-                          <div class="uk-form-description uk-margin-top uk-width-9-10">Interoperability records list</div>
-                          <div class="uk-form-controls uk-margin-medium-top">
-                            @for (ir of getFieldAsFormArray('interoperabilityRecordIds').controls; track ir; let i = $index) {
-                              <div
-                                class="uk-margin-bottom">
-                                @if (guidelines?.length > 0) {
-                                  <ng-select class="uk-width-9-10" id="interoperabilityRecordIds"
-                                    [items]="guidelines"
-                                    (change)="checkForDuplicates('interoperabilityRecordIds'); unsavedChangesPrompt()"
-                                    bindLabel="name"
-                                    bindValue="id"
-                                    clearAllText="Clear"
-                                    [formControlName]="i">
-                                  </ng-select>
-                                }
-                                @if (getFieldAsFormArray('interoperabilityRecordIds').length > 1 && !disable) {
-                                  <a
-                                    class="remove-element uk-padding-small"
-                                    (click)="remove('interoperabilityRecordIds', i); unsavedChangesPrompt()">
-                                    <i class="fa fa-times" aria-hidden="true"></i>
-                                  </a>
-                                }
-                              </div>
-                            }
-                            @if (!disable) {
-                              <div class="uk-width-9-10 uk-text-center uk-margin-medium-top">
-                                <a class="add-new-element"
-                                  (click)="push('interoperabilityRecordIds')">
-                                  <i class="fa fa-plus" aria-hidden="true"></i> Add Guideline
-                                </a>
-                              </div>
-                            }
-                          </div>
-                        </div>
-
-                        <!--                                                                        <pre>-->
-                        <!--                                                                          {{guidelinesForm.value | json}}-->
-                        <!--                                                                          {{guidelines|json}}-->
-                      <!--                                                                        </pre>-->
-                      </div>
-
-                    </form>
-
-                </div>
-
-              </div>
+                }
             </div>
 
           </div>
