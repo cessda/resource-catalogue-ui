@@ -15,7 +15,6 @@ declare var UIkit: any;
 @Component({
     selector: 'app-datasource-select',
     templateUrl: './datasource-select.component.html',
-    styleUrls: ['../provider/dashboard/services/service.component.css'],
     standalone: false
 })
 

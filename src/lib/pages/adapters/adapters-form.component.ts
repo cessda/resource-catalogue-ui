@@ -27,7 +27,6 @@ declare var UIkit: any;
 @Component({
     selector: 'app-resource-adapters-form',
     templateUrl: './adapters-form.component.html',
-    styleUrls: ['../provider/service-provider-form.component.css'],
     providers: [FormControlService],
     standalone: false
 })

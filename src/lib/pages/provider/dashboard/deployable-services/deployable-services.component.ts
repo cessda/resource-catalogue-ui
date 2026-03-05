@@ -15,7 +15,6 @@ declare var UIkit: any;
 @Component({
     selector: 'app-deployable-services',
     templateUrl: './deployable-services.component.html',
-    styleUrls: ['../services/service.component.css'],
     standalone: false
 })
 

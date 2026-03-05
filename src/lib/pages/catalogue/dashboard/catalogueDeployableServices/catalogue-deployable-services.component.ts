@@ -13,7 +13,6 @@ declare var UIkit: any;
 @Component({
     selector: 'app-catalogue-deployable-services',
     templateUrl: './catalogue-deployable-services.component.html',
-    styleUrls: ['../../../provider/dashboard/services/service.component.css'],
     standalone: false
 })
 

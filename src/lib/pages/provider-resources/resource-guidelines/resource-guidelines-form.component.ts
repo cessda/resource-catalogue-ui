@@ -14,7 +14,6 @@ declare var UIkit: any;
 @Component({
     selector: 'app-resource-guidelines-form',
     templateUrl: './resource-guidelines-form.component.html',
-    styleUrls: ['../../provider/service-provider-form.component.css'],
     standalone: false
 })
 export class ResourceGuidelinesFormComponent implements OnInit {

@@ -19,7 +19,6 @@ import {ConfigService} from "../../../services/config.service";
 @Component({
     selector: 'app-resource-monitoring-extension-form',
     templateUrl: './monitoring-extension-form.component.html',
-    styleUrls: ['../../provider/service-provider-form.component.css'],
     providers: [FormControlService],
     standalone: false
 })

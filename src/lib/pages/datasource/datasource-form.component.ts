@@ -23,7 +23,6 @@ declare var UIkit: any;
 @Component({
     selector: 'app-datasource-form',
     templateUrl: './datasource-form.component.html',
-    styleUrls: ['../provider/service-provider-form.component.css'],
     standalone: false
 })
 export class DatasourceFormComponent implements OnInit {

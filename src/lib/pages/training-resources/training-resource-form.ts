@@ -23,7 +23,6 @@ declare var UIkit: any;
 @Component({
     selector: 'app-training-resource-form',
     templateUrl: './training-resource-form.html',
-    styleUrls: ['../provider/service-provider-form.component.css'],
     standalone: false
 })
 export class TrainingResourceForm implements OnInit {

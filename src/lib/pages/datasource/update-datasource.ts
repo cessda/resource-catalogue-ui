@@ -13,7 +13,6 @@ import {DatasourceService} from "../../services/datasource.service";
 @Component({
     selector: 'app-update-datasource',
     templateUrl: './datasource-form.component.html',
-    styleUrls: ['../provider/service-provider-form.component.css'],
     standalone: false
 })
 export class UpdateDatasource extends DatasourceFormComponent implements OnInit {

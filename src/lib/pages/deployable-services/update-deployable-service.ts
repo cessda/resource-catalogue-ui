@@ -14,7 +14,6 @@ import {ConfigService} from "../../services/config.service";
 @Component({
     selector: 'app-update-deployable-service',
     templateUrl: './deployable-service-form.html',
-    styleUrls: ['../provider/service-provider-form.component.css'],
     standalone: false
 })
 export class UpdateDeployableService extends DeployableServiceForm implements OnInit {

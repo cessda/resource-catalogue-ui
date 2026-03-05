@@ -21,7 +21,6 @@ declare var UIkit: any;
 @Component({
     selector: 'app-deployable-service-form',
     templateUrl: './deployable-service-form.html',
-    styleUrls: ['../provider/service-provider-form.component.css'],
     standalone: false
 })
 export class DeployableServiceForm implements OnInit {

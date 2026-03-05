@@ -5,7 +5,6 @@ import {environment} from '../../../../environments/environment';
 @Component({
     selector: 'app-about',
     templateUrl: './about.component.html',
-    styleUrls: ['../developers/developers.component.css'],
     standalone: false
 })
 export class AboutComponent implements OnInit {

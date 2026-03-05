@@ -797,11 +797,6 @@ a.remove-element i {
   text-decoration: none;
 }
 
-/*.service-card h4 {*/
-  /*color: #333432;*/
-  /*font-weight: 500;*/
-/*}*/
-
 
 .project-bg-color {
   background-color: #214c9c !important;
@@ -1361,15 +1356,45 @@ a[class*="wk-"]:hover {
         Dynamic Catalogue
  ========================== */
 
-.uk-display-none {
-  display: none;
-}
-
 .guideline-name {
   display: inline-block;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  max-width: 200px; /* adjust width as needed for your sidebar */
+  max-width: 200px; /* adjust width as needed for the sidebar */
   vertical-align: middle;
+}
+
+/* ========================
+        Feedback
+ ========================== */
+
+.uk-tooltip-red {
+  background: rgb(209,48,58);
+}
+
+#feedback {
+  float: left;
+  position: fixed;
+  top: calc(50% - 47px);
+  left: 0;
+  z-index: 10000;
+  display: block;
+}
+
+#feedback a {
+  /*background: #666;*/
+  background: rgba(209,48,58,0.01);
+  border-radius: 5px 0 0 5px;
+  box-shadow: none;
+  border: none !important;
+  display: block;
+  padding: 30px 12px;
+  padding-right: 12px;
+  transition: all .2s ease-in-out;
+  opacity: 0.5;
+}
+
+#feedback a:hover {
+  padding-right: 20px;
 }

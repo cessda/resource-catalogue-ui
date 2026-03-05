@@ -14,7 +14,6 @@ import {ConfigService} from "../../services/config.service";
 @Component({
     selector: 'app-update-training-resource',
     templateUrl: './training-resource-form.html',
-    styleUrls: ['../provider/service-provider-form.component.css'],
     standalone: false
 })
 export class UpdateTrainingResource extends TrainingResourceForm implements OnInit {

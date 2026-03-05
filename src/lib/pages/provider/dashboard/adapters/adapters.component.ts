@@ -15,7 +15,6 @@ declare var UIkit: any;
 @Component({
     selector: 'app-adapters',
     templateUrl: './adapters.component.html',
-    styleUrls: ['../services/service.component.css'],
     standalone: false
 })
 

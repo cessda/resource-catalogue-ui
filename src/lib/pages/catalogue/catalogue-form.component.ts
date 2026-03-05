@@ -17,7 +17,6 @@ declare var UIkit: any;
 @Component({
     selector: 'app-catalogue-form',
     templateUrl: './catalogue-form.component.html',
-    // styleUrls: ['./service-provider-form.component.css']
     providers: [FormControlService],
     standalone: false
 })

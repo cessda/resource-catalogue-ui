@@ -19,7 +19,6 @@ declare var UIkit: any;
 @Component({
   selector: 'app-new-service-provider',
   templateUrl: './service-provider-form.component.html',
-  styleUrls: ['./service-provider-form.component.css'],
   providers: [FormControlService],
   standalone: false
 })

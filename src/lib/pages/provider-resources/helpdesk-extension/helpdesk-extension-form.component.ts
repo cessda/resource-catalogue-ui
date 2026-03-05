@@ -17,7 +17,6 @@ import {Model} from "../../../../dynamic-catalogue/domain/dynamic-form-model";
 @Component({
     selector: 'app-helpdesk-extension-form',
     templateUrl: './helpdesk-extension-form.component.html',
-    styleUrls: ['../../provider/service-provider-form.component.css'],
     standalone: false
 })
 export class HelpdeskExtensionFormComponent implements OnInit {
