@@ -86,7 +86,7 @@ export class MyServiceProvidersComponent implements OnInit {
                 );
               }
               // if (p.status === 'pending template submission') {
-              if (p.status === 'approved' && p.provider.catalogueId === this.catalogueConfigId) {
+              if (p.status === 'approved' && p.organisation.catalogueId === this.catalogueConfigId) {
                 // console.log(p.id);
                 this.resourceService.getDraftServicesByProvider(p.id, '0', '50', 'ASC', 'name').subscribe(
                   res => {

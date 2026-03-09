@@ -95,7 +95,7 @@ export class ProviderInfoComponent {
     this.providerService.getServiceProviderBundleById(this.providerId).subscribe(
       providerBundle => {
         this.providerBundle = providerBundle;
-        this.provider = this.providerBundle.provider;
+        this.provider = this.providerBundle.organisation;
       },
       error => console.log(error)
     );

@@ -164,18 +164,18 @@
             </div>
             <div class="uk-grid uk-flex-middle uk-margin-remove-top">
               <div class="uk-width-1-6">
-                <img src="{{providerBundle.provider.logo ? providerBundle.provider.logo : '/assets/images/broken_image-black-48dp.svg'}}">
+                <img src="{{providerBundle.organisation.logo ? providerBundle.organisation.logo : '/assets/images/broken_image-black-48dp.svg'}}">
               </div>
               <div class="uk-width-2-3">
                 <h4 class="uk-margin-remove">
                   <a [routerLink]="['/dashboard', providerBundle.catalogueId, providerBundle.id]" data-uk-tooltip title="Go to the provider dashboard">
-                    {{ providerBundle.provider.name }}
+                    {{ providerBundle.organisation.name }}
                   </a>
-                  <!--                    <a (click)="navigate(providerBundle.provider.id)">{{providerBundle.provider.name}}</a>-->
+                  <!--                    <a (click)="navigate(providerBundle.organisation.id)">{{providerBundle.organisation.name}}</a>-->
                 </h4>
                 <div class="uk-margin-small-top">
-                  @if (providerBundle.provider.description) {
-                    <span class="uk-margin-small-top"><markdown [data]="providerBundle.provider.description"></markdown></span>
+                  @if (providerBundle.organisation.description) {
+                    <span class="uk-margin-small-top"><markdown [data]="providerBundle.organisation.description"></markdown></span>
                   }
                 </div>
                 <div class="uk-margin-small-top">
@@ -289,7 +289,7 @@
 <div id="actionModal" uk-modal>
   <div class="uk-modal-dialog uk-modal-body uk-margin-auto-vertical">
     @if (selectedProvider) {
-      <h6>Are you sure you want to delete the provider '{{selectedProvider.provider.name}}'</h6>
+      <h6>Are you sure you want to delete the provider '{{selectedProvider.organisation.name}}'</h6>
     }
     <div class="uk-text-right">
       <button class="uk-button uk-button-default uk-modal-close uk-margin-small-right" type="button">Cancel</button>

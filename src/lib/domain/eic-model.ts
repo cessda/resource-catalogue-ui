@@ -270,7 +270,7 @@ export class Provider implements Identifiable {
 }
 
 export class ProviderBundle extends Bundle<Provider> {
-  provider: Provider;
+  organisation: Provider;
 }
 
 export class CatalogueBundle extends Bundle<Catalogue> {

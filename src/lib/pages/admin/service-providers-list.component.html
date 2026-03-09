@@ -254,7 +254,7 @@
                             <div class="uk-width-1-5">
                               <div>
                                 <img class="el-image uk-border-rounded"
-                                     src="{{ providerBundle.provider.logo ? providerBundle.provider.logo : '/assets/images/broken_image-black-48dp.svg' }}">
+                                     src="{{ providerBundle.organisation.logo ? providerBundle.organisation.logo : '/assets/images/broken_image-black-48dp.svg' }}">
                               </div>
                             </div>
                             <div class="uk-width-4-5">
@@ -263,12 +263,12 @@
 <!--                                  <ng-container *ngIf="providerBundle.catalogueId===catalogueConfigId else anotherCatalogue">-->
                                     <ng-container *ngIf="providerBundle.status === 'approved'">
                                       <a [routerLink]="['/dashboard', providerBundle.catalogueId, pidHandler.customEncodeURIComponent(providerBundle.id)]" data-uk-tooltip title="Go to the resource provider monitoring dashboard">
-                                        {{ providerBundle.provider.name }}
+                                        {{ providerBundle.organisation.name }}
                                       </a>
                                     </ng-container>
                                     <ng-container *ngIf="providerBundle.status !== 'approved'">
                                       <a [routerLink]="['/dashboard', providerBundle.catalogueId, pidHandler.customEncodeURIComponent(providerBundle.id)]" data-uk-tooltip title="Go to the resource provider monitoring dashboard">
-                                        {{ providerBundle.provider.name }}
+                                        {{ providerBundle.organisation.name }}
                                       </a>
                                     </ng-container>
                                   <!--                                  <ng-container *ngIf="providerBundle.catalogueId===catalogueConfigId ">-->
@@ -276,13 +276,13 @@
                                       <i aria-hidden="true" class="fa fa-info-circle fa-lg uk-margin-left"></i>
                                     </a>
                                   <!--                                  </ng-container>-->
-                                  <!--                                  <ng-template #anotherCatalogue>{{ providerBundle.provider.name }}</ng-template>-->
+                                  <!--                                  <ng-template #anotherCatalogue>{{ providerBundle.organisation.name }}</ng-template>-->
                                 </span>
                               </div>
                               <div class="uk-margin-small-top">
                                 <span class="statusLabel">Abbreviation: </span>
-                                <ng-container *ngIf="providerBundle.provider.abbreviation && (providerBundle.provider.abbreviation!==null)">{{ providerBundle.provider.abbreviation }}</ng-container>
-                                <ng-container *ngIf="!providerBundle.provider.abbreviation || (providerBundle.provider.abbreviation===null)">not available</ng-container>
+                                <ng-container *ngIf="providerBundle.organisation.abbreviation && (providerBundle.organisation.abbreviation!==null)">{{ providerBundle.organisation.abbreviation }}</ng-container>
+                                <ng-container *ngIf="!providerBundle.organisation.abbreviation || (providerBundle.organisation.abbreviation===null)">not available</ng-container>
                               </div>
                               <div class="uk-margin-small-top">
                                 <span class="statusLabel">Provider Status: </span>{{ labels[statuses.indexOf(providerBundle.status)] | titlecase }}
@@ -564,7 +564,7 @@
                           <div *ngIf="showMainAuditForm && selectedProvider === providerBundle">
                             <!--                            <hr>-->
                             <div>
-                              <p>You are about to audit "{{ selectedProvider.provider.name }}".</p>
+                              <p>You are about to audit "{{ selectedProvider.organisation.name }}".</p>
                               <p>Please fill in the reason(s) of your action. <span style="color: grey">(optional)</span></p>
                             </div>
                             <form>
@@ -620,7 +620,7 @@
   <div *ngIf="!loadingMessage" class="uk-modal-dialog uk-modal-header uk-h4">Onboarding</div>
   <div *ngIf="!loadingMessage" class="uk-modal-dialog uk-modal-body uk-margin-auto-vertical">
     <div *ngIf="selectedProvider">
-      <h6>Proceed with changing the status of "{{ selectedProvider.provider.name }}"</h6>
+      <h6>Proceed with changing the status of "{{ selectedProvider.organisation.name }}"</h6>
       <p *ngIf="selectedProvider.status !== newStatus">The status will change from "{{ selectedProvider.status }}" to
         "{{ newStatus }}"</p>
       <p *ngIf="selectedProvider.status === newStatus">
@@ -646,12 +646,12 @@
   <div *ngIf="!loadingMessage" class="uk-modal-dialog uk-modal-header uk-h4">Delete Provider</div>
   <div *ngIf="!loadingMessage" class="uk-modal-dialog uk-modal-body uk-margin-auto-vertical">
     <div *ngIf="selectedProvider">
-      <h6>Are you sure you want to delete "{{ selectedProvider.provider.name }}" ?</h6>
+      <h6>Are you sure you want to delete "{{ selectedProvider.organisation.name }}" ?</h6>
       <p>Deleting a provider is an irreversible action.</p>
     </div>
     <div class="uk-text-right">
       <button class="uk-button uk-button-default uk-modal-close uk-margin-small-right" type="button">Cancel</button>
-      <button class="uk-button uk-button-danger uk-modal-close" type="button" (click)="deleteProvider(selectedProvider.provider.id)">Delete</button>
+      <button class="uk-button uk-button-danger uk-modal-close" type="button" (click)="deleteProvider(selectedProvider.organisation.id)">Delete</button>
     </div>
   </div>
   <div *ngIf="loadingMessage">
@@ -666,7 +666,7 @@
   <div *ngIf="!loadingMessage" class="uk-modal-dialog uk-modal-header uk-h4">Suspend Provider</div>
   <div *ngIf="!loadingMessage" class="uk-modal-dialog uk-modal-body uk-margin-auto-vertical">
     <ng-container *ngIf="selectedProvider">
-      <h6>Are you sure you want to {{selectedProvider.suspended==true ? 'un' : ''}}suspend "{{ selectedProvider.provider.name }}"?</h6>
+      <h6>Are you sure you want to {{selectedProvider.suspended==true ? 'un' : ''}}suspend "{{ selectedProvider.organisation.name }}"?</h6>
       <p>All services of this provider will be automatically {{selectedProvider.suspended==true ? 'un' : ''}}suspended as well.</p>
       <p>This action may take a while to complete.</p>
       <div class="uk-text-right">
@@ -747,7 +747,7 @@
             <div class="uk-width-1-5">
               <div>
                 <img class="el-image uk-border-rounded"
-                     src="{{ providerBundle.provider.logo ? providerBundle.provider.logo : '/assets/images/broken_image-black-48dp.svg' }}">
+                     src="{{ providerBundle.organisation.logo ? providerBundle.organisation.logo : '/assets/images/broken_image-black-48dp.svg' }}">
               </div>
             </div>
 
@@ -756,20 +756,20 @@
                 <span class="uk-margin-auto-vertical">
 <!--                  <ng-container *ngIf="providerBundle.catalogueId === catalogueConfigId else anotherCatalogue">-->
                     <a [routerLink]="['/dashboard', providerBundle.catalogueId, pidHandler.customEncodeURIComponent(providerBundle.id)]" target="_blank" data-uk-tooltip title="Go to the resource provider monitoring dashboard">
-                        {{ providerBundle.provider.name }}
+                        {{ providerBundle.organisation.name }}
                     </a>
                   <!--                  <ng-container *ngIf="providerBundle.catalogueId === catalogueConfigId">-->
                     <a [routerLink]="['/provider/view', providerBundle.catalogueId, pidHandler.customEncodeURIComponent(providerBundle.id)]" target="_blank" class="uk-display-inline-block">
                       <i aria-hidden="true" class="fa fa-info-circle fa-lg uk-margin-left"></i>
                     </a>
                   <!--                  </ng-container>-->
-                  <!--                  <ng-template #anotherCatalogue>{{ providerBundle.provider.name }}</ng-template>-->
+                  <!--                  <ng-template #anotherCatalogue>{{ providerBundle.organisation.name }}</ng-template>-->
                 </span>
               </div>
               <div class="uk-margin-small-top">
                 <span class="statusLabel">Abbreviation: </span>
-                <ng-container *ngIf="providerBundle.provider.abbreviation && (providerBundle.provider.abbreviation!==null)">{{ providerBundle.provider.abbreviation }}</ng-container>
-                <ng-container *ngIf="!providerBundle.provider.abbreviation || (providerBundle.provider.abbreviation===null)">not available</ng-container>
+                <ng-container *ngIf="providerBundle.organisation.abbreviation && (providerBundle.organisation.abbreviation!==null)">{{ providerBundle.organisation.abbreviation }}</ng-container>
+                <ng-container *ngIf="!providerBundle.organisation.abbreviation || (providerBundle.organisation.abbreviation===null)">not available</ng-container>
               </div>
               <div class="uk-margin-small-top">
                 <span class="statusLabel">Status: </span>{{ labels[statuses.indexOf(providerBundle.status)] | titlecase }}
@@ -872,7 +872,7 @@
           <div *ngIf="showSideAuditForm && selectedProvider === providerBundle">
             <hr>
             <div>
-              <p>You are about to audit "{{ selectedProvider.provider.name }}".</p>
+              <p>You are about to audit "{{ selectedProvider.organisation.name }}".</p>
               <p>Please fill in the reason(s) of your action. <span style="color: grey">(optional)</span></p>
             </div>
             <form>
@@ -895,7 +895,7 @@
 <div id="HLEmodal" uk-modal>
   <div *ngIf="!loadingMessage" class="uk-modal-dialog uk-modal-body uk-margin-auto-vertical">
     <div *ngIf="selectedProvider">
-      <div class="uk-h4 uk-padding uk-text-center uk-margin-remove-bottom">List of providers in which "{{selectedProvider.provider.name}}" appears as a Hosting Legal Entity</div>
+      <div class="uk-h4 uk-padding uk-text-center uk-margin-remove-bottom">List of providers in which "{{selectedProvider.organisation.name}}" appears as a Hosting Legal Entity</div>
       <div *ngIf="!resourcesUnderHLE">No results available</div>
       <div *ngFor="let item of resourcesUnderHLE; let i = index">
         <div *ngIf="item.key === 'service' && i === 1" class="uk-h4 uk-padding uk-padding-remove-bottom uk-text-center">Their associated resources</div>

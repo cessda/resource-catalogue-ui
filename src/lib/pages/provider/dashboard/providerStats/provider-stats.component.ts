@@ -509,7 +509,7 @@ export class ProviderStatsComponent implements OnInit {
         // borderWidth: 1
       },
       title: {
-        text: 'Countries serviced by ' + this.providerBundle.provider.name
+        text: 'Countries serviced by ' + this.providerBundle.organisation.name
       },
       // subtitle: {
       //     text: 'Demo of drawing all areas in the map, only highlighting partial data'
@@ -562,7 +562,7 @@ export class ProviderStatsComponent implements OnInit {
           height: (3 / 4 * 100) + '%', // 3:4 ratio
         },
         title: {
-          // text: 'Countries serviced by ' + this.providerBundle.provider.name
+          // text: 'Countries serviced by ' + this.providerBundle.organisation.name
           text: ''
         },
         colorAxis: {

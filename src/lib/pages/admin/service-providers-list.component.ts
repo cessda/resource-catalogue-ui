@@ -707,7 +707,7 @@ export class ServiceProvidersListComponent implements OnInit {
   showHLE(bundle: ProviderBundle) {
     this.loadingMessage = 'Loading HLE...'
     this.selectedProvider = bundle;
-    this.serviceProviderService.getAllResourcesUnderHLE(this.selectedProvider.provider.name).subscribe(
+    this.serviceProviderService.getAllResourcesUnderHLE(this.selectedProvider.organisation.name).subscribe(
       res => {
         this.resourcesUnderHLE = res;
       },
