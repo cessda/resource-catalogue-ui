@@ -1398,3 +1398,101 @@ a[class*="wk-"]:hover {
 #feedback a:hover {
   padding-right: 20px;
 }
+
+/* ========================================================================
+   Sidebar hover submenu - "Add first Resource"
+ ========================================================================== */
+
+/* The parent li that holds the submenu */
+.sidebar-hover-parent {
+  position: relative;
+}
+
+/* Parent link styling - match existing sidebar link style */
+.sidebar-hover-parent > a.uk-nav-link {
+  display: flex !important;
+  align-items: center;
+  font-weight: 400;
+  font-size: 14px;
+  color: #333432CC;
+  padding: 8px 25px;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.sidebar-hover-parent > a.uk-nav-link:hover {
+  text-decoration: none;
+  color: #333432;
+}
+
+/* Chevron arrow icon */
+.submenu-arrow {
+  margin-left: auto;
+  opacity: 0.45;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+  flex-shrink: 0;
+}
+
+/* CHANGED: was :hover, now .submenu-open */
+.sidebar-hover-parent.submenu-open .submenu-arrow {
+  transform: rotate(90deg);
+  opacity: 0.75;
+}
+
+/* Hide submenu by default */
+.sidebar-submenu {
+  display: none;
+  opacity: 0;
+  transform: translateY(-4px);
+  transition: opacity 0.18s ease, transform 0.18s ease;
+  margin: 0 !important;
+  padding: 4px 0 6px 0 !important;
+  background-color: rgba(0, 0, 0, 0.035);
+  border-left: 2px solid var(--primary-color, #26c0e2);
+  margin-left: 25px !important;
+  margin-right: 12px !important;
+  border-radius: 0 0 4px 4px;
+}
+
+/* CHANGED: was :hover, now .submenu-open */
+.sidebar-hover-parent.submenu-open .sidebar-submenu {
+  display: block;
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Child list items */
+.sidebar-submenu li {
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+/* Child links */
+.sidebar-submenu li > a {
+  display: block;
+  font-size: 13px !important;
+  font-weight: 400 !important;
+  color: #333432BB !important;
+  padding: 6px 14px 6px 16px !important;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.sidebar-submenu li > a:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+  color: #212121 !important;
+  text-decoration: none;
+}
+
+/* Fix the nested uk-nav wrapping the parent - remove extra margins */
+#sidebar_main .menu_section ul.uk-nav.uk-nav-default {
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+/* Ensure the nested ul.uk-nav li inherits sidebar spacing correctly */
+#sidebar_main .menu_section ul.uk-nav.uk-nav-default > li > a {
+  padding: 8px 25px;
+}
