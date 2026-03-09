@@ -102,7 +102,7 @@ export class ResourcesListComponent implements OnInit {
 
   @ViewChildren('checkboxes') checkboxes: QueryList<ElementRef>;
 
-  semanticRelationshipVoc: Vocabulary[] = null;
+  // semanticRelationshipVoc: Vocabulary[] = null;
 
   constructor(private resourceService: ResourceService,
               private providerService: ServiceProviderService,
@@ -226,7 +226,7 @@ export class ResourcesListComponent implements OnInit {
         }
       );
 
-      this.getSemanticRelationshipVoc();
+      // this.getSemanticRelationshipVoc();
     }
   }
 
@@ -775,11 +775,11 @@ export class ResourcesListComponent implements OnInit {
     return namesArray;
   }
 
-  getSemanticRelationshipVoc() {
-    this.resourceService.getVocabularyByType('SEMANTIC_RELATIONSHIP').subscribe(
-      suc => this.semanticRelationshipVoc = suc
-    );
-  }
+  // getSemanticRelationshipVoc() {
+  //   this.resourceService.getVocabularyByType('SEMANTIC_RELATIONSHIP').subscribe(
+  //     suc => this.semanticRelationshipVoc = suc
+  //   );
+  // }
 
   // getServiceMonitoringStatusWithId(id: string) {
   //   return this.providersPage.results.find( x => x.id === id )?.legalStatus;

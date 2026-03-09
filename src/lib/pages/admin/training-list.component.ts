@@ -104,7 +104,7 @@ export class TrainingListComponent implements OnInit {
   @ViewChildren("checkboxes") checkboxes: QueryList<ElementRef>;
 
   researchCategoriesVoc: Vocabulary[] = null;
-  semanticRelationshipVoc: Vocabulary[] = null;
+  // semanticRelationshipVoc: Vocabulary[] = null;
 
   constructor(private resourceService: ResourceService,
               private trainingResourceService: TrainingResourceService,
@@ -228,8 +228,8 @@ export class TrainingListComponent implements OnInit {
         }
       );
 
-      this.getResearchCategoriesVoc();
-      this.getSemanticRelationshipVoc();
+      // this.getResearchCategoriesVoc();
+      // this.getSemanticRelationshipVoc();
     }
   }
 
@@ -739,16 +739,16 @@ export class TrainingListComponent implements OnInit {
     return namesArray;
   }
 
-  getResearchCategoriesVoc() {
-    this.resourceService.getVocabularyByType('RESEARCH_CATEGORY').subscribe(
-      suc => this.researchCategoriesVoc = suc
-    );
-  }
+  // getResearchCategoriesVoc() {
+  //   this.resourceService.getVocabularyByType('RESEARCH_CATEGORY').subscribe(
+  //     suc => this.researchCategoriesVoc = suc
+  //   );
+  // }
 
-  getSemanticRelationshipVoc() {
-    this.resourceService.getVocabularyByType('SEMANTIC_RELATIONSHIP').subscribe(
-      suc => this.semanticRelationshipVoc = suc
-    );
-  }
+  // getSemanticRelationshipVoc() {
+  //   this.resourceService.getVocabularyByType('SEMANTIC_RELATIONSHIP').subscribe(
+  //     suc => this.semanticRelationshipVoc = suc
+  //   );
+  // }
 
 }
