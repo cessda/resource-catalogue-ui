@@ -108,12 +108,12 @@ export class ConfigurationTemplatesComponent implements OnInit {
                 map(instance => {
                   if (instance?.id) {
                     this.answersByTemplateId[templateId] = this.getAnswerForTemplate(instance);
-                    this.payloadAnswer = { answer: { ConfigurationTemplate: instance } };
+                    this.payloadAnswer = { answer: { configurationTemplateInstance: instance } };
                   } else {
                     // create empty payload if no instance returned
                     this.answersByTemplateId[templateId] = {
                       'answer': {
-                        ConfigurationTemplate: {
+                        configurationTemplateInstance: {
                           resourceId: decodeURIComponent(this.serviceId),
                           configurationTemplateId: modelId.split("-").slice(2).join("/"),
                           catalogueId: this.catalogueConfigId
@@ -165,23 +165,22 @@ export class ConfigurationTemplatesComponent implements OnInit {
   }
 
   getAnswerForTemplate(instance): any {
-    return { answer: { ConfigurationTemplate: instance } };
+    return { answer: { configurationTemplateInstance: instance } };
   }
 
   saveForm(submittedEvent: any, templateId: string): void {
     let myFormGroup: FormGroup = submittedEvent;
-    const ctiValue = submittedEvent.value.ConfigurationTemplate;
+    const ctiValue = submittedEvent.value.configurationTemplateInstance;
     const isUpdate = !!ctiValue.id;
-
     this.guidelinesService.saveConfigurationTemplateInstance(ctiValue).subscribe({
       next: (savedInstance) => {
-        myFormGroup.patchValue({ConfigurationTemplate: savedInstance}); // fill the form with the response because the id in now generated
+        myFormGroup.patchValue({configurationTemplateInstance: savedInstance}); // fill the form with the response because the id in now generated
         this.saveMessageMap[templateId] = isUpdate ? 'Updated successfully!' : 'Saved successfully!';
-        setTimeout(() => this.saveMessageMap[templateId] = '', 3000);
+        setTimeout(() => this.saveMessageMap[templateId] = '', 5000);
       },
       error: (err) => {
-        this.saveMessageMap[templateId] = isUpdate ? 'Update failed.' : 'Save failed.';
-        setTimeout(() => this.saveMessageMap[templateId] = '', 3000);
+        this.saveMessageMap[templateId] = isUpdate ? 'Update failed. ' + + err.error.message : 'Save failed. ' + err.error.message;
+        setTimeout(() => this.saveMessageMap[templateId] = '', 5000);
         console.error(`Failed to save template instance for ${templateId}`, err);
       }
     });
