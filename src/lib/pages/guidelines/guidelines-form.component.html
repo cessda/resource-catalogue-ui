@@ -14,7 +14,7 @@
         </div>
       }
       @if ((editMode && payloadAnswer) || !editMode) {
-        <app-survey [payload]="payloadAnswer" [model]="model" [tabsHeader]="" (submitForm)="submitForm($event)" [activeUsers]="[]">
+        <app-survey [payload]="payloadAnswer" [model]="model" [tabsHeader]="" (submitForm)="submitForm($event)">
           @if (model) {
             <div class="uk-grid form-top-section">
               <h5 class="uk-width-1-1 uk-margin-bottom">{{ model.name }}</h5>
