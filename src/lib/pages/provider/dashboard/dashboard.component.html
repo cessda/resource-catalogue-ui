@@ -70,7 +70,7 @@
             <li [routerLinkActive]="['current_section']" #deployableServices="routerLinkActive">
               <a [routerLink]="['/dashboard', catalogueId, providerId, 'deployable-services']">
                 <img src="{{deployableServices.isActive ? 'assets/images/new-icons/services-active.svg' : 'assets/images/new-icons/services.svg'}}" class="uk-margin-small-right">
-                Deployable Software
+                Deployable Application
               </a>
             </li>
           }
@@ -115,7 +115,7 @@
                 <li [routerLinkActive]="['current_section']" #deployableServices="routerLinkActive">
                   <a [routerLink]="['/dashboard', catalogueId, providerId, 'deployable-services']">
                     <img src="{{deployableServices.isActive ? 'assets/images/new-icons/services-active.svg' : 'assets/images/new-icons/services.svg'}}" class="uk-margin-small-right">
-                    Deployable Software
+                    Deployable Application
                   </a>
                 </li>
                 <li [routerLinkActive]="['current_section']" #adapters="routerLinkActive">
@@ -185,7 +185,7 @@
                 </li>
                 <li>
                   <a [routerLink]="['/provider/' + pidHandler.customEncodeURIComponent(providerId) + '/add-first-deployable-service/']">
-                    Add first Deployable Software
+                    Add first Deployable Application
                   </a>
                 </li>
               </ul>
@@ -218,7 +218,7 @@
                   </li>
                   <li>
                     <a href="#" uk-tooltip="Disabled until provider gets approved.">
-                      Add first Deployable Software
+                      Add first Deployable Application
                     </a>
                   </li>
                 </ul>
@@ -260,7 +260,7 @@
                   </li>
                   <li>
                     <a [routerLink]="['/provider/' + providerId + '/deployable-service/add/']">
-                      Add new Deployable Software
+                      Add new Deployable Application
                     </a>
                   </li>
                 }

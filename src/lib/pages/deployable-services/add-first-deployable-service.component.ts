@@ -40,9 +40,9 @@ export class AddFirstDeployableServiceComponent extends DeployableServiceForm im
       this.editMode = true;
       this.deployableServiceService.getDeployableServiceBundle(this.deployableServiceId).subscribe(
         dsBundle => {
-          ResourceService.removeNulls(dsBundle.deployableSoftware);
-          // this.formPrepare(dsBundle.deployableSoftware);
-          this.serviceForm.patchValue(dsBundle.deployableSoftware);
+          ResourceService.removeNulls(dsBundle.deployableApplication);
+          // this.formPrepare(dsBundle.deployableApplication);
+          this.serviceForm.patchValue(dsBundle.deployableApplication);
           for (const i in this.serviceForm.controls) {
             if (this.serviceForm.controls[i].value === null) {
               this.serviceForm.controls[i].setValue('');

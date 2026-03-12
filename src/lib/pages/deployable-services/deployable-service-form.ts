@@ -75,7 +75,7 @@ export class DeployableServiceForm implements OnInit {
   }
 
   submitForm(formData: any, tempSave: boolean, pendingService: boolean) {//TODO
-    let dsValue = formData.value.deployableSoftware;
+    let dsValue = formData.value.deployableApplication;
     window.scrollTo(0, 0);
 
 /*    if (!this.authenticationService.isLoggedIn()) {
@@ -140,10 +140,10 @@ export class DeployableServiceForm implements OnInit {
         if(!this.editMode){ //prefill field(s)
           this.payloadAnswer = {
             'answer': {
-              deployableSoftware:
+              deployableApplication:
                 {
                   'resourceOwner': decodeURIComponent(this.providerId),
-                  'type': "Deployable Software",
+                  'type': "Deployable Application",
                   'catalogueId': this.catalogueConfigId
                 }
             }

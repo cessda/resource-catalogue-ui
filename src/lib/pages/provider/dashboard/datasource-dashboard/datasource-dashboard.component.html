@@ -25,6 +25,39 @@
       </div>
 
       <div class="menu_section border_top">
+        <div class="sidebar_heading">GUIDELINES</div>
+
+        <ul>
+
+          @if (catalogueId === catalogueConfigId) {
+            @if (resourceBundle?.status === 'approved' && resourceBundle?.active === true) {
+              @if (resourceGuidelines?.interoperabilityRecordIds?.length > 0) {
+                @for (id of resourceGuidelines.interoperabilityRecordIds; track id) {
+                  <li [routerLinkActive]="['current_section']" #guideline="routerLinkActive">
+                    <a class="uk-text-truncate"
+                       [routerLink]="['./templatesForGuideline', id]"
+                       [title]="getGuidelineName(id)">
+                  <span class="guideline-name">
+                    <i class="fa fa-circle-thin" style="color: #26c0e2"></i>&nbsp;
+                    {{ getGuidelineName(id) }}
+                  </span>
+                    </a>
+                  </li>
+                }
+              }
+              <li [routerLinkActive]="['current_section']" #addGuidelines="routerLinkActive">
+                <a [routerLink]="['/dashboard', catalogueId, pidHandler.customEncodeURIComponent(providerId), 'resource-dashboard', pidHandler.customEncodeURIComponent(resourceId), 'assignGuidelines']">
+                  <img src="../../../../../assets/images/new-icons/add-service.svg" class="uk-margin-small-right">
+                  Add/Remove Guidelines
+                </a>
+              </li>
+            }
+          }
+
+        </ul>
+      </div>
+
+      <div class="menu_section border_top">
         <div class="sidebar_heading">ACTIONS</div>
 
         <ul>

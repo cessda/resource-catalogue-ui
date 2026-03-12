@@ -320,7 +320,7 @@ export class DeployableServicesListComponent implements OnInit {
   }
 
   getResources() {
-    this.loadingMessage = 'Loading deployable software';
+    this.loadingMessage = 'Loading Deployable Application';
     this.deployableServiceBundles = [];
     this.deployableServiceService.getResourceBundles(this.dataForm.get('from').value, this.dataForm.get('quantity').value,
       this.dataForm.get('sort').value, this.dataForm.get('order').value, this.dataForm.get('query').value,
@@ -344,7 +344,7 @@ export class DeployableServicesListComponent implements OnInit {
   }
 
   getRandomResources(quantity: string) {
-    this.loadingMessage = 'Loading ' + quantity + ' random Deployable Software';
+    this.loadingMessage = 'Loading ' + quantity + ' random Deployable Application';
     this.deployableServicesForAudit = [];
     this.resourceService.getRandomResources(quantity).subscribe(
       res => {

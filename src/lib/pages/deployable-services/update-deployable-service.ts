@@ -50,12 +50,12 @@ export class UpdateDeployableService extends DeployableServiceForm implements On
         // this.deployableServiceService.getService(this.resourceId).subscribe(service => {
         this.deployableServiceService[this.pendingResource ? 'getPendingService' : 'getDeployableServiceBundle'](this.deployableServiceId, this.catalogueId)
           .subscribe(dsBundle => {
-              this.payloadAnswer = {'answer': {deployableSoftware: dsBundle.deployableSoftware}};
-              // if (dsBundle.deployableSoftware.contact === null) //in case of unauthorized access backend will not show sensitive info
+              this.payloadAnswer = {'answer': {deployableApplication: dsBundle.deployableApplication}};
+              // if (dsBundle.deployableApplication.contact === null) //in case of unauthorized access backend will not show sensitive info
               //   this.navigator.go('/forbidden')
-              ResourceService.removeNulls(dsBundle.deployableSoftware);
-              // this.formPrepare(dsBundle.deployableSoftware);
-              // this.serviceForm.patchValue(dsBundle.deployableSoftware);
+              ResourceService.removeNulls(dsBundle.deployableApplication);
+              // this.formPrepare(dsBundle.deployableApplication);
+              // this.serviceForm.patchValue(dsBundle.deployableApplication);
 
 /*              for (const i in this.serviceForm.controls) {
                 if (this.serviceForm.controls[i].value === null) {

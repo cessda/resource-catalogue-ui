@@ -138,7 +138,7 @@ export class CatalogueDeployableServicesComponent implements OnInit {
         },
         err => {
           this.toggleLoading = false;
-          this.errorMessage = 'An error occurred while retrieving the deployable software of this provider. ' + err.error;
+          this.errorMessage = 'An error occurred while retrieving the Deployable Application of this provider. ' + err.error;
         }
       );
   }

@@ -4,13 +4,13 @@
       <div class="uk-width-1-1@m uk-first-column">
 
         <div class="services-provider-container">
-          @if (deployableSoftware) {
+          @if (deployableApplication) {
             <div class="uk-flex">
               <!--            <div>-->
               <!--              <img src="{{ '/assets/images/broken_image-black-48dp.svg' }}" style="max-width: 200px">-->
             <!--            </div>-->
             <div class="uk-margin-medium-left">
-              <h3 class="uk-margin-remove">{{deployableSoftware.name}}</h3>
+              <h3 class="uk-margin-remove">{{deployableApplication.name}}</h3>
               <!--              <div><span class="status-label">Status: </span>{{ serviceBundle.status | titlecase}}</div>-->
               <!--              <div *ngIf="serviceHistory?.results[0]?.registeredBy && serviceHistory?.results[0]?.registeredAt">
               <span class="status-label">Registered by: </span>{{ serviceHistory.results[0].registeredBy }} on {{ serviceHistory.results[0].registeredAt | date}}
@@ -34,14 +34,14 @@
             <div class="uk-alert uk-alert-danger uk-animation-slide-top">{{errorMessage}}</div>
           }
 
-          @if (deployableSoftware) {
+          @if (deployableApplication) {
             <div class="uk-grid">
               <div class="uk-width-1-1">
                 <section class="section">
                   <div class="uk-container uk-container-center">
                     <div class="uk-button uk-button-danger uk-disabled uk-position-top-center uk-margin-small-top todayBadge">Today</div>
                     <div class="al_timeline">
-                      @if (deployableSoftware && deployableServiceHistory?.length>0) {
+                      @if (deployableApplication && deployableServiceHistory?.length>0) {
                         @for (history of deployableServiceHistory; track history; let i = $index) {
                           @if (i < 10) {
                             <div class="al_timeline_block update">
@@ -97,9 +97,9 @@
                     </div>
                   </section>
                   <div class="uk-margin-top uk-text-center">
-                    @if (deployableSoftware && pidHandler) {
+                    @if (deployableApplication && pidHandler) {
                       <a
-                        [routerLink]="['/dashboard/' + catalogueId + '/' + pidHandler.customEncodeURIComponent(deployableSoftware.resourceOwner) + '/deployable-service-dashboard/' + pidHandler.customEncodeURIComponent(deployableSoftware.id) + '/fullHistory']"
+                        [routerLink]="['/dashboard/' + catalogueId + '/' + pidHandler.customEncodeURIComponent(deployableApplication.resourceOwner) + '/deployable-service-dashboard/' + pidHandler.customEncodeURIComponent(deployableApplication.id) + '/fullHistory']"
                       class="uk-h3 uk-link">See more results ...</a>
                     }
                   </div>
