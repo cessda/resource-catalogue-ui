@@ -30,6 +30,36 @@ export class ReadonlyResourceInfoComponent {
     return field.form?.display?.visible !== false;
   }
 
+  displayValue(value: any) {
+
+    if (value === null || value === undefined) {
+      return '—';
+    }
+
+    // handle arrays (PIDs, affiliations etc.)
+    if (Array.isArray(value)) {
+      return value
+        .map(v => this.displayValue(v))
+        .filter(v => v !== '—')
+        .join(', ');
+    }
+
+    // handle objects
+    if (typeof value === 'object') {
+
+      const vals = Object.values(value)
+        .filter(v => v !== null && v !== undefined && v !== '');
+
+      if (!vals.length) return '—';
+
+      return vals
+        .map(v => this.displayValue(v))
+        .join(' ');
+    }
+
+    return value;
+  }
+
   displayVocValue(field: any, value: any): string {
     if (value == null) {
       return '—';

@@ -52,7 +52,7 @@
                                 {{ displayVocValue(sub, item[sub.name]) }}
                               }
                               @else {
-                                {{ item[sub.name] || '—' }}
+                                {{ displayValue(item[sub.name]) }}
                               }
 
                             </div>
@@ -81,7 +81,7 @@
                               {{ displayVocValue(sub, valueOf(field, data)?.[sub.name]) }}
                             }
                             @else {
-                              {{ valueOf(field, data)?.[sub.name] || '—' }}
+                              {{ displayValue(valueOf(field, data)?.[sub.name]) }}
                             }
 
                           </div>
@@ -113,7 +113,7 @@
                         {{ displayVocValue(field, valueOf(field, data)) }}
                       }
                       @else {
-                        {{ valueOf(field, data) || '—' }}
+                        {{ displayValue(valueOf(field, data)) }}
                       }
 
                     </div>
