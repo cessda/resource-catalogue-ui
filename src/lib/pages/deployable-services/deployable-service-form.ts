@@ -143,7 +143,7 @@ export class DeployableServiceForm implements OnInit {
               deployableApplication:
                 {
                   'resourceOwner': decodeURIComponent(this.providerId),
-                  'type': "Deployable Application",
+                  'type': "DeployableApplication",
                   'catalogueId': this.catalogueConfigId
                 }
             }

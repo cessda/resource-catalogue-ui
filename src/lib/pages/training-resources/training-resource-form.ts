@@ -313,7 +313,7 @@ export class TrainingResourceForm implements OnInit {
               trainingResource:
                 {
                   'resourceOwner': decodeURIComponent(this.providerId),
-                  'type': "Training Material",
+                  'type': "TrainingMaterial",
                   'catalogueId': this.catalogueConfigId
                 }
             }

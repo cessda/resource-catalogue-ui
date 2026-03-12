@@ -10,8 +10,6 @@ import {URLValidator} from '../../shared/validators/generic.validator';
 import {environment} from '../../../environments/environment';
 import {ActivatedRoute} from '@angular/router';
 import {DatasourceService} from "../../services/datasource.service";
-import BitSet from "bitset";
-import {PremiumSortPipe} from "../../shared/pipes/premium-sort.pipe";
 import {SurveyComponent} from "../../../dynamic-catalogue/pages/dynamic-form/survey.component";
 import {Model} from "../../../dynamic-catalogue/domain/dynamic-form-model";
 import {FormControlService} from "../../../dynamic-catalogue/services/form-control.service";
@@ -61,45 +59,6 @@ export class DatasourceFormComponent implements OnInit {
   datasourceId: string = null;
   trainingResourceId: string = null;
 
-  requiredOnTab0 = 4;
-  requiredOnTab1 = 3;
-  requiredOnTab2 = 3;
-  requiredOnTab3 = 2;
-  requiredOnTab5 = 4;
-  requiredOnTab6 = 1;
-  requiredOnTab9 = 2;
-  requiredOnTab10 = 1;
-  requiredOnTab13 = 4;
-
-  remainingOnTab0 = this.requiredOnTab0;
-  remainingOnTab1 = this.requiredOnTab1;
-  remainingOnTab2 = this.requiredOnTab2;
-  remainingOnTab3 = this.requiredOnTab3;
-  remainingOnTab5 = this.requiredOnTab5;
-  remainingOnTab6 = this.requiredOnTab6;
-  remainingOnTab9 = this.requiredOnTab9;
-  remainingOnTab10 = this.requiredOnTab10;
-  remainingOnTab13 = this.requiredOnTab13;
-
-  BitSetTab0 = new BitSet;
-  BitSetTab1 = new BitSet;
-  BitSetTab2 = new BitSet;
-  BitSetTab3 = new BitSet;
-  BitSetTab5 = new BitSet;
-  BitSetTab6 = new BitSet;
-  BitSetTab9 = new BitSet;
-  BitSetTab10 = new BitSet;
-  BitSetTab13 = new BitSet;
-
-  requiredTabs = 9;
-  completedTabs = 0;
-  completedTabsBitSet = new BitSet;
-
-  allRequiredFields = 28;
-  loaderBitSet = new BitSet;
-  loaderPercentage = 0;
-
-
   formGroupMeta = {
     id: [''],
     serviceId: [''],
@@ -148,13 +107,6 @@ export class DatasourceFormComponent implements OnInit {
 
   vocabularies: Map<string, Vocabulary[]> = null;
   subVocabularies: Map<string, Vocabulary[]> = null;
-  premiumSort = new PremiumSortPipe();
-  public jurisdictionVocabulary: Vocabulary[] = null;
-  public classificationVocabulary: Vocabulary[] = null;
-  public researchEntityTypeVocabulary: Vocabulary[] = null;
-  public persistentIdentitySchemeVocabulary: Vocabulary[] = null;
-  public accessRightsVocabulary: Vocabulary[] = null;
-  public nodeVocabulary: Vocabulary[] = null;
 
   constructor(protected injector: Injector,
               protected authenticationService: AuthenticationService,
@@ -220,7 +172,7 @@ export class DatasourceFormComponent implements OnInit {
             'answer': {
               datasource: {
                 'id': this.openaireId,
-                'type': "Service@DataSource",
+                'type': "DataSource",
                 'serviceId': decodeURIComponent(this.resourceId),
                 'catalogueId': this.catalogueConfigId,
                 'resourceOwner': decodeURIComponent(this.providerId)
@@ -383,8 +335,6 @@ export class DatasourceFormComponent implements OnInit {
   unsavedChangesPrompt() {
     this.hasChanges = true;
   }
-
-  handleBitSets(a: any, b: any, c: any){};
 
   checkForDuplicates(formControlName, group?) {
     if (this.serviceForm.get(formControlName).value.length > 1) {

@@ -63,7 +63,7 @@ export class GuidelinesFormComponent implements OnInit {
               interoperabilityRecord:
                 {
                   'resourceOwner': decodeURIComponent(this.providerId),
-                  'type': "Interoperability Guidelines",
+                  'type': "InteroperabilityGuidelines",
                   'catalogueId': this.catalogueConfigId
                 }
             }
