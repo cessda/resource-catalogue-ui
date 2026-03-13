@@ -1,11 +1,4 @@
-import {
-  UntypedFormArray,
-  UntypedFormBuilder,
-  FormControl,
-  UntypedFormGroup,
-  Validators,
-  FormGroup
-} from '@angular/forms';
+import {UntypedFormBuilder, UntypedFormGroup, FormGroup} from '@angular/forms';
 import {Component, Injector, OnInit, ViewChild, isDevMode} from '@angular/core';
 import {AuthenticationService} from '../../services/authentication.service';
 import {NavigationService} from '../../services/navigation.service';
@@ -33,7 +26,6 @@ declare var UIkit: any;
 export class AdaptersFormComponent implements OnInit {
   @ViewChild(SurveyComponent) child: SurveyComponent
   model: Model = null;
-  vocabulariesMap: Map<string, object[]> = null;
   payloadAnswer: object = null;
 
   catalogueConfigId: string | null = null;
@@ -88,6 +80,7 @@ export class AdaptersFormComponent implements OnInit {
 
   submitForm(formData: FormGroup) {
     window.scrollTo(0, 0);
+    this.showLoader = true;
     let adapterValue = formData.value.adapter;
     adapterValue = FormControlService.cleanObjectInPlace(adapterValue); // clean form before submission
     this.adaptersService.uploadAdapter(adapterValue, this.editMode).subscribe(
