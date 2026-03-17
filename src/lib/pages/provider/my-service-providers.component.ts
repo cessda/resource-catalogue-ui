@@ -127,7 +127,7 @@ export class MyServiceProvidersComponent implements OnInit {
                     }
                   }
                 );
-                this.serviceProviderService.getRejectedResourcesOfProvider(p.id, '0', '50', 'ASC', 'name', 'deployable_software').subscribe(
+                this.serviceProviderService.getRejectedResourcesOfProvider(p.id, '0', '50', 'ASC', 'name', 'deployable_application').subscribe(
                   res => {
                     if (res.results?.length > 0) {
                       this.hasRejectedDeployableServices.push({id: p.id, flag: true});
