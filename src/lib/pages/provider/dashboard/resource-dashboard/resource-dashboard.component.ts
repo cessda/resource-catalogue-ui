@@ -95,7 +95,7 @@ export class ResourceDashboardComponent implements OnInit {
     return this.guidelines?.find(g => g.id === id)?.name || id;
   }
 
-  showDatasourceDeletionModal() {
+/*  showDatasourceDeletionModal() {
     UIkit.modal('#datasourceDeletionModal').show();
   }
 
@@ -113,6 +113,6 @@ export class ResourceDashboardComponent implements OnInit {
         window.location.reload()
       }
     );
-  }
+  }*/
 
 }

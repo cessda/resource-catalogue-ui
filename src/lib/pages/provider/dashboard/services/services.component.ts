@@ -122,7 +122,7 @@ export class ServicesComponent implements OnInit {
       res => {},
       error => {
         UIkit.modal('#spinnerModal').hide();
-        this.errorMessage = 'Something went bad. ' + error.error.error ;
+        this.errorMessage = 'Something went bad. ' + error.error.message ;
       },
       () => {
         UIkit.modal('#spinnerModal').hide();

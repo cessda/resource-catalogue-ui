@@ -9,7 +9,8 @@
               Guidelines
             </div>
             <div class="providerName uk-margin-small-top">
-              <strong>Service id: {{decodeURIComponent(serviceId)}}</strong> {{hasChanges ? '(unsaved changes)' : ''}}
+              <strong>{{ serviceId ? 'Service' : 'Datasource' }} id: {{ decodeURIComponent(serviceId || datasourceId) }}</strong>
+              {{ hasChanges ? '(unsaved changes)' : '' }}
             </div>
           </div>
           <div class="uk-flex uk-flex-middle">
@@ -34,7 +35,7 @@
 
               <div [ngClass]="{'blur-filter': showLoader}">
 
-                <h5 class="uk-padding-small uk-padding-remove-left uk-margin-remove">On this page you can assign Guidelines to your {{serviceORresource}}. </h5>
+                <h5 class="uk-padding-small uk-padding-remove-left uk-margin-remove">On this page you can assign Guidelines to your {{ serviceId ? 'Service' : 'Datasource' }}. </h5>
 
                 <div>Please add or remove the guidelines you wish and submit the form.</div>
                 <div class="uk-text-meta">Only approved guidelines are shown. If your guideline isn’t listed, please ensure it is registered and approved.</div>
@@ -145,7 +146,7 @@
   @if (!loadingMessage) {
     <div class="uk-modal-dialog uk-modal-body uk-margin-auto-vertical">
       <ng-container>
-        <h6>Are you sure you want to remove Guidelines from this Service?</h6>
+        <h6>Are you sure you want to remove Guidelines from this {{ serviceId ? 'Service' : 'Datasource' }}?</h6>
         <p>Keep in mind that removing a Guideline will also delete all related configurations instances.</p>
         <div class="uk-text-right">
           <button class="uk-button uk-button-default uk-modal-close uk-margin-small-right" type="button">Cancel</button>
@@ -163,7 +164,7 @@
   @if (!loadingMessage) {
     <div class="uk-modal-dialog uk-modal-body uk-margin-auto-vertical">
       <ng-container>
-        <h6>You are about to make changes to the assigned Guidelines of this Service.</h6>
+        <h6>You are about to make changes to the assigned Guidelines of this {{ serviceId ? 'Service' : 'Datasource' }}.</h6>
         <p>Keep in mind that removing a Guideline will also delete all related configurations instances.</p>
         <div class="uk-text-right">
           <button class="uk-button uk-button-default uk-modal-close uk-margin-small-right" type="button">Cancel</button>

@@ -6,9 +6,10 @@ import {ServiceExtensionsService} from '../../../../services/service-extensions.
 import {NavigationService} from '../../../../services/navigation.service';
 import {ConfigService} from "../../../../services/config.service";
 import {environment} from '../../../../../environments/environment';
-import {DatasourceBundle} from "../../../../domain/eic-model";
+import {DatasourceBundle, InteroperabilityRecord, ResourceInteroperabilityRecord} from "../../../../domain/eic-model";
 import {pidHandler} from "../../../../shared/pid-handler/pid-handler.service";
 import {DatasourceService} from "../../../../services/datasource.service";
+import {GuidelinesService} from "../../../../services/guidelines.service";
 
 
 @Component({
@@ -29,6 +30,9 @@ export class DatasourceDashboardComponent implements OnInit {
 
   datasourceBundle: DatasourceBundle;
 
+  resourceGuidelines: ResourceInteroperabilityRecord;
+  guidelines: InteroperabilityRecord[] = [];
+
   constructor(public authenticationService: AuthenticationService,
               public resourceService: ResourceService,
               public datasourceService: DatasourceService,
@@ -36,7 +40,8 @@ export class DatasourceDashboardComponent implements OnInit {
               public navigator: NavigationService,
               private route: ActivatedRoute,
               public pidHandler: pidHandler,
-              public config: ConfigService) {
+              public config: ConfigService,
+              public guidelinesService: GuidelinesService) {
   }
 
   ngOnInit() {
@@ -54,8 +59,25 @@ export class DatasourceDashboardComponent implements OnInit {
         // this.serviceExtensionsService.getHelpdeskByServiceId(this.datasourceId).subscribe(
         //   res => { if (res!=null) this.helpdeskId = res.id }
         // );
+        this.guidelinesService.getGuidelinesOfResource(this.datasourceId).subscribe(
+          res => {
+            if (res != null) this.resourceGuidelines = res;
+          },
+          err => console.log(err),
+          () => {
+            this.guidelinesService.getInteroperabilityRecords('0', '9999').subscribe(
+              res => {
+                if (res != null) this.guidelines = res['results'];
+              }
+            );
+          }
+        );
       }
     );
+  }
+
+  getGuidelineName(id: string): string {
+    return this.guidelines?.find(g => g.id === id)?.name || id;
   }
 
 }

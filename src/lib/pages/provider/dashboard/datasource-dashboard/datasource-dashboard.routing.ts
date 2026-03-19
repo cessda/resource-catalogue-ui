@@ -4,6 +4,10 @@ import {CanActivateViaAuthGuard} from '../../../../services/can-activate-auth-gu
 import {DatasourceHistoryComponent} from './datasource-history.component';
 import {DatasourceFullHistoryComponent} from './datasource-full-history.component';
 import {DatasourceDashboardComponent} from './datasource-dashboard.component';
+import {
+  ResourceGuidelinesFormComponent
+} from "../../../provider-resources/resource-guidelines/resource-guidelines-form.component";
+import {ConfigurationTemplatesComponent} from "../resource-dashboard/configuration-templates.component";
 
 const datasourceDashboardRoutes: Routes = [
   {
@@ -29,6 +33,15 @@ const datasourceDashboardRoutes: Routes = [
       {
         path: 'fullHistory',
         component: DatasourceFullHistoryComponent
+      },
+      {
+        path: 'assignGuidelines',
+        component: ResourceGuidelinesFormComponent
+
+      },
+      {
+        path: 'templatesForGuideline/:guidelineId',
+        component: ConfigurationTemplatesComponent
       }
     ]
   },

@@ -35,7 +35,9 @@ export class ConfigurationTemplatesComponent implements OnInit {
   showLoader = false;
   ready = false;
   hasChanges = false;
-  serviceId: string = null;
+  // serviceId: string = null;
+  // datasourceId: string = null;
+  resourceId: string = null;
   guidelineId: string = null;
   currentResourceGuideline: InteroperabilityRecord;
   displayMessage = '';
@@ -61,7 +63,9 @@ export class ConfigurationTemplatesComponent implements OnInit {
 
   ngOnInitWorkaround() {
     this.resetVariables();
-    this.serviceId = this.route.parent.snapshot.paramMap.get('resourceId');
+    const serviceId = this.route.parent.snapshot.paramMap.get('resourceId');
+    const datasourceId = this.route.parent.snapshot.paramMap.get('datasourceId');
+    this.resourceId = serviceId || datasourceId;
     this.showLoader = true;
 
     this.guidelinesService.getInteroperabilityRecordById(this.guidelineId).subscribe(
@@ -100,7 +104,7 @@ export class ConfigurationTemplatesComponent implements OnInit {
               }
 
               // 2. Fetch the instance
-              return this.guidelinesService.getInstanceOfTemplate(this.serviceId, templateId).pipe(
+              return this.guidelinesService.getInstanceOfTemplate(this.resourceId, templateId).pipe(
                 catchError(err => {
                   console.error(`Instance fetch error for ${templateId}`, err);
                   return of(null);
@@ -114,7 +118,7 @@ export class ConfigurationTemplatesComponent implements OnInit {
                     this.answersByTemplateId[templateId] = {
                       'answer': {
                         configurationTemplateInstance: {
-                          resourceId: decodeURIComponent(this.serviceId),
+                          resourceId: decodeURIComponent(this.resourceId),
                           configurationTemplateId: modelId.split("-").slice(2).join("/"),
                           catalogueId: this.catalogueConfigId
                         }
