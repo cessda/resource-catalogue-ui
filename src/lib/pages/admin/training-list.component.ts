@@ -540,7 +540,7 @@ export class TrainingListComponent implements OnInit {
           UIkit.modal('#suspensionModal').hide();
           UIkit.modal('#spinnerModal').hide();
           this.loadingMessage = '';
-          this.errorMessage = err.error.error;
+          this.errorMessage = err.error.message;
           window.scroll(0,0);
         },
         () => {
