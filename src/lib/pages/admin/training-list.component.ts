@@ -222,7 +222,7 @@ export class TrainingListComponent implements OnInit {
         err => {
                   this.errorMessage =
           (err?.status >= 500 && err?.status < 600)
-            ? `Something went wrong on our end. If the problem persists, please contact support with Trace ID: ${err?.error?.traceId}`
+            ? `Something went wrong. If the issue persists, please contact support and provide the following error code: ${err?.error?.traceId}`
             : `Something went bad while getting the data for page initialization: ${err?.error?.message}`;
         },
         () => {
@@ -545,7 +545,7 @@ export class TrainingListComponent implements OnInit {
           this.loadingMessage = '';
           this.errorMessage =
           (err?.status >= 500 && err?.status < 600)
-            ? `Something went wrong on our end. If the problem persists, please contact support with Trace ID: ${err?.error?.traceId}`
+            ? `Something went wrong. If the issue persists, please contact support and provide the following error code: ${err?.error?.traceId}`
             : `Something went bad, server responded: ${err?.error?.message}`;
           window.scroll(0,0);
         },

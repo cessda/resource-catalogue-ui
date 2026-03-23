@@ -102,7 +102,7 @@ export class DeployableServiceForm implements OnInit {
       //     this.scientificDomainArray.enable();
       //     this.errorMessage =
       //           (err?.status >= 500 && err?.status < 600)
-      //             ? `Something went wrong on our end. If the problem persists, please contact support with Trace ID: ${err?.error?.traceId}`
+      //             ? `Something went wrong. If the issue persists, please contact support and provide the following error code: ${err?.error?.traceId}`
       //             : `Something went bad, server responded: ${err?.error?.message}`;
       //   }
       // );
@@ -118,7 +118,7 @@ export class DeployableServiceForm implements OnInit {
           window.scrollTo(0, 0);
           this.errorMessage =
           (err?.status >= 500 && err?.status < 600)
-            ? `Something went wrong on our end. If the problem persists, please contact support with Trace ID: ${err?.error?.traceId}`
+            ? `Something went wrong. If the issue persists, please contact support and provide the following error code: ${err?.error?.traceId}`
             : `Something went bad, server responded: ${err?.error?.message}`;
           console.log(err);
           console.log(this.errorMessage);
@@ -140,7 +140,7 @@ export class DeployableServiceForm implements OnInit {
       err => {
                 this.errorMessage =
           (err?.status >= 500 && err?.status < 600)
-            ? `Something went wrong on our end. If the problem persists, please contact support with Trace ID: ${err?.error?.traceId}`
+            ? `Something went wrong. If the issue persists, please contact support and provide the following error code: ${err?.error?.traceId}`
             : `Something went bad while getting the data for page initialization: ${err?.error?.message}`;
       },
       () => {
