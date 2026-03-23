@@ -187,7 +187,10 @@ export class ServiceProviderFormComponent implements OnInit {
           },
           err => {
             this.showLoader = false;
-            this.errorMessage = 'Something went wrong. ' + JSON.stringify(err.error.message);
+                    this.errorMessage =
+          (err?.status >= 500 && err?.status < 600)
+            ? `Something went wrong on our end. If the problem persists, please contact support with Trace ID: ${err?.error?.traceId}`
+            : `Something went bad, server responded: ${err?.error?.message}`;
           },
           () => {
             this.showLoader = false;
@@ -200,7 +203,10 @@ export class ServiceProviderFormComponent implements OnInit {
         },
         err => {
           this.showLoader = false;
-          this.errorMessage = 'Something went wrong. ' + JSON.stringify(err.error.message);
+                  this.errorMessage =
+          (err?.status >= 500 && err?.status < 600)
+            ? `Something went wrong on our end. If the problem persists, please contact support with Trace ID: ${err?.error?.traceId}`
+            : `Something went bad, server responded: ${err?.error?.message}`;
         },
         () => {
           this.showLoader = false;

@@ -247,8 +247,11 @@ export class ServiceProvidersListComponent implements OnInit {
         this.geographicalVocabulary = this.vocabularies[Type.COUNTRY];
         this.languagesVocabulary = this.vocabularies[Type.LANGUAGE];
       },
-      error => {
-        this.errorMessage = 'Something went bad while getting the data for page initialization. ' + JSON.stringify(error.error.message);
+      err => {
+                this.errorMessage =
+          (err?.status >= 500 && err?.status < 600)
+            ? `Something went wrong on our end. If the problem persists, please contact support with Trace ID: ${err?.error?.traceId}`
+            : `Something went bad while getting the data for page initialization: ${err?.error?.message}`;
       },
       () => {}
     );
@@ -576,7 +579,10 @@ export class ServiceProvidersListComponent implements OnInit {
           UIkit.modal('#suspensionModal').hide();
           UIkit.modal('#spinnerModal').hide();
           this.loadingMessage = '';
-          this.errorMessage = err.error.message;
+          this.errorMessage =
+          (err?.status >= 500 && err?.status < 600)
+            ? `Something went wrong on our end. If the problem persists, please contact support with Trace ID: ${err?.error?.traceId}`
+            : `Something went bad, server responded: ${err?.error?.message}`;
           window.scroll(0,0);
         },
         () => {

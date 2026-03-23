@@ -148,7 +148,10 @@ export class DatasourceFormComponent implements OnInit {
       err => {
         this.showLoader = false;
         window.scrollTo(0, 0);
-        this.errorMessage = 'Something went bad, server responded: ' + JSON.stringify(err.error.message);
+        this.errorMessage =
+          (err?.status >= 500 && err?.status < 600)
+            ? `Something went wrong on our end. If the problem persists, please contact support with Trace ID: ${err?.error?.traceId}`
+            : `Something went bad, server responded: ${err?.error?.message}`;
       }
     );
 }
@@ -163,8 +166,11 @@ export class DatasourceFormComponent implements OnInit {
       suc => {
         this.model = suc; // Since you're only dealing with the getFormModelById response now
       },
-      error => {
-        this.errorMessage = 'Something went bad while getting the data for page initialization. ' + JSON.stringify(error.error.message);
+      err => {
+                this.errorMessage =
+          (err?.status >= 500 && err?.status < 600)
+            ? `Something went wrong on our end. If the problem persists, please contact support with Trace ID: ${err?.error?.traceId}`
+            : `Something went bad while getting the data for page initialization: ${err?.error?.message}`;
       },
       () => {
         if (!this.editMode) { //prefill field(s)

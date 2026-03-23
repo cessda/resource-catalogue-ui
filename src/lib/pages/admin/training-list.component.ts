@@ -219,8 +219,11 @@ export class TrainingListComponent implements OnInit {
       this.resourceService.getProvidersNames('approved').subscribe(suc => {
           this.providersPage = <Paging<Provider>>suc;
         },
-        error => {
-          this.errorMessage = 'Something went bad while getting the data for page initialization. ' + JSON.stringify(error.error.message);
+        err => {
+                  this.errorMessage =
+          (err?.status >= 500 && err?.status < 600)
+            ? `Something went wrong on our end. If the problem persists, please contact support with Trace ID: ${err?.error?.traceId}`
+            : `Something went bad while getting the data for page initialization: ${err?.error?.message}`;
         },
         () => {
           this.providersPage.results.sort((a, b) => 0 - (a.name > b.name ? -1 : 1));
@@ -540,7 +543,10 @@ export class TrainingListComponent implements OnInit {
           UIkit.modal('#suspensionModal').hide();
           UIkit.modal('#spinnerModal').hide();
           this.loadingMessage = '';
-          this.errorMessage = err.error.message;
+          this.errorMessage =
+          (err?.status >= 500 && err?.status < 600)
+            ? `Something went wrong on our end. If the problem persists, please contact support with Trace ID: ${err?.error?.traceId}`
+            : `Something went bad, server responded: ${err?.error?.message}`;
           window.scroll(0,0);
         },
         () => {

@@ -100,7 +100,10 @@ export class DeployableServiceForm implements OnInit {
       //     this.showLoader = false;
       //     window.scrollTo(0, 0);
       //     this.scientificDomainArray.enable();
-      //     this.errorMessage = 'Something went bad, server responded: ' + JSON.stringify(err.error.message);
+      //     this.errorMessage =
+      //           (err?.status >= 500 && err?.status < 600)
+      //             ? `Something went wrong on our end. If the problem persists, please contact support with Trace ID: ${err?.error?.traceId}`
+      //             : `Something went bad, server responded: ${err?.error?.message}`;
       //   }
       // );
     } else {
@@ -113,7 +116,10 @@ export class DeployableServiceForm implements OnInit {
         err => {
           this.showLoader = false;
           window.scrollTo(0, 0);
-          this.errorMessage = 'Something went bad, server responded: ' + JSON.stringify(err.error.message);
+          this.errorMessage =
+          (err?.status >= 500 && err?.status < 600)
+            ? `Something went wrong on our end. If the problem persists, please contact support with Trace ID: ${err?.error?.traceId}`
+            : `Something went bad, server responded: ${err?.error?.message}`;
           console.log(err);
           console.log(this.errorMessage);
         }
@@ -131,8 +137,11 @@ export class DeployableServiceForm implements OnInit {
         this.providersPage = <Paging<Provider>>suc[0];
         this.model = suc[1];
       },
-      error => {
-        this.errorMessage = 'Something went bad while getting the data for page initialization. ' + JSON.stringify(error.error.message);
+      err => {
+                this.errorMessage =
+          (err?.status >= 500 && err?.status < 600)
+            ? `Something went wrong on our end. If the problem persists, please contact support with Trace ID: ${err?.error?.traceId}`
+            : `Something went bad while getting the data for page initialization: ${err?.error?.message}`;
       },
       () => {
         this.providerId = this.route.snapshot.paramMap.get('providerId');

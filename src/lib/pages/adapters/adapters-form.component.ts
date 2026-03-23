@@ -92,7 +92,10 @@ export class AdaptersFormComponent implements OnInit {
         this.showLoader = false;
         window.scrollTo(0, 0);
         console.log(err);
-        this.errorMessage = 'Something went bad, server responded: ' + JSON.stringify(err.error.message);
+        this.errorMessage =
+          (err?.status >= 500 && err?.status < 600)
+            ? `Something went wrong on our end. If the problem persists, please contact support with Trace ID: ${err?.error?.traceId}`
+            : `Something went bad, server responded: ${err?.error?.message}`;
       }
     );
   }
