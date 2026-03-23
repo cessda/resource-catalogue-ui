@@ -9,7 +9,7 @@ import {filter} from 'rxjs/operators';
 
 interface IBreadcrumb {
   label: string;
-  params: Params;
+  params: Params | undefined;
   url: string;
 }
 
@@ -70,7 +70,6 @@ export class BreadcrumbsComponent implements OnInit {
 
     // get the child routes
     const children: ActivatedRoute[] = route.children;
-    // console.log(children, url, breadcrumbs);
     // return if there are no more children
     if (children.length === 0) {
       return breadcrumbs;
@@ -78,7 +77,6 @@ export class BreadcrumbsComponent implements OnInit {
 
     // iterate over each children
     for (const child of children) {
-      // console.log('children', child);
       // verify primary route
       if (child.outlet !== PRIMARY_OUTLET) {
         continue;
@@ -87,24 +85,19 @@ export class BreadcrumbsComponent implements OnInit {
       // verify the custom data property "breadcrumb" is specified on the route
       if (!child.snapshot.data.hasOwnProperty(ROUTE_DATA_BREADCRUMB)) {
         return this.getBreadcrumbs(child, url, breadcrumbs);
-      } else {
-        // console.log('if', child.snapshot);
       }
 
       // get the route's URL segment
-      // console.log(child.snapshot.url);
       const routeURL: string = child.snapshot.url.map(segment => segment.path).join('/');
-      // let routeURL: string = child.snapshot.url[0].path;
       // append route URL to URL
       url += `/${routeURL}`;
 
       // add breadcrumb
       const breadcrumb: IBreadcrumb = {
         label: child.snapshot.data[ROUTE_DATA_BREADCRUMB],
-        params: child.snapshot.params,
-        url: url
+        params: undefined,
+        url: this.stripMatrixParams(url)
       };
-      // console.log(breadcrumb);
       if (breadcrumb.label !== '') {
         breadcrumbs.push(breadcrumb);
       }
@@ -112,5 +105,12 @@ export class BreadcrumbsComponent implements OnInit {
       // recursive
       return this.getBreadcrumbs(child, url, breadcrumbs);
     }
+  }
+
+  private stripMatrixParams(path: string): string {
+    return path
+      .split('/')
+      .map(segment => segment.split(';')[0])
+      .join('/');
   }
 }
