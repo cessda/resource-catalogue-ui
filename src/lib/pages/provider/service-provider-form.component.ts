@@ -103,9 +103,10 @@ export class ServiceProviderFormComponent implements OnInit {
       () => {
         if (!this.editMode) { //prefill field(s)
           const currentUser = this.getCurrentUserInfo();
+          console.log(currentUser);
           this.payloadAnswer = {
             'answer': {
-              οrganisation: {
+              organisation: {
                 'catalogueId': this.catalogueConfigId,
                 'users': [
                   {
