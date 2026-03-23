@@ -11,6 +11,7 @@ interface IBreadcrumb {
   label: string;
   params: Params | undefined;
   url: string;
+  navigable: boolean;
 }
 
 @Component({
@@ -53,7 +54,8 @@ export class BreadcrumbsComponent implements OnInit {
     const breadcrumb: IBreadcrumb = {
       label: 'Home',
       params: {},
-      url: '/home'
+      url: '/home',
+      navigable: true
     };
     breadcrumbs.push(breadcrumb);
     this.breadcrumbs = this.getBreadcrumbs(root, '', breadcrumbs);
@@ -96,7 +98,8 @@ export class BreadcrumbsComponent implements OnInit {
       const breadcrumb: IBreadcrumb = {
         label: child.snapshot.data[ROUTE_DATA_BREADCRUMB],
         params: undefined,
-        url: this.stripMatrixParams(url)
+        url: this.stripMatrixParams(url),
+        navigable: child.snapshot.data['breadcrumbNavigable'] !== false
       };
       if (breadcrumb.label !== '') {
         breadcrumbs.push(breadcrumb);
