@@ -105,7 +105,7 @@ export class ServiceProviderFormComponent implements OnInit {
           const currentUser = this.getCurrentUserInfo();
           this.payloadAnswer = {
             'answer': {
-              rganisation: {
+              οrganisation: {
                 'catalogueId': this.catalogueConfigId,
                 'users': [
                   {
