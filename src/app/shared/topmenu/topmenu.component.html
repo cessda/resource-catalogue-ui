@@ -218,7 +218,7 @@
           </div>
         </li>
 
-        <li class="uk-parent" [routerLinkActive]="['uk-active']">
+        <!--<li class="uk-parent" [routerLinkActive]="['uk-active']">
           <a href="#" class="" aria-expanded="false">
             For Catalogues
           </a>
@@ -227,7 +227,7 @@
             <div class="uk-navbar-dropdown-grid uk-child-width-1-1 uk-grid uk-grid-stack" uk-grid="">
               <div class="uk-first-column">
                 <ul class="uk-nav uk-navbar-dropdown-nav">
-<!--                  <li><a [routerLink]="['/catalogue/add']" routerLinkActive="uk-active">Add a Catalogue</a></li>-->
+&lt;!&ndash;                  <li><a [routerLink]="['/catalogue/add']" routerLinkActive="uk-active">Add a Catalogue</a></li>&ndash;&gt;
                   @if (authenticationService.isLoggedIn()) {
                     <li><a [routerLink]="['/catalogue/my']" routerLinkActive="uk-active">My Catalogues</a></li>
                   }
@@ -238,7 +238,7 @@
               </div>
             </div>
           </div>
-        </li>
+        </li>-->
 
         @if (authenticationService.isAdmin()) {
           <li class="uk-parent" [routerLinkActive]="['uk-active']">
@@ -250,7 +250,7 @@
               <div class="uk-navbar-dropdown-grid uk-child-width-1-1 uk-grid uk-grid-stack" uk-grid="">
                 <div class="uk-first-column">
                   <ul class="uk-nav uk-navbar-dropdown-nav">
-                    <li><a [routerLink]="['/catalogue/all']" routerLinkActive="uk-active">Catalogues</a></li>
+<!--                    <li><a [routerLink]="['/catalogue/all']" routerLinkActive="uk-active">Catalogues</a></li>-->
                     <li><a [routerLink]="['/provider/all']" routerLinkActive="uk-active">Providers</a></li>
                     <li><a [routerLink]="['/provider/resource/all']" routerLinkActive="uk-active">Services</a></li>
                     <li><a [routerLink]="['/provider/datasource/all']" routerLinkActive="uk-active">Datasources</a></li>
