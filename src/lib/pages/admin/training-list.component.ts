@@ -230,9 +230,6 @@ export class TrainingListComponent implements OnInit {
           // console.log(this.providersPage.results);
         }
       );
-
-      // this.getResearchCategoriesVoc();
-      // this.getSemanticRelationshipVoc();
     }
   }
 
@@ -734,27 +731,5 @@ export class TrainingListComponent implements OnInit {
   getProviderNameWithId(id: string) {
     return this.providersPage.results.find( x => x.id === id )?.name;
   }
-
-  getProviderNamesWithIds(idsArray: string[]) {
-    let namesArray = [];
-    if (idsArray) {
-      for (let i=0; i<idsArray.length; i++) {
-        namesArray.push(this.providersPage.results.find( x => x.id == idsArray[i] )?.name);
-      }
-    }
-    return namesArray;
-  }
-
-  // getResearchCategoriesVoc() {
-  //   this.resourceService.getVocabularyByType('RESEARCH_CATEGORY').subscribe(
-  //     suc => this.researchCategoriesVoc = suc
-  //   );
-  // }
-
-  // getSemanticRelationshipVoc() {
-  //   this.resourceService.getVocabularyByType('SEMANTIC_RELATIONSHIP').subscribe(
-  //     suc => this.semanticRelationshipVoc = suc
-  //   );
-  // }
 
 }

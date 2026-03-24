@@ -102,8 +102,6 @@ export class ResourcesListComponent implements OnInit {
 
   @ViewChildren('checkboxes') checkboxes: QueryList<ElementRef>;
 
-  // semanticRelationshipVoc: Vocabulary[] = null;
-
   constructor(private resourceService: ResourceService,
               private providerService: ServiceProviderService,
               private authenticationService: AuthenticationService,
@@ -229,7 +227,6 @@ export class ResourcesListComponent implements OnInit {
         }
       );
 
-      // this.getSemanticRelationshipVoc();
     }
   }
 
@@ -572,21 +569,6 @@ export class ResourcesListComponent implements OnInit {
       );
   }
 
-  /** manage form arrays--> **/
-/*  getFieldAsFormArray(field: string) {
-    return this.extrasForm.get(field) as UntypedFormArray;
-  }
-
-  push(field: string) {
-      this.getFieldAsFormArray(field).push(this.fb.control(''));
-  }
-
-  remove(field: string, i: number) {
-    this.getFieldAsFormArray(field).removeAt(i);
-  }*/
-
-  /** <--manage form arrays **/
-
   toggleService(bundle: ServiceBundle) {
     if (bundle.status === 'pending' || bundle.status === 'rejected') {
       this.errorMessage = `You cannot activate a ${bundle.status}.`;
@@ -780,12 +762,6 @@ export class ResourcesListComponent implements OnInit {
     }
     return namesArray;
   }
-
-  // getSemanticRelationshipVoc() {
-  //   this.resourceService.getVocabularyByType('SEMANTIC_RELATIONSHIP').subscribe(
-  //     suc => this.semanticRelationshipVoc = suc
-  //   );
-  // }
 
   // getServiceMonitoringStatusWithId(id: string) {
   //   return this.providersPage.results.find( x => x.id === id )?.legalStatus;
