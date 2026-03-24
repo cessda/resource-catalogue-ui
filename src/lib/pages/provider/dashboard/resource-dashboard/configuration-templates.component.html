@@ -3,7 +3,7 @@
 
     @if (currentResourceGuideline) {
       <div class="uk-margin-large-top">
-        <h3>{{currentResourceGuideline.title}}</h3>
+        <h3>{{currentResourceGuideline.name}}</h3>
       </div>
     }
 
@@ -45,11 +45,8 @@
                 <app-survey #survey
                   [payload]="answersByTemplateId[template.id]"
                   [model]="formModels[template.id]"
-                  [vocabulariesMap]="vocabulariesMap"
-                  [subVocabularies]="subVocabulariesMap"
                   [tabsHeader]=""
-                  [activeUsers]="[]"
-                  (submit)="saveForm($event, template.id)">
+                  (submitForm)="saveForm($event, template.id)">
                   <div class="uk-grid form-top-section">
                     <h5 class="uk-width-1-1 uk-margin-bottom">{{ formModels[template.id].name }}</h5>
                     <p class="uk-margin-bottom" [innerHTML]="formModels[template.id].notice"></p>

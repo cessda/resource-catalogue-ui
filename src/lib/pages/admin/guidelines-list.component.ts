@@ -24,7 +24,7 @@ export class GuidelinesListComponent implements OnInit {
 
   formPrepare = {
     order: 'ASC',
-    sort: 'title',
+    sort: 'name',
     quantity: '10',
     from: '0',
     query: '',
@@ -251,7 +251,7 @@ export class GuidelinesListComponent implements OnInit {
 
   suspendInteroperabilityRecord() {
     UIkit.modal('#spinnerModal').show();
-    this.guidelinesService.suspendInteroperabilityRecord(this.selectedGuideline.id, this.selectedGuideline.interoperabilityRecord.catalogueId, !this.selectedGuideline.suspended)
+    this.guidelinesService.suspendInteroperabilityRecord(this.selectedGuideline.id, this.selectedGuideline.catalogueId, !this.selectedGuideline.suspended)
       .subscribe(
         res => {
           UIkit.modal('#suspensionModal').hide();
@@ -262,7 +262,10 @@ export class GuidelinesListComponent implements OnInit {
           UIkit.modal('#suspensionModal').hide();
           UIkit.modal('#spinnerModal').hide();
           this.loadingMessage = '';
-          this.errorMessage = err.error.error;
+          this.errorMessage =
+          (err?.status >= 500 && err?.status < 600)
+            ? `Something went wrong. If the issue persists, please contact support and provide the following error code: ${err?.error?.traceId}`
+            : `Something went bad, server responded: ${err?.error?.message}`;
           window.scroll(0,0);
         },
         () => {
@@ -285,10 +288,10 @@ export class GuidelinesListComponent implements OnInit {
     );
   }
 
-  publishGuideline(id: string, active: boolean){ // Activates/Deactivates
+  activateGuideline(id: string, active: boolean){
     this.loadingMessage = '';
     UIkit.modal('#spinnerModal').show();
-    this.guidelinesService.publishInteroperabilityRecord(id, active).subscribe(
+    this.guidelinesService.activateInteroperabilityRecord(id, active).subscribe(
       res => this.getGuidelines(),
       err => UIkit.modal('#spinnerModal').hide(),
       () => {
@@ -311,7 +314,7 @@ export class GuidelinesListComponent implements OnInit {
   }
 
   auditResourceAction(action: string, bundle: InteroperabilityRecordBundle) {
-    this.guidelinesService.auditGuideline(this.selectedGuideline.id, action, this.selectedGuideline.interoperabilityRecord.catalogueId, this.commentAuditControl.value)
+    this.guidelinesService.auditGuideline(this.selectedGuideline.id, action, this.selectedGuideline.catalogueId, this.commentAuditControl.value)
       .subscribe(
         res => {this.getGuidelines();},
         err => {console.log(err);},

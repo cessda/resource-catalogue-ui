@@ -100,7 +100,6 @@ export class ResourcesStatsComponent implements OnInit {
 
     this.createGeneralContent();
 
-    this.getDataFromAllProviders();
   }
 
   changeView(view: string) {
@@ -172,23 +171,6 @@ export class ResourcesStatsComponent implements OnInit {
 
       this.funderTabIsInitialised = true;
     }
-  }
-
-  getDataFromAllProviders() {
-
-    this.resourceService.getMapDistributionOfServices().subscribe(
-      data => {
-        this.geographicalDistributionMap = new Map();
-
-        for (const [key, value] of Object.entries(data)) {
-          this.geographicalDistributionMap.set(value.key.toLowerCase(), value.values);
-        }
-        this.setMapDistributionOfServices(data);
-      },
-      err => {
-        this.errorMessage = 'An error occurred while retrieving geographical distribution of services for this provider. ' + err.error;
-      }
-    );
   }
 
   onMapSeriesClick(e) {

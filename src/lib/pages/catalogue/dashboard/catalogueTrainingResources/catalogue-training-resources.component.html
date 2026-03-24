@@ -9,7 +9,7 @@
           </div>
           <div class="uk-margin-medium-left">
             <h3 class="uk-margin-remove">{{catalogueBundle.catalogue.name}}</h3>
-            <div><span class="status-label">Catalogue Status: </span>{{ catalogueBundle.status.substr(0,catalogueBundle.status.indexOf(' ')) | titlecase }}</div>
+            <div><span class="status-label">Catalogue Status: </span>{{ catalogueBundle.status | titlecase }}</div>
           </div>
         </div>
       }
@@ -54,7 +54,7 @@
             <label class="" for="sort">Order by </label>
             <div class="uk-inline">
               <select class="uk-input uk-select" id="sort" (change)="handleChangeAndResetPage()" formControlName="sort">
-                <option value="title" selected>Title</option>
+                <option value="name" selected>Name</option>
                 <option value="registeredAt">Creation Date</option>
                 <option value="modifiedAt">Modification Date</option>
               </select>
@@ -127,17 +127,17 @@
       @for (bundle of trainingResourceBundles; track bundle) {
         <div class="uk-card uk-card-small uk-card-default uk-margin-bottom service-card">
           <div class="uk-card-body">
-            @if (bundle.status === 'approved resource') {
+            @if (bundle.status === 'approved') {
               <div class="approved">
                 <div class="uk-card-badge uk-label">Approved</div>
               </div>
             }
-            @if (bundle.status === 'pending resource') {
+            @if (bundle.status === 'pending') {
               <div class="pending">
                 <div class="uk-card-badge uk-label">Pending</div>
               </div>
             }
-            @if ((bundle.status === 'rejected resource')) {
+            @if ((bundle.status === 'rejected')) {
               <div class="rejected">
                 <div class="uk-card-badge uk-label">Rejected</div>
               </div>
@@ -168,10 +168,10 @@
               </div>
               <div class="uk-width-2-3">
                 <h4 class="uk-margin-remove">
-                  <a [routerLink]="['/dashboard', bundle.trainingResource.catalogueId, bundle.trainingResource.resourceOrganisation, 'training-resource-dashboard', bundle.id]" data-uk-tooltip title="Go to the training resource dashboard">
-                    {{ bundle.trainingResource.title }}
+                  <a [routerLink]="['/dashboard', bundle.trainingResource.catalogueId, bundle.trainingResource.resourceOwner, 'training-resource-dashboard', bundle.id]" data-uk-tooltip title="Go to the training resource dashboard">
+                    {{ bundle.trainingResource.name }}
                   </a>
-                  <!--                    <a (click)="navigate(bundle.id)">{{bundle.trainingResource.title}}</a>-->
+                  <!--                    <a (click)="navigate(bundle.id)">{{bundle.trainingResource.name}}</a>-->
                 </h4>
                 <div class="uk-margin-small-top">
                   @if (bundle.trainingResource.description) {
@@ -211,7 +211,7 @@
           <hr class="uk-margin-top">
           <div class="uk-align-right">
             <button
-              routerLink="/provider/{{bundle.trainingResource.catalogueId}}/{{bundle.trainingResource.resourceOrganisation}}/training-resource/view/{{bundle.id}}"
+              routerLink="/provider/{{bundle.trainingResource.catalogueId}}/{{bundle.trainingResource.resourceOwner}}/training-resource/view/{{bundle.id}}"
               class="uk-button uk-button-link" style="">
               <i class="fa fa-eye fa-lg uk-margin-small-right" aria-hidden="true"></i>
               View Training Resource
@@ -250,7 +250,7 @@
 <div id="actionModal" uk-modal>
   <div class="uk-modal-dialog uk-modal-body uk-margin-auto-vertical">
     @if (selectedTrainingResource) {
-      <h6 class="uk-margin-bottom">Are you sure you want to delete the Training Resource '{{selectedTrainingResource.trainingResource.title}}'?</h6>
+      <h6 class="uk-margin-bottom">Are you sure you want to delete the Training Resource '{{selectedTrainingResource.trainingResource.name}}'?</h6>
     }
     <div class="uk-text-right">
       <button class="uk-button uk-button-default uk-modal-close uk-margin-small-right" type="button">Cancel</button>

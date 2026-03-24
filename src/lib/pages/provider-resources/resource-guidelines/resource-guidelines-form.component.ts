@@ -14,13 +14,11 @@ declare var UIkit: any;
 @Component({
     selector: 'app-resource-guidelines-form',
     templateUrl: './resource-guidelines-form.component.html',
-    styleUrls: ['../../provider/service-provider-form.component.css'],
     standalone: false
 })
 export class ResourceGuidelinesFormComponent implements OnInit {
   catalogueConfigId: string = this.config.getProperty('catalogueId');
   catalogueSupportEmail: string | null = null;
-  serviceORresource = environment.serviceORresource;
   showLoader = false;
   pendingService = false; // revisit
   providerId: string;
@@ -29,6 +27,7 @@ export class ResourceGuidelinesFormComponent implements OnInit {
   guidelinesForm: UntypedFormGroup;
   service: Service;
   serviceId: string = null;
+  datasourceId: string = null;
   resourceGuidelines: ResourceInteroperabilityRecord;
   guidelines: InteroperabilityRecord[] = [];
   errorMessage = '';
@@ -40,7 +39,6 @@ export class ResourceGuidelinesFormComponent implements OnInit {
   formGroupMeta = {
     id: [''],
     resourceId: [''],
-    catalogueId: [this.catalogueConfigId],
     interoperabilityRecordIds: this.fb.array([this.fb.control('')]),
   };
 
@@ -61,12 +59,12 @@ export class ResourceGuidelinesFormComponent implements OnInit {
   ngOnInit() {
     this.catalogueSupportEmail = this.config.getProperty('catalogueSupportEmail');
     this.serviceId = this.route.parent.snapshot.paramMap.get('resourceId');
-    this.guidelinesForm.get('resourceId').setValue(decodeURIComponent(this.serviceId));
+    this.datasourceId = this.route.parent.snapshot.paramMap.get('datasourceId');
+    this.guidelinesForm.get('resourceId').setValue(decodeURIComponent(this.serviceId ? this.serviceId : this.datasourceId));
 
-    this.guidelinesService.getGuidelinesOfResource(this.serviceId).subscribe(
+    this.guidelinesService.getGuidelinesOfResource(this.serviceId ? this.serviceId : this.datasourceId).subscribe(
       res => { if(res!=null) {
         this.resourceGuidelines = res;
-        console.log(this.resourceGuidelines.interoperabilityRecordIds.length)
         this.editMode = true;
         }
       },
@@ -79,7 +77,7 @@ export class ResourceGuidelinesFormComponent implements OnInit {
           this.guidelinesForm.patchValue(this.resourceGuidelines);
         }
         this.loadingMessage = 'Loading guidelines...';
-        this.guidelinesService.getInteroperabilityRecords('0', '9999').subscribe( //get all
+        this.guidelinesService.getInteroperabilityRecords('0', '9999', undefined, undefined, undefined, 'approved').subscribe( //get all
           res => {
             if (res != null) {
               this.guidelines = res['results'];
@@ -100,16 +98,11 @@ export class ResourceGuidelinesFormComponent implements OnInit {
   }
 
   submitGuidelines() {
-    if (!this.authenticationService.isLoggedIn()) {
-      sessionStorage.setItem('service', JSON.stringify(this.guidelinesForm.value));
-      this.authenticationService.login();
-    }
-
     this.errorMessage = '';
     this.showLoader = true;
 
     window.scrollTo(0, 0);
-    this.guidelinesService.assignGuidelinesToResource('service', this.editMode, this.guidelinesForm.value).subscribe(
+    this.guidelinesService.assignGuidelinesToResource(this.serviceId ? 'service' : 'datasource', this.editMode, this.guidelinesForm.value).subscribe(
       _ir => {
         this.showLoader = false;
       },
@@ -129,7 +122,7 @@ export class ResourceGuidelinesFormComponent implements OnInit {
     this.errorMessage = '';
     this.showLoader = true;
 
-    this.guidelinesService.deleteGuidelinesOfResource(this.serviceId, this.resourceGuidelines.id).subscribe(
+    this.guidelinesService.deleteGuidelinesOfResource(this.serviceId ? this.serviceId : this.datasourceId, this.resourceGuidelines.id).subscribe(
       _ir => {
         window.location.reload();
       },
@@ -201,4 +194,5 @@ export class ResourceGuidelinesFormComponent implements OnInit {
     }
   }
 
+  protected readonly decodeURIComponent = decodeURIComponent;
 }

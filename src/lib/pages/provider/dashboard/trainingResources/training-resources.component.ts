@@ -16,7 +16,6 @@ declare var UIkit: any;
 @Component({
     selector: 'app-training-resources',
     templateUrl: './training-resources.component.html',
-    styleUrls: ['../services/service.component.css'],
     standalone: false
 })
 
@@ -30,7 +29,7 @@ export class TrainingResourcesComponent implements OnInit {
     from: '0',
     quantity: '10',
     order: 'ASC',
-    sort: 'title',
+    sort: 'name',
     query: '',
     active: 'statusAll',
     status: ''
@@ -114,13 +113,13 @@ export class TrainingResourcesComponent implements OnInit {
   }
 
   toggleTrainingResource(trBundle: TrainingResourceBundle) {
-    if (trBundle.status === 'pending resource' || trBundle.status === 'rejected resource') {
+    if (trBundle.status === 'pending' || trBundle.status === 'rejected') {
       this.errorMessage = `You cannot activate a ${trBundle.status}.`;
       window.scrollTo(0, 0);
       return;
     }
     UIkit.modal('#spinnerModal').show();
-    this.trainingResourceService.publishTrainingResource(trBundle.id, !trBundle.active).subscribe(
+    this.trainingResourceService.activateTrainingResource(trBundle.id, !trBundle.active).subscribe(
       res => {},
       error => {
         this.errorMessage = 'Something went bad. ' + error.error ;

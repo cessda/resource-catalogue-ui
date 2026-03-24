@@ -44,11 +44,11 @@ export class CatalogueService {
   }
 
   verifyCatalogue(id: string, active: boolean, status: string) { //used for onboarding process
-    return this.http.patch(this.base + `/catalogue/verifyCatalogue/${id}?active=${active}&status=${status}`, {}, this.options);
+    return this.http.patch(this.base + `/catalogue/verify/${id}?active=${active}&status=${status}`, {}, this.options);
   }
 
   getMyCatalogues() {
-    return this.http.get<CatalogueBundle[]>(this.base + '/catalogue/getMyCatalogues', this.options);
+    return this.http.get<CatalogueBundle[]>(this.base + '/catalogue/getMy', this.options);
   }
 
   getCatalogueBundleById(id: string) {
@@ -93,13 +93,13 @@ export class CatalogueService {
         params = params.append('status', statusValue);
       }
     } else {
-      const allStatus = ["approved provider","pending provider","rejected provider"];
+      const allStatus = ["approved","pending","rejected"];
       for (const statusValue of allStatus) {
         params = params.append('status', statusValue);
       }
     }
     return this.http.get<Paging<ProviderBundle>>(this.base +
-      `/provider/byCatalogue/${id}?from=${from}&quantity=${quantity}&order=${order}&sort=${sort}&keyword=${query}`, {params});
+      `/catalogue/${id}/provider/bundle/all?from=${from}&quantity=${quantity}&order=${order}&sort=${sort}&keyword=${query}`, {params});
   }
 
   getServicesOfCatalogue(id: string, from: string, quantity: string, order: string, sort: string, status?: string, query?: string) {
@@ -110,12 +110,12 @@ export class CatalogueService {
         params = params.append('status', statusValue);
       }
     } else {
-      const allStatus = ["approved resource","pending resource","rejected resource"];
+      const allStatus = ["approved","pending","rejected"];
       for (const statusValue of allStatus) {
         params = params.append('status', statusValue);
       }
     }
-      return this.http.get<any>(this.base + `/service/byCatalogue/${id}?from=${from}&quantity=${quantity}&order=${order}&sort=${sort}&keyword=${query}`, {params});
+      return this.http.get<any>(this.base + `/catalogue/${id}/service/bundle/all?from=${from}&quantity=${quantity}&order=${order}&sort=${sort}&keyword=${query}`, {params});
   }
 
   getTrainingsOfCatalogue(id: string, from: string, quantity: string, order: string, sort: string, status?: string, query?: string) {
@@ -126,12 +126,12 @@ export class CatalogueService {
         params = params.append('status', statusValue);
       }
     } else {
-      const allStatus = ["approved resource","pending resource","rejected resource"];
+      const allStatus = ["approved","pending","rejected"];
       for (const statusValue of allStatus) {
         params = params.append('status', statusValue);
       }
     }
-    return this.http.get<any>(this.base + `/trainingResource/byCatalogue/${id}?from=${from}&quantity=${quantity}&order=${order}&sort=${sort}&keyword=${query}`, {params});
+    return this.http.get<any>(this.base + `/catalogue/${id}/trainingResource/bundle/all?from=${from}&quantity=${quantity}&order=${order}&sort=${sort}&keyword=${query}`, {params});
   }
 
   getDeployableServicesOfCatalogue(id: string, from: string, quantity: string, order: string, sort: string, status?: string, query?: string) {
@@ -142,12 +142,12 @@ export class CatalogueService {
         params = params.append('status', statusValue);
       }
     } else {
-      const allStatus = ["approved resource","pending resource","rejected resource"];
+      const allStatus = ["approved","pending","rejected"];
       for (const statusValue of allStatus) {
         params = params.append('status', statusValue);
       }
     }
-    return this.http.get<any>(this.base + `/deployableService/byCatalogue/${id}?from=${from}&quantity=${quantity}&order=${order}&sort=${sort}&keyword=${query}`, {params});
+    return this.http.get<any>(this.base + `/catalogue/${id}/deployableApplication/bundle/all?from=${from}&quantity=${quantity}&order=${order}&sort=${sort}&keyword=${query}`, {params});
   }
 
   getDatasourcesOfCatalogue(id: string, from: string, quantity: string, order: string, sort: string, active: string, status?: string, query?: string) {
@@ -158,7 +158,7 @@ export class CatalogueService {
         params = params.append('status', statusValue);
       }
     } else {
-      const allStatus = ["approved resource","pending resource","rejected resource"];
+      const allStatus = ["approved","pending","rejected"];
       for (const statusValue of allStatus) {
         params = params.append('status', statusValue);
       }
@@ -173,24 +173,24 @@ export class CatalogueService {
 
   hasAdminAcceptedTerms(id: string, pendingCatalogue: boolean) {
     if (pendingCatalogue) {
-      return this.http.get<boolean>(this.base + `/catalogue/hasAdminAcceptedTerms?catalogueId=${id}&isDraft=true`);
+      return this.http.get<boolean>(this.base + `/catalogue/hasAdminAcceptedTerms?id=${id}&isDraft=true`);
     }
-    return this.http.get<boolean>(this.base + `/catalogue/hasAdminAcceptedTerms?catalogueId=${id}&isDraft=false`);
+    return this.http.get<boolean>(this.base + `/catalogue/hasAdminAcceptedTerms?id=${id}&isDraft=false`);
   }
 
   adminAcceptedTerms(id: string, pendingCatalogue: boolean) {
     if (pendingCatalogue) {
-      return this.http.put(this.base + `/pendingCatalogue/adminAcceptedTerms?catalogueId=${id}&isDraft=true`, this.options);
+      return this.http.put(this.base + `/pendingCatalogue/adminAcceptedTerms?id=${id}&isDraft=true`, this.options);
     }
-    return this.http.put(this.base + `/catalogue/adminAcceptedTerms?catalogueId=${id}&isDraft=false`, this.options);
+    return this.http.put(this.base + `/catalogue/adminAcceptedTerms?id=${id}&isDraft=false`, this.options);
   }
 
   suspendCatalogue(catalogueId: string, suspend: boolean) {
-    return this.http.put<CatalogueBundle>(this.base + `/catalogue/suspend?catalogueId=${catalogueId}&suspend=${suspend}`, this.options);
+    return this.http.put<CatalogueBundle>(this.base + `/catalogue/suspend?id=${catalogueId}&suspend=${suspend}`, this.options);
   }
 
   auditCatalogue(id: string, action: string, comment: string) {
-    return this.http.patch(this.base + `/catalogue/auditCatalogue/${id}?actionType=${action}&comment=${comment}`, this.options);
+    return this.http.patch(this.base + `/catalogue/audit/${id}?actionType=${action}&comment=${comment}`, this.options);
   }
 
   getContactInfo() {

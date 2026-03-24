@@ -15,7 +15,6 @@ declare var UIkit: any;
 @Component({
     selector: 'app-catalogue-services',
     templateUrl: './catalogue-services.component.html',
-    styleUrls: ['../../../provider/dashboard/services/service.component.css'],
     standalone: false
 })
 
@@ -109,13 +108,13 @@ export class CatalogueServicesComponent implements OnInit {
   }
 
   toggleService(bundle: ServiceBundle) {
-    if (bundle.status === 'pending resource' || bundle.status === 'rejected resource') {
+    if (bundle.status === 'pending' || bundle.status === 'rejected') {
       this.errorMessage = `You cannot activate a ${bundle.status}.`;
       window.scrollTo(0, 0);
       return;
     }
     this.toggleLoading = true;
-    this.providerService.publishService(bundle.id, bundle.service.version, !bundle.active).subscribe(
+    this.providerService.activateService(bundle.id, bundle.service.version, !bundle.active).subscribe(
       res => {},
       error => {
         this.errorMessage = 'Something went bad. ' + error.error ;

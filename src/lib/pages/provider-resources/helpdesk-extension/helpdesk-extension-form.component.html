@@ -29,7 +29,7 @@
 <!--  <pre>{{this.payloadAnswer|json}}</pre>-->
 <!--</ng-container>-->
 
-<div class="uk-section-default uk-section uk-section-xsmall uk-padding-remove-bottom" style="min-height: 325px">
+<!--<div class="uk-section-default uk-section uk-section-xsmall uk-padding-remove-bottom" style="min-height: 325px">
   <div class="uk-container uk-container-expand">
     <div class="uk-grid-margin uk-grid uk-grid-stack" uk-grid="">
       <div class="uk-width-1-1@m uk-first-column">
@@ -54,7 +54,7 @@
         <div class="uk-margin-medium-bottom">
           <div class="uk-grid">
 
-            <!-- MIDDLE -->
+            &lt;!&ndash; MIDDLE &ndash;&gt;
             <div class=" uk-width-expand@m uk-margin-medium-top">
               @if (showLoader) {
                 <div class="uk-position-center">
@@ -76,7 +76,7 @@
                           <p class="uk-margin-remove-bottom">For questions related to the information that needs to be
                             filled in and suggestions on the portal, please contact us in <a
                           href="mailto:support@sandbox.eosc-beyond.eu">support&#64;sandbox.eosc-beyond.eu</a></p>
-                          <!--                        <p>For technical issues and questions, please contact us in <a href="mailto:support@sandbox.eosc-beyond.eu">support@sandbox.eosc-beyond.eu</a></p>-->
+                          &lt;!&ndash;                        <p>For technical issues and questions, please contact us in <a href="mailto:support@sandbox.eosc-beyond.eu">support@sandbox.eosc-beyond.eu</a></p>&ndash;&gt;
                         </div>
                       </div>
                     </div>
@@ -104,7 +104,7 @@
                           <label class="" for="orderBy">Guidelines for </label>
                           <div class="uk-inline">
                             <select (change)="selectChangeHandler($event)" class="uk-input uk-select" id="orderBy" formControlName="helpdeskType">
-                              <!--                            <select class="uk-input uk-select" id="orderBy" (change)="" formControlName="order">-->
+                              &lt;!&ndash;                            <select class="uk-input uk-select" id="orderBy" (change)="" formControlName="order">&ndash;&gt;
                               <option value="direct usage">Direct Usage</option>
                               <option value="ticket redirection">Ticket Redirection</option>
                               <option value="full integration">Full Integration with EOSC Helpdesk</option>
@@ -112,7 +112,7 @@
                           </div>
                         </div>
 
-                        <!--Direct Usage-->
+                        &lt;!&ndash;Direct Usage&ndash;&gt;
                         <div formArrayName="services" class="uk-margin-large-bottom">
                           <label class="uk-form-label uk-text-right" for="services">
                             {{servicesDesc.label + (servicesDesc.mandatory ? ' (*)' : '')}}
@@ -193,7 +193,7 @@
                                 <a href="{{this.serviceForm.get('organisation').value}}" target="_blank">&nbsp;&nbsp;<i class="fa fa-external-link"></i></a>
                               </div>
                             }
-                            <!--<i><small>{{organisationDesc.desc}}</small></i>-->
+                            &lt;!&ndash;<i><small>{{organisationDesc.desc}}</small></i>&ndash;&gt;
                           </div>
                         </div>
                         @if (this.serviceForm.get('helpdeskType').value!=='ticket redirection') {
@@ -375,13 +375,13 @@
                           </div>
                         }
 
-                        <!--                                                <pre>-->
-                        <!--                                                  {{serviceForm.value | json}}-->
-                      <!--                                                </pre>-->
+                        &lt;!&ndash;                                                <pre>&ndash;&gt;
+                        &lt;!&ndash;                                                  {{serviceForm.value | json}}&ndash;&gt;
+                      &lt;!&ndash;                                                </pre>&ndash;&gt;
                     </div>
-                    <!--<button type="submit" class="btn btn-primary butn theme block full-width m-b">-->
-                    <!--{{editMode ? "Update" : "Add"}}-->
-                  <!--</button>-->
+                    &lt;!&ndash;<button type="submit" class="btn btn-primary butn theme block full-width m-b">&ndash;&gt;
+                    &lt;!&ndash;{{editMode ? "Update" : "Add"}}&ndash;&gt;
+                  &lt;!&ndash;</button>&ndash;&gt;
 
                 </form>
 
@@ -393,4 +393,4 @@
       </div>
     </div>
   </div>
-</div>
+</div>-->

@@ -15,7 +15,6 @@ declare var UIkit: any;
 @Component({
     selector: 'app-deployable-services',
     templateUrl: './deployable-services.component.html',
-    styleUrls: ['../services/service.component.css'],
     standalone: false
 })
 
@@ -109,13 +108,13 @@ export class DeployableServicesComponent implements OnInit {
   }
 
   toggleDeployableService(dsBundle: DeployableServiceBundle) {
-    if (dsBundle.status === 'pending resource' || dsBundle.status === 'rejected resource') {
+    if (dsBundle.status === 'pending' || dsBundle.status === 'rejected') {
       this.errorMessage = `You cannot activate a ${dsBundle.status}.`;
       window.scrollTo(0, 0);
       return;
     }
     UIkit.modal('#spinnerModal').show();
-    this.deployableServiceService.publishDeployableService(dsBundle.id, !dsBundle.active).subscribe(
+    this.deployableServiceService.activateDeployableService(dsBundle.id, !dsBundle.active).subscribe(
       res => {},
       error => {
         this.errorMessage = 'Something went bad. ' + error.error ;

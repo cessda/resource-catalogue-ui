@@ -13,7 +13,6 @@ declare var UIkit: any;
 @Component({
     selector: 'app-catalogue-deployable-services',
     templateUrl: './catalogue-deployable-services.component.html',
-    styleUrls: ['../../../provider/dashboard/services/service.component.css'],
     standalone: false
 })
 
@@ -104,13 +103,13 @@ export class CatalogueDeployableServicesComponent implements OnInit {
   }
 
   toggleDeployableService(bundle: DeployableServiceBundle) {
-    if (bundle.status === 'pending resource' || bundle.status === 'rejected resource') {
+    if (bundle.status === 'pending' || bundle.status === 'rejected') {
       this.errorMessage = `You cannot activate a ${bundle.status}.`;
       window.scrollTo(0, 0);
       return;
     }
     this.toggleLoading = true;
-    this.deployableServiceService.publishDeployableService(bundle.id, !bundle.active).subscribe(
+    this.deployableServiceService.activateDeployableService(bundle.id, !bundle.active).subscribe(
       res => {},
       error => {
         this.errorMessage = 'Something went bad. ' + error.error ;
@@ -139,7 +138,7 @@ export class CatalogueDeployableServicesComponent implements OnInit {
         },
         err => {
           this.toggleLoading = false;
-          this.errorMessage = 'An error occurred while retrieving the deployable services of this provider. ' + err.error;
+          this.errorMessage = 'An error occurred while retrieving the Deployable Application of this provider. ' + err.error;
         }
       );
   }

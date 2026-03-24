@@ -7,37 +7,61 @@ import {
   OnChanges,
   SimpleChanges,
 } from "@angular/core";
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from "@angular/forms";
+import { CommonModule } from "@angular/common";
 import {
   HelpdeskTicketResponse,
   HelpdeskArticle,
 } from "../../../../lib/domain/eic-model";
-import { CommonModule } from '@angular/common';
+import { HelpdeskService } from "../../../services/helpdesk.service";
 
 @Component({
   selector: "app-ticket-modal",
   templateUrl: "./ticket-modal.component.html",
   styleUrls: ["./ticket-modal.component.css"],
   standalone: true,
-  imports: [CommonModule]
+  imports: [CommonModule, ReactiveFormsModule]
 })
 export class TicketModalComponent implements OnInit, OnChanges {
   @Input() ticket: HelpdeskTicketResponse | null = null;
   @Input() isOpen: boolean = false;
   @Output() closeModal = new EventEmitter<void>();
 
-  constructor() {}
+  replyForm: FormGroup;
+  submittingReply: boolean = false;
+  replyError: string = "";
+
+  constructor(
+    private formBuilder: FormBuilder,
+    private helpdeskService: HelpdeskService
+  ) {
+    this.replyForm = this.formBuilder.group({
+      body: ["", [Validators.required]],
+    });
+  }
 
   ngOnInit(): void {}
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes["isOpen"]) {
-      console.debug("Modal isOpen changed:", changes["isOpen"].currentValue);
+      console.log("🔄 Modal isOpen changed:", changes["isOpen"].currentValue);
+      // Reset form when modal opens/closes
+      if (!changes["isOpen"].currentValue) {
+        // Modal is closing - reset form
+        this.replyForm.reset();
+        this.replyError = "";
+      }
     }
     if (changes["ticket"]) {
       const ticket = changes["ticket"].currentValue;
-      console.debug("Modal ticket changed:", ticket);
+      console.log("🎫 Modal ticket changed:", ticket);
+      
+      // Reset form when ticket changes to ensure each ticket has its own form state
+      this.replyForm.reset();
+      this.replyError = "";
+      
       if (ticket) {
-        console.debug("Ticket timestamps:", {
+        console.log("📅 Ticket timestamps:", {
           created_at: ticket.created_at,
           updated_at: ticket.updated_at,
           close_at: ticket.close_at,
@@ -47,7 +71,11 @@ export class TicketModalComponent implements OnInit, OnChanges {
   }
 
   onClose(): void {
-    console.debug(" Modal close requested");
+    console.log("❌ Modal close requested");
+    // Reset form when closing modal
+    this.replyForm.reset();
+    this.replyError = "";
+    this.submittingReply = false;
     this.closeModal.emit();
   }
 
@@ -200,5 +228,86 @@ export class TicketModalComponent implements OnInit, OnChanges {
    */
   getMessageOriginator(article: HelpdeskArticle): string {
     return this.isEpotMessage(article) ? "EPOT" : "USER";
+  }
+
+  /**
+   * Checks if the ticket is closed
+   * @returns true if ticket state is "closed"
+   */
+  isTicketClosed(): boolean {
+    if (!this.ticket) {
+      return false;
+    }
+    const state = this.getTicketState(this.ticket);
+    return state.toLowerCase() === "closed";
+  }
+
+  /**
+   * Handles reply form submission
+   */
+  onSubmitReply(): void {
+    if (this.replyForm.valid && this.ticket && this.ticket.id) {
+      this.submittingReply = true;
+      this.replyError = "";
+
+      const ticketId = String(this.ticket.id);
+      const replyBody = this.replyForm.value.body;
+
+      this.helpdeskService.addReply(ticketId, replyBody).subscribe({
+        next: () => {
+          console.log("✅ Reply submitted successfully");
+          this.replyForm.reset();
+          
+          // Re-fetch the full ticket to get updated articles/conversation
+          this.helpdeskService.getTicket(ticketId).subscribe({
+            next: (fullTicket) => {
+              // Handle case where API returns an array instead of a single object
+              const ticketData = Array.isArray(fullTicket) ? fullTicket[0] : fullTicket;
+              this.ticket = ticketData;
+              this.submittingReply = false;
+              console.log("✅ Ticket refreshed with updated conversation");
+            },
+            error: (fetchErr) => {
+              console.error("⚠️ Reply sent but failed to refresh ticket:", fetchErr);
+              // Reply was sent successfully, just couldn't refresh
+              this.submittingReply = false;
+            }
+          });
+        },
+        error: (err) => {
+          console.error("❌ Error submitting reply:", err);
+          console.error("❌ Error details:", {
+            status: err.status,
+            statusText: err.statusText,
+            message: err.message,
+            error: err.error,
+            url: err.url
+          });
+          
+          // Provide more specific error message
+          if (err.status === 500) {
+            this.replyError = "Server error. Please contact support if the issue persists.";
+          } else if (err.status === 404) {
+            this.replyError = "Ticket not found. Please refresh and try again.";
+          } else if (err.status === 400) {
+            this.replyError = "Invalid request. Please check your message and try again.";
+          } else {
+            this.replyError = "Failed to send reply. Please try again.";
+          }
+          this.submittingReply = false;
+        },
+      });
+    }
+  }
+
+  /**
+   * Gets error message for form validation
+   */
+  getErrorMessage(field: string): string {
+    const control = this.replyForm.get(field);
+    if (control?.hasError("required")) {
+      return `${field} is required`;
+    }
+    return "";
   }
 }

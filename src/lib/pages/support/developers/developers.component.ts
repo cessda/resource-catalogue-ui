@@ -6,7 +6,6 @@ import {ConfigService} from '../../../services/config.service';
 @Component({
     selector: 'app-developers',
     templateUrl: './developers.component.html',
-    styleUrls: ['./developers.component.css'],
     standalone: false
 })
 export class DevelopersComponent implements OnInit {

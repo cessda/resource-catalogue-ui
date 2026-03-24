@@ -5,10 +5,10 @@
       @if (providerBundle) {
         <div class="uk-flex">
           <div>
-            <img src="{{ providerBundle.provider.logo ? providerBundle.provider.logo : '/assets/images/broken_image-black-48dp.svg' }}" style="max-width: 200px">
+            <img src="{{ providerBundle.organisation.logo ? providerBundle.organisation.logo : '/assets/images/broken_image-black-48dp.svg' }}" style="max-width: 200px">
           </div>
           <div class="uk-margin-medium-left">
-            <h3 class="uk-margin-remove">{{providerBundle.provider.name}}</h3>
+            <h3 class="uk-margin-remove">{{providerBundle.organisation.name}}</h3>
             <div><span class="status-label">ID: </span>{{ providerBundle.id}}</div>
             <div><span class="status-label">Status: </span>{{providerBundle.status | titlecase}}</div>
           </div>
@@ -35,8 +35,8 @@
 
                   <div class="al_timeline">
 
-                    @if (providerHistory?.results?.length>0) {
-                      @for (history of providerHistory.results; track history; let i = $index) {
+                    @if (providerHistory?.length>0) {
+                      @for (history of providerHistory; track history; let i = $index) {
                         @if (i < 10) {
                           <div class="al_timeline_block update">
                             <div class="al_timeline_image uk-scrollspy-init-inview uk-scrollspy-inview uk-animation-scale-up"></div>

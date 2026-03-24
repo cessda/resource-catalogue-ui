@@ -1,0 +1,392 @@
+import {UntypedFormArray, UntypedFormBuilder, FormControl, UntypedFormGroup, Validators} from '@angular/forms';
+import {Component, Injector, isDevMode, OnInit, ViewChild} from '@angular/core';
+import {AuthenticationService} from '../../services/authentication.service';
+import {NavigationService} from '../../services/navigation.service';
+import {ResourceService} from '../../services/resource.service';
+import {ServiceExtensionsService} from '../../services/service-extensions.service';
+import {Provider, Service, Datasource, Vocabulary, Type} from '../../domain/eic-model';
+import {Paging} from '../../domain/paging';
+import {URLValidator} from '../../shared/validators/generic.validator';
+import {environment} from '../../../environments/environment';
+import {ActivatedRoute} from '@angular/router';
+import {DatasourceService} from "../../services/datasource.service";
+import {SurveyComponent} from "../../../dynamic-catalogue/pages/dynamic-form/survey.component";
+import {Model} from "../../../dynamic-catalogue/domain/dynamic-form-model";
+import {FormControlService} from "../../../dynamic-catalogue/services/form-control.service";
+import {zip} from "rxjs";
+import {ConfigService} from "../../services/config.service";
+
+declare var UIkit: any;
+
+@Component({
+    selector: 'app-datasource-form',
+    templateUrl: './datasource-form.component.html',
+    standalone: false
+})
+export class DatasourceFormComponent implements OnInit {
+  @ViewChild(SurveyComponent) child: SurveyComponent
+  model: Model = null;
+  payloadAnswer: object = null;
+
+  catalogueConfigId: string = this.config.getProperty('catalogueId');
+  serviceORresource = environment.serviceORresource;
+  serviceName = '';
+  firstServiceForm = false;
+  showLoader = false;
+  pendingResource = false;
+  addOpenAIRE = false; //on addOpenAIRE path
+  openaireId: string = null; //datasource OA id
+  providerId: string;
+  catalogueId: string;
+  editMode = false;
+  hasChanges = false;
+  serviceForm: UntypedFormGroup;
+  provider: Provider;
+  service: Service;
+  datasource: Datasource;
+  errorMessage = '';
+  successMessage: string = null;
+  weights: string[] = [];
+  tabs: boolean[] = [false];
+  fb: UntypedFormBuilder = this.injector.get(UntypedFormBuilder);
+  disable = false;
+  isPortalAdmin = false;
+
+  serviceId: string = null; //filled for all types (service, datasource, training)
+  resourceType = '';
+  //only one of these 3 ids will be filled from URL
+  resourceId: string = null;
+  datasourceId: string = null;
+  trainingResourceId: string = null;
+
+  formGroupMeta = {
+    id: [''],
+    serviceId: [''],
+    node: [''],
+    catalogueId: [this.catalogueConfigId],
+
+    submissionPolicyURL: this.fb.control(''),
+    preservationPolicyURL: this.fb.control(''),
+    versionControl: [''],
+    persistentIdentitySystems: this.fb.array([
+      this.fb.group({
+        persistentIdentityEntityType: [''],
+        persistentIdentityEntityTypeSchemes: this.fb.array([this.fb.control('')])
+        // persistentIdentityEntityTypeSchemes: this.fb.array([this.initPersistentIdentityEntityTypeScheme()])
+      })
+    ]),
+
+    jurisdiction: ['', Validators.required],
+    datasourceClassification: ['', Validators.required],
+    researchEntityTypes: this.fb.array([this.fb.control('', Validators.required)], Validators.required),
+    thematic: ['', Validators.required],
+    harvestable: [''],
+
+    researchProductLicensings: this.fb.array([
+      this.fb.group({
+        researchProductLicenseName: [''],
+        researchProductLicenseURL: ['', Validators.compose([Validators.required, URLValidator])]
+      })
+    ]),
+    researchProductAccessPolicies: this.fb.array([this.fb.control('')]),
+
+    researchProductMetadataLicensing: this.fb.group({
+      researchProductMetadataLicenseName: [''],
+      researchProductMetadataLicenseURL: ['', Validators.compose([Validators.required, URLValidator])]
+    }),
+    researchProductMetadataAccessPolicies: this.fb.array([this.fb.control('')]),
+  };
+
+  providersPage: Paging<Provider>;
+  requiredResources: any;
+  relatedResources: any;
+  resourceService: ResourceService = this.injector.get(ResourceService);
+  serviceExtensionsService: ServiceExtensionsService = this.injector.get(ServiceExtensionsService);
+
+  navigator: NavigationService = this.injector.get(NavigationService);
+
+  vocabularies: Map<string, Vocabulary[]> = null;
+  subVocabularies: Map<string, Vocabulary[]> = null;
+
+  constructor(protected injector: Injector,
+              protected authenticationService: AuthenticationService,
+              protected datasourceService: DatasourceService,
+              protected route: ActivatedRoute,
+              public dynamicFormService: FormControlService,
+              public config: ConfigService
+  ) {
+    this.resourceService = this.injector.get(ResourceService);
+    this.fb = this.injector.get(UntypedFormBuilder);
+    this.navigator = this.injector.get(NavigationService);
+    this.serviceForm = this.fb.group(this.formGroupMeta);
+    this.weights[0] = this.authenticationService.getUserEmail().split('@')[0];
+  }
+
+  submitForm(formData: any, tempSave: boolean, pendingResource: boolean) {
+    let datasourceValue = formData.value.datasource;
+    window.scrollTo(0, 0);
+
+    if (!this.authenticationService.isLoggedIn()) {
+      sessionStorage.setItem('service', JSON.stringify(this.serviceForm.value));
+      this.authenticationService.login();
+    }
+
+    this.errorMessage = '';
+    this.showLoader = true;
+
+    datasourceValue = FormControlService.cleanObjectInPlace(datasourceValue);
+
+    this.datasourceService.submitDatasource(datasourceValue, this.editMode).subscribe(
+      _ds => {
+        this.showLoader = false;
+        // if (this.addOpenAIRE) return this.navigator.datasourceSubmitted(_ds.id);
+        if(window.location.pathname.includes('first-datasource')) {
+          this.datasourceId = _ds['id'];
+        }
+        return this.navigator.datasourceDashboard(this.providerId, this.datasourceId); // TODO: check if catalogueId param is needed
+      },
+      err => {
+        this.showLoader = false;
+        window.scrollTo(0, 0);
+        this.errorMessage =
+          (err?.status >= 500 && err?.status < 600)
+            ? `Something went wrong. If the issue persists, please contact support and provide the following error code: ${err?.error?.traceId}`
+            : `Something went bad, server responded: ${err?.error?.message}`;
+      }
+    );
+}
+
+  ngOnInit() {
+    this.showLoader = true;
+    this.addOpenAIRE = window.location.pathname.includes('addOpenAIRE');
+    this.openaireId = this.route.snapshot.paramMap.get('openaireId');
+    this.providerId = this.route.snapshot.paramMap.get('providerId');
+    this.resourceId = this.route.snapshot.paramMap.get('resourceId');
+    this.resourceService.getFormModelById('m-b-datasource').subscribe(
+      suc => {
+        this.model = suc; // Since you're only dealing with the getFormModelById response now
+      },
+      err => {
+                this.errorMessage =
+          (err?.status >= 500 && err?.status < 600)
+            ? `Something went wrong. If the issue persists, please contact support and provide the following error code: ${err?.error?.traceId}`
+            : `Something went bad while getting the data for page initialization: ${err?.error?.message}`;
+      },
+      () => {
+        if (!this.editMode) { //prefill field(s)
+          this.payloadAnswer = {
+            'answer': {
+              datasource: {
+                'id': this.openaireId,
+                'type': "DataSource",
+                'serviceId': decodeURIComponent(this.resourceId),
+                'catalogueId': this.catalogueConfigId,
+                'resourceOwner': decodeURIComponent(this.providerId)
+              }
+            }
+          };
+        }
+        this.showLoader = false;
+      }
+    );
+
+    if (this.route.snapshot.paramMap.get('datasourceId')) {
+      this.datasourceId = this.route.snapshot.paramMap.get('datasourceId');
+      this.resourceType = 'datasource';
+    }
+
+  }
+
+  // checkFormValidity(name: string, edit: boolean): boolean {
+  //   return (this.serviceForm.get(name).invalid && (edit || this.serviceForm.get(name).dirty));
+  // }
+
+  checkFormValidity(name: string, edit: boolean, required?: boolean): boolean {
+    if (required && edit && (this.serviceForm.get(name).value === "")) return false; // for dropdown required fields that get red on edit
+    return (this.serviceForm.get(name).invalid && (edit || this.serviceForm.get(name).dirty));
+  }
+
+  checkFormArrayValidity(name: string, position: number, edit: boolean, groupName?: string): boolean {
+    if (groupName) {
+      return this.getFieldAsFormArray(name).get([position]).get(groupName).invalid
+        && (edit || this.getFieldAsFormArray(name).get([position]).get(groupName).dirty);
+    }
+    return (this.getFieldAsFormArray(name).get([position]).invalid && (edit || this.getFieldAsFormArray(name).get([position]).dirty));
+  }
+
+  /** manage form arrays--> **/
+  getFieldAsFormArray(field: string) {
+    return this.serviceForm.get(field) as UntypedFormArray;
+  }
+
+  push(field: string, required: boolean, url?: boolean) {
+    if (required) {
+      if (url) {
+        this.getFieldAsFormArray(field).push(this.fb.control('', Validators.compose([Validators.required, URLValidator])));
+      } else {
+        this.getFieldAsFormArray(field).push(this.fb.control('', Validators.required));
+      }
+    } else if (url) {
+      // console.log('added non mandatory url field');
+      this.getFieldAsFormArray(field).push(this.fb.control('', URLValidator));
+    } else {
+      this.getFieldAsFormArray(field).push(this.fb.control(''));
+    }
+  }
+
+  remove(field: string, i: number) {
+    this.getFieldAsFormArray(field).removeAt(i);
+  }
+
+  /** <--manage form arrays **/
+
+  /** Licensing -->**/
+  newLicensing(): UntypedFormGroup {
+    return this.fb.group({
+      researchProductLicenseName: [''],
+      researchProductLicenseURL: ['', Validators.compose([Validators.required, URLValidator])]
+    });
+  }
+
+  get licensingArray() {
+    return this.serviceForm.get('researchProductLicensings') as UntypedFormArray;
+  }
+
+  pushLicensing() {
+    this.licensingArray.push(this.newLicensing());
+  }
+
+  removeLicensing(index: number) {
+    this.licensingArray.removeAt(index);
+  }
+  /** <--Licensing**/
+
+  /** MetadataLicensing -->**/
+  get metadataLicensingArray() {
+    return this.serviceForm.get('researchProductMetadataLicensing') as UntypedFormArray;
+  }
+  /** <--MetadataLicensing**/
+
+  /** Persistent Identity Systems--> **/
+  newPersistentIdentitySystem(): UntypedFormGroup {
+    return this.fb.group({
+      persistentIdentityEntityType: [''],
+      persistentIdentityEntityTypeSchemes: this.fb.array([''])
+    });
+  }
+
+  get persistentIdentitySystemArray() {
+    return this.serviceForm.get('persistentIdentitySystems') as UntypedFormArray;
+  }
+
+  pushPersistentIdentitySystem() {
+    this.persistentIdentitySystemArray.push(this.newPersistentIdentitySystem());
+  }
+
+  removePersistentIdentitySystem(index: number) {
+    this.persistentIdentitySystemArray.removeAt(index);
+  }
+
+  pushPersistentIdentityEntityTypeScheme(i) {
+    // const control = (<FormArray>this.serviceForm.controls['persistentIdentitySystems']).at(i).get('persistentIdentityEntityTypeSchemes') as FormArray;
+    // control.push(this.fb.control(''));
+    (this.persistentIdentitySystemArray.controls[i].get('persistentIdentityEntityTypeSchemes') as UntypedFormArray).push(this.fb.control(''));
+  }
+
+  removePersistentIdentityEntityTypeScheme(i:number, index: number) {
+    (this.persistentIdentitySystemArray.controls[i].get('persistentIdentityEntityTypeSchemes') as UntypedFormArray).removeAt(index);
+  }
+  /** <--Persistent Identity Systems**/
+
+  sortVocabulariesByName(vocabularies: Vocabulary[]): Vocabulary[] {
+    return vocabularies.sort((vocabulary1, vocabulary2) => {
+      if (vocabulary1.name > vocabulary2.name) {
+        return 1;
+      }
+      if (vocabulary1.name < vocabulary2.name) {
+        return -1;
+      }
+      return 0;
+    });
+  }
+
+  formPrepare(datasource: Datasource) {
+    if (datasource.persistentIdentitySystems) {
+      for (let i = 0; i < datasource.persistentIdentitySystems.length - 1; i++) {
+        this.pushPersistentIdentitySystem();
+      }
+    }
+    if (datasource.researchEntityTypes) {
+      for (let i = 0; i < datasource.researchEntityTypes.length - 1; i++) {
+        this.push('researchEntityTypes', true);
+      }
+    }
+    if (datasource.researchProductLicensings) {
+      for (let i = 0; i < datasource.researchProductLicensings.length - 1; i++) {
+        this.pushLicensing();
+      }
+    }
+    if (datasource.researchProductAccessPolicies) {
+      for (let i = 0; i < datasource.researchProductAccessPolicies.length - 1; i++) {
+        this.push('researchProductAccessPolicies', false);
+      }
+    }
+    if (datasource.researchProductMetadataAccessPolicies) {
+      for (let i = 0; i < datasource.researchProductMetadataAccessPolicies.length - 1; i++) {
+        this.push('researchProductMetadataAccessPolicies', false);
+      }
+    }
+  }
+
+  unsavedChangesPrompt() {
+    this.hasChanges = true;
+  }
+
+  checkForDuplicates(formControlName, group?) {
+    if (this.serviceForm.get(formControlName).value.length > 1) {
+      for (let i = 0; i < this.serviceForm.get(formControlName).value.length; i++) {
+        for (let j = 0; j < this.serviceForm.get(formControlName).value.length; j++) {
+          if (i !== j && this.serviceForm.get(formControlName).value[i] === this.serviceForm.get(formControlName).value[j]) {
+            this.showNotification();
+            return;
+          }
+        }
+      }
+    }
+  }
+
+  switchToTab(id: string){
+    const element: HTMLElement = document.getElementById(id) as HTMLElement;
+    element.click();
+    window.scrollTo(0, -1);
+  }
+
+  showNotification() {
+    UIkit.notification({
+      // message: `Please remove duplicate entries for ${label}.`,
+      message: 'Please remove duplicate entries.',
+      status: 'danger',
+      pos: 'top-center',
+      timeout: 7000
+    });
+  }
+
+  deleteDatasource() {
+    this.showLoader = true;
+    this.datasourceService.deleteDatasource(this.datasource.catalogueId).subscribe( // old deleteDatasourceWithoutAdminRights
+      res => {},
+      error => {
+        this.showLoader = false;
+        this.errorMessage = 'Something went bad. ' + error.error ;
+        // return this.navigator.resourceDashboard(this.providerId, this.datasource.serviceId); // fixme: Datasource providerId -2test
+      },
+      () => {
+        this.showLoader = false;
+        // return this.navigator.resourceDashboard(this.providerId, this.datasource.serviceId); // fixme: Datasource providerId -2test
+      }
+    );
+  }
+
+  protected readonly environment = environment;
+  protected readonly isDevMode = isDevMode;
+}

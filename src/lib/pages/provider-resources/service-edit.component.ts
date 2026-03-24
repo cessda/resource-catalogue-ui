@@ -18,7 +18,6 @@ import {ConfigService} from "../../services/config.service";
 @Component({
     selector: 'app-service-edit',
     templateUrl: './service-form.component.html',
-    styleUrls: ['../provider/service-provider-form.component.css'],
     standalone: false
 })
 export class ServiceEditComponent extends ServiceFormComponent implements OnInit {
@@ -60,28 +59,28 @@ export class ServiceEditComponent extends ServiceFormComponent implements OnInit
         if (this.pendingService) {
           this.resourceService.getPendingService(this.serviceId)
             .subscribe(service => {
-                this.payloadAnswer = {'answer': {Service: service}};
+                this.payloadAnswer = {'answer': {service: service}};
                 //clear below
                 if (service.mainContact === null) //in case of unauthorized access backend will not show sensitive info
                   this.navigator.go('/forbidden')
                 ResourceService.removeNulls(service);
                 //remove catalogueId. prefix for same catalogue entries
-                if (service.requiredResources) {
-                  service.requiredResources = service.requiredResources.map(value => value.startsWith(this.catalogueId) ? value.substring(this.catalogueId.length + 1) : value);
-                }
-                if (service.relatedResources) {
-                  service.relatedResources = service.relatedResources.map(value => value.startsWith(this.catalogueId) ? value.substring(this.catalogueId.length + 1) : value);
-                }
-                this.serviceForm.patchValue(service);
-                for (const i in this.serviceForm.controls) {
-                  if (this.serviceForm.controls[i].value === null) {
-                    this.serviceForm.controls[i].setValue('');
-                  }
-                }
-                if (this.serviceForm.get('lastUpdate').value) {
-                  const lastUpdate = new Date(this.serviceForm.get('lastUpdate').value);
-                  this.serviceForm.get('lastUpdate').setValue(this.datePipe.transform(lastUpdate, 'yyyy-MM-dd'));
-                }
+                // if (service.requiredResources) {
+                //   service.requiredResources = service.requiredResources.map(value => value.startsWith(this.catalogueId) ? value.substring(this.catalogueId.length + 1) : value);
+                // }
+                // if (service.relatedResources) {
+                //   service.relatedResources = service.relatedResources.map(value => value.startsWith(this.catalogueId) ? value.substring(this.catalogueId.length + 1) : value);
+                // }
+                // this.serviceForm.patchValue(service);
+                // for (const i in this.serviceForm.controls) {
+                //   if (this.serviceForm.controls[i].value === null) {
+                //     this.serviceForm.controls[i].setValue('');
+                //   }
+                // }
+                // if (this.serviceForm.get('lastUpdate').value) {
+                //   const lastUpdate = new Date(this.serviceForm.get('lastUpdate').value);
+                //   this.serviceForm.get('lastUpdate').setValue(this.datePipe.transform(lastUpdate, 'yyyy-MM-dd'));
+                // }
               },
               err => this.errorMessage = 'Could not get the data for the requested service. ' + err.error,
               () => {
@@ -108,7 +107,7 @@ export class ServiceEditComponent extends ServiceFormComponent implements OnInit
                 ...this.service,
                 horizontalService: typeof this.service.horizontalService === 'boolean' ? this.service.horizontalService.toString() : this.service.horizontalService
               };
-              this.payloadAnswer = {'answer': {Service: parsedService}};
+              this.payloadAnswer = {'answer': {service: parsedService}};
               //clear below
 
 /*              if (serviceBundle.service.mainContact === null) //in case of unauthorized access backend will not show sensitive info
@@ -120,7 +119,7 @@ export class ServiceEditComponent extends ServiceFormComponent implements OnInit
               }
               if (serviceBundle.service.relatedResources) {
                 serviceBundle.service.relatedResources = serviceBundle.service.relatedResources.map(value => value.startsWith(this.catalogueId) ? value.substring(this.catalogueId.length + 1) : value);
-              }*/
+
               this.serviceForm.patchValue(serviceBundle.service);
               for (const i in this.serviceForm.controls) {
                 if (this.serviceForm.controls[i].value === null) {
@@ -131,6 +130,7 @@ export class ServiceEditComponent extends ServiceFormComponent implements OnInit
                 const lastUpdate = new Date(this.serviceForm.get('lastUpdate').value);
                 this.serviceForm.get('lastUpdate').setValue(this.datePipe.transform(lastUpdate, 'yyyy-MM-dd'));
               }
+ */
             },
             err => this.errorMessage = 'Could not get the data for the requested service. ' + err.error,
             () => {

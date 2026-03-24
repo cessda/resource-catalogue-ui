@@ -43,7 +43,7 @@
                     </div>
                   </form>
 
-                  <h5>Deployable Service Status</h5>
+                  <h5>Deployable Application Status</h5>
                   <form [formGroup]="dataForm">
                     <div formArrayName="status" class="uk-padding uk-padding-remove-top">
                       @for (statusValue of statuses; track statusValue) {
@@ -228,17 +228,17 @@
                     @for (dsBundle of deployableServiceBundles; track dsBundle) {
                       <div class="uk-card provider-card uk-margin-medium-top">
                         <div class="uk-card-body" style="padding-bottom: 20px;">
-                          @if (dsBundle.status === 'approved resource') {
+                          @if (dsBundle.status === 'approved') {
                             <div class="approved">
                               <div class="uk-card-badge uk-label">Approved</div>
                             </div>
                           }
-                          @if (dsBundle.status === 'pending resource') {
+                          @if (dsBundle.status === 'pending') {
                             <div class="pending">
                               <div class="uk-card-badge uk-label">Pending</div>
                             </div>
                           }
-                          @if ((dsBundle.status === 'rejected resource')) {
+                          @if ((dsBundle.status === 'rejected')) {
                             <div class="rejected">
                               <div class="uk-card-badge uk-label">Rejected</div>
                             </div>
@@ -272,8 +272,8 @@
                           <div class="uk-width-4-5">
                             <div class="providerName">
                               <span class="uk-margin-auto-vertical">
-                                <a [routerLink]="['/dashboard', dsBundle.deployableService.catalogueId, pidHandler.customEncodeURIComponent(dsBundle.deployableService.resourceOrganisation), 'deployable-service-dashboard', pidHandler.customEncodeURIComponent(dsBundle.id)]" data-uk-tooltip title="Go to the deployable service dashboard">
-                                  {{ dsBundle.deployableService.name }}
+                                <a [routerLink]="['/dashboard', dsBundle.catalogueId, pidHandler.customEncodeURIComponent(dsBundle.deployableApplication.resourceOwner), 'deployable-service-dashboard', pidHandler.customEncodeURIComponent(dsBundle.id)]" data-uk-tooltip title="Go to the Deployable Application dashboard">
+                                  {{ dsBundle.deployableApplication.name }}
                                 </a>
                               </span>
                             </div>
@@ -281,21 +281,18 @@
                               <div>
                                 <div class="uk-margin-small-top uk-text-break">
                                   <span class="statusLabel">ID: </span>
-                                  @if (dsBundle.deployableService.id && (dsBundle.deployableService.id!==null)) {
-                                    {{ dsBundle.deployableService.id }}
+                                  @if (dsBundle.deployableApplication.id && (dsBundle.deployableApplication.id!==null)) {
+                                    {{ dsBundle.deployableApplication.id }}
                                   }
-                                  @if (!dsBundle.deployableService.id || (dsBundle.deployableService.id===null)) {
+                                  @if (!dsBundle.deployableApplication.id || (dsBundle.deployableApplication.id===null)) {
                                     not available
                                   }
                                 </div>
                                 <div class="uk-margin-small-top">
-                                  <span class="statusLabel">Deployable Service Status: </span>{{labels[statuses.indexOf(dsBundle.status)]}}
+                                  <span class="statusLabel">Deployable Application Status: </span>{{labels[statuses.indexOf(dsBundle.status)]}}
                                 </div>
                                 <div class="uk-margin-small-top">
-                                  <span class="statusLabel">Resource Organisation: </span>{{ providersPage?.results ? getProviderNameWithId(dsBundle.deployableService.resourceOrganisation) : ''}}
-                                </div>
-                                <div class="uk-margin-small-top">
-                                  <span class="statusLabel">Resource Providers: </span>{{ providersPage?.results ? getProviderNamesWithIds(dsBundle.deployableService.resourceProviders) : ''}}
+                                  <span class="statusLabel">Resource Organisation: </span>{{ providersPage?.results ? getProviderNameWithId(dsBundle.deployableApplication.resourceOwner) : ''}}
                                 </div>
                                 <!--                              <div class="uk-margin-small-top">-->
                                 <!--                                <span class="statusLabel">Status: </span>{{ trBundle.active ? 'Active' : 'Inactive' }}-->
@@ -325,28 +322,28 @@
                                 }
                               </div>
                               <div class="uk-margin-small-top">
-                                <span class="statusLabel">Catalogue id: </span>{{ dsBundle.deployableService.catalogueId }}
+                                <span class="statusLabel">Catalogue id: </span>{{ dsBundle.catalogueId }}
                               </div>
                             </div>
                           </div>
                         </div>
                       </div>
                     </div>
-                    @if (dsBundle.deployableService.catalogueId !== catalogueConfigId) {
+                    @if (dsBundle.catalogueId !== catalogueConfigId) {
                       <hr class="uk-margin-top">
                       <div class="uk-align-right">
                         <button
-                          routerLink="/provider/{{dsBundle.deployableService.catalogueId}}/{{dsBundle.deployableService.resourceOrganisation}}/deployable-service/view/{{dsBundle.id}}"
+                          routerLink="/provider/{{dsBundle.catalogueId}}/{{dsBundle.deployableApplication.resourceOwner}}/deployable-service/view/{{dsBundle.id}}"
                           class="uk-button uk-button-link" style="">
                           <i class="fa fa-eye fa-lg uk-margin-small-right" aria-hidden="true"></i>
-                          View Deployable Service
+                          View Deployable Application
                         </button>
                         <button class="uk-button uk-button-link uk-margin-medium-left">
                           <i class="fa fa-ellipsis-v fa-lg uk-margin-small-right"></i>More Options
                         </button>
                         <div uk-dropdown="mode: click">
                           <ul class="uk-nav uk-dropdown-nav uk-dropdown-close">
-                            @if (dsBundle.active && dsBundle.status=='approved resource') {
+                            @if (dsBundle.active && dsBundle.status=='approved') {
                               <li class="uk-margin-small-bottom"
                                 (click)="showAuditForm('main', dsBundle)">
                                 <a><i class="fa fa-check-circle-o fa-lg uk-margin-small-right"></i>Audit</a>
@@ -370,25 +367,25 @@
                         </div>
                       </div>
                     }
-                    @if (dsBundle.deployableService.catalogueId === catalogueConfigId) {
+                    @if (dsBundle.catalogueId === catalogueConfigId) {
                       <hr class="uk-margin-top">
                       <div class="uk-align-right">
                         <button
-                          routerLink="/provider/{{pidHandler.customEncodeURIComponent(dsBundle.deployableService.resourceOrganisation)}}/deployable-service/update/{{pidHandler.customEncodeURIComponent(dsBundle.id)}}"
+                          routerLink="/provider/{{pidHandler.customEncodeURIComponent(dsBundle.deployableApplication.resourceOwner)}}/deployable-service/update/{{pidHandler.customEncodeURIComponent(dsBundle.id)}}"
                           class="uk-button uk-button-link"
                           style="">
                           <i class="fa fa-pencil fa-lg uk-margin-small-right" aria-hidden="true"></i>
-                          Update Deployable Service
+                          Update Deployable Application
                         </button>
-                        @if (dsBundle.status !== 'pending resource') {
+                        @if (dsBundle.status !== 'pending') {
                           <button (click)="showDeletionModal(dsBundle)"
                             class="uk-button uk-button-link uk-margin-medium-left"
                             style="padding-left: 40px; border-left: 1px solid #ccc">
                             <i class="fa fa-trash fa-lg uk-margin-small-right" aria-hidden="true"></i>
-                            Delete Deployable Service
+                            Delete Deployable Application
                           </button>
                         }
-                        @if (dsBundle.status!=='rejected resource') {
+                        @if (dsBundle.status!=='rejected') {
                           <button
                             class="uk-button uk-button-link uk-margin-medium-left"
                             style="padding-left: 40px; border-left: 1px solid #ccc">
@@ -397,7 +394,7 @@
                         }
                         <div uk-dropdown="mode: click">
                           <ul class="uk-nav uk-dropdown-nav uk-dropdown-close">
-                            @if (dsBundle.status=='approved resource') {
+                            @if (dsBundle.status=='approved') {
                               @if (dsBundle.active) {
                                 <ng-container class="uk-margin-small-bottom">
                                   <li (click)="showAuditForm('main', dsBundle)">
@@ -412,15 +409,15 @@
                                 </li>
                                 <li class="uk-nav-divider"></li>
                               </ng-container>
-                              @if (isProviderActive(dsBundle.deployableService.resourceOrganisation) ) {
+                              @if (isProviderActive(dsBundle.deployableApplication.resourceOwner) ) {
                                 <div>
                                   <li class="uk-button uk-button-link uk-padding-small"
                                     (click)="toggleService(dsBundle)">
                                     @if (dsBundle.active) {
-                                      <i class="fa fa-thumbs-down" aria-hidden="true"></i> Deactivate Deployable Service
+                                      <i class="fa fa-thumbs-down" aria-hidden="true"></i> Deactivate Deployable Application
                                     }
                                     @if (!dsBundle.active) {
-                                      <i class="fa fa-thumbs-up" aria-hidden="true"></i> Activate Deployable Service
+                                      <i class="fa fa-thumbs-up" aria-hidden="true"></i> Activate Deployable Application
                                     }
                                   </li>
                                 </div>
@@ -429,10 +426,10 @@
                                   <li class="uk-button uk-button-link uk-disabled uk-padding-small"
                                     (click)="toggleService(dsBundle)">
                                     @if (dsBundle.active) {
-                                      <i class="fa fa-thumbs-down" aria-hidden="true"></i> Deactivate Deployable Service
+                                      <i class="fa fa-thumbs-down" aria-hidden="true"></i> Deactivate Deployable Application
                                     }
                                     @if (!dsBundle.active) {
-                                      <i class="fa fa-thumbs-up" aria-hidden="true"></i> Activate Deployable Service
+                                      <i class="fa fa-thumbs-up" aria-hidden="true"></i> Activate Deployable Application
                                     }
                                   </li>
                                 </div>
@@ -452,12 +449,12 @@
                                 </li>
                               }
                             }
-                            @if (dsBundle.status=='pending resource') {
-                              <li class="uk-active" (click)="templateAction(dsBundle.id, true, 'approved resource')">
-                                <a class="uk-margin-small-top"><i class="fa fa-thumbs-up"></i> Approve First Deployable Service</a>
+                            @if (dsBundle.status=='pending') {
+                              <li class="uk-active" (click)="templateAction(dsBundle.id, true, 'approved')">
+                                <a class="uk-margin-small-top"><i class="fa fa-thumbs-up"></i> Approve First Deployable Application</a>
                               </li>
-                              <li class="uk-active" (click)="templateAction(dsBundle.id, true, 'rejected resource')">
-                                <a class="uk-margin-small-top"><i class="fa fa-thumbs-down"></i> Reject First Deployable Service</a>
+                              <li class="uk-active" (click)="templateAction(dsBundle.id, false, 'rejected')">
+                                <a class="uk-margin-small-top"><i class="fa fa-thumbs-down"></i> Reject First Deployable Application</a>
                               </li>
                             }
                           </ul>
@@ -469,7 +466,7 @@
                         <div>
                           <!--                            <hr>-->
                           <div>
-                            <p>You are about to audit "{{ selectedDeployableService.deployableService.name }}".</p>
+                            <p>You are about to audit "{{ selectedDeployableService.deployableApplication.name }}".</p>
                             <p>Please fill in the reason(s) of your action. <span style="color: grey">(optional)</span></p>
                           </div>
                           <form>
@@ -532,19 +529,19 @@
 
 <div id="deletionModal" uk-modal>
   @if (!loadingMessage) {
-    <div class="uk-modal-dialog uk-modal-header uk-h4">Delete Deployable Service</div>
+    <div class="uk-modal-dialog uk-modal-header uk-h4">Delete Deployable Application</div>
   }
   @if (!loadingMessage) {
     <div class="uk-modal-dialog uk-modal-body uk-margin-auto-vertical">
       @if (selectedDeployableService) {
         <div>
-          <h6>Are you sure you want to delete "{{ selectedDeployableService.deployableService.name }}" ?</h6>
-          <p>Deleting a Deployable Service is an irreversible action.</p>
+          <h6>Are you sure you want to delete "{{ selectedDeployableService.deployableApplication.name }}" ?</h6>
+          <p>Deleting a Deployable Application is an irreversible action.</p>
         </div>
       }
       <div class="uk-text-right">
         <button class="uk-button uk-button-secondary uk-modal-close uk-margin-small-right" type="button">Cancel</button>
-        <button class="uk-button uk-button-danger uk-modal-close" type="button" (click)="deleteDeployableService(selectedDeployableService.deployableService.id)">Delete</button>
+        <button class="uk-button uk-button-danger uk-modal-close" type="button" (click)="deleteDeployableService(selectedDeployableService.deployableApplication.id)">Delete</button>
       </div>
     </div>
   }
@@ -560,12 +557,12 @@
 
 <div id="suspensionModal" uk-modal>
   @if (!loadingMessage) {
-    <div class="uk-modal-dialog uk-modal-header uk-h4">Suspend Deployable Service</div>
+    <div class="uk-modal-dialog uk-modal-header uk-h4">Suspend Deployable Application</div>
   }
   @if (!loadingMessage) {
     <div class="uk-modal-dialog uk-modal-body uk-margin-auto-vertical">
       @if (selectedDeployableService) {
-        <h6 class="uk-margin-medium-bottom">Are you sure you want to {{selectedDeployableService.suspended==true ? 'un' : ''}}suspend "{{ selectedDeployableService.deployableService.name }}"?</h6>
+        <h6 class="uk-margin-medium-bottom">Are you sure you want to {{selectedDeployableService.suspended==true ? 'un' : ''}}suspend "{{ selectedDeployableService.deployableApplication.name }}"?</h6>
         <div class="uk-text-right">
           <button class="uk-button uk-button-primary uk-modal-close uk-margin-small-right" type="button">Cancel</button>
           <button class="uk-button uk-button-danger uk-modal-close" type="button" (click)="suspendDeployableService()">
@@ -589,11 +586,11 @@
     <div class="uk-modal-dialog uk-modal-body uk-margin-auto-vertical">
       @if (selectedDeployableService) {
         <div>
-          <p>You are about to send a notification email to the admins of "{{ selectedDeployableService.deployableService.name }}", requesting an update for this Resource.</p>
+          <p>You are about to send a notification email to the admins of "{{ selectedDeployableService.deployableApplication.name }}", requesting an update for this Resource.</p>
           <p>Do you want to proceed?</p>
         </div>
       }
-      <button class="uk-button uk-button-primary uk-modal-close uk-margin-small-right" type="button" (click)="sendMailForUpdate(selectedDeployableService.deployableService.id)">OK</button>
+      <button class="uk-button uk-button-primary uk-modal-close uk-margin-small-right" type="button" (click)="sendMailForUpdate(selectedDeployableService.deployableApplication.id)">OK</button>
       <button class="uk-button uk-button-secondary uk-modal-close" type="button">Cancel</button>
     </div>
   }
@@ -612,8 +609,8 @@
     <div class="uk-modal-dialog uk-modal-body uk-margin-auto-vertical">
       @if (selectedDeployableService) {
         <div>
-          <p>Deployable Service "{{ selectedDeployableService.deployableService.name }}" is currently managed by provider "{{ selectedDeployableService.deployableService.resourceOrganisation }}."</p>
-          <p>Choose another provider to move "{{ selectedDeployableService.deployableService.name }}".</p>
+          <p>Deployable Application "{{ selectedDeployableService.deployableApplication.name }}" is currently managed by provider "{{ selectedDeployableService.deployableApplication.resourceOwner }}."</p>
+          <p>Choose another provider to move "{{ selectedDeployableService.deployableApplication.name }}".</p>
           <p style="color: grey">The initial {{serviceORresource | lowercase}} will be deleted from its current provider.</p>
           <form [formGroup]="providersDropdownForm">
             <div class="uk-form-controls uk-margin-medium-top">
@@ -637,7 +634,7 @@
             </form>
             <!--        <pre>{{providersDropdownForm.value | json }}</pre>-->
             <button class="uk-button uk-button-primary uk-modal-close uk-margin-small-right" type="button"
-            (click)="moveResourceToProvider(selectedDeployableService.deployableService.id, providersDropdownForm.get('resourceOrganisation').value)">OK</button>
+            (click)="moveResourceToProvider(selectedDeployableService.deployableApplication.id, providersDropdownForm.get('resourceOrganisation').value)">OK</button>
             <button class="uk-button uk-button-secondary uk-modal-close" type="button">Cancel</button>
           </form>
         </div>

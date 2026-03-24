@@ -8,7 +8,7 @@
         </div>
       }
       <app-survey [payload]="payloadAnswer" [model]="model" [vocabulariesMap]="vocabulariesMap" [tabsHeader]=""
-        [subVocabularies]="" (submit)="submitForm($event)" [activeUsers]="[]">
+        [subVocabularies]="" (submit)="submitForm($event)">
         @if (model) {
           <div class="uk-grid form-top-section">
             <h5 class="uk-width-1-1 uk-margin-bottom">{{ model.name }}</h5>

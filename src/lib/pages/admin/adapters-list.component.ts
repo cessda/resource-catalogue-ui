@@ -251,7 +251,7 @@ export class AdaptersListComponent implements OnInit {
 
   suspendAdapter() {
     UIkit.modal('#spinnerModal').show();
-    this.adaptersService.suspendAdapter(this.selectedAdapter.id, this.selectedAdapter.adapter.catalogueId, !this.selectedAdapter.suspended)
+    this.adaptersService.suspendAdapter(this.selectedAdapter.id, this.selectedAdapter.catalogueId, !this.selectedAdapter.suspended)
       .subscribe(
         res => {
           UIkit.modal('#suspensionModal').hide();
@@ -262,7 +262,10 @@ export class AdaptersListComponent implements OnInit {
           UIkit.modal('#suspensionModal').hide();
           UIkit.modal('#spinnerModal').hide();
           this.loadingMessage = '';
-          this.errorMessage = err.error.error;
+          this.errorMessage =
+          (err?.status >= 500 && err?.status < 600)
+            ? `Something went wrong. If the issue persists, please contact support and provide the following error code: ${err?.error?.traceId}`
+            : `Something went bad, server responded: ${err?.error?.message}`;
           window.scroll(0,0);
         },
         () => {
@@ -285,10 +288,10 @@ export class AdaptersListComponent implements OnInit {
     );
   }
 
-  publishAdapter(id: string, active: boolean){ // Activates/Deactivates
+  activateAdapter(id: string, active: boolean){ // Activates/Deactivates
     this.loadingMessage = '';
     UIkit.modal('#spinnerModal').show();
-    this.adaptersService.publishAdapter(id, active).subscribe(
+    this.adaptersService.activateAdapter(id, active).subscribe(
       res => this.getAdapters(),
       err => UIkit.modal('#spinnerModal').hide(),
       () => {
@@ -311,7 +314,7 @@ export class AdaptersListComponent implements OnInit {
   }
 
   auditResourceAction(action: string, bundle: AdapterBundle) {
-    this.adaptersService.auditAdapter(this.selectedAdapter.id, action, this.selectedAdapter.adapter.catalogueId, this.commentAuditControl.value)
+    this.adaptersService.auditAdapter(this.selectedAdapter.id, action, this.selectedAdapter.catalogueId, this.commentAuditControl.value)
       .subscribe(
         res => {this.getAdapters();},
         err => {console.log(err);},

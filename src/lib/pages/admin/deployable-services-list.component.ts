@@ -45,19 +45,6 @@ export class DeployableServicesListComponent implements OnInit {
   };
   dataForm: UntypedFormGroup;
 
-  extrasFormPrepare = {
-    researchCategories: this.fb.array([this.fb.control('')]),
-    eoscIFGuidelines: this.fb.array([
-      this.fb.group({
-        label: [''],
-        pid: [''],
-        semanticRelationship: [''],
-        url: ['']
-      })
-    ])
-  };
-  extrasForm: UntypedFormGroup;
-
   urlParams: URLParameter[] = [];
 
   commentAuditControl = new UntypedFormControl();
@@ -69,7 +56,6 @@ export class DeployableServicesListComponent implements OnInit {
   loadingMessage = '';
 
   providers: ProviderBundle[] = [];
-  selectedProvider: ProviderBundle;
   providersTotal: number;
 
   deployableServiceBundles: DeployableServiceBundle[] = [];
@@ -99,13 +85,10 @@ export class DeployableServicesListComponent implements OnInit {
 
   @ViewChildren("auditCheckboxes") auditCheckboxes: QueryList<ElementRef>;
 
-  public statuses: Array<string> = ['approved resource', 'pending resource', 'rejected resource'];
+  public statuses: Array<string> = ['approved', 'pending', 'rejected'];
   public labels: Array<string> = [`Approved`, `Pending`, `Rejected`];
 
   @ViewChildren("checkboxes") checkboxes: QueryList<ElementRef>;
-
-  researchCategoriesVoc: Vocabulary[] = null;
-  semanticRelationshipVoc: Vocabulary[] = null;
 
   constructor(private resourceService: ResourceService,
               private deployableServiceService: DeployableServiceService,
@@ -125,7 +108,6 @@ export class DeployableServicesListComponent implements OnInit {
     } else {
       this.dataForm = this.fb.group(this.formPrepare);
       this.providersDropdownForm = this.fb.group(this.providersFormPrepare);
-      this.extrasForm = this.fb.group(this.extrasFormPrepare);
 
       this.urlParams = [];
       this.route.queryParams
@@ -219,17 +201,17 @@ export class DeployableServicesListComponent implements OnInit {
       this.resourceService.getProvidersNames('approved').subscribe(suc => {
           this.providersPage = <Paging<Provider>>suc;
         },
-        error => {
-          this.errorMessage = 'Something went bad while getting the data for page initialization. ' + JSON.stringify(error.error.message);
+        err => {
+                  this.errorMessage =
+          (err?.status >= 500 && err?.status < 600)
+            ? `Something went wrong. If the issue persists, please contact support and provide the following error code: ${err?.error?.traceId}`
+            : `Something went bad while getting the data for page initialization: ${err?.error?.message}`;
         },
         () => {
           this.providersPage.results.sort((a, b) => 0 - (a.name > b.name ? -1 : 1));
           // console.log(this.providersPage.results);
         }
       );
-
-      this.getResearchCategoriesVoc();
-      this.getSemanticRelationshipVoc();
     }
   }
 
@@ -335,7 +317,7 @@ export class DeployableServicesListComponent implements OnInit {
   }
 
   getResources() {
-    this.loadingMessage = 'Loading deployable services';
+    this.loadingMessage = 'Loading Deployable Application';
     this.deployableServiceBundles = [];
     this.deployableServiceService.getResourceBundles(this.dataForm.get('from').value, this.dataForm.get('quantity').value,
       this.dataForm.get('sort').value, this.dataForm.get('order').value, this.dataForm.get('query').value,
@@ -359,7 +341,7 @@ export class DeployableServicesListComponent implements OnInit {
   }
 
   getRandomResources(quantity: string) {
-    this.loadingMessage = 'Loading ' + quantity + ' random Deployable Services';
+    this.loadingMessage = 'Loading ' + quantity + ' random Deployable Application';
     this.deployableServicesForAudit = [];
     this.resourceService.getRandomResources(quantity).subscribe(
       res => {
@@ -529,7 +511,7 @@ export class DeployableServicesListComponent implements OnInit {
 
   suspendDeployableService() {
     UIkit.modal('#spinnerModal').show();
-    this.deployableServiceService.suspendDeployableService(this.selectedDeployableService.id, this.selectedDeployableService.deployableService.catalogueId, !this.selectedDeployableService.suspended)
+    this.deployableServiceService.suspendDeployableService(this.selectedDeployableService.id, this.selectedDeployableService.catalogueId, !this.selectedDeployableService.suspended)
       .subscribe(
         res => {
           UIkit.modal('#suspensionModal').hide();
@@ -540,7 +522,10 @@ export class DeployableServicesListComponent implements OnInit {
           UIkit.modal('#suspensionModal').hide();
           UIkit.modal('#spinnerModal').hide();
           this.loadingMessage = '';
-          this.errorMessage = err.error.error;
+          this.errorMessage =
+          (err?.status >= 500 && err?.status < 600)
+            ? `Something went wrong. If the issue persists, please contact support and provide the following error code: ${err?.error?.traceId}`
+            : `Something went bad, server responded: ${err?.error?.message}`;
           window.scroll(0,0);
         },
         () => {
@@ -550,136 +535,9 @@ export class DeployableServicesListComponent implements OnInit {
       );
   }
 
-  /** resourceExtras--> **/
-  /*toggleHorizontalService(dsBundle: DeployableServiceBundle) {
-    UIkit.modal('#spinnerModal').show();
-    this.resourceExtrasService.updateHorizontalService(dsBundle.id, 'deployable_service', dsBundle.deployableService.catalogueId, !dsBundle?.resourceExtras?.horizontalService).subscribe(
-      res => {},
-      err => {
-        UIkit.modal('#spinnerModal').hide();
-        console.log(err)
-      },
-      () => {
-        UIkit.modal('#spinnerModal').hide();
-        location.reload();
-      }
-    );
-  }
-
-  showResourceCategories(dsBundle: DeployableServiceBundle) {
-    this.selectedDeployableService = dsBundle;
-    if (this.selectedDeployableService) {
-      this.extrasFormPrep(this.selectedDeployableService);
-      this.extrasForm.patchValue(this.selectedDeployableService.resourceExtras);
-      UIkit.modal('#researchCategoriesModal').show();
-    }
-  }
-
-  showEoscIFGuidelines(dsBundle: DeployableServiceBundle) {
-    this.selectedDeployableService = dsBundle;
-    if (this.selectedDeployableService) {
-      this.extrasFormPrep(this.selectedDeployableService);
-      this.extrasForm.patchValue(this.selectedDeployableService.resourceExtras);
-      UIkit.modal('#eoscIFGuidelinesModal').show();
-    }
-  }
-
-  updateResearchCategories(dsBundle: DeployableServiceBundle) {
-    UIkit.modal('#spinnerModal').show();
-    this.resourceExtrasService.updateResearchCategories(dsBundle.id, 'deployable_service', dsBundle.deployableService.catalogueId, this.extrasForm.value.researchCategories).subscribe(
-      res => {},
-      err => {
-        UIkit.modal('#spinnerModal').hide();
-        console.log(err);
-      },
-      () => {
-        UIkit.modal('#spinnerModal').hide();
-        location.reload();
-      }
-    );
-  }
-
-  updateEoscIFGuidelines(dsBundle: DeployableServiceBundle) {
-    UIkit.modal('#spinnerModal').show();
-    this.resourceExtrasService.updateEoscIFGuidelines(dsBundle.id, 'deployable_service', dsBundle.deployableService.catalogueId, this.extrasForm.value.eoscIFGuidelines).subscribe(
-      res => {},
-      err => {
-        UIkit.modal('#spinnerModal').hide();
-        console.log(err);
-      },
-      () => {
-        UIkit.modal('#spinnerModal').hide();
-        location.reload();
-      }
-    );
-  }
-
-  extrasFormPrep(dsBundle: DeployableServiceBundle){
-    //resets the 2 parts of the form and then fills them
-    this.extrasForm.setControl('researchCategories', this.fb.array([this.fb.control('')]));
-    this.extrasForm.setControl('eoscIFGuidelines',
-      this.fb.array([this.fb.group({
-        label: [''],
-        pid: [''],
-        semanticRelationship: [''],
-        url: ['']
-      })
-      ]));
-    if ( dsBundle?.resourceExtras?.researchCategories ) {
-      for (let i = 0; i < dsBundle.resourceExtras.researchCategories.length - 1; i++) {
-        this.push('researchCategories');
-      }
-    }
-    if ( dsBundle?.resourceExtras?.eoscIFGuidelines ) {
-      for (let i = 0; i < dsBundle.resourceExtras.eoscIFGuidelines.length - 1; i++) {
-        this.pushEoscIFGuidelines();
-      }
-    }
-  }*/
-  /** <--resourceExtras **/
-
-  /** eoscIFGuidelines--> **/
-  /*newEoscIFGuidelines(): FormGroup {
-    return this.fb.group({
-      label: [''],
-      pid: [''],
-      semanticRelationship: [''],
-      url: ['']
-    });
-  }
-
-  get eoscIFGuidelinesArray() {
-    return this.extrasForm.get('eoscIFGuidelines') as FormArray;
-  }
-
-  pushEoscIFGuidelines() {
-    this.eoscIFGuidelinesArray.push(this.newEoscIFGuidelines());
-  }
-
-  removeEoscIFGuidelines(index: number) {
-    this.eoscIFGuidelinesArray.removeAt(index);
-  }
-*/
-  /** <--eoscIFGuidelines **/
-
-  /** manage form arrays--> **/
-  getFieldAsFormArray(field: string) {
-    return this.extrasForm.get(field) as UntypedFormArray;
-  }
-
-  push(field: string) {
-    this.getFieldAsFormArray(field).push(this.fb.control(''));
-  }
-
-  remove(field: string, i: number) {
-    this.getFieldAsFormArray(field).removeAt(i);
-  }
-
-  /** <--manage form arrays **/
-
   toggleService(dsBundle: DeployableServiceBundle) {
     UIkit.modal('#spinnerModal').show();
-    this.deployableServiceService.publishDeployableService(dsBundle.id, !dsBundle.active).subscribe(
+    this.deployableServiceService.activateDeployableService(dsBundle.id, !dsBundle.active).subscribe(
       res => {},
       error => {
         this.errorMessage = 'Something went bad. ' + error.error ;
@@ -747,7 +605,7 @@ export class DeployableServicesListComponent implements OnInit {
   }
 
   auditResourceAction(action: string) {
-    this.deployableServiceService.auditDeployableService(this.selectedDeployableService.id, action, this.selectedDeployableService.deployableService.catalogueId, this.commentAuditControl.value)
+    this.deployableServiceService.auditDeployableService(this.selectedDeployableService.id, action, this.selectedDeployableService.catalogueId, this.commentAuditControl.value)
       .subscribe(
         res => {
           if (!this.showSideAuditForm) {
@@ -846,28 +704,6 @@ export class DeployableServicesListComponent implements OnInit {
 
   getProviderNameWithId(id: string) {
     return this.providersPage.results.find( x => x.id === id )?.name;
-  }
-
-  getProviderNamesWithIds(idsArray: string[]) {
-    let namesArray = [];
-    if (idsArray) {
-      for (let i=0; i<idsArray.length; i++) {
-        namesArray.push(this.providersPage.results.find( x => x.id == idsArray[i] )?.name);
-      }
-    }
-    return namesArray;
-  }
-
-  getResearchCategoriesVoc() {
-    this.resourceService.getVocabularyByType('RESEARCH_CATEGORY').subscribe(
-      suc => this.researchCategoriesVoc = suc
-    );
-  }
-
-  getSemanticRelationshipVoc() {
-    this.resourceService.getVocabularyByType('SEMANTIC_RELATIONSHIP').subscribe(
-      suc => this.semanticRelationshipVoc = suc
-    );
   }
 
 }

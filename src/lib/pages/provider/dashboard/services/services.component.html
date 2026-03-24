@@ -5,12 +5,12 @@
       @if (providerBundle) {
         <div class="uk-flex">
           <div>
-            <img src="{{ providerBundle.provider.logo ? providerBundle.provider.logo : '/assets/images/broken_image-black-48dp.svg' }}" style="max-width: 200px">
+            <img src="{{ providerBundle.organisation.logo ? providerBundle.organisation.logo : '/assets/images/broken_image-black-48dp.svg' }}" style="max-width: 200px">
           </div>
           <div class="uk-margin-medium-left">
-            <h3 class="uk-margin-remove">{{providerBundle.provider.name}}</h3>
+            <h3 class="uk-margin-remove">{{providerBundle.organisation.name}}</h3>
             <div><span class="status-label">ID: </span>{{ providerBundle.id}}</div>
-            <div><span class="status-label">Provider Status: </span>{{ providerBundle.status.substr(0,providerBundle.status.indexOf(' ')) | titlecase }}</div>
+            <div><span class="status-label">Provider Status: </span>{{ providerBundle.status | titlecase }}</div>
           </div>
         </div>
       }
@@ -70,9 +70,9 @@
             <div class="uk-inline">
               <select class="uk-input uk-select" id="status" (change)="handleChangeAndResetPage()" formControlName="status">
                 <option value="" selected>All</option>
-                <option value="approved resource">Approved Resource</option>
-                <option value="pending resource">Pending Resource</option>
-                <option value="rejected resource">Rejected Resource</option>
+                <option value="approved">Approved Resource</option>
+                <option value="pending">Pending Resource</option>
+                <option value="rejected">Rejected Resource</option>
               </select>
             </div>
           </div>
@@ -128,17 +128,17 @@
             @for (serviceBundle of providerServices.results; track serviceBundle; let i = $index) {
               <div class="uk-card uk-card-small uk-card-default uk-margin-bottom service-card">
                 <div class="uk-card-body">
-                  @if (serviceBundle.status === 'approved resource') {
+                  @if (serviceBundle.status === 'approved') {
                     <div class="approved">
                       <div class="uk-card-badge uk-label">Approved</div>
                     </div>
                   }
-                  @if (serviceBundle.status === 'pending resource') {
+                  @if (serviceBundle.status === 'pending') {
                     <div class="pending">
                       <div class="uk-card-badge uk-label">Pending</div>
                     </div>
                   }
-                  @if ((serviceBundle.status === 'rejected resource')) {
+                  @if ((serviceBundle.status === 'rejected')) {
                     <div class="rejected">
                       <div class="uk-card-badge uk-label">Rejected</div>
                     </div>
@@ -169,7 +169,7 @@
                     </div>
                     <div class="uk-width-2-3">
                       <h4 class="uk-margin-remove uk-padding-small uk-padding-remove-top uk-padding-remove-left uk-padding-remove-right">
-                        <a [routerLink]="['/dashboard', serviceBundle.service.catalogueId, serviceBundle.service.resourceOrganisation, 'resource-dashboard', serviceBundle.id]" data-uk-tooltip title="Go to the service dashboard">
+                        <a [routerLink]="['/dashboard', serviceBundle.catalogueId, serviceBundle.service.resourceOwner, 'resource-dashboard', serviceBundle.id]" data-uk-tooltip title="Go to the service dashboard">
                           {{serviceBundle.service.name}}
                         </a>
                       </h4>
@@ -210,17 +210,17 @@
           <div class="uk-width-1-6">
             <div class="action-buttons">
               <button
-                [routerLink]="['/provider/' + pidHandler.customEncodeURIComponent(serviceBundle.service.resourceOrganisation)+'/resource/update/'+pidHandler.customEncodeURIComponent(serviceBundle.id)]"
+                [routerLink]="['/provider/' + pidHandler.customEncodeURIComponent(serviceBundle.service.resourceOwner)+'/resource/update/'+pidHandler.customEncodeURIComponent(serviceBundle.id)]"
                 class="uk-button uk-button-action uk-display-block uk-margin-small-top">
                 <i class="fa fa-pencil fa-lg" aria-hidden="true"></i> Update {{serviceORresource | lowercase}}
               </button>
-              @if (providerBundle.templateStatus === 'approved template' && serviceBundle?.service) {
+<!--              @if (providerBundle.templateStatus === 'approved template' && serviceBundle?.service) {
                 <button
                   class="uk-button uk-button-action uk-display-block uk-margin-small-top"
                   (click)="useAsTemplate(serviceBundle.id)">
                   <i class="fa fa-copy fa-lg" aria-hidden="true"></i> Use as template
                 </button>
-              }
+              }-->
               <button class="uk-button uk-button-action uk-display-block uk-margin-small-top" (click)="toggleService(serviceBundle)">
                 @if (serviceBundle.active) {
                   <i class="fa fa-close fa-lg" aria-hidden="true"></i> Deactivate
@@ -234,7 +234,7 @@
             <!--<button class="uk-button uk-button-action uk-display-block" (click)="navigate(providerService.service.id)">-->
             <!--<i class="fa fa-pencil fa-lg"></i> Edit {{serviceORresource | lowercase}}-->
           <!--</button>-->
-          @if (serviceBundle.status !== 'pending resource') {
+          @if (serviceBundle.status !== 'pending') {
             <button class="uk-button uk-button-action uk-display-block uk-margin-small-top" (click)="setSelectedService(serviceBundle)">
               <i class="fa fa-trash fa-lg" aria-hidden="true"></i> Delete {{serviceORresource | lowercase}}
             </button>

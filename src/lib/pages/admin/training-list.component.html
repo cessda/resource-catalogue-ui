@@ -151,7 +151,7 @@
                       <label class="" for="sort">Order by </label>
                       <div class="uk-inline">
                         <select class="uk-input uk-select" id="sort" (change)="handleChangeAndResetPage()" formControlName="sort">
-                          <option value="title" selected>Title</option>
+                          <option value="name" selected>Name</option>
                           <option value="registeredAt">Creation Date</option>
                           <option value="modifiedAt">Modification Date</option>
                           <option value="latestAuditDate">Audit Date</option>
@@ -228,17 +228,17 @@
                     @for (trBundle of trainingResourceBundles; track trBundle) {
                       <div class="uk-card provider-card uk-margin-medium-top">
                         <div class="uk-card-body" style="padding-bottom: 20px;">
-                          @if (trBundle.status === 'approved resource') {
+                          @if (trBundle.status === 'approved') {
                             <div class="approved">
                               <div class="uk-card-badge uk-label">Approved</div>
                             </div>
                           }
-                          @if (trBundle.status === 'pending resource') {
+                          @if (trBundle.status === 'pending') {
                             <div class="pending">
                               <div class="uk-card-badge uk-label">Pending</div>
                             </div>
                           }
-                          @if ((trBundle.status === 'rejected resource')) {
+                          @if ((trBundle.status === 'rejected')) {
                             <div class="rejected">
                               <div class="uk-card-badge uk-label">Rejected</div>
                             </div>
@@ -272,8 +272,8 @@
                           <div class="uk-width-4-5">
                             <div class="providerName">
                               <span class="uk-margin-auto-vertical">
-                                <a [routerLink]="['/dashboard', trBundle.trainingResource.catalogueId, pidHandler.customEncodeURIComponent(trBundle.trainingResource.resourceOrganisation), 'training-resource-dashboard', pidHandler.customEncodeURIComponent(trBundle.id)]" data-uk-tooltip title="Go to the training resource dashboard">
-                                  {{ trBundle.trainingResource.title }}
+                                <a [routerLink]="['/dashboard', trBundle.catalogueId, pidHandler.customEncodeURIComponent(trBundle.trainingResource.resourceOwner), 'training-resource-dashboard', pidHandler.customEncodeURIComponent(trBundle.id)]" data-uk-tooltip title="Go to the training resource dashboard">
+                                  {{ trBundle.trainingResource.name }}
                                 </a>
                               </span>
                             </div>
@@ -292,10 +292,7 @@
                                   <span class="statusLabel">Training Resource Status: </span>{{labels[statuses.indexOf(trBundle.status)]}}
                                 </div>
                                 <div class="uk-margin-small-top">
-                                  <span class="statusLabel">Resource Organisation: </span>{{ providersPage?.results ? getProviderNameWithId(trBundle.trainingResource.resourceOrganisation) : ''}}
-                                </div>
-                                <div class="uk-margin-small-top">
-                                  <span class="statusLabel">Resource Providers: </span>{{ providersPage?.results ? getProviderNamesWithIds(trBundle.trainingResource.resourceProviders) : ''}}
+                                  <span class="statusLabel">Resource Organisation: </span>{{ providersPage?.results ? getProviderNameWithId(trBundle.trainingResource.resourceOwner) : ''}}
                                 </div>
                                 <!--                              <div class="uk-margin-small-top">-->
                                 <!--                                <span class="statusLabel">Status: </span>{{ trBundle.active ? 'Active' : 'Inactive' }}-->
@@ -325,18 +322,18 @@
                                 }
                               </div>
                               <div class="uk-margin-small-top">
-                                <span class="statusLabel">Catalogue id: </span>{{ trBundle.trainingResource.catalogueId }}
+                                <span class="statusLabel">Catalogue id: </span>{{ trBundle.catalogueId }}
                               </div>
                             </div>
                           </div>
                         </div>
                       </div>
                     </div>
-                    @if (trBundle.trainingResource.catalogueId !== catalogueConfigId) {
+                    @if (trBundle.catalogueId !== catalogueConfigId) {
                       <hr class="uk-margin-top">
                       <div class="uk-align-right">
                         <button
-                          routerLink="/provider/{{trBundle.trainingResource.catalogueId}}/{{trBundle.trainingResource.resourceOrganisation}}/training-resource/view/{{trBundle.id}}"
+                          routerLink="/provider/{{trBundle.catalogueId}}/{{trBundle.trainingResource.resourceOwner}}/training-resource/view/{{trBundle.id}}"
                           class="uk-button uk-button-link" style="">
                           <i class="fa fa-eye fa-lg uk-margin-small-right" aria-hidden="true"></i>
                           View Training Resource
@@ -346,7 +343,7 @@
                         </button>
                         <div uk-dropdown="mode: click">
                           <ul class="uk-nav uk-dropdown-nav uk-dropdown-close">
-                            @if (trBundle.active && trBundle.status=='approved resource') {
+                            @if (trBundle.active && trBundle.status=='approved') {
                               <li class="uk-margin-small-bottom"
                                 (click)="showAuditForm('main', trBundle)">
                                 <a><i class="fa fa-check-circle-o fa-lg uk-margin-small-right"></i>Audit</a>
@@ -370,17 +367,17 @@
                         </div>
                       </div>
                     }
-                    @if (trBundle.trainingResource.catalogueId === catalogueConfigId) {
+                    @if (trBundle.catalogueId === catalogueConfigId) {
                       <hr class="uk-margin-top">
                       <div class="uk-align-right">
                         <button
-                          routerLink="/provider/{{pidHandler.customEncodeURIComponent(trBundle.trainingResource.resourceOrganisation)}}/training-resource/update/{{pidHandler.customEncodeURIComponent(trBundle.id)}}"
+                          routerLink="/provider/{{pidHandler.customEncodeURIComponent(trBundle.trainingResource.resourceOwner)}}/training-resource/update/{{pidHandler.customEncodeURIComponent(trBundle.id)}}"
                           class="uk-button uk-button-link"
                           style="">
                           <i class="fa fa-pencil fa-lg uk-margin-small-right" aria-hidden="true"></i>
                           Update Training Resource
                         </button>
-                        @if (trBundle.status !== 'pending resource') {
+                        @if (trBundle.status !== 'pending') {
                           <button (click)="showDeletionModal(trBundle)"
                             class="uk-button uk-button-link uk-margin-medium-left"
                             style="padding-left: 40px; border-left: 1px solid #ccc">
@@ -388,7 +385,7 @@
                             Delete Training Resource
                           </button>
                         }
-                        @if (trBundle.status!=='rejected resource') {
+                        @if (trBundle.status!=='rejected') {
                           <button
                             class="uk-button uk-button-link uk-margin-medium-left"
                             style="padding-left: 40px; border-left: 1px solid #ccc">
@@ -397,7 +394,7 @@
                         }
                         <div uk-dropdown="mode: click">
                           <ul class="uk-nav uk-dropdown-nav uk-dropdown-close">
-                            @if (trBundle.status=='approved resource') {
+                            @if (trBundle.status=='approved') {
                               @if (trBundle.active) {
                                 <ng-container class="uk-margin-small-bottom">
                                   <li (click)="showAuditForm('main', trBundle)">
@@ -412,7 +409,7 @@
                                 </li>
                                 <li class="uk-nav-divider"></li>
                               </ng-container>
-                              @if (isProviderActive(trBundle.trainingResource.resourceOrganisation) ) {
+                              @if (isProviderActive(trBundle.trainingResource.resourceOwner) ) {
                                 <div>
                                   <li class="uk-button uk-button-link uk-padding-small"
                                     (click)="toggleService(trBundle)">
@@ -452,11 +449,11 @@
                                 </li>
                               }
                             }
-                            @if (trBundle.status=='pending resource') {
-                              <li class="uk-active" (click)="templateAction(trBundle.id, true, 'approved resource')">
+                            @if (trBundle.status=='pending') {
+                              <li class="uk-active" (click)="templateAction(trBundle.id, true, 'approved')">
                                 <a class="uk-margin-small-top"><i class="fa fa-thumbs-up"></i> Approve First Training Resource</a>
                               </li>
-                              <li class="uk-active" (click)="templateAction(trBundle.id, true, 'rejected resource')">
+                              <li class="uk-active" (click)="templateAction(trBundle.id, false, 'rejected')">
                                 <a class="uk-margin-small-top"><i class="fa fa-thumbs-down"></i> Reject First Training Resource</a>
                               </li>
                             }
@@ -469,7 +466,7 @@
                         <div>
                           <!--                            <hr>-->
                           <div>
-                            <p>You are about to audit "{{ selectedTrainingResource.trainingResource.title }}".</p>
+                            <p>You are about to audit "{{ selectedTrainingResource.trainingResource.name }}".</p>
                             <p>Please fill in the reason(s) of your action. <span style="color: grey">(optional)</span></p>
                           </div>
                           <form>
@@ -538,7 +535,7 @@
     <div class="uk-modal-dialog uk-modal-body uk-margin-auto-vertical">
       @if (selectedTrainingResource) {
         <div>
-          <h6>Are you sure you want to delete "{{ selectedTrainingResource.trainingResource.title }}" ?</h6>
+          <h6>Are you sure you want to delete "{{ selectedTrainingResource.trainingResource.name }}" ?</h6>
           <p>Deleting a Training Resource is an irreversible action.</p>
         </div>
       }
@@ -565,7 +562,7 @@
   @if (!loadingMessage) {
     <div class="uk-modal-dialog uk-modal-body uk-margin-auto-vertical">
       @if (selectedTrainingResource) {
-        <h6 class="uk-margin-medium-bottom">Are you sure you want to {{selectedTrainingResource.suspended==true ? 'un' : ''}}suspend "{{ selectedTrainingResource.trainingResource.title }}"?</h6>
+        <h6 class="uk-margin-medium-bottom">Are you sure you want to {{selectedTrainingResource.suspended==true ? 'un' : ''}}suspend "{{ selectedTrainingResource.trainingResource.name }}"?</h6>
         <div class="uk-text-right">
           <button class="uk-button uk-button-primary uk-modal-close uk-margin-small-right" type="button">Cancel</button>
           <button class="uk-button uk-button-danger uk-modal-close" type="button" (click)="suspendTrainingResource()">
@@ -589,7 +586,7 @@
     <div class="uk-modal-dialog uk-modal-body uk-margin-auto-vertical">
       @if (selectedTrainingResource) {
         <div>
-          <p>You are about to send a notification email to the admins of "{{ selectedTrainingResource.trainingResource.title }}", requesting an update for this Resource.</p>
+          <p>You are about to send a notification email to the admins of "{{ selectedTrainingResource.trainingResource.name }}", requesting an update for this Resource.</p>
           <p>Do you want to proceed?</p>
         </div>
       }
@@ -612,8 +609,8 @@
     <div class="uk-modal-dialog uk-modal-body uk-margin-auto-vertical">
       @if (selectedTrainingResource) {
         <div>
-          <p>Training Resource "{{ selectedTrainingResource.trainingResource.title }}" is currently managed by provider "{{ selectedTrainingResource.trainingResource.resourceOrganisation }}."</p>
-          <p>Choose another provider to move "{{ selectedTrainingResource.trainingResource.title }}".</p>
+          <p>Training Resource "{{ selectedTrainingResource.trainingResource.name }}" is currently managed by provider "{{ selectedTrainingResource.trainingResource.resourceOwner }}."</p>
+          <p>Choose another provider to move "{{ selectedTrainingResource.trainingResource.name }}".</p>
           <p style="color: grey">The initial {{serviceORresource | lowercase}} will be deleted from its current provider.</p>
           <form [formGroup]="providersDropdownForm">
             <div class="uk-form-controls uk-margin-medium-top">

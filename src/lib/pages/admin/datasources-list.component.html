@@ -115,9 +115,9 @@
                     <div class="uk-inline">
                       <select class="uk-input uk-select" id="status" (change)="handleChangeAndResetPage()" formControlName="status">
                         <option value="" selected>All</option>
-                        <option value="pending datasource">Pending</option>
-                        <option value="approved datasource">Approved</option>
-                        <option value="rejected datasource">Rejected</option>
+                        <option value="pending">Pending</option>
+                        <option value="approved">Approved</option>
+                        <option value="rejected">Rejected</option>
                       </select>
                     </div>
                   </div>
@@ -193,35 +193,35 @@
       </ul>
     </div>
     <hr class="adminResultsHeader">
-    @for (datasourceBundlePlus of enrichedDatasources; track datasourceBundlePlus) {
+    @for (datasourceBundle of datasources; track datasourceBundle) {
       <div class="uk-card provider-card uk-margin-medium-top">
         <div class="uk-card-body uk-padding-remove-bottom">
-          @if (datasourceBundlePlus.status === 'approved datasource') {
+          @if (datasourceBundle.status === 'approved') {
             <div class="approved">
               <div class="uk-card-badge uk-label">Approved</div>
             </div>
           }
-          @if (datasourceBundlePlus.status === 'pending datasource') {
+          @if (datasourceBundle.status === 'pending') {
             <div class="pending">
               <div class="uk-card-badge uk-label">Pending</div>
             </div>
           }
-          @if ((datasourceBundlePlus.status === 'rejected datasource')) {
+          @if ((datasourceBundle.status === 'rejected')) {
             <div class="rejected">
               <div class="uk-card-badge uk-label">Rejected</div>
             </div>
           }
-          @if (datasourceBundlePlus.active) {
+          @if (datasourceBundle.active) {
             <div class="approved">
               <div class="uk-label uk-align-right">Active</div>
             </div>
           }
-          @if (!datasourceBundlePlus.active) {
+          @if (!datasourceBundle.active) {
             <div class="rejected">
               <div class="uk-label uk-align-right">Inactive</div>
             </div>
           }
-          @if (datasourceBundlePlus.suspended) {
+          @if (datasourceBundle.suspended) {
             <div class="rejected">
               <div class="uk-label uk-align-right">Suspended</div>
             </div>
@@ -231,27 +231,27 @@
               <div class="uk-width-1-5">
                 <div>
                   <img class="el-image uk-border-rounded"
-                    src="{{ datasourceBundlePlus.logo ? datasourceBundlePlus.logo : '/assets/images/broken_image-black-48dp.svg' }}">
+                    src="{{ datasourceBundle.datasource.logo ? datasourceBundle.datasource.logo : '/assets/images/broken_image-black-48dp.svg' }}">
                   </div>
                 </div>
                 <div class="uk-width-4-5" style="padding-left: 100px;">
                   <div class="providerName uk-margin-bottom">
-                    <a [routerLink]="['/dashboard', datasourceBundlePlus.datasource.catalogueId, datasourceBundlePlus.resourceOrganisation, 'resource-dashboard', datasourceBundlePlus.datasource.serviceId]"
+                    <a [routerLink]="['/dashboard', datasourceBundle.catalogueId, datasourceBundle.datasource.resourceOwner, 'datasource-dashboard', datasourceBundle.id]"
                       data-uk-tooltip title="Go to the service dashboard">
-                    {{ datasourceBundlePlus.name }}
-                  </a>
+                    {{ datasourceBundle.datasource.name }}
+                    </a>
                 </div>
                 <!--                          <div class="uk-margin-small-top">-->
                 <!--                            <span class="statusLabel">Datasource ID: </span>{{ datasourceBundle.id }}-->
               <!--                          </div>-->
               <div class="uk-margin-small-top">
-                <span class="statusLabel">Service ID: </span>{{ datasourceBundlePlus.datasource.serviceId }}
+                <span class="statusLabel">Datasource ID: </span>{{ datasourceBundle.datasource.id }}
               </div>
               <div class="uk-margin-small-top">
-                <span class="statusLabel">Provider ID: </span>{{ datasourceBundlePlus.resourceOrganisation }}
+                <span class="statusLabel">Provider ID: </span>{{ datasourceBundle.datasource.resourceOwner }}
               </div>
               <div class="uk-margin-small-top">
-                <span class="statusLabel">Catalogue ID: </span>{{ datasourceBundlePlus.datasource.catalogueId }}
+                <span class="statusLabel">Catalogue ID: </span>{{ datasourceBundle.catalogueId }}
               </div>
             </div>
             <!--<div class="uk-width-1-5">
@@ -275,32 +275,32 @@
     </div>
     <hr class="uk-margin-top">
     <div class="uk-align-right uk-margin-bottom">
-      @if (datasourceBundlePlus.datasource.catalogueId===catalogueConfigId) {
+      @if (datasourceBundle.catalogueId===catalogueConfigId) {
         <button
-          routerLink="/provider/{{pidHandler.customEncodeURIComponent(datasourceBundlePlus.id)}}/resource/{{pidHandler.customEncodeURIComponent(datasourceBundlePlus.datasource.serviceId)}}/subprofile/datasource"
+          routerLink="/provider/{{pidHandler.customEncodeURIComponent(datasourceBundle.datasource.resourceOwner)}}/datasource/update/{{pidHandler.customEncodeURIComponent(datasourceBundle.id)}}"
           class="uk-button uk-button-link"
           style="">
           <i class="fa fa-pencil fa-lg uk-margin-small-right" aria-hidden="true"></i>
           Update
         </button>
-        <button (click)="showDeletionModal(datasourceBundlePlus.id)"
+        <button (click)="showDeletionModal(datasourceBundle.id)"
           class="uk-button uk-button-link uk-margin-medium-left"
           style="padding-left: 40px; border-left: 1px solid #ccc">
           <i class="fa fa-trash fa-lg uk-margin-small-right" aria-hidden="true"></i>
           Delete
         </button>
       }
-      @if (datasourceBundlePlus.status==='pending datasource') {
+      @if (datasourceBundle.status==='pending') {
         <button class="uk-button uk-button-link uk-margin-medium-left"
           style="padding-left: 40px; border-left: 1px solid #ccc">
           <i class="fa fa-ellipsis-v fa-lg uk-margin-small-right"></i>More Options
         </button>
         <div uk-dropdown="mode: click">
           <ul class="uk-nav uk-dropdown-nav uk-dropdown-close">
-            <li class="uk-active" (click)="verifyDatasource(datasourceBundlePlus.id, true, 'approved datasource')">
+            <li class="uk-active" (click)="verifyDatasource(datasourceBundle.id, true, 'approved')">
               <a class="uk-margin-small-top"><i class="fa fa-thumbs-up"></i> Approve </a>
             </li>
-            <li class="uk-active" (click)="verifyDatasource(datasourceBundlePlus.id, true, 'rejected datasource')">
+            <li class="uk-active" (click)="verifyDatasource(datasourceBundle.id, false, 'rejected')">
               <a class="uk-margin-small-top"><i class="fa fa-thumbs-down"></i> Reject </a>
             </li>
             <!--                              <li *ngIf="(datasourceBundle.status === 'approved datasource') && (!datasourceBundle.active)"
@@ -370,7 +370,7 @@
 
 <div id="deletionModal" uk-modal>
   @if (!loadingMessage) {
-    <div class="uk-modal-dialog uk-modal-header uk-h4">Delete Datasource Subprofile</div>
+    <div class="uk-modal-dialog uk-modal-header uk-h4">Delete Datasource</div>
   }
   @if (!loadingMessage) {
     <div class="uk-modal-dialog uk-modal-body uk-margin-auto-vertical">
@@ -395,3 +395,6 @@
     </div>
   }
 </div>
+
+
+<pre>{{this.datasources|json}}</pre>

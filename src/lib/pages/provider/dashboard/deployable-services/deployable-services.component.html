@@ -5,12 +5,12 @@
       @if (providerBundle) {
         <div class="uk-flex">
           <div>
-            <img src="{{ providerBundle.provider.logo ? providerBundle.provider.logo : '/assets/images/broken_image-black-48dp.svg' }}" style="max-width: 200px">
+            <img src="{{ providerBundle.organisation.logo ? providerBundle.organisation.logo : '/assets/images/broken_image-black-48dp.svg' }}" style="max-width: 200px">
           </div>
           <div class="uk-margin-medium-left">
-            <h3 class="uk-margin-remove">{{providerBundle.provider.name}}</h3>
+            <h3 class="uk-margin-remove">{{providerBundle.organisation.name}}</h3>
             <div><span class="status-label">ID: </span>{{ providerBundle.id}}</div>
-            <div><span class="status-label">Provider Status: </span>{{ providerBundle.status.substr(0,providerBundle.status.indexOf(' ')) | titlecase }}</div>
+            <div><span class="status-label">Provider Status: </span>{{ providerBundle.status | titlecase }}</div>
           </div>
         </div>
       }
@@ -70,9 +70,9 @@
             <div class="uk-inline">
               <select class="uk-input uk-select" id="status" (change)="handleChangeAndResetPage()" formControlName="status">
                 <option value="" selected>All</option>
-                <option value="approved resource">Approved Resource</option>
-                <option value="pending resource">Pending Resource</option>
-                <option value="rejected resource">Rejected Resource</option>
+                <option value="approved">Approved Resource</option>
+                <option value="pending">Pending Resource</option>
+                <option value="rejected">Rejected Resource</option>
               </select>
             </div>
           </div>
@@ -103,7 +103,7 @@
 
       @if (deployableServices && deployableServices?.results?.length === 0) {
         <div>
-          <p>No deployable services found</p>
+          <p>No Deployable Application found</p>
         </div>
       }
 
@@ -111,7 +111,7 @@
         <div>
           <div class="uk-flex uk-flex-middle uk-flex-between">
             <div class="resultsInfo">
-              <span class="number">{{total}}</span> DEPLOYABLE SERVICES, PAGE <span class="number">{{currentPage}}</span> OF <span class="number">{{pageTotal}}</span>
+              <span class="number">{{total}}</span> Deployable Application, PAGE <span class="number">{{currentPage}}</span> OF <span class="number">{{pageTotal}}</span>
             </div>
             <ul class="uk-pagination" uk-margin>
               <li><a (click)="previousPage()"><span uk-pagination-previous></span></a></li>
@@ -128,17 +128,17 @@
             @for (dsBundle of deployableServices.results; track dsBundle; let i = $index) {
               <div class="uk-card uk-card-small uk-card-default uk-margin-bottom service-card">
                 <div class="uk-card-body">
-                  @if (dsBundle.status === 'approved resource') {
+                  @if (dsBundle.status === 'approved') {
                     <div class="approved">
                       <div class="uk-card-badge uk-label">Approved</div>
                     </div>
                   }
-                  @if (dsBundle.status === 'pending resource') {
+                  @if (dsBundle.status === 'pending') {
                     <div class="pending">
                       <div class="uk-card-badge uk-label">Pending</div>
                     </div>
                   }
-                  @if ((dsBundle.status === 'rejected resource')) {
+                  @if ((dsBundle.status === 'rejected')) {
                     <div class="rejected">
                       <div class="uk-card-badge uk-label">Rejected</div>
                     </div>
@@ -165,17 +165,17 @@
                   </div>
                   <div class="uk-grid uk-flex-middle uk-margin-remove-top">
                     <!--                <div class="uk-width-1-6">-->
-                    <!--                  <img src="{{dsBundle.deployableService.logo ? dsBundle.deployableService.logo : '/assets/images/broken_image-black-48dp.svg'}}">-->
+                    <!--                  <img src="{{dsBundle.deployableApplication.logo ? dsBundle.deployableApplication.logo : '/assets/images/broken_image-black-48dp.svg'}}">-->
                   <!--                </div>-->
                   <div class="uk-width-3-4">
                     <h4 class="uk-margin-remove uk-padding-small uk-padding-remove-top uk-padding-remove-left uk-padding-remove-right">
-                      <a [routerLink]="['/dashboard', dsBundle.deployableService.catalogueId, dsBundle.deployableService.resourceOrganisation, 'deployable-service-dashboard', dsBundle.id]" data-uk-tooltip title="Go to the deployable service dashboard">
-                        {{dsBundle.deployableService.name}}
+                      <a [routerLink]="['/dashboard', dsBundle.catalogueId, dsBundle.deployableApplication.resourceOwner, 'deployable-service-dashboard', dsBundle.id]" data-uk-tooltip title="Go to the Deployable Application dashboard">
+                        {{dsBundle.deployableApplication.name}}
                       </a>
                     </h4>
                     <div class="uk-margin-small-top">
-                      @if (dsBundle.deployableService.description) {
-                        <span class="uk-margin-small-top"><markdown [data]="dsBundle.deployableService.description"></markdown></span>
+                      @if (dsBundle.deployableApplication.description) {
+                        <span class="uk-margin-small-top"><markdown [data]="dsBundle.deployableApplication.description"></markdown></span>
                       }
                     </div>
                     <div class="uk-margin-small-top">
@@ -189,17 +189,17 @@
                     <div class="uk-width-1-4">
                       <div class="action-buttons">
                         <button
-                          [routerLink]="['/provider/'+ pidHandler.customEncodeURIComponent(dsBundle.deployableService.resourceOrganisation) +'/deployable-service/update/'+ pidHandler.customEncodeURIComponent(dsBundle.id)]"
+                          [routerLink]="['/provider/'+ pidHandler.customEncodeURIComponent(dsBundle.deployableApplication.resourceOwner) +'/deployable-service/update/'+ pidHandler.customEncodeURIComponent(dsBundle.id)]"
                           class="uk-button uk-button-action uk-display-block uk-margin-small-top">
-                          <i class="fa fa-pencil fa-lg" aria-hidden="true"></i> Update deployable service
+                          <i class="fa fa-pencil fa-lg" aria-hidden="true"></i> Update Deployable Application
                         </button>
-                        @if (providerBundle.templateStatus === 'approved template') {
+<!--                        @if (providerBundle.templateStatus === 'approved template') {
                           <button
                             class="uk-button uk-button-action uk-display-block uk-margin-small-top"
-                            (click)="useAsTemplate(dsBundle.deployableService.id)">
+                            (click)="useAsTemplate(dsBundle.deployableApplication.id)">
                             <i class="fa fa-copy fa-lg" aria-hidden="true"></i> Use as template
                           </button>
-                        }
+                        }-->
                         <button class="uk-button uk-button-action uk-display-block uk-margin-small-top" (click)="toggleDeployableService(dsBundle)">
                           @if (dsBundle.active) {
                             <i class="fa fa-close fa-lg" aria-hidden="true"></i> Deactivate
@@ -213,9 +213,9 @@
                       <!--<button class="uk-button uk-button-action uk-display-block" (click)="navigate(providerService.service.id)">-->
                       <!--<i class="fa fa-pencil fa-lg"></i> Edit {{serviceORresource | lowercase}}-->
                     <!--</button>-->
-                    @if (dsBundle.status !== 'pending resource') {
+                    @if (dsBundle.status !== 'pending') {
                       <button class="uk-button uk-button-action uk-display-block uk-margin-small-top" (click)="setSelectedDeployableService(dsBundle)">
-                        <i class="fa fa-trash fa-lg" aria-hidden="true"></i> Delete deployable service
+                        <i class="fa fa-trash fa-lg" aria-hidden="true"></i> Delete Deployable Application
                       </button>
                     }
                   </div>
@@ -250,7 +250,7 @@
 <div id="actionModal" uk-modal>
   <div class="uk-modal-dialog uk-modal-body uk-margin-auto-vertical">
     @if (selectedDeployableService) {
-      <h6>Are you sure you want to delete the deployable service: '{{selectedDeployableService.deployableService.name}}'</h6>
+      <h6>Are you sure you want to delete the Deployable Application: '{{selectedDeployableService.deployableApplication.name}}'</h6>
     }
     <div class="uk-text-right">
       <button class="uk-button uk-button-default uk-modal-close uk-margin-small-right" type="button">Cancel</button>

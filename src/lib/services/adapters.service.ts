@@ -2,9 +2,10 @@ import {Injectable} from '@angular/core';
 import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http';
 import {AuthenticationService} from './authentication.service';
 import {environment} from '../../environments/environment';
-import {Adapter, AdapterBundle} from '../domain/eic-model';
+import {Adapter, AdapterBundle, InteroperabilityRecordBundle} from '../domain/eic-model';
 import {Model} from "../../dynamic-catalogue/domain/dynamic-form-model";
 import {ConfigService} from "./config.service";
+import {Paging} from "../domain/paging";
 
 @Injectable()
 export class AdaptersService {
@@ -18,6 +19,13 @@ export class AdaptersService {
   }
   base = environment.API_ENDPOINT;
   private options = {withCredentials: true};
+
+  getAdaptersOfProvider(id: string, from: string, quantity: string, order: string, sort: string, query: string, status: string) {
+    id = decodeURIComponent(id);
+    if (!query) { query = '';}
+    if (!status) { return this.http.get<Paging<AdapterBundle>>(this.base + `/adapter/byProvider/${id}?from=${from}&quantity=${quantity}&order=${order}&sort=${sort}&keyword=${query}`); }
+    return this.http.get<Paging<AdapterBundle>>(this.base + `/adapter/byProvider/${id}?from=${from}&quantity=${quantity}&order=${order}&sort=${sort}&keyword=${query}&status=${status}`);
+  }
 
   uploadAdapter(adapter: Adapter, shouldPut: boolean) {
     if (shouldPut) {
@@ -74,39 +82,38 @@ export class AdaptersService {
     return this.http.patch(this.base + `/adapter/verify/${id}?active=${active}&status=${status}`, {}, this.options);
   }
 
-  publishAdapter(id: string, active: boolean) { // toggles active/inactive provider
+  activateAdapter(id: string, active: boolean) { // toggles active/inactive provider
     // id = decodeURIComponent(id);
-    return this.http.patch(this.base + `/adapter/publish/${id}?active=${active}`, this.options);
+    return this.http.patch(this.base + `/adapter/setActive/${id}?active=${active}`, this.options);
   }
 
   suspendAdapter(adapterId: string, catalogueId: string, suspend: boolean) {
     adapterId = decodeURIComponent(adapterId);
-    return this.http.put<AdapterBundle>(this.base + `/adapter/suspend?adapterId=${adapterId}&catalogueId=${catalogueId}&suspend=${suspend}`, this.options);
+    return this.http.put<AdapterBundle>(this.base + `/adapter/suspend?id=${adapterId}&catalogueId=${catalogueId}&suspend=${suspend}`, this.options);
   }
 
   auditAdapter(id: string, action: string, catalogueId: string, comment: string) {
     id = decodeURIComponent(id);
     if(!catalogueId) catalogueId = this.catalogueConfigId;
     if (catalogueId === this.catalogueConfigId)
-      return this.http.patch(this.base + `/adapter/auditResource/${id}?actionType=${action}&catalogueId=${catalogueId}&comment=${comment}`, this.options);
+      return this.http.patch(this.base + `/adapter/audit/${id}?actionType=${action}&catalogueId=${catalogueId}&comment=${comment}`, this.options);
     else
-      return this.http.patch(this.base + `/catalogue/${catalogueId}/adapter/auditAdapter/${id}?actionType=${action}&comment=${comment}`, this.options);
+      return this.http.patch(this.base + `/catalogue/${catalogueId}/adapter/audit/${id}?actionType=${action}&comment=${comment}`, this.options);
   }
 
-  getLinkedResourcesForAdapter(catalogueId?: string) {
-    if(!catalogueId) catalogueId = this.catalogueConfigId;
-    return this.http.get<any>(this.base + `/adapter/resourceIdToNameMap?catalogueId=${catalogueId}`);
+  hasAdminAcceptedTerms(id: string) {
+    id = decodeURIComponent(id);
+    return this.http.get<boolean>(this.base + `/adapter/hasAdminAcceptedTerms?id=${id}`);
   }
 
-  getLinkedServicesForAdapter(catalogueId?: string) {
-    if(!catalogueId) catalogueId = this.catalogueConfigId;
-    return this.http.get<any>(this.base + `/adapter/linkedResourceServiceMapDetails?catalogueId=${catalogueId}`);
+  adminAcceptedTerms(id: string) {
+    id = decodeURIComponent(id);
+    return this.http.put(this.base + `/adapter/adminAcceptedTerms?id=${id}`, this.options);
   }
 
-  getLinkedGuidelinesForAdapter(catalogueId?: string) {
-    if(!catalogueId) catalogueId = this.catalogueConfigId;
-    return this.http.get<any>(this.base + `/adapter/linkedResourceGuidelineMapDetails?catalogueId=${catalogueId}`);
-  }
+  // getResourcesAsVocs(catalogueId: string, resourceType?: string){
+  //   return this.http.get<any>(this.base + `/reference/idToNameMap?catalogueId=${catalogueId}&resourceType=${resourceType}`);
+  // }
 
   getFormModelById(id: string) {
     return this.http.get<Model>(this.base + `/forms/models/${id}`);

@@ -66,11 +66,6 @@ const appRoutes: Routes = [
     canActivate: [CanActivateViaAuthGuard]
   },
   {
-    path: 'datasource',
-    loadChildren: () => import('../lib/pages/datasource/datasource.module').then(m => m.DatasourceModule),
-    canActivate: [CanActivateViaAuthGuard]
-  },
-  {
     path: 'dashboard/:catalogueId/:providerId/resource-dashboard',
     loadChildren: () => import('../lib/pages/provider/dashboard/resource-dashboard/resource-dashboard.module').then(m => m.ResourceDashboardModule),
     canActivate: [CanActivateViaAuthGuard]
@@ -78,6 +73,11 @@ const appRoutes: Routes = [
   {
     path: 'dashboard/:catalogueId/:providerId/shared-resource-dashboard',
     loadChildren: () => import('../lib/pages/provider/dashboard/resource-dashboard/shared-resource-dashboard.module').then(m => m.SharedResourceDashboardModule),
+    canActivate: [CanActivateViaAuthGuard]
+  },
+  {
+    path: 'dashboard/:catalogueId/:providerId/datasource-dashboard',
+    loadChildren: () => import('../lib/pages/provider/dashboard/datasource-dashboard/datasource-dashboard.module').then(m => m.DatasourceDashboardModule),
     canActivate: [CanActivateViaAuthGuard]
   },
   {
@@ -103,11 +103,6 @@ const appRoutes: Routes = [
   {
     path: 'guidelines',
     loadChildren: () => import('../lib/pages/guidelines/guidelines.module').then(m => m.GuidelinesModule),
-    canActivate: [CanActivateViaAuthGuard]
-  },
-  {
-    path: 'adapters',
-    loadChildren: () => import('../lib/pages/adapters/adapters.module').then(m => m.AdaptersModule),
     canActivate: [CanActivateViaAuthGuard]
   },
   {

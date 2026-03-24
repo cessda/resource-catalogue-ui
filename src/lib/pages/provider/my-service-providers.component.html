@@ -3,7 +3,7 @@
     <div class="uk-grid-margin uk-grid uk-grid-stack" uk-grid="">
       <div class="uk-width-1-1@m uk-first-column">
 
-        <h1 class="uk-h3 uk-text-center">My Providers</h1>
+        <div class="uk-h2 uk-text-center">My Providers</div>
 
         <div class="uk-container uk-margin-large-bottom">
           <div class="uk-grid">
@@ -23,13 +23,13 @@
                     <div class="uk-margin-bottom uk-grid-small uk-child-width-auto uk-grid serviceStatuses">
                       <span class="status-label">Show:</span>
                       <label class="status-value uk-margin-small-left">
-                        <input class="uk-checkbox" type="checkbox" (change)="onCheckChanged($event, 'approved provider')" [checked]="isApprovedChecked"> Approved
+                        <input class="uk-checkbox" type="checkbox" (change)="onCheckChanged($event, 'approved')" [checked]="isApprovedChecked"> Approved
                       </label>
                       <label class="status-value uk-margin-small-left">
-                        <input class="uk-checkbox" type="checkbox" (change)="onCheckChanged($event, 'pending provider')" [checked]="isPendingChecked"> Pending
+                        <input class="uk-checkbox" type="checkbox" (change)="onCheckChanged($event, 'pending')" [checked]="isPendingChecked"> Pending
                       </label>
                       <label class="status-value uk-margin-small-left">
-                        <input class="uk-checkbox" type="checkbox" (change)="onCheckChanged($event, 'rejected provider')" [checked]="isRejectedChecked"> Rejected
+                        <input class="uk-checkbox" type="checkbox" (change)="onCheckChanged($event, 'rejected')" [checked]="isRejectedChecked"> Rejected
                       </label>
                       <label class="status-value uk-margin-small-left">
                         <input class="uk-checkbox" type="checkbox" (change)="onCheckChanged($event, 'incomplete')" [checked]="isIncompleteChecked"> Incomplete
@@ -47,13 +47,13 @@
                                 </div>
                                 <div class="provider-logo">
                                   <span class="provider-logo-helper"></span>
-                                  <img src="{{ providerBundle.provider.logo ? providerBundle.provider.logo : '/assets/images/broken_image-black-48dp.svg' }}">
+                                  <img src="{{ providerBundle.organisation.logo ? providerBundle.organisation.logo : '/assets/images/broken_image-black-48dp.svg' }}">
                                 </div>
                                 <div class="uk-card-body">
                                   <div class="providerName">
                                     <span class="uk-margin-auto-vertical" data-uk-tooltip title="Go to the {{serviceORresource | lowercase}} provider monitoring dashboard">
-                                      <a [routerLink]="['/dashboard', providerBundle.provider.catalogueId, pidHandler.customEncodeURIComponent(providerBundle.id)]">
-                                        {{ providerBundle.provider.name }}
+                                      <a [routerLink]="['/dashboard', providerBundle.catalogueId, pidHandler.customEncodeURIComponent(providerBundle.id)]">
+                                        {{ providerBundle.organisation.name }}
                                       </a>
                                     </span>
                                   </div>
@@ -76,6 +76,14 @@
                                               Update First {{serviceORresource}}
                                             </button>
                                           }
+                                          @if (hasCreatedFirstDatasource(providerBundle.id)) {
+                                            <!--<ng-container *ngIf="(providerBundle.templateStatus === 'pending template')">-->
+                                            <button class="uk-button uk-button-action uk-margin-small-left"
+                                                    routerLink="{{ getLinkToFirstDatasource(providerBundle.id) }}">
+                                              <i class="fa fa-lg fa-edit"></i>
+                                              Update First Datasource
+                                            </button>
+                                          }
                                           @if (hasCreatedFirstTrainingResource(providerBundle.id)) {
                                             <!--<ng-container *ngIf="(providerBundle.templateStatus === 'pending template')">-->
                                             <button class="uk-button uk-button-action uk-margin-small-left"
@@ -84,7 +92,7 @@
                                               Update First Training Resource
                                             </button>
                                           }
-                                          @if (!hasCreatedFirstService(providerBundle.id) && !hasCreatedFirstTrainingResource(providerBundle.id)) {
+                                          @if (!hasCreatedFirstService(providerBundle.id) && !hasCreatedFirstDatasource(providerBundle.id) && !hasCreatedFirstTrainingResource(providerBundle.id) && !hasCreatedFirstDeployableService(providerBundle.id)) {
                                             <button class="uk-button uk-button-action uk-margin-small-left">
                                               <i class="fa fa-plus"></i>
                                               Add First {{serviceORresource}}
@@ -95,10 +103,13 @@
                                                   <a routerLink="{{ getLinkToFirstService(pidHandler.customEncodeURIComponent(providerBundle.id)) }}">Add First {{serviceORresource}}</a>
                                                 </li>
                                                 <li class="uk-active">
+                                                  <a routerLink="{{ getLinkToFirstDatasource(pidHandler.customEncodeURIComponent(providerBundle.id)) }}">Add First Datasource</a>
+                                                </li>
+                                                <li class="uk-active">
                                                   <a routerLink="{{ getLinkToFirstTrainingResource(pidHandler.customEncodeURIComponent(providerBundle.id)) }}">Add First Training Resource</a>
                                                 </li>
                                                 <li class="uk-active">
-                                                  <a routerLink="{{ getLinkToFirstDeployableService(pidHandler.customEncodeURIComponent(providerBundle.id)) }}">Add First Deployable Service</a>
+                                                  <a routerLink="{{ getLinkToFirstDeployableService(pidHandler.customEncodeURIComponent(providerBundle.id)) }}">Add First Deployable Application</a>
                                                 </li>
                                                 @if (checkForDraftServices(providerBundle.id)) {
                                                   <li class="uk-active">
@@ -114,6 +125,13 @@
                                                     </a>
                                                   </li>
                                                 }
+                                                @if (checkForRejectedDatasources(providerBundle.id)) {
+                                                  <li class="uk-active">
+                                                    <a [routerLink]="['/provider/rejected-datasources/' + pidHandler.customEncodeURIComponent(providerBundle.id)] ">
+                                                      Select from rejected datasources
+                                                    </a>
+                                                  </li>
+                                                }
                                                 @if (checkForRejectedTrainingResources(providerBundle.id)) {
                                                   <li class="uk-active">
                                                     <a [routerLink]="['/provider/rejected-training-resources/' + pidHandler.customEncodeURIComponent(providerBundle.id)] ">
@@ -121,8 +139,13 @@
                                                     </a>
                                                   </li>
                                                 }
-                                                <li class="uk-nav-divider"></li>
-                                                <li class="uk-active"><a routerLink="/developers">Use API</a></li>
+                                                @if (checkForRejectedDeployableServices(providerBundle.id)) {
+                                                  <li class="uk-active">
+                                                    <a [routerLink]="['/provider/rejected-deployable-services/' + pidHandler.customEncodeURIComponent(providerBundle.id)] ">
+                                                      Select from rejected Deployable Application
+                                                    </a>
+                                                  </li>
+                                                }
                                               </ul>
                                             </div>
                                           }
@@ -136,7 +159,7 @@
                                             <!--                                <ul class="uk-nav uk-dropdown-nav uk-dropdown-close">-->
                                             <li class="uk-margin-small-bottom">
                                               <!--                                    <ng-container *ngIf="providerBundle.status === 'approved provider'">-->
-                                              <a [routerLink]="['/dashboard', providerBundle.provider.catalogueId, pidHandler.customEncodeURIComponent(providerBundle.id)]">
+                                              <a [routerLink]="['/dashboard', providerBundle.catalogueId, pidHandler.customEncodeURIComponent(providerBundle.id)]">
                                                 Go to Dashboard
                                               </a>
                                             <!--                                    </ng-container>-->
@@ -145,10 +168,12 @@
                                             <!--                                        Go to Dashboard-->
                                           <!--                                      </a>-->
                                         <!--                                    </ng-container>-->
-                                      </li>
-                                      @if (providerBundle.templateStatus==='approved template') {
+                                            </li>
+                                            <li class="uk-nav-divider"></li>
+                                            <li class="uk-active"><a routerLink="/developers">Use API</a></li>
+<!--                                      @if (providerBundle.templateStatus==='approved template') {
                                         <li class="uk-margin-small-bottom">
-                                          <a [routerLink]="['/dashboard', providerBundle.provider.catalogueId, pidHandler.customEncodeURIComponent(providerBundle.id), 'resources']">
+                                          <a [routerLink]="['/dashboard', providerBundle.catalogueId, pidHandler.customEncodeURIComponent(providerBundle.id), 'resources']">
                                             View {{serviceORresource}}s
                                           </a>
                                         </li>
@@ -157,7 +182,7 @@
                                             Add new {{serviceORresource}}
                                           </a>
                                         </li>
-                                      }
+                                      }-->
                                     </ul>
                                   </div>
                                 </div>
@@ -217,13 +242,13 @@
             </div>
             <div class="provider-logo">
               <span class="provider-logo-helper"></span>
-              <img src="{{ providerBundle.provider.logo ? providerBundle.provider.logo : '/assets/images/broken_image-black-48dp.svg' }}">
+              <img src="{{ providerBundle.organisation.logo ? providerBundle.organisation.logo : '/assets/images/broken_image-black-48dp.svg' }}">
             </div>
             <div class="uk-card-body">
               <div class="providerName">
                 <span class="uk-margin-auto-vertical" data-uk-tooltip title="Go to the {{serviceORresource | lowercase}} provider monitoring dashboard">
-                  <a [routerLink]="['/dashboard', providerBundle.provider.catalogueId, pidHandler.customEncodeURIComponent(providerBundle.id)]">
-                    {{ providerBundle.provider.name }}
+                  <a [routerLink]="['/dashboard', providerBundle.catalogueId, pidHandler.customEncodeURIComponent(providerBundle.id)]">
+                    {{ providerBundle.organisation.name }}
                   </a>
                 </span>
               </div>
@@ -296,13 +321,13 @@
                           </div>
                           <div class="provider-logo">
                             <span class="provider-logo-helper"></span>
-                            <img src="{{ providerBundle.provider.logo ? providerBundle.provider.logo : '/assets/images/broken_image-black-48dp.svg' }}">
+                            <img src="{{ providerBundle.organisation.logo ? providerBundle.organisation.logo : '/assets/images/broken_image-black-48dp.svg' }}">
                           </div>
                           <div class="uk-card-body">
                             <div class="providerName">
                               <span class="uk-margin-auto-vertical" data-uk-tooltip title="Go to the {{serviceORresource | lowercase}} provider monitoring dashboard">
-                                <a [routerLink]="['/dashboard', providerBundle.provider.catalogueId, pidHandler.customEncodeURIComponent(providerBundle.id)]">
-                                    {{ providerBundle.provider.name }}
+                                <a [routerLink]="['/dashboard', providerBundle.catalogueId, pidHandler.customEncodeURIComponent(providerBundle.id)]">
+                                    {{ providerBundle.organisation.name }}
                                 </a>
                               </span>
                             </div>
@@ -341,13 +366,13 @@
                 </div>
                 <div class="provider-logo">
                   <span class="provider-logo-helper"></span>
-                  <img src="{{ providerBundle.provider.logo ? providerBundle.provider.logo : '/assets/images/broken_image-black-48dp.svg' }}">
+                  <img src="{{ providerBundle.organisation.logo ? providerBundle.organisation.logo : '/assets/images/broken_image-black-48dp.svg' }}">
                 </div>
                 <div class="uk-card-body">
                   <div class="providerName">
                     <span class="uk-margin-auto-vertical" data-uk-tooltip
                       title="Your {{serviceORresource | lowercase}} provider is incomplete, therefore you cannot access its monitoring dashboard">
-                      <h5>{{ providerBundle.provider.name }}</h5>
+                      <h5>{{ providerBundle.organisation.name }}</h5>
                     </span>
                   </div>
                   <div class="uk-margin-small-top">

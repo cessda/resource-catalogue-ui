@@ -41,31 +41,8 @@ export class UpdateCatalogueComponent extends CatalogueFormComponent implements 
     if (path === 'info/:catalogueId') {
       this.disable = true;
     }
+    this.getProvider();
     super.ngOnInit();
-    if (sessionStorage.getItem('service')) {
-      sessionStorage.removeItem('service');
-    } else {
-      if (this.vocabularies === null) {
-        this.resourceService.getAllVocabulariesByType().subscribe(
-          res => {
-            this.vocabularies = res;
-            this.placesVocabulary = this.vocabularies[Type.COUNTRY];
-            this.providerTypeVocabulary = this.vocabularies[Type.PROVIDER_STRUCTURE_TYPE];
-            this.domainsVocabulary = this.vocabularies[Type.SCIENTIFIC_DOMAIN];
-            this.categoriesVocabulary = this.vocabularies[Type.SCIENTIFIC_SUBDOMAIN];
-            this.legalStatusVocabulary = this.vocabularies[Type.PROVIDER_LEGAL_STATUS];
-            this.networksVocabulary = this.vocabularies[Type.PROVIDER_NETWORK];
-            this.hostingLegalEntityVocabulary = this.vocabularies[Type.PROVIDER_HOSTING_LEGAL_ENTITY];
-          },
-          error => console.log(error),
-          () => {
-            this.getProvider();
-          }
-        );
-      } else {
-        this.getProvider();
-      }
-    }
   }
 
   getProvider() {
@@ -79,7 +56,7 @@ export class UpdateCatalogueComponent extends CatalogueFormComponent implements 
             ...this.catalogue,
             legalEntity: typeof this.catalogue.legalEntity === 'boolean' ? this.catalogue.legalEntity.toString() : this.catalogue.legalEntity
           };
-          this.payloadAnswer = {'answer': {Catalogue: parsedCatalogue}};
+          this.payloadAnswer = {'answer': {catalogue: parsedCatalogue}};
         },
         err => {
           console.log(err);

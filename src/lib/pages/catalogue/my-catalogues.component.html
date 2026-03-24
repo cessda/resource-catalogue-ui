@@ -3,14 +3,10 @@
     <div class="uk-grid-margin uk-grid uk-grid-stack" uk-grid="">
       <div class="uk-width-1-1@m uk-first-column">
 
-        <h1 class="uk-h3 uk-text-center">My Catalogues</h1>
-
-
+        <div class="uk-h2 uk-text-center">My Catalogues</div>
 
         <div class="uk-container uk-margin-medium-bottom">
           <div class="uk-grid">
-
-
 
             <!-- MIDDLE -->
             <div class=" uk-width-expand@m">
@@ -27,13 +23,13 @@
                     <div class="uk-margin-bottom uk-grid-small uk-child-width-auto uk-grid serviceStatuses">
                       <span class="status-label">Show:</span>
                       <label class="status-value uk-margin-small-left">
-                        <input class="uk-checkbox" type="checkbox" (change)="onCheckChanged($event, 'approved catalogue')" [checked]="isApprovedChecked"> Approved
+                        <input class="uk-checkbox" type="checkbox" (change)="onCheckChanged($event, 'approved')" [checked]="isApprovedChecked"> Approved
                       </label>
                       <label class="status-value uk-margin-small-left">
-                        <input class="uk-checkbox" type="checkbox" (change)="onCheckChanged($event, 'pending catalogue')" [checked]="isPendingChecked"> Pending
+                        <input class="uk-checkbox" type="checkbox" (change)="onCheckChanged($event, 'pending')" [checked]="isPendingChecked"> Pending
                       </label>
                       <label class="status-value uk-margin-small-left">
-                        <input class="uk-checkbox" type="checkbox" (change)="onCheckChanged($event, 'rejected catalogue')" [checked]="isRejectedChecked"> Rejected
+                        <input class="uk-checkbox" type="checkbox" (change)="onCheckChanged($event, 'rejected')" [checked]="isRejectedChecked"> Rejected
                       </label>
                       <!--                    <label class="status-value uk-margin-small-left">-->
                       <!--                      <input class="uk-checkbox" type="checkbox" (change)="onCheckChanged($event, 'incomplete')" [checked]="isIncompleteChecked"> Incomplete-->
@@ -62,7 +58,7 @@
                                   </span>
                                 </div>
                                 <div class="uk-margin-small-top">
-                                  <!--                              <span class="statusLabel">Catalogue Status: </span>{{ catalogueBundle.status.substr(0,catalogueBundle.status.indexOf(' ')) | titlecase }}-->
+                                  <!--                              <span class="statusLabel">Catalogue Status: </span>{{ catalogueBundle.status | titlecase }}-->
                                   <!--                              <span class="statusLabel">Catalogue Status: </span>{{labels[statuses.indexOf(catalogueBundle.status)]}}-->
                                   <span class="statusLabel">Catalogue Status: </span>Approved
                                   <!--                              <br>-->

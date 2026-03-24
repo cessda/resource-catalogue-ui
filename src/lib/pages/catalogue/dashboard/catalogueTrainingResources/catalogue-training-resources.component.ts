@@ -14,7 +14,6 @@ declare var UIkit: any;
 @Component({
     selector: 'app-catalogue-training-resources',
     templateUrl: './catalogue-training-resources.component.html',
-    styleUrls: ['../../../provider/dashboard/services/service.component.css'],
     standalone: false
 })
 
@@ -26,7 +25,7 @@ export class CatalogueTrainingResourcesComponent implements OnInit {
     from: '0',
     quantity: '10',
     order: 'ASC',
-    sort: 'title',
+    sort: 'name',
     query: '',
     active: '',
     status: '',
@@ -104,13 +103,13 @@ export class CatalogueTrainingResourcesComponent implements OnInit {
   }
 
   toggleTrainingResource(bundle: TrainingResourceBundle) {
-    if (bundle.status === 'pending resource' || bundle.status === 'rejected resource') {
+    if (bundle.status === 'pending' || bundle.status === 'rejected') {
       this.errorMessage = `You cannot activate a ${bundle.status}.`;
       window.scrollTo(0, 0);
       return;
     }
     this.toggleLoading = true;
-    this.trainingResourceService.publishTrainingResource(bundle.id, !bundle.active).subscribe(
+    this.trainingResourceService.activateTrainingResource(bundle.id, !bundle.active).subscribe(
       res => {},
       error => {
         this.errorMessage = 'Something went bad. ' + error.error ;

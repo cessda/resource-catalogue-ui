@@ -15,7 +15,6 @@ declare var UIkit: any;
 @Component({
     selector: 'app-guidelines',
     templateUrl: './guidelines.component.html',
-    styleUrls: ['../services/service.component.css'],
     standalone: false
 })
 
@@ -25,7 +24,7 @@ export class GuidelinesComponent implements OnInit {
     from: '0',
     quantity: '10',
     order: 'ASC',
-    sort: 'title',
+    sort: 'name',
     query: '',
     // active: 'statusAll',
     status: ''

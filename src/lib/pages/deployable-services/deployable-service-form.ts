@@ -3,18 +3,9 @@ import {Component, Injector, isDevMode, OnInit, ViewChild} from '@angular/core';
 import {AuthenticationService} from '../../services/authentication.service';
 import {NavigationService} from '../../services/navigation.service';
 import {TrainingResourceService} from '../../services/training-resource.service';
-import * as dm from '../../shared/description.map';
-import {
-  DeployableService,
-  Provider,
-  Service,
-  Type,
-  Vocabulary
-} from '../../domain/eic-model';
+import {DeployableService, Provider, Service, Type} from '../../domain/eic-model';
 import {Paging} from '../../domain/paging';
-import {URLValidator} from '../../shared/validators/generic.validator';
 import {zip} from 'rxjs';
-import {PremiumSortPipe} from '../../shared/pipes/premium-sort.pipe';
 import {ConfigService} from '../../services/config.service';
 import {environment} from '../../../environments/environment';
 import BitSet from 'bitset';
@@ -30,14 +21,11 @@ declare var UIkit: any;
 @Component({
     selector: 'app-deployable-service-form',
     templateUrl: './deployable-service-form.html',
-    styleUrls: ['../provider/service-provider-form.component.css'],
     standalone: false
 })
 export class DeployableServiceForm implements OnInit {
   @ViewChild(SurveyComponent) child: SurveyComponent
   model: Model = null;
-  vocabulariesMap: Map<string, object[]> = null;
-  subVocabulariesMap: Map<string, object[]> = null
   payloadAnswer: object = null;
   formDataToSubmit: any = null;
 
@@ -66,11 +54,6 @@ export class DeployableServiceForm implements OnInit {
   commentControl = new UntypedFormControl();
 
   providersPage: Paging<Provider>;
-  providersAsVocs: any;
-  resourcesAsVocs: any;
-  territoriesVoc: any;
-  vocabularies: Map<string, Vocabulary[]> = null;
-  subVocabularies: Map<string, Vocabulary[]> = null;
   resourceService: ResourceService = this.injector.get(ResourceService);
   trainingResourceService: TrainingResourceService = this.injector.get(TrainingResourceService);
 
@@ -92,7 +75,7 @@ export class DeployableServiceForm implements OnInit {
   }
 
   submitForm(formData: any, tempSave: boolean, pendingService: boolean) {//TODO
-    let dsValue = formData.value.DeployableService;
+    let dsValue = formData.value.deployableApplication;
     window.scrollTo(0, 0);
 
 /*    if (!this.authenticationService.isLoggedIn()) {
@@ -103,7 +86,7 @@ export class DeployableServiceForm implements OnInit {
     this.errorMessage = '';
     this.showLoader = true;
 
-    this.cleanArrayProperty(dsValue, 'scientificDomains');
+    dsValue = FormControlService.cleanObjectInPlace(dsValue);
 
     if (tempSave) {//TODO
       // this.deployableServiceService.saveServiceAsDraft(this.serviceForm.value).subscribe(
@@ -117,7 +100,10 @@ export class DeployableServiceForm implements OnInit {
       //     this.showLoader = false;
       //     window.scrollTo(0, 0);
       //     this.scientificDomainArray.enable();
-      //     this.errorMessage = 'Something went bad, server responded: ' + JSON.stringify(err.error.message);
+      //     this.errorMessage =
+      //           (err?.status >= 500 && err?.status < 600)
+      //             ? `Something went wrong. If the issue persists, please contact support and provide the following error code: ${err?.error?.traceId}`
+      //             : `Something went bad, server responded: ${err?.error?.message}`;
       //   }
       // );
     } else {
@@ -130,7 +116,10 @@ export class DeployableServiceForm implements OnInit {
         err => {
           this.showLoader = false;
           window.scrollTo(0, 0);
-          this.errorMessage = 'Something went bad, server responded: ' + JSON.stringify(err.error.message);
+          this.errorMessage =
+          (err?.status >= 500 && err?.status < 600)
+            ? `Something went wrong. If the issue persists, please contact support and provide the following error code: ${err?.error?.traceId}`
+            : `Something went bad, server responded: ${err?.error?.message}`;
           console.log(err);
           console.log(this.errorMessage);
         }
@@ -143,51 +132,27 @@ export class DeployableServiceForm implements OnInit {
     this.showLoader = true;
     zip(
       this.trainingResourceService.getProvidersNames('approved'),
-      this.trainingResourceService.getAllVocabulariesByType(),
-      this.resourceService.getProvidersAsVocs(this.catalogueId ? this.catalogueId : this.catalogueConfigId),
-      this.resourceService.getResourcesAsVocs(this.catalogueId ? this.catalogueId : this.catalogueConfigId),
-      this.trainingResourceService.getTerritories(),
       this.deployableServiceService.getFormModelById('m-b-deployable')
     ).subscribe(suc => {
         this.providersPage = <Paging<Provider>>suc[0];
-        this.vocabularies = <Map<string, Vocabulary[]>>suc[1];
-        this.vocabulariesMap = suc[1];
-        this.providersAsVocs = suc[2];
-        this.resourcesAsVocs = suc[3];
-        this.territoriesVoc = suc[4]; //combined COUNTRY and REGION vocs
-        this.model = suc[5];
-        // this.getLocations();
-
-        this.vocabulariesMap = suc[1];
-        let subVocs: Vocabulary[] = this.vocabulariesMap['SCIENTIFIC_SUBDOMAIN'].concat(this.vocabulariesMap['SUBCATEGORY']);
-        this.subVocabulariesMap = this.groupByKey(subVocs, 'parentId');
-
-        [this.providersAsVocs, this.resourcesAsVocs, this.territoriesVoc].forEach(vocSet => {
-          Object.entries(vocSet).forEach(([key, newItems]) => {
-            // Type assertion to ensure newItems is an array
-            const additionalItems = newItems as Vocabulary[];
-            const existingItems = this.vocabulariesMap[key] || [];
-            this.vocabulariesMap[key] = [...existingItems, ...additionalItems];
-          });
-        });
+        this.model = suc[1];
       },
-      error => {
-        this.errorMessage = 'Something went bad while getting the data for page initialization. ' + JSON.stringify(error.error.message);
+      err => {
+                this.errorMessage =
+          (err?.status >= 500 && err?.status < 600)
+            ? `Something went wrong. If the issue persists, please contact support and provide the following error code: ${err?.error?.traceId}`
+            : `Something went bad while getting the data for page initialization: ${err?.error?.message}`;
       },
       () => {
-        this.providersPage.results.sort((a, b) => 0 - (a.name > b.name ? -1 : 1));
-
-        let voc: Vocabulary[] = this.vocabularies[Type.SUBCATEGORY].concat(this.vocabularies[Type.SCIENTIFIC_SUBDOMAIN]);
-        this.subVocabularies = this.groupByKey(voc, 'parentId');
-
         this.providerId = this.route.snapshot.paramMap.get('providerId');
 
         if(!this.editMode){ //prefill field(s)
           this.payloadAnswer = {
             'answer': {
-              DeployableService:
+              deployableApplication:
                 {
-                  'resourceOrganisation': decodeURIComponent(this.providerId),
+                  'resourceOwner': decodeURIComponent(this.providerId),
+                  'type': "DeployableApplication",
                   'catalogueId': this.catalogueConfigId
                 }
             }
@@ -224,26 +189,6 @@ export class DeployableServiceForm implements OnInit {
           }
         }
       }
-    });
-  }
-
-  getVocabularyById(vocabularies: Vocabulary[], id: string) {
-    return vocabularies.find(entry => entry.id === id);
-  }
-
-  getSortedChildrenCategories(childrenCategory: Vocabulary[], parentId: string) {
-    return this.sortVocabulariesByName(childrenCategory.filter(entry => entry.parentId === parentId));
-  }
-
-  sortVocabulariesByName(vocabularies: Vocabulary[]): Vocabulary[] {
-    return vocabularies.sort((vocabulary1, vocabulary2) => {
-      if (vocabulary1.name > vocabulary2.name) {
-        return 1;
-      }
-      if (vocabulary1.name < vocabulary2.name) {
-        return -1;
-      }
-      return 0;
     });
   }
 
@@ -289,22 +234,6 @@ export class DeployableServiceForm implements OnInit {
       }
       return Object.assign(hash, {[obj[key]]: (hash[obj[key]] || []).concat(obj)});
     }, {});
-  }
-
-  cleanArrayProperty(obj: any, property: string): void {
-    if (obj && Array.isArray(obj[property])) {
-      // Filter out elements that are entirely empty:
-      const cleaned = obj[property].filter((element: any) => {
-        if (element && typeof element === 'object') {
-          // Keep the element if at least one property has a non-empty value.
-          return Object.keys(element).some(key => element[key] !== null && element[key] !== '');
-        }
-        // For non-objects, keep the element if it's not null or ''.
-        return element !== null && element !== '';
-      });
-      // If the cleaned array is empty, set the property to null. Otherwise, update it.
-      obj[property] = cleaned.length ? cleaned : null;
-    }
   }
 
   protected readonly environment = environment;

@@ -16,7 +16,6 @@ declare var UIkit: any;
 @Component({
     selector: 'app-services',
     templateUrl: './services.component.html',
-    styleUrls: ['./service.component.css'],
     standalone: false
 })
 
@@ -113,17 +112,17 @@ export class ServicesComponent implements OnInit {
   }
 
   toggleService(bundle: ServiceBundle) {
-    if (bundle.status === 'pending resource' || bundle.status === 'rejected resource') {
+    if (bundle.status === 'pending' || bundle.status === 'rejected') {
       this.errorMessage = `You cannot activate a ${bundle.status}.`;
       window.scrollTo(0, 0);
       return;
     }
     UIkit.modal('#spinnerModal').show();
-    this.providerService.publishService(bundle.id, bundle.service.version, !bundle.active).subscribe(
+    this.providerService.activateService(bundle.id, bundle.service.version, !bundle.active).subscribe(
       res => {},
       error => {
         UIkit.modal('#spinnerModal').hide();
-        this.errorMessage = 'Something went bad. ' + error.error.error ;
+        this.errorMessage = 'Something went bad. ' + error.error.message ;
       },
       () => {
         UIkit.modal('#spinnerModal').hide();

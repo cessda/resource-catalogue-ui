@@ -18,6 +18,10 @@ declare var UIkit: any;
 })
 export class DashboardComponent implements OnInit {
 
+  showResourcesSubmenu = false;
+  showAddNewSubmenu = false;
+  showAddFirstSubmenu = false;
+
   catalogueConfigId: string | null = null;
   catalogueId: string;
   providerId: string;
@@ -67,6 +71,15 @@ export class DashboardComponent implements OnInit {
         },
         () => {}
       );
+  }
+
+  showPendingNotification(): void {
+    UIkit.notification({
+      message: 'Disabled until provider gets approved.',
+      status: 'warning',
+      pos: 'bottom-right',
+      timeout: 3000
+    });
   }
 
 }

@@ -42,58 +42,11 @@
         </ul>
       </div>
 
-
-      @if (resourceBundle?.status === 'approved resource') {
-        <div class="menu_section border_top">
-          <div class="sidebar_heading">DATASOURCE SUBPROFILE</div>
-          <ul>
-            <li>
-              @if (!datasourceId) {
-                <a [routerLink]="['/provider/' + pidHandler.customEncodeURIComponent(providerPID) + '/resource/' + pidHandler.customEncodeURIComponent(resourcePID) + '/datasource/select']">
-                  <img src="../../../../../assets/images/new-icons/add-service.svg" class="uk-margin-small-right"> Enable Datasource Subprofile
-                </a>
-              }
-              @if (datasourceId) {
-                <a [routerLink]="['/provider/' + pidHandler.customEncodeURIComponent(providerPID) + '/resource/' + pidHandler.customEncodeURIComponent(resourcePID) + '/subprofile/datasource']">
-                  <img src="../../../../../assets/images/new-icons/update-service.svg" class="uk-margin-small-right"> Edit Datasource Subprofile
-                </a>
-              }
-              @if (datasourceId) {
-                <a (click)="showDatasourceDeletionModal()">
-                  <img src="../../../../../assets/images/new-icons/trashcan.svg" class="uk-margin-small-right"> Delete Datasource Subprofile
-                </a>
-              }
-              <!--            <ng-container *ngIf="datasourceId">-->
-              <!--              <a [routerLink]="['/provider/' + providerId + '/resource/' + resourceId + '/datasource/metrics']"> &lt;!&ndash; need to change to dashboard route &ndash;&gt;-->
-              <!--                <img src="assets/images/new-icons/stats.svg" class="uk-margin-small-right"> Research Products Accounting-->
-            <!--              </a>-->
-          <!--            </ng-container>-->
-        </li>
-      </ul>
-    </div>
-  }
-
-  @if (resourceBundle?.status !== 'approved resource') {
-    <div class="menu_section border_top" uk-tooltip="Disabled until first service approval.">
-      <div class="sidebar_heading">DATASOURCE SUBPROFILE</div>
-      <ul class="uk-disabled">
-        <li>
-          @if (!datasourceId) {
-            <a><img src="../../../../../assets/images/new-icons/add-service.svg" class="uk-margin-small-right"> Enable Datasource Subprofile</a>
-          }
-          @if (datasourceId) {
-            <a><img src="../../../../../assets/images/new-icons/add-service.svg" class="uk-margin-small-right"> Edit Datasource Subprofile</a>
-          }
-        </li>
-      </ul>
-    </div>
-  }
-
-  @if (catalogueId === catalogueConfigId) {
+  <!--@if (catalogueId === catalogueConfigId) {
     <div class="menu_section border_top">
       <div class="sidebar_heading">EXTENSIONS</div>
       <ul>
-        @if (resourceBundle && resourceBundle.status==='approved resource' && resourceBundle.active===true) {
+        @if (resourceBundle && resourceBundle.status==='approved' && resourceBundle.active===true) {
           <li>
             <a [routerLink]="['/provider/' + pidHandler.customEncodeURIComponent(providerId) + '/resource/monitoring/' + pidHandler.customEncodeURIComponent(resourceId)]">
               <img src="../../../../../assets/images/new-icons/add-service.svg" class="uk-margin-small-right">
@@ -107,7 +60,7 @@
             </a>
           </li>
         }
-        @if (resourceBundle?.status!=='approved resource' || resourceBundle?.active!==true) {
+        @if (resourceBundle?.status!=='approved' || resourceBundle?.active!==true) {
           <li uk-tooltip="Disabled until first service approval and/or service activation.">
             <a><img src="../../../../../assets/images/new-icons/add-service.svg" class="uk-margin-small-right"> {{monitoringId ? 'Edit' : 'Add'}} Monitoring Extension</a>
           </li>
@@ -117,7 +70,7 @@
         }
       </ul>
     </div>
-  }
+  }-->
 
   <div class="menu_section border_top">
     <div class="sidebar_heading">GUIDELINES</div>
@@ -125,7 +78,7 @@
     <ul>
 
       @if (catalogueId === catalogueConfigId) {
-        @if (resourceBundle?.status === 'approved resource' && resourceBundle?.active === true) {
+        @if (resourceBundle?.status === 'approved' && resourceBundle?.active === true) {
           @if (resourceGuidelines?.interoperabilityRecordIds?.length > 0) {
             @for (id of resourceGuidelines.interoperabilityRecordIds; track id) {
               <li [routerLinkActive]="['current_section']" #guideline="routerLinkActive">
@@ -149,8 +102,6 @@
         }
       }
 
-
-
     </ul>
   </div>
 
@@ -166,7 +117,7 @@
             Update {{serviceORresource}}
           </a>
         </li>
-        @if (resourceBundle?.status!=='approved resource' || resourceBundle?.active!==true) {
+        @if (resourceBundle?.status!=='approved' || resourceBundle?.active!==true) {
           <li uk-tooltip="Disabled until first service approval and/or service activation.">
             <a><img src="../../../../../assets/images/new-icons/add-service.svg" class="uk-margin-small-right"> Add/Remove Guidelines</a>
           </li>
@@ -175,7 +126,7 @@
 
       @if (catalogueId !== catalogueConfigId && resourceBundle) {
         <li>
-          <a href="/provider/{{resourceBundle?.service.catalogueId}}/{{pidHandler.customEncodeURIComponent(resourceBundle?.service.resourceOrganisation)}}/resource/view/{{pidHandler.customEncodeURIComponent(resourceBundle?.id)}}">
+          <a href="/provider/{{resourceBundle?.service.catalogueId}}/{{pidHandler.customEncodeURIComponent(resourceBundle?.service.resourceOwner)}}/resource/view/{{pidHandler.customEncodeURIComponent(resourceBundle?.id)}}">
             <i class="fa fa-eye fa-lg uk-margin-small-right" aria-hidden="true" style="color: #26c0e2"></i> View {{serviceORresource}}
           </a>
         </li>
@@ -212,8 +163,8 @@
   </div>
 </div>
 
-<div id="datasourceDeletionModal" uk-modal>
-  <div class="uk-modal-dialog uk-modal-header uk-h4">Delete Datasource Subprofile</div>
+<!--<div id="datasourceDeletionModal" uk-modal>
+  <div class="uk-modal-dialog uk-modal-header uk-h4">Delete Datasource</div>
   <div class="uk-modal-dialog uk-modal-body uk-margin-auto-vertical">
     <div class="uk-margin-medium-bottom">
       <p>You are about to delete the datasource</p>
@@ -223,4 +174,4 @@
       <button class="uk-button uk-button-danger" type="button" (click)="deleteDatasource(pidHandler.customEncodeURIComponent(this.datasourceId))">Delete</button>
     </div>
   </div>
-</div>
+</div>-->

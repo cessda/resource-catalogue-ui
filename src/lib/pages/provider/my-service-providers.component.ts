@@ -26,7 +26,9 @@ export class MyServiceProvidersComponent implements OnInit {
   serviceTemplatePerProvider: any[] = [];
   hasDraftServices: { id: string, flag: boolean }[] = [];
   hasRejectedServices: { id: string, flag: boolean }[] = [];
+  hasRejectedDatasources: { id: string, flag: boolean }[] = [];
   hasRejectedTrainingResources: { id: string, flag: boolean }[] = [];
+  hasRejectedDeployableServices: { id: string, flag: boolean }[] = [];
 
   myApprovedProviders: ProviderBundle[] = [];
   myPendingActionProviders: ProviderBundle[] = [];
@@ -52,8 +54,8 @@ export class MyServiceProvidersComponent implements OnInit {
 
   ngOnInit() {
     zip(
-      this.serviceProviderService.getMyServiceProviders(),
-      this.serviceProviderService.getMyPendingProviders())
+      this.serviceProviderService.getMyProviders(),
+      this.serviceProviderService.getMyProviders(true))
       .subscribe(
         res => {
           this.myProviders = res[0];
@@ -84,7 +86,7 @@ export class MyServiceProvidersComponent implements OnInit {
                 );
               }
               // if (p.status === 'pending template submission') {
-              if (p.status === 'approved provider' && p.provider.catalogueId === this.catalogueConfigId) {
+              if (p.status === 'approved' && p.organisation.catalogueId === this.catalogueConfigId) {
                 // console.log(p.id);
                 this.resourceService.getDraftServicesByProvider(p.id, '0', '50', 'ASC', 'name').subscribe(
                   res => {
@@ -107,12 +109,30 @@ export class MyServiceProvidersComponent implements OnInit {
                     }
                   }
                 );
-                this.serviceProviderService.getRejectedResourcesOfProvider(p.id, '0', '50', 'ASC', 'title', 'training_resource').subscribe(
+                this.serviceProviderService.getRejectedResourcesOfProvider(p.id, '0', '50', 'ASC', 'name', 'datasource').subscribe(
+                  res => {
+                    if (res.results?.length > 0) {
+                      this.hasRejectedDatasources.push({id: p.id, flag: true});
+                    } else {
+                      this.hasRejectedDatasources.push({id: p.id, flag: false});
+                    }
+                  }
+                );
+                this.serviceProviderService.getRejectedResourcesOfProvider(p.id, '0', '50', 'ASC', 'name', 'training_resource').subscribe(
                   res => {
                     if (res.results?.length > 0) {
                       this.hasRejectedTrainingResources.push({id: p.id, flag: true});
                     } else {
                       this.hasRejectedTrainingResources.push({id: p.id, flag: false});
+                    }
+                  }
+                );
+                this.serviceProviderService.getRejectedResourcesOfProvider(p.id, '0', '50', 'ASC', 'name', 'deployable_application').subscribe(
+                  res => {
+                    if (res.results?.length > 0) {
+                      this.hasRejectedDeployableServices.push({id: p.id, flag: true});
+                    } else {
+                      this.hasRejectedDeployableServices.push({id: p.id, flag: false});
                     }
                   }
                 );
@@ -138,6 +158,17 @@ export class MyServiceProvidersComponent implements OnInit {
     return false;
   }
 
+  hasCreatedFirstDatasource(providerId: string) {
+    for (let i = 0; i < this.serviceTemplatePerProvider.length; i++) {
+      if (this.serviceTemplatePerProvider[i].providerId == providerId) {
+        if (this.serviceTemplatePerProvider[i].datasource) {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+
   hasCreatedFirstTrainingResource(providerId: string) {
     for (let i = 0; i < this.serviceTemplatePerProvider.length; i++) {
       if (this.serviceTemplatePerProvider[i].providerId == providerId) {
@@ -152,7 +183,7 @@ export class MyServiceProvidersComponent implements OnInit {
   hasCreatedFirstDeployableService(providerId: string) {
     for (let i = 0; i < this.serviceTemplatePerProvider.length; i++) {
       if (this.serviceTemplatePerProvider[i].providerId == providerId) {
-        if (this.serviceTemplatePerProvider[i].deployableService) {
+        if (this.serviceTemplatePerProvider[i].deployableApplication) {
           return true;
         }
       }
@@ -178,6 +209,15 @@ export class MyServiceProvidersComponent implements OnInit {
     return false;
   }
 
+  checkForRejectedDatasources(id: string): boolean {
+    for (let i = 0; i < this.hasRejectedDatasources.length; i++) {
+      if (this.hasRejectedDatasources[i].id === id) {
+        return this.hasRejectedDatasources[i].flag;
+      }
+    }
+    return false;
+  }
+
   checkForRejectedTrainingResources(id: string): boolean {
     for (let i = 0; i < this.hasRejectedTrainingResources.length; i++) {
       if (this.hasRejectedTrainingResources[i].id === id) {
@@ -187,34 +227,51 @@ export class MyServiceProvidersComponent implements OnInit {
     return false;
   }
 
+  checkForRejectedDeployableServices(id: string): boolean {
+    for (let i = 0; i < this.hasRejectedDeployableServices.length; i++) {
+      if (this.hasRejectedDeployableServices[i].id === id) {
+        return this.hasRejectedDeployableServices[i].flag;
+      }
+    }
+    return false;
+  }
+
   getLinkToFirstService(id: string) {
     if (this.hasCreatedFirstService(id)) {
-      return '/provider/' + id + '/resource/update/' + this.serviceTemplatePerProvider.filter(x => x.providerId === id)[0].serviceId;
+      return '/provider/' + this.pidHandler.customEncodeURIComponent(id) + '/resource/update/' + this.pidHandler.customEncodeURIComponent(this.serviceTemplatePerProvider.filter(x => x.providerId === id)[0].serviceId);
     } else {
-      return '/provider/' + id + '/add-first-service';
+      return '/provider/' + this.pidHandler.customEncodeURIComponent(id) + '/add-first-service';
+    }
+  }
+
+  getLinkToFirstDatasource(id: string) {
+    if (this.hasCreatedFirstDatasource(id)) {
+      return '/provider/' + this.pidHandler.customEncodeURIComponent(id) + '/datasource/update/' + this.pidHandler.customEncodeURIComponent(this.serviceTemplatePerProvider.filter(x => x.providerId === id)[0].serviceId);
+    } else {
+      return  '/provider/' + this.pidHandler.customEncodeURIComponent(id) + '/datasource/select-first';
     }
   }
 
   getLinkToFirstTrainingResource(id: string) {
     if (this.hasCreatedFirstTrainingResource(id)) {
-      return '/provider/' + id + '/training-resource/update/' + this.serviceTemplatePerProvider.filter(x => x.providerId === id)[0].serviceId;
+      return '/provider/' + this.pidHandler.customEncodeURIComponent(id) + '/training-resource/update/' + this.pidHandler.customEncodeURIComponent(this.serviceTemplatePerProvider.filter(x => x.providerId === id)[0].serviceId);
     } else {
-      return '/provider/' + id + '/add-first-training-resource';
+      return '/provider/' + this.pidHandler.customEncodeURIComponent(id) + '/add-first-training-resource';
     }
   }
 
   getLinkToFirstDeployableService(id: string) {
     if (this.hasCreatedFirstDeployableService(id)) {
-      return '/provider/' + id + '/deployable-service/update/' + this.serviceTemplatePerProvider.filter(x => x.providerId === id)[0].serviceId;
+      return '/provider/' + this.pidHandler.customEncodeURIComponent(id) + '/deployable-service/update/' + this.pidHandler.customEncodeURIComponent(this.serviceTemplatePerProvider.filter(x => x.providerId === id)[0].serviceId);
     } else {
-      return '/provider/' + id + '/add-first-deployable-service';
+      return '/provider/' + this.pidHandler.customEncodeURIComponent(id) + '/add-first-deployable-service';
     }
   }
 
   assignProviderToList(p: ProviderBundle) {
-    if (p.status === 'rejected provider') {
+    if (p.status === 'rejected') {
       this.myRejectedProviders.push(p);
-    } else if ((p.status === 'approved provider')) {
+    } else if ((p.status === 'approved')) {
       this.myApprovedProviders.push(p);
     } else {
       this.myPendingActionProviders.push(p);
@@ -223,11 +280,11 @@ export class MyServiceProvidersComponent implements OnInit {
 
   onCheckChanged(e, status: string) {
 
-    if (status === 'approved provider') {
+    if (status === 'approved') {
       this.isApprovedChecked = e.target.checked;
-    } else if (status === 'pending provider') {
+    } else if (status === 'pending') {
       this.isPendingChecked = e.target.checked;
-    } else if (status === 'rejected provider') {
+    } else if (status === 'rejected') {
       this.isRejectedChecked = e.target.checked;
     } else if (status === 'incomplete') {
       this.isIncompleteChecked = e.target.checked;

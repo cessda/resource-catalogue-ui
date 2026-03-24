@@ -22,8 +22,6 @@ import {ServiceExtensionsService} from "../../../../services/service-extensions.
 export class ConfigurationTemplatesComponent implements OnInit {
   @ViewChildren('survey') children!: QueryList<SurveyComponent>;
   model: Model = null;
-  vocabulariesMap: Map<string, object[]> = null;
-  subVocabulariesMap: Map<string, object[]> = null;
   payloadAnswer: object = null;
   templates: any = null; // stores templates found for a specific guideline
   formModels: Record<string, any> = {}; // stores each template's form model
@@ -37,7 +35,9 @@ export class ConfigurationTemplatesComponent implements OnInit {
   showLoader = false;
   ready = false;
   hasChanges = false;
-  serviceId: string = null;
+  // serviceId: string = null;
+  // datasourceId: string = null;
+  resourceId: string = null;
   guidelineId: string = null;
   currentResourceGuideline: InteroperabilityRecord;
   displayMessage = '';
@@ -63,8 +63,9 @@ export class ConfigurationTemplatesComponent implements OnInit {
 
   ngOnInitWorkaround() {
     this.resetVariables();
-    this.getServiceTypesAndSetVocabulariesMap();
-    this.serviceId = this.route.parent.snapshot.paramMap.get('resourceId');
+    const serviceId = this.route.parent.snapshot.paramMap.get('resourceId');
+    const datasourceId = this.route.parent.snapshot.paramMap.get('datasourceId');
+    this.resourceId = serviceId || datasourceId;
     this.showLoader = true;
 
     this.guidelinesService.getInteroperabilityRecordById(this.guidelineId).subscribe(
@@ -103,7 +104,7 @@ export class ConfigurationTemplatesComponent implements OnInit {
               }
 
               // 2. Fetch the instance
-              return this.guidelinesService.getInstanceOfTemplate(this.serviceId, templateId).pipe(
+              return this.guidelinesService.getInstanceOfTemplate(this.resourceId, templateId).pipe(
                 catchError(err => {
                   console.error(`Instance fetch error for ${templateId}`, err);
                   return of(null);
@@ -111,13 +112,13 @@ export class ConfigurationTemplatesComponent implements OnInit {
                 map(instance => {
                   if (instance?.id) {
                     this.answersByTemplateId[templateId] = this.getAnswerForTemplate(instance);
-                    this.payloadAnswer = { answer: { ConfigurationTemplate: instance } };
+                    this.payloadAnswer = { answer: { configurationTemplateInstance: instance } };
                   } else {
                     // create empty payload if no instance returned
                     this.answersByTemplateId[templateId] = {
                       'answer': {
-                        ConfigurationTemplate: {
-                          resourceId: decodeURIComponent(this.serviceId),
+                        configurationTemplateInstance: {
+                          resourceId: decodeURIComponent(this.resourceId),
                           configurationTemplateId: modelId.split("-").slice(2).join("/"),
                           catalogueId: this.catalogueConfigId
                         }
@@ -168,39 +169,25 @@ export class ConfigurationTemplatesComponent implements OnInit {
   }
 
   getAnswerForTemplate(instance): any {
-    return { answer: { ConfigurationTemplate: instance } };
+    return { answer: { configurationTemplateInstance: instance } };
   }
 
   saveForm(submittedEvent: any, templateId: string): void {
     let myFormGroup: FormGroup = submittedEvent;
-    const ctiValue = submittedEvent.value.ConfigurationTemplate;
+    const ctiValue = submittedEvent.value.configurationTemplateInstance;
     const isUpdate = !!ctiValue.id;
-
     this.guidelinesService.saveConfigurationTemplateInstance(ctiValue).subscribe({
       next: (savedInstance) => {
-        myFormGroup.patchValue({ConfigurationTemplate: savedInstance}); // fill the form with the response because the id in now generated
+        myFormGroup.patchValue({configurationTemplateInstance: savedInstance}); // fill the form with the response because the id in now generated
         this.saveMessageMap[templateId] = isUpdate ? 'Updated successfully!' : 'Saved successfully!';
-        setTimeout(() => this.saveMessageMap[templateId] = '', 3000);
+        setTimeout(() => this.saveMessageMap[templateId] = '', 5000);
       },
       error: (err) => {
-        this.saveMessageMap[templateId] = isUpdate ? 'Update failed.' : 'Save failed.';
-        setTimeout(() => this.saveMessageMap[templateId] = '', 3000);
+        this.saveMessageMap[templateId] = isUpdate ? 'Update failed. ' + + err.error.message : 'Save failed. ' + err.error.message;
+        setTimeout(() => this.saveMessageMap[templateId] = '', 5000);
         console.error(`Failed to save template instance for ${templateId}`, err);
       }
     });
-  }
-
-  getServiceTypesAndSetVocabulariesMap() { // adds Vocabulary for Monitoring
-    this.serviceExtensionsService.getServiceTypes().subscribe(
-      res => {
-        const map: { [name: string]: { id: string, name: string }[];  } = {'serviceTypesVoc': []};
-        res.forEach(item => {
-          map['serviceTypesVoc'].push({id: item.id, name: item.name})
-        })
-        this.vocabulariesMap = <Map<string, object[]>><unknown>map;
-      },
-      error => console.log('getServiceTypes error:', JSON.stringify(error.error))
-    );
   }
 
 }

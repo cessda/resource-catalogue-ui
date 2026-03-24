@@ -40,7 +40,7 @@ export class TrainingResourceStatsComponent implements OnInit, OnDestroy {
   resourceAddsToProjectOptions: any = null;
   resourceMapOptions: any = null;
 
-  resourceHistory: Paging<LoggingInfo>;
+  resourceHistory: LoggingInfo[];
 
   statisticPeriod: string;
 
@@ -236,7 +236,7 @@ export class TrainingResourceStatsComponent implements OnInit, OnDestroy {
         // borderWidth: 1
       },
       title: {
-        text: 'Countries serviced by ' + this.trainingResource.title
+        text: 'Countries serviced by ' + this.trainingResource.name
       },
       // subtitle: {
       //     text: 'Demo of drawing all areas in the map, only highlighting partial data'

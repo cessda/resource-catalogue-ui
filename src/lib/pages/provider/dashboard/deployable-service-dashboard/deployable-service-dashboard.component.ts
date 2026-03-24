@@ -48,12 +48,12 @@ export class DeployableServiceDashboardComponent implements OnInit {
       res => { if (res!=null) this.deployableServiceBundle = res },
       error => {},
       () => {
-        this.serviceExtensionsService.getMonitoringByServiceId(this.deployableServiceId).subscribe(
-          res => { if (res!=null) this.monitoringId = res.id }
-        );
-        this.serviceExtensionsService.getHelpdeskByServiceId(this.deployableServiceId).subscribe(
-          res => { if (res!=null) this.helpdeskId = res.id }
-        );
+        // this.serviceExtensionsService.getMonitoringByServiceId(this.deployableServiceId).subscribe(
+        //   res => { if (res!=null) this.monitoringId = res.id }
+        // );
+        // this.serviceExtensionsService.getHelpdeskByServiceId(this.deployableServiceId).subscribe(
+        //   res => { if (res!=null) this.helpdeskId = res.id }
+        // );
       }
     );
   }

@@ -19,12 +19,12 @@ import {DeployableServiceService} from "../../../../services/deployable-service.
 export class DeployableServiceFullHistoryComponent implements OnInit, OnDestroy {
 
   public catalogueId: string;
-  public deployableService: DeployableService;
+  public deployableApplication: DeployableService;
   public errorMessage: string;
   private sub: Subscription;
   public pidHandler: pidHandler;
 
-  deployableServiceHistory: Paging<LoggingInfo>;
+  deployableServiceHistory: LoggingInfo[];
 
   constructor(private route: ActivatedRoute,
               private navigator: NavigationService,
@@ -38,7 +38,7 @@ export class DeployableServiceFullHistoryComponent implements OnInit, OnDestroy 
       zip(
         this.deployableServiceService.getService(params['deployableServiceId'], params['catalogueId'])
       ).subscribe(suc => {
-          this.deployableService = <DeployableService>suc[0];
+          this.deployableApplication = <DeployableService>suc[0];
           this.getDataForDeployableService();
 
         },
@@ -53,10 +53,10 @@ export class DeployableServiceFullHistoryComponent implements OnInit, OnDestroy 
   }
 
   getDataForDeployableService() {
-    this.deployableServiceService.getServiceLoggingInfoHistory(this.deployableService.id, this.catalogueId).subscribe(
+    this.deployableServiceService.getServiceLoggingInfoHistory(this.deployableApplication.id, this.catalogueId).subscribe(
       res => this.deployableServiceHistory = res,
       err => {
-        this.errorMessage = 'An error occurred while retrieving the history of this deployable service. ' + err.error;
+        this.errorMessage = 'An error occurred while retrieving the history of this Deployable Application. ' + err.error;
       }
     );
   }
@@ -66,7 +66,7 @@ export class DeployableServiceFullHistoryComponent implements OnInit, OnDestroy 
   }
 
   handleError(error) {
-    this.errorMessage = 'System error retrieving deployable service (Server responded: ' + error + ')';
+    this.errorMessage = 'System error retrieving Deployable Application (Server responded: ' + error + ')';
   }
 
 }
