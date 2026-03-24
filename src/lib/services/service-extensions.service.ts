@@ -57,7 +57,7 @@ export class ServiceExtensionsService {
   }
 
   getServiceTypes() {
-    return this.http.get<any>(this.base + `/service-extensions/monitoring/serviceTypes`);
+    return this.http.get<any>(this.base + `/configurationTemplate/monitoring/serviceTypes`);
   }
 
   getMonitoringStatus(serviceId: string, showAllStatuses?: boolean) {
