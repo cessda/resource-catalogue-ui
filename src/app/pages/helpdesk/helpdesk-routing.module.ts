@@ -41,7 +41,8 @@ const routes: Routes = [
       }
     ],
     data: {
-      breadcrumb: 'Helpdesk'
+      breadcrumb: 'Helpdesk',
+      breadcrumbNavigable: false
     }
   }
 ];
