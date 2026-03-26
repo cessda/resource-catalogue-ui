@@ -143,7 +143,7 @@ export class DatasourceFormComponent implements OnInit {
         if(window.location.pathname.includes('first-datasource')) {
           this.datasourceId = _ds['id'];
         }
-        return this.navigator.datasourceDashboard(this.providerId, this.datasourceId); // TODO: check if catalogueId param is needed
+        return this.navigator.datasourceDashboard(this.providerId, this.datasourceId);
       },
       err => {
         this.showLoader = false;

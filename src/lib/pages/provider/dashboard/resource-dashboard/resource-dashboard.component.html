@@ -140,7 +140,7 @@
         </a>
       </li>
       <li>
-        <a [routerLink]="['/dashboard', catalogueId, providerId]">
+        <a [routerLink]="['/dashboard', catalogueId, pidHandler.customEncodeURIComponent(providerId)]">
           <img src="../../../../../assets/images/new-icons/stats.svg" class="uk-margin-small-right">
           Back to Provider Dashboard
         </a>
