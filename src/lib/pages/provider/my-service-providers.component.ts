@@ -79,7 +79,8 @@ export class MyServiceProvidersComponent implements OnInit {
                         providerId: p.id, serviceId: JSON.parse(JSON.stringify(res)).id,
                         service: JSON.parse(JSON.stringify(res)).service,
                         datasource: JSON.parse(JSON.stringify(res)).datasource,
-                        trainingResource: JSON.parse(JSON.stringify(res)).trainingResource
+                        trainingResource: JSON.parse(JSON.stringify(res)).trainingResource,
+                        deployableApplication: JSON.parse(JSON.stringify(res)).deployableApplication
                       });
                     }
                   }
@@ -180,9 +181,10 @@ export class MyServiceProvidersComponent implements OnInit {
     return false;
   }
 
-  hasCreatedFirstDeployableService(providerId: string) {
+  hasCreatedFirstDeployableApplication(providerId: string) {
     for (let i = 0; i < this.serviceTemplatePerProvider.length; i++) {
       if (this.serviceTemplatePerProvider[i].providerId == providerId) {
+        console.log(this.serviceTemplatePerProvider[i]);
         if (this.serviceTemplatePerProvider[i].deployableApplication) {
           return true;
         }
@@ -260,8 +262,8 @@ export class MyServiceProvidersComponent implements OnInit {
     }
   }
 
-  getLinkToFirstDeployableService(id: string) {
-    if (this.hasCreatedFirstDeployableService(id)) {
+  getLinkToFirstDeployableApplication(id: string) {
+    if (this.hasCreatedFirstDeployableApplication(id)) {
       return '/provider/' + this.pidHandler.customEncodeURIComponent(id) + '/deployable-service/update/' + this.pidHandler.customEncodeURIComponent(this.serviceTemplatePerProvider.filter(x => x.providerId === id)[0].serviceId);
     } else {
       return '/provider/' + this.pidHandler.customEncodeURIComponent(id) + '/add-first-deployable-service';
