@@ -37,6 +37,7 @@ import {AdaptersListComponent} from "../admin/adapters-list.component";
 import {AddFirstDatasourceComponent} from "../datasource/add-first-datasource.component";
 import {UpdateDatasource} from "../datasource/update-datasource";
 import {UpdateAdaptersFormComponent} from "../adapters/update-adapters-form.component";
+import {DraftDatasourcesComponent} from "./dashboard/draftDatasources/draft-datasources.component";
 
 const providerRoutes: Routes = [
 
@@ -56,7 +57,6 @@ const providerRoutes: Routes = [
       breadcrumb: 'New Provider'
     }
   },
-  // fixme move this to the dashboard module when no longer in form
   {
     path: 'view/:catalogueId/:providerId',
     component: UpdateServiceProviderComponent,
@@ -87,6 +87,14 @@ const providerRoutes: Routes = [
     canActivate: [CanActivateViaAuthGuard],
     data: {
       breadcrumb: 'Draft ' + environment.serviceORresource + 's'
+    }
+  },
+  {
+    path: 'draft-datasources/:providerId',
+    component: DraftDatasourcesComponent,
+    canActivate: [CanActivateViaAuthGuard],
+    data: {
+      breadcrumb: 'Draft Datasource'
     }
   },
   {
@@ -191,6 +199,14 @@ const providerRoutes: Routes = [
     canActivate: [CanActivateViaAuthGuard],
     data: {
       breadcrumb: 'Edit Draft ' + environment.serviceORresource
+    }
+  },
+  {
+    path: ':providerId/draft-datasource/update/:datasourceId',
+    component: UpdateDatasource,
+    canActivate: [CanActivateViaAuthGuard],
+    data: {
+      breadcrumb: 'Edit Draft Datasource'
     }
   },
   {

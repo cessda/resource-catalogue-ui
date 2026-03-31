@@ -1,5 +1,5 @@
 import {Component, Injector, OnInit} from '@angular/core';
-import {ActivatedRoute} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import {AuthenticationService} from '../../services/authentication.service';
 import {ResourceService} from '../../services/resource.service';
 import {Datasource} from '../../domain/eic-model';
@@ -8,6 +8,7 @@ import {FormControlService} from "../../../dynamic-catalogue/services/form-contr
 import {ConfigService} from "../../services/config.service";
 import {DatasourceFormComponent} from "./datasource-form.component";
 import {DatasourceService} from "../../services/datasource.service";
+import {pidHandler} from "../../shared/pid-handler/pid-handler.service";
 
 @Component({
     selector: 'app-add-first-datasource',
@@ -23,9 +24,11 @@ export class AddFirstDatasourceComponent extends DatasourceFormComponent impleme
               protected authenticationService: AuthenticationService,
               protected datasourceService: DatasourceService,
               protected route: ActivatedRoute,
+              protected router: Router,
               public dynamicFormService: FormControlService,
-              public config: ConfigService) {
-    super(injector, authenticationService, datasourceService, route, dynamicFormService, config);
+              public config: ConfigService,
+              public pidHandler: pidHandler) {
+    super(injector, authenticationService, datasourceService, route, router, dynamicFormService, config, pidHandler);
     this.editMode = false;
   }
 
@@ -39,21 +42,14 @@ export class AddFirstDatasourceComponent extends DatasourceFormComponent impleme
       this.editMode = true;
       this.datasourceService.getDatasourceBundleById(this.datasourceId, this.catalogueConfigId).subscribe(
         dsBundle => {
-          ResourceService.removeNulls(dsBundle.datasource);
-          this.formPrepare(dsBundle.datasource);
-          this.serviceForm.patchValue(dsBundle.datasource);
-          for (const i in this.serviceForm.controls) {
-            if (this.serviceForm.controls[i].value === null) {
-              this.serviceForm.controls[i].setValue('');
-            }
-          }
+
         },
         err => this.errorMessage = 'Something went bad, server responded: ' + err.error);
     }
   }
 
   onSuccess(service) {
-    this.successMessage = 'Training Resource uploaded successfully!';
+    this.successMessage = 'Datasource uploaded successfully!';
   }
 
 }

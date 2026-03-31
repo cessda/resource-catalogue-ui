@@ -126,6 +126,13 @@
                                                     </a>
                                                   </li>
                                                 }
+                                                @if (checkForDraftDatasources(providerBundle.id)) {
+                                                  <li class="uk-active">
+                                                    <a [routerLink]="['/provider/draft-resources/' + pidHandler.customEncodeURIComponent(providerBundle.id)] ">
+                                                      Select from draft datasources
+                                                    </a>
+                                                  </li>
+                                                }
                                                 @if (checkForRejectedServices(providerBundle.id)) {
                                                   <li class="uk-active">
                                                     <a [routerLink]="['/provider/rejected-resources/' + pidHandler.customEncodeURIComponent(providerBundle.id)] ">

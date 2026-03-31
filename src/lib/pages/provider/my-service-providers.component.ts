@@ -25,6 +25,7 @@ export class MyServiceProvidersComponent implements OnInit {
   myPendingProviders: ProviderBundle[];
   serviceTemplatePerProvider: any[] = [];
   hasDraftServices: { id: string, flag: boolean }[] = [];
+  hasDraftDatasources: { id: string, flag: boolean }[] = [];
   hasRejectedServices: { id: string, flag: boolean }[] = [];
   hasRejectedDatasources: { id: string, flag: boolean }[] = [];
   hasRejectedTrainingResources: { id: string, flag: boolean }[] = [];
@@ -97,6 +98,15 @@ export class MyServiceProvidersComponent implements OnInit {
                       this.hasDraftServices.push({id: p.id, flag: false});
                     }
                     // console.log(this.hasDraftServices);
+                  }
+                );
+                this.resourceService.getDraftServicesByProvider(p.id, '0', '50', 'ASC', 'name').subscribe(
+                  res => {
+                    if (res.results?.length > 0) {
+                      this.hasDraftDatasources.push({id: p.id, flag: true});
+                    } else {
+                      this.hasDraftDatasources.push({id: p.id, flag: false});
+                    }
                   }
                 );
               }
@@ -197,6 +207,15 @@ export class MyServiceProvidersComponent implements OnInit {
     for (let i = 0; i < this.hasDraftServices.length; i++) {
       if (this.hasDraftServices[i].id === id) {
         return this.hasDraftServices[i].flag;
+      }
+    }
+    return false;
+  }
+
+  checkForDraftDatasources(id: string): boolean {
+    for (let i = 0; i < this.hasDraftDatasources.length; i++) {
+      if (this.hasDraftDatasources[i].id === id) {
+        return this.hasDraftDatasources[i].flag;
       }
     }
     return false;
