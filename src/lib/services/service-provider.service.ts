@@ -75,7 +75,7 @@ export class ServiceProviderService {
 
   requestProviderDeletion(id: string) {
     id = decodeURIComponent(id);
-    return this.http.get(this.base + `/provider/requestProviderDeletion?providerId=${id}`, this.options);
+    return this.http.get(this.base + `/provider/requestProviderDeletion?id=${id}`, this.options);
   }
 
   deleteServiceProvider(id: string) {
