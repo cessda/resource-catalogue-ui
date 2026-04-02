@@ -195,9 +195,11 @@ export class DatasourceFormComponent implements OnInit {
     this.showLoader = true;
     this.datasourceService.deleteDatasource(this.datasource.catalogueId).subscribe( // old deleteDatasourceWithoutAdminRights
       res => {},
-      error => {
+      err => {
         this.showLoader = false;
-        this.errorMessage = 'Something went bad. ' + error.error ;
+        this.errorMessage = (err?.status >= 500 && err?.status < 600)
+            ? `Something went wrong. If the issue persists, please contact support and provide the following error code: ${err?.error?.traceId}`
+            : `Something went bad, server responded: ${err?.error?.message}`;
         // return this.navigator.resourceDashboard(this.providerId, this.datasource.serviceId); // fixme: Datasource providerId -2test
       },
       () => {
