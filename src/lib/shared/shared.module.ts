@@ -30,6 +30,7 @@ import {
 import {
   RejectedDatasourcesComponent
 } from "../pages/provider/dashboard/rejectedDatasources/rejected-datasources.component";
+import {DraftDatasourcesComponent} from "../pages/provider/dashboard/draftDatasources/draft-datasources.component";
 
 @NgModule({
   imports: [
@@ -55,6 +56,7 @@ import {
     BreadcrumbsComponent,
     DashboardBreadcrumbsComponent,
     PendingServicesComponent,
+    DraftDatasourcesComponent,
     SharedServicesComponent,
     RejectedServicesComponent,
     RejectedDatasourcesComponent,
@@ -78,6 +80,7 @@ import {
     BreadcrumbsComponent,
     DashboardBreadcrumbsComponent,
     PendingServicesComponent,
+    DraftDatasourcesComponent,
     SharedServicesComponent,
     RejectedServicesComponent,
     RejectedDatasourcesComponent,

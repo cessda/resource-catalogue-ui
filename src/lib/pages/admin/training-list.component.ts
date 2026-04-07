@@ -514,10 +514,12 @@ export class TrainingListComponent implements OnInit {
     // UIkit.modal('#spinnerModal').show();
     this.trainingResourceService.deleteTrainingResource(id).subscribe(
       res => {},
-      error => {
+      err => {
         // console.log(error);
         // UIkit.modal('#spinnerModal').hide();
-        this.errorMessage = 'Something went bad. ' + error.error ;
+        this.errorMessage = (err?.status >= 500 && err?.status < 600)
+            ? `Something went wrong. If the issue persists, please contact support and provide the following error code: ${err?.error?.traceId}`
+            : `Something went bad, server responded: ${err?.error?.message}`;
         this.getResources();
       },
       () => {
@@ -557,8 +559,10 @@ export class TrainingListComponent implements OnInit {
     UIkit.modal('#spinnerModal').show();
     this.trainingResourceService.activateTrainingResource(trBundle.id, !trBundle.active).subscribe(
       res => {},
-      error => {
-        this.errorMessage = 'Something went bad. ' + error.error ;
+      err => {
+        this.errorMessage = (err?.status >= 500 && err?.status < 600)
+            ? `Something went wrong. If the issue persists, please contact support and provide the following error code: ${err?.error?.traceId}`
+            : `Something went bad, server responded: ${err?.error?.message}`;
         this.getResources();
         UIkit.modal('#spinnerModal').hide();
         // console.log(error);
@@ -592,10 +596,11 @@ export class TrainingListComponent implements OnInit {
     UIkit.modal('#spinnerModal').show();
     this.trainingResourceService.moveTrainingResourceToProvider(trainingResourceId, providerId, this.commentMoveControl.value).subscribe(
       res => {},
-      error => {
-        // console.log(error);
+      err => {
         UIkit.modal('#spinnerModal').hide();
-        this.errorMessage = 'Something went bad. ' + error.error ;
+        this.errorMessage = (err?.status >= 500 && err?.status < 600)
+            ? `Something went wrong. If the issue persists, please contact support and provide the following error code: ${err?.error?.traceId}`
+            : `Something went bad, server responded: ${err?.error?.message}`;
         this.getResources();
       },
       () => {

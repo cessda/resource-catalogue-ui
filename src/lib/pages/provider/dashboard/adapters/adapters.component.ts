@@ -125,9 +125,11 @@ export class AdaptersComponent implements OnInit {
     UIkit.modal('#spinnerModal').show();
     this.adaptersService.deleteAdapterById(id).subscribe(
       res => {},
-      error => {
+      err => {
         UIkit.modal('#spinnerModal').hide();
-        this.errorMessage = 'Something went bad. ' + error.error ;
+        this.errorMessage = (err?.status >= 500 && err?.status < 600)
+            ? `Something went wrong. If the issue persists, please contact support and provide the following error code: ${err?.error?.traceId}`
+            : `Something went bad, server responded: ${err?.error?.message}`;
         this.getAdapters();
       },
       () => {

@@ -106,6 +106,12 @@
                     Datasources
                   </a>
                 </li>
+                <li [routerLinkActive]="['current_section']" #draftDatasources="routerLinkActive">
+                  <a [routerLink]="['/dashboard', catalogueId, providerId, 'draft-datasources']">
+                    <img src="{{draftDatasources.isActive ? 'assets/images/new-icons/draft-services-active.svg' : 'assets/images/new-icons/draft-services.svg'}}" class="uk-margin-small-right">
+                    Draft Datasources
+                  </a>
+                </li>
                 <li [routerLinkActive]="['current_section']" #trainingResources="routerLinkActive">
                   <a [routerLink]="['/dashboard', catalogueId, providerId, 'training-resources']">
                     <img src="{{trainingResources.isActive ? 'assets/images/new-icons/services-active.svg' : 'assets/images/new-icons/services.svg'}}" class="uk-margin-small-right">

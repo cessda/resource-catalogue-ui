@@ -25,6 +25,7 @@ export class MyServiceProvidersComponent implements OnInit {
   myPendingProviders: ProviderBundle[];
   serviceTemplatePerProvider: any[] = [];
   hasDraftServices: { id: string, flag: boolean }[] = [];
+  hasDraftDatasources: { id: string, flag: boolean }[] = [];
   hasRejectedServices: { id: string, flag: boolean }[] = [];
   hasRejectedDatasources: { id: string, flag: boolean }[] = [];
   hasRejectedTrainingResources: { id: string, flag: boolean }[] = [];
@@ -79,7 +80,8 @@ export class MyServiceProvidersComponent implements OnInit {
                         providerId: p.id, serviceId: JSON.parse(JSON.stringify(res)).id,
                         service: JSON.parse(JSON.stringify(res)).service,
                         datasource: JSON.parse(JSON.stringify(res)).datasource,
-                        trainingResource: JSON.parse(JSON.stringify(res)).trainingResource
+                        trainingResource: JSON.parse(JSON.stringify(res)).trainingResource,
+                        deployableApplication: JSON.parse(JSON.stringify(res)).deployableApplication
                       });
                     }
                   }
@@ -96,6 +98,15 @@ export class MyServiceProvidersComponent implements OnInit {
                       this.hasDraftServices.push({id: p.id, flag: false});
                     }
                     // console.log(this.hasDraftServices);
+                  }
+                );
+                this.resourceService.getDraftServicesByProvider(p.id, '0', '50', 'ASC', 'name').subscribe(
+                  res => {
+                    if (res.results?.length > 0) {
+                      this.hasDraftDatasources.push({id: p.id, flag: true});
+                    } else {
+                      this.hasDraftDatasources.push({id: p.id, flag: false});
+                    }
                   }
                 );
               }
@@ -180,9 +191,10 @@ export class MyServiceProvidersComponent implements OnInit {
     return false;
   }
 
-  hasCreatedFirstDeployableService(providerId: string) {
+  hasCreatedFirstDeployableApplication(providerId: string) {
     for (let i = 0; i < this.serviceTemplatePerProvider.length; i++) {
       if (this.serviceTemplatePerProvider[i].providerId == providerId) {
+        console.log(this.serviceTemplatePerProvider[i]);
         if (this.serviceTemplatePerProvider[i].deployableApplication) {
           return true;
         }
@@ -195,6 +207,15 @@ export class MyServiceProvidersComponent implements OnInit {
     for (let i = 0; i < this.hasDraftServices.length; i++) {
       if (this.hasDraftServices[i].id === id) {
         return this.hasDraftServices[i].flag;
+      }
+    }
+    return false;
+  }
+
+  checkForDraftDatasources(id: string): boolean {
+    for (let i = 0; i < this.hasDraftDatasources.length; i++) {
+      if (this.hasDraftDatasources[i].id === id) {
+        return this.hasDraftDatasources[i].flag;
       }
     }
     return false;
@@ -260,8 +281,8 @@ export class MyServiceProvidersComponent implements OnInit {
     }
   }
 
-  getLinkToFirstDeployableService(id: string) {
-    if (this.hasCreatedFirstDeployableService(id)) {
+  getLinkToFirstDeployableApplication(id: string) {
+    if (this.hasCreatedFirstDeployableApplication(id)) {
       return '/provider/' + this.pidHandler.customEncodeURIComponent(id) + '/deployable-service/update/' + this.pidHandler.customEncodeURIComponent(this.serviceTemplatePerProvider.filter(x => x.providerId === id)[0].serviceId);
     } else {
       return '/provider/' + this.pidHandler.customEncodeURIComponent(id) + '/add-first-deployable-service';

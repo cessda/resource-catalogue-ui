@@ -111,8 +111,10 @@ export class CatalogueDeployableServicesComponent implements OnInit {
     this.toggleLoading = true;
     this.deployableServiceService.activateDeployableService(bundle.id, !bundle.active).subscribe(
       res => {},
-      error => {
-        this.errorMessage = 'Something went bad. ' + error.error ;
+      err => {
+        this.errorMessage = (err?.status >= 500 && err?.status < 600)
+            ? `Something went wrong. If the issue persists, please contact support and provide the following error code: ${err?.error?.traceId}`
+            : `Something went bad, server responded: ${err?.error?.message}`;
         this.getDeployableServices();
         this.toggleLoading = false;
         // console.log(error);
@@ -152,10 +154,12 @@ export class CatalogueDeployableServicesComponent implements OnInit {
     // UIkit.modal('#spinnerModal').show();
     this.deployableServiceService.deleteDeployableService(id).subscribe(
       res => {},
-      error => {
+      err => {
         // console.log(error);
         // UIkit.modal('#spinnerModal').hide();
-        this.errorMessage = 'Something went bad. ' + error.error ;
+        this.errorMessage = (err?.status >= 500 && err?.status < 600)
+            ? `Something went wrong. If the issue persists, please contact support and provide the following error code: ${err?.error?.traceId}`
+            : `Something went bad, server responded: ${err?.error?.message}`;
         this.getDeployableServices();
       },
       () => {

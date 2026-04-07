@@ -18,6 +18,7 @@ import {DeployableServicesComponent} from "./deployable-services/deployable-serv
 import {ProviderAccountingStatsComponent} from "./providerAccountingStats/provider-accounting-stats.component";
 import {AdaptersComponent} from "./adapters/adapters.component";
 import {DatasourcesComponent} from "./datasources/datasources.component";
+import {DraftDatasourcesComponent} from "./draftDatasources/draft-datasources.component";
 
 const providerDashboardRoutes: Routes = [
   {
@@ -90,6 +91,13 @@ const providerDashboardRoutes: Routes = [
       {
         path: 'draft-resources',
         component: PendingServicesComponent,
+        data: {
+          isResource: false
+        }
+      },
+      {
+        path: 'draft-datasources',
+        component: DraftDatasourcesComponent,
         data: {
           isResource: false
         }

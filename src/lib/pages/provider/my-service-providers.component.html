@@ -62,7 +62,7 @@
                                     <!--                              <span class="statusLabel">Provider Status: </span>{{labels[statuses.indexOf(providerBundle.status)]}}-->
                                     <span class="statusLabel">Provider Status: </span>Approved
                                     <br>
-                                      <span class="statusLabel">First {{serviceORresource}} Status: </span>{{templateLabels[templateStatuses.indexOf(providerBundle.templateStatus)]}}
+                                      <span class="statusLabel">First Resource Status: </span>{{templateLabels[templateStatuses.indexOf(providerBundle.templateStatus)]}}
                                     </div>
                                     <div class="uk-margin-top cardActionButtons">
                                       <button class="uk-button uk-button-action" routerLink="/provider/update/{{pidHandler.customEncodeURIComponent(providerBundle.id)}}">
@@ -73,7 +73,7 @@
                                             <button class="uk-button uk-button-action uk-margin-small-left"
                                               routerLink="{{ getLinkToFirstService(providerBundle.id) }}">
                                               <i class="fa fa-lg fa-edit"></i>
-                                              Update First {{serviceORresource}}
+                                              Update First Resource
                                             </button>
                                           }
                                           @if (hasCreatedFirstDatasource(providerBundle.id)) {
@@ -92,15 +92,23 @@
                                               Update First Training Resource
                                             </button>
                                           }
-                                          @if (!hasCreatedFirstService(providerBundle.id) && !hasCreatedFirstDatasource(providerBundle.id) && !hasCreatedFirstTrainingResource(providerBundle.id) && !hasCreatedFirstDeployableService(providerBundle.id)) {
+                                          @if (hasCreatedFirstDeployableApplication(providerBundle.id)) {
+                                            <!--<ng-container *ngIf="(providerBundle.templateStatus === 'pending template')">-->
+                                            <button class="uk-button uk-button-action uk-margin-small-left"
+                                                    routerLink="{{ getLinkToFirstDeployableApplication(providerBundle.id) }}">
+                                              <i class="fa fa-lg fa-edit"></i>
+                                              Update First Deployable Application
+                                            </button>
+                                          }
+                                          @if (!hasCreatedFirstService(providerBundle.id) && !hasCreatedFirstDatasource(providerBundle.id) && !hasCreatedFirstTrainingResource(providerBundle.id) && !hasCreatedFirstDeployableApplication(providerBundle.id)) {
                                             <button class="uk-button uk-button-action uk-margin-small-left">
                                               <i class="fa fa-plus"></i>
-                                              Add First {{serviceORresource}}
+                                              Add First Resource
                                             </button>
                                             <div uk-dropdown>
                                               <ul class="uk-nav uk-dropdown-nav">
                                                 <li class="uk-active">
-                                                  <a routerLink="{{ getLinkToFirstService(pidHandler.customEncodeURIComponent(providerBundle.id)) }}">Add First {{serviceORresource}}</a>
+                                                  <a routerLink="{{ getLinkToFirstService(pidHandler.customEncodeURIComponent(providerBundle.id)) }}">Add First Resource</a>
                                                 </li>
                                                 <li class="uk-active">
                                                   <a routerLink="{{ getLinkToFirstDatasource(pidHandler.customEncodeURIComponent(providerBundle.id)) }}">Add First Datasource</a>
@@ -109,12 +117,19 @@
                                                   <a routerLink="{{ getLinkToFirstTrainingResource(pidHandler.customEncodeURIComponent(providerBundle.id)) }}">Add First Training Resource</a>
                                                 </li>
                                                 <li class="uk-active">
-                                                  <a routerLink="{{ getLinkToFirstDeployableService(pidHandler.customEncodeURIComponent(providerBundle.id)) }}">Add First Deployable Application</a>
+                                                  <a routerLink="{{ getLinkToFirstDeployableApplication(pidHandler.customEncodeURIComponent(providerBundle.id)) }}">Add First Deployable Application</a>
                                                 </li>
                                                 @if (checkForDraftServices(providerBundle.id)) {
                                                   <li class="uk-active">
                                                     <a [routerLink]="['/provider/draft-resources/' + pidHandler.customEncodeURIComponent(providerBundle.id)] ">
                                                       Select from draft {{serviceORresource | lowercase}}s
+                                                    </a>
+                                                  </li>
+                                                }
+                                                @if (checkForDraftDatasources(providerBundle.id)) {
+                                                  <li class="uk-active">
+                                                    <a [routerLink]="['/provider/draft-resources/' + pidHandler.customEncodeURIComponent(providerBundle.id)] ">
+                                                      Select from draft datasources
                                                     </a>
                                                   </li>
                                                 }
@@ -255,7 +270,7 @@
               <div class="uk-margin-small-top">
                 <span class="statusLabel">Provider Status: </span>Pending
                 <br>
-                  <span class="statusLabel">First {{serviceORresource}} Status: </span>{{templateLabels[templateStatuses.indexOf(providerBundle.templateStatus)]}}
+                  <span class="statusLabel">First Resource Status: </span>{{templateLabels[templateStatuses.indexOf(providerBundle.templateStatus)]}}
                 </div>
                 <div class="uk-margin-top cardActionButtons">
                   <button class="uk-button uk-button-action" routerLink="/provider/update/{{pidHandler.customEncodeURIComponent(providerBundle.id)}}">
@@ -267,18 +282,18 @@
                               <!--                                  <button class="uk-button uk-button-action uk-margin-small-left"-->
                               <!--                                          routerLink="{{ getLinkToFirstService(providerBundle.id) }}">-->
                               <!--                                    <i class="fa fa-lg fa-edit"></i>-->
-                              <!--                                    Update First {{serviceORresource}}-->
+                              <!--                                    Update First Resource-->
                               <!--                                  </button>-->
                               <!--                                </ng-container>-->
                               <!--                                <ng-container *ngIf="!hasCreatedFirstService(providerBundle.id)">-->
                               <!--                                  <button class="uk-button uk-button-action uk-margin-small-left">-->
                               <!--                                    <i class="fa fa-plus"></i>-->
-                              <!--                                    Add First {{serviceORresource}}-->
+                              <!--                                    Add First Resource-->
                               <!--                                  </button>-->
                               <!--                                  <div uk-dropdown>-->
                               <!--                                    <ul class="uk-nav uk-dropdown-nav">-->
                               <!--                                      <li class="uk-active">-->
-                              <!--                                        <a routerLink="{{ getLinkToFirstService(providerBundle.id) }}">Create First {{serviceORresource}}</a>-->
+                              <!--                                        <a routerLink="{{ getLinkToFirstService(providerBundle.id) }}">Create First Resource</a>-->
                               <!--                                      </li>-->
                               <!--                                      <li *ngIf="checkForPendingServices(providerBundle.id)" class="uk-active">-->
                               <!--                                        <a [routerLink]="['/provider/draft-resources/' + providerBundle.id] ">-->
@@ -334,7 +349,7 @@
                             <div class="uk-margin-small-top">
                               <span class="statusLabel">Provider Status: </span>Rejected
                               <br>
-                              <span class="statusLabel">First {{serviceORresource}} Status: </span>{{templateLabels[templateStatuses.indexOf(providerBundle.templateStatus)]}}
+                              <span class="statusLabel">First Resource Status: </span>{{templateLabels[templateStatuses.indexOf(providerBundle.templateStatus)]}}
                             </div>
                             <div class="uk-margin-top cardActionButtons">
                               <button class="uk-button uk-button-action" routerLink="/provider/update/{{pidHandler.customEncodeURIComponent(providerBundle.id)}}">
@@ -343,7 +358,7 @@
 <button class="uk-button uk-button-action"
                                       routerLink="{{ getLinkToFirstService(providerBundle.id) }}">
                         <i class="fa fa-lg fa-edit"></i>
-                        Update First {{serviceORresource}}
+                        Update First Resource
                       </button>
                     }
                   </div>
@@ -378,7 +393,7 @@
                   <div class="uk-margin-small-top">
                     <span class="statusLabel">Provider Status: </span> Not available
                     <br>
-                      <span class="statusLabel">First {{serviceORresource}} Status: </span> Not available
+                      <span class="statusLabel">First Resource Status: </span> Not available
                     </div>
                     <div class="uk-margin-top cardActionButtons">
                       <button class="uk-button uk-button-action" routerLink="/provider/add/{{pidHandler.customEncodeURIComponent(providerBundle.id)}}">

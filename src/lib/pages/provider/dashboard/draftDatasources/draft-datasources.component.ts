@@ -1,23 +1,24 @@
-import {Component, OnInit} from '@angular/core';
-import {ProviderBundle, DeployableServiceBundle} from '../../../../domain/eic-model';
+import {Component, Input, OnInit} from '@angular/core';
+import { Provider, ProviderBundle, Datasource, DatasourceBundle} from '../../../../domain/eic-model';
 import {ServiceProviderService} from '../../../../services/service-provider.service';
 import {ActivatedRoute, Router} from '@angular/router';
+import {ResourceService} from '../../../../services/resource.service';
 import {Paging} from '../../../../domain/paging';
 import {UntypedFormBuilder, UntypedFormGroup} from '@angular/forms';
 import {URLParameter} from '../../../../domain/url-parameter';
 import {environment} from '../../../../../environments/environment';
 import {NavigationService} from "../../../../services/navigation.service";
-import {DeployableServiceService} from "../../../../services/deployable-service.service";
+import {DatasourceService} from "../../../../services/datasource.service";
 
 declare var UIkit: any;
 
 @Component({
-    selector: 'app-rejected-deployable-services',
-    templateUrl: './rejected-deployable-services.component.html',
+    selector: 'app-draft-datasources',
+    templateUrl: './draft-datasources.component.html',
     standalone: false
 })
 
-export class RejectedDeployableServicesComponent implements OnInit {
+export class DraftDatasourcesComponent implements OnInit {
 
   formPrepare = {
     from: '0'
@@ -30,8 +31,8 @@ export class RejectedDeployableServicesComponent implements OnInit {
   providerId: string;
   catalogueId: string;
   providerBundle: ProviderBundle;
-  deployableServiceBundle: Paging<DeployableServiceBundle>;
-  selectedDeployableService: DeployableServiceBundle = null;
+  providerDatasources: Paging<DatasourceBundle>;
+  selectedDatasource: DatasourceBundle = null;
   path: string;
 
   total: number;
@@ -47,13 +48,24 @@ export class RejectedDeployableServicesComponent implements OnInit {
     private router: Router,
     private navigator: NavigationService,
     private providerService: ServiceProviderService,
-    private deployableServiceService: DeployableServiceService
+    private datasourceService: DatasourceService
   ) {}
 
   ngOnInit(): void {
+    // this.path = this.route.snapshot.routeConfig.path;
     this.path = window.location.pathname;
-    this.providerId = this.route.snapshot.paramMap.get('providerId');
-    this.catalogueId = this.route.parent.snapshot.paramMap.get('catalogueId');
+    // console.log('this.path --> ', this.path);
+    // console.log('window.location.pathname --> ', window.location.pathname);
+
+    if (this.path.includes('dashboard')) {
+      this.providerId = this.route.parent.snapshot.paramMap.get('provider');
+      this.catalogueId = this.route.parent.snapshot.paramMap.get('catalogueId');
+    } else {
+      this.providerId = this.route.snapshot.paramMap.get('providerId');
+    }
+    // console.log('this.path: ', this.path);
+    // this.providerId = this.route.parent.snapshot.paramMap.get('provider');
+    // console.log('this.providerId: ', this.providerId);
 
     this.getProvider();
 
@@ -74,15 +86,14 @@ export class RejectedDeployableServicesComponent implements OnInit {
           }
 
           // this.handleChange();
-          this.getRejectedResources();
+          this.getDraftDatasources();
         },
         error => this.errorMessage = <any>error
       );
-    // this.getPendingServices();
   }
 
-  navigate(id: string) {
-    this.router.navigate([`/provider/` + this.providerId + `/deployable-service/update/`, id]);
+  navigate(bundle: DatasourceBundle) {
+    this.router.navigate([`/provider/` + this.providerId + `/draft-datasource/update/`, bundle.id]);
   }
 
   getProvider() {
@@ -95,41 +106,34 @@ export class RejectedDeployableServicesComponent implements OnInit {
     );
   }
 
-  getRejectedResources() {
-    this.providerService.getRejectedResourcesOfProvider(this.providerId, this.dataForm.get('from').value,
-      this.itemsPerPage + '', 'ASC', 'name', 'deployable_application')
+  getDraftDatasources() {
+    this.datasourceService.getDraftDatasourcesByProvider(this.providerId, this.dataForm.get('from').value,
+      this.itemsPerPage + '', 'ASC', 'name')
       .subscribe(res => {
-          this.deployableServiceBundle = res;
+          this.providerDatasources = res;
           this.total = res['total'];
           this.paginationInit();
         },
         err => {
-          this.errorMessage = 'An error occurred while retrieving the Deployable Application of this provider. ' + err.error;
-        },
-        () => {}
+          this.errorMessage = 'An error occurred while retrieving the datasources of this provider. ' + err.error;
+        }
       );
   }
 
-  setSelectedDeployableService(dsBundle: DeployableServiceBundle) {
-    this.selectedDeployableService = dsBundle;
+  setSelectedDatasource(bundle: DatasourceBundle) {
+    this.selectedDatasource = bundle;
     UIkit.modal('#actionModal').show();
   }
 
-  deleteDeployableService(id: string) {
+  deleteDatasource(bundle: DatasourceBundle) {
     // UIkit.modal('#spinnerModal').show();
-    this.deployableServiceService.deleteDeployableService(id).subscribe(
-      res => {},
+    this.datasourceService.deleteDraftDatasource(bundle.id).subscribe(
+      res => {window.location.reload()},
       err => {
-        // console.log(error);
         // UIkit.modal('#spinnerModal').hide();
         this.errorMessage = (err?.status >= 500 && err?.status < 600)
             ? `Something went wrong. If the issue persists, please contact support and provide the following error code: ${err?.error?.traceId}`
             : `Something went bad, server responded: ${err?.error?.message}`;
-        this.getRejectedResources();
-      },
-      () => {
-        this.getRejectedResources();
-        // UIkit.modal('#spinnerModal').hide();
       }
     );
   }
@@ -147,13 +151,11 @@ export class RejectedDeployableServicesComponent implements OnInit {
       }
     }
 
-    if (this.path.includes('/provider/rejected-deployable-services')) {
-      this.router.navigate([`/provider/rejected-deployable-services/` + this.providerId], {queryParams: map});
+    if (this.path.includes('/provider/draft-datasources')) {
+      this.router.navigate([`/provider/draft-datasources/` + this.providerId], {queryParams: map});
+    } else {
+      this.router.navigate([`/dashboard/` + this.providerId + `/draft-datasources`], {queryParams: map});
     }
-    // else {
-    //   this.router.navigate([`/dashboard/` + this.providerId + `/rejected-deployable-services`], {queryParams: map});
-    // }
-    // this.getPendingDeployableServices();
   }
 
   paginationInit() {

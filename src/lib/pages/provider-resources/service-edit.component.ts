@@ -60,27 +60,6 @@ export class ServiceEditComponent extends ServiceFormComponent implements OnInit
           this.resourceService.getPendingService(this.serviceId)
             .subscribe(service => {
                 this.payloadAnswer = {'answer': {service: service}};
-                //clear below
-                if (service.mainContact === null) //in case of unauthorized access backend will not show sensitive info
-                  this.navigator.go('/forbidden')
-                ResourceService.removeNulls(service);
-                //remove catalogueId. prefix for same catalogue entries
-                // if (service.requiredResources) {
-                //   service.requiredResources = service.requiredResources.map(value => value.startsWith(this.catalogueId) ? value.substring(this.catalogueId.length + 1) : value);
-                // }
-                // if (service.relatedResources) {
-                //   service.relatedResources = service.relatedResources.map(value => value.startsWith(this.catalogueId) ? value.substring(this.catalogueId.length + 1) : value);
-                // }
-                // this.serviceForm.patchValue(service);
-                // for (const i in this.serviceForm.controls) {
-                //   if (this.serviceForm.controls[i].value === null) {
-                //     this.serviceForm.controls[i].setValue('');
-                //   }
-                // }
-                // if (this.serviceForm.get('lastUpdate').value) {
-                //   const lastUpdate = new Date(this.serviceForm.get('lastUpdate').value);
-                //   this.serviceForm.get('lastUpdate').setValue(this.datePipe.transform(lastUpdate, 'yyyy-MM-dd'));
-                // }
               },
               err => this.errorMessage = 'Could not get the data for the requested service. ' + err.error,
               () => {

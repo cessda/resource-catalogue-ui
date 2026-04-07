@@ -131,4 +131,34 @@ export class DatasourceService {
       return this.http.get<LoggingInfo[]>(this.base + `/catalogue/${catalogue_id}/datasource/loggingInfoHistory/${datasourceId}`);
   }
 
+  /** Draft Datasources -->**/
+  temporarySaveDatasource(datasource: Datasource) {
+    const datasourceExists = !!datasource.id;
+    if (datasourceExists) {
+      return this.http.put<Datasource>(this.base + '/datasource/draft', datasource, this.options);
+    }
+    return this.http.post<Datasource>(this.base + '/datasource/draft', datasource, this.options);
+  }
+
+  submitDraftDatasource(datasource: Datasource) {
+    return this.http.put<Datasource>(this.base + '/datasource/draft/transform', datasource, this.options);
+  }
+
+  getDraftDatasourcesByProvider(id: string, from: string, quantity: string, order: string, sort: string) {
+    id = decodeURIComponent(id);
+    return this.http.get<Paging<DatasourceBundle>>(this.base +
+      `/datasource/draft/byProvider/${id}?from=${from}&quantity=${quantity}&order=${order}&sort=${sort}`);
+  }
+
+  getDraftDatasource(id: string) {
+    id = decodeURIComponent(id);
+    return this.http.get<any>(this.base + `/datasource/draft/${id}`, this.options);
+  }
+
+  deleteDraftDatasource(id: string) {
+    id = decodeURIComponent(id);
+    return this.http.delete(this.base + '/datasource/draft/' + id, this.options);
+  }
+  /** <-- Draft Datasources **/
+
 }
