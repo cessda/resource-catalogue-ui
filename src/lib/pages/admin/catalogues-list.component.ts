@@ -547,7 +547,13 @@ export class CataloguesListComponent implements OnInit {
     this.catalogueService.auditCatalogue(this.selectedCatalogue.id, action, this.commentAuditControl.value)
       .subscribe(
         res => {this.getCatalogues();},
-        err => {console.log(err);},
+        err => {
+          this.errorMessage =
+            (err?.status >= 500 && err?.status < 600)
+              ? `Something went wrong. If the issue persists, please contact support and provide the following error code: ${err?.error?.traceId}`
+              : `Something went bad, server responded: ${err?.error?.message}`;
+          window.scroll(0,0);
+        },
         () => {
           this.selectedCataloguesForAudit.forEach(
             s => {

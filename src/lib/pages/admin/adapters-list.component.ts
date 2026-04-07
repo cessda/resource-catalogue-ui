@@ -319,7 +319,13 @@ export class AdaptersListComponent implements OnInit {
     this.adaptersService.auditAdapter(this.selectedAdapter.id, action, this.selectedAdapter.catalogueId, this.commentAuditControl.value)
       .subscribe(
         res => {this.getAdapters();},
-        err => {console.log(err);},
+        err => {
+          this.errorMessage =
+            (err?.status >= 500 && err?.status < 600)
+              ? `Something went wrong. If the issue persists, please contact support and provide the following error code: ${err?.error?.traceId}`
+              : `Something went bad, server responded: ${err?.error?.message}`;
+          window.scroll(0,0);
+        },
         () => {
           this.adaptersForAudit.forEach(
             s => {
