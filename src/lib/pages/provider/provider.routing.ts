@@ -171,10 +171,10 @@ const providerRoutes: Routes = [
   },
   {
     path: ':providerId/datasource/update-template/:resourceId',
-    component: AddFirstServiceComponent,
+    component: AddFirstDatasourceComponent,
     canActivate: [CanActivateViaAuthGuard],
     data: {
-      breadcrumb: 'Edit ' + environment.serviceORresource + ' Template'
+      breadcrumb: 'Edit Datasource Template'
     }
   },
   {
