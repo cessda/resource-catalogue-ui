@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {ResourceService} from '../../services/resource.service';
 import {ServiceProviderService} from '../../services/service-provider.service';
-import {DatasourceBundle, ProviderBundle, Service, ServiceBundle} from '../../domain/eic-model';
+import {DatasourceBundle, Provider, ProviderBundle, Service, ServiceBundle} from '../../domain/eic-model';
 import {ConfigService} from "../../services/config.service";
 import {environment} from '../../../environments/environment';
 import {AuthenticationService} from '../../services/authentication.service';
@@ -11,6 +11,7 @@ import {URLParameter} from '../../domain/url-parameter';
 import {NavigationService} from '../../services/navigation.service';
 import {DatasourceService} from "../../services/datasource.service";
 import {pidHandler} from "../../shared/pid-handler/pid-handler.service";
+import {Paging} from "../../domain/paging";
 
 declare var UIkit: any;
 
@@ -27,7 +28,7 @@ export class DatasourcesListComponent implements OnInit {
 
   formPrepare = {
     order: 'ASC',
-    sort: 'id',
+    sort: 'name',
     quantity: '10',
     from: '0',
     query: '',
@@ -65,6 +66,10 @@ export class DatasourcesListComponent implements OnInit {
   pageTotal: number;
   pages: number[] = [];
   offset = 2;
+
+  public statuses: Array<string> = ['approved', 'pending', 'rejected'];
+  public labels: Array<string> = [`Approved`, `Pending`, `Rejected`];
+  providersPage: Paging<Provider>;
 
   constructor(private resourceService: ResourceService,
               private serviceProviderService: ServiceProviderService,
@@ -129,6 +134,9 @@ export class DatasourcesListComponent implements OnInit {
           error => this.errorMessage = <any>error
         );
     }
+
+    this.getProviderNames();
+
   }
 
   handleChange() {
@@ -376,5 +384,26 @@ export class DatasourcesListComponent implements OnInit {
     }
   }
   /** <--Pagination **/
+
+  getProviderNames(){
+    this.resourceService.getProvidersNames('approved').subscribe(suc => {
+        this.providersPage = <Paging<Provider>>suc;
+      },
+      err => {
+        this.errorMessage =
+          (err?.status >= 500 && err?.status < 600)
+            ? `Something went wrong. If the issue persists, please contact support and provide the following error code: ${err?.error?.traceId}`
+            : `Something went bad while getting the data for page initialization: ${err?.error?.message}`;
+      },
+      () => {
+        this.providersPage.results.sort((a, b) => 0 - (a.name > b.name ? -1 : 1));
+        // console.log(this.providersPage.results);
+      }
+    );
+  }
+
+  getProviderNameWithId(id: string) {
+    return this.providersPage.results.find( x => x.id === id )?.name;
+  }
 
 }

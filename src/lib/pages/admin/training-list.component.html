@@ -148,7 +148,7 @@
                     </div>
 
                     <div class="uk-inline">
-                      <label class="" for="sort">Order by </label>
+                      <label class="" for="sort">Sort by </label>
                       <div class="uk-inline">
                         <select class="uk-input uk-select" id="sort" (change)="handleChangeAndResetPage()" formControlName="sort">
                           <option value="name" selected>Name</option>
@@ -292,6 +292,9 @@
                                   <span class="statusLabel">Training Resource Status: </span>{{labels[statuses.indexOf(trBundle.status)]}}
                                 </div>
                                 <div class="uk-margin-small-top">
+                                  <span class="statusLabel">Catalogue ID: </span>{{ trBundle.catalogueId }}
+                                </div>
+                                <div class="uk-margin-small-top">
                                   <span class="statusLabel">Resource Organisation: </span>{{ providersPage?.results ? getProviderNameWithId(trBundle.trainingResource.resourceOwner) : ''}}
                                 </div>
                                 <!--                              <div class="uk-margin-small-top">-->
@@ -320,9 +323,6 @@
                                 @if (!trBundle.latestAuditInfo) {
                                   <i>Never audited</i>
                                 }
-                              </div>
-                              <div class="uk-margin-small-top">
-                                <span class="statusLabel">Catalogue id: </span>{{ trBundle.catalogueId }}
                               </div>
                             </div>
                           </div>

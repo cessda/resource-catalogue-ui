@@ -152,7 +152,7 @@
                       </div>
 
                       <div class="uk-inline">
-                        <label class="" for="sort">Order by </label>
+                        <label class="" for="sort">Sort by </label>
                         <div class="uk-inline">
                           <select class="uk-input uk-select" id="sort" (change)="handleChangeAndResetPage()" formControlName="sort">
                             <option value="name" selected>Name</option>
@@ -336,7 +336,7 @@
                                     <span class="statusLabel">{{serviceORresource}} Status: </span>{{labels[statuses.indexOf(serviceBundle.status)]}}
                                   </div>
                                   <div class="uk-margin-small-top">
-                                    <span class="statusLabel">Catalogue id: </span>{{ serviceBundle.catalogueId }}
+                                    <span class="statusLabel">Catalogue ID: </span>{{ serviceBundle.catalogueId }}
                                   </div>
                                   <div class="uk-margin-small-top">
                                     <span class="statusLabel">Resource Organisation: </span>{{ providersPage?.results ? getProviderNameWithId(serviceBundle.service.resourceOwner) : ''}}
@@ -854,7 +854,7 @@
                 <span class="statusLabel">Resource Providers: </span>{{ getProviderNamesWithIds(serviceBundle.service.serviceProviders) }}
               </div>
               <div class="uk-margin-small-top">
-                <span class="statusLabel">Catalogue id: </span>{{ serviceBundle.catalogueId }}
+                <span class="statusLabel">Catalogue ID: </span>{{ serviceBundle.catalogueId }}
               </div>
             </div>
 

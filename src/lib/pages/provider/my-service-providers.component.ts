@@ -194,7 +194,7 @@ export class MyServiceProvidersComponent implements OnInit {
   hasCreatedFirstDeployableApplication(providerId: string) {
     for (let i = 0; i < this.serviceTemplatePerProvider.length; i++) {
       if (this.serviceTemplatePerProvider[i].providerId == providerId) {
-        console.log(this.serviceTemplatePerProvider[i]);
+        // console.log(this.serviceTemplatePerProvider[i]);
         if (this.serviceTemplatePerProvider[i].deployableApplication) {
           return true;
         }
