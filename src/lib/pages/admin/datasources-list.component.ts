@@ -224,6 +224,31 @@ export class DatasourcesListComponent implements OnInit {
     );
   }
 
+  suspendDatasource() {
+    UIkit.modal('#spinnerModal').show();
+    this.datasourceService.suspendDatasource(this.selectedDatasource.id, this.selectedDatasource.catalogueId, !this.selectedDatasource.suspended)
+      .subscribe(
+        res => {
+          UIkit.modal('#suspensionModal').hide();
+          location.reload();
+        },
+        err => {
+          UIkit.modal('#suspensionModal').hide();
+          UIkit.modal('#spinnerModal').hide();
+          this.loadingMessage = '';
+          this.errorMessage =
+            (err?.status >= 500 && err?.status < 600)
+              ? `Something went wrong. If the issue persists, please contact support and provide the following error code: ${err?.error?.traceId}`
+              : `Something went bad, server responded: ${err?.error?.message}`;
+          window.scroll(0,0);
+        },
+        () => {
+          UIkit.modal('#spinnerModal').hide();
+          this.loadingMessage = '';
+        }
+      );
+  }
+
   showSuspensionModal(bundle: DatasourceBundle) {
     this.selectedDatasource = bundle;
     if (this.selectedDatasource) {

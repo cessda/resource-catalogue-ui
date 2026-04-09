@@ -538,11 +538,6 @@ export class ResourceService {
     return this.http.put<ServiceBundle>(this.base + `/service/suspend?id=${serviceId}&catalogueId=${catalogueId}&suspend=${suspend}`, this.options);
   }
 
-  suspendDatasource(datasourceId: string, catalogueId: string, suspend: boolean) {
-    datasourceId = decodeURIComponent(datasourceId);
-    return this.http.put<DatasourceBundle>(this.base + `/datasource/suspend?id=${datasourceId}&catalogueId=${catalogueId}&suspend=${suspend}`, this.options);
-  }
-
   getFormModelById(id: string) {
     return this.http.get<Model>(this.base + `/forms/models/${id}`);
   }

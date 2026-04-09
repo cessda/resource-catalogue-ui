@@ -5,6 +5,7 @@ import {environment} from '../../environments/environment';
 import {Datasource, DatasourceBundle, LoggingInfo, OpenAIREMetrics, ProviderBundle} from '../domain/eic-model';
 import {Paging} from '../domain/paging';
 import {ConfigService} from "./config.service";
+import {Model} from "../../dynamic-catalogue/domain/dynamic-form-model";
 
 @Injectable()
 export class DatasourceService {
@@ -160,5 +161,10 @@ export class DatasourceService {
     return this.http.delete(this.base + '/datasource/draft/' + id, this.options);
   }
   /** <-- Draft Datasources **/
+
+  suspendDatasource(datasourceId: string, catalogueId: string, suspend: boolean) {
+    datasourceId = decodeURIComponent(datasourceId);
+    return this.http.put<DatasourceBundle>(this.base + `/datasource/suspend?id=${datasourceId}&catalogueId=${catalogueId}&suspend=${suspend}`, this.options);
+  }
 
 }

@@ -330,39 +330,41 @@
           Delete
         </button>
       }
-      @if (datasourceBundle.status==='pending') {
+      @if (1==1) {
         <button class="uk-button uk-button-link uk-margin-medium-left"
           style="padding-left: 40px; border-left: 1px solid #ccc">
           <i class="fa fa-ellipsis-v fa-lg uk-margin-small-right"></i>More Options
         </button>
         <div uk-dropdown="mode: click">
           <ul class="uk-nav uk-dropdown-nav uk-dropdown-close">
-            <li class="uk-active" (click)="verifyDatasource(datasourceBundle.id, true, 'approved')">
-              <a class="uk-margin-small-top"><i class="fa fa-thumbs-up"></i> Approve </a>
-            </li>
-            <li class="uk-active" (click)="verifyDatasource(datasourceBundle.id, false, 'rejected')">
-              <a class="uk-margin-small-top"><i class="fa fa-thumbs-down"></i> Reject </a>
-            </li>
-            <!--                              <li *ngIf="(datasourceBundle.status === 'approved datasource') && (!datasourceBundle.active)"
-            (click)="verifyDatasource(datasourceBundle.id, true, 'approved datasource')"
-            class="uk-margin-small-top">
-            <a><i aria-hidden="true" class="fa fa-thumbs-up uk-margin-small-right"></i>Activate</a>
-          </li>
-          <li *ngIf="(datasourceBundle.status === 'approved datasource') && (datasourceBundle.active)"
-            (click)="verifyDatasource(datasourceBundle.id, false, 'approved datasource')"
-            class="uk-margin-small-top">
-            <a><i aria-hidden="true" class="fa fa-thumbs-down uk-margin-small-right"></i>Deactivate</a>
-          </li>
-          <li *ngIf="(datasourceBundle.suspended==false)"
-            (click)="showSuspensionModal(datasourceBundle)"
-            class="uk-margin-small-top">
-            <a><i aria-hidden="true" class="fa fa-dot-circle-o uk-margin-small-right"></i>Suspend</a>
-          </li>
-          <li *ngIf="(datasourceBundle.suspended==true)"
-            (click)="showSuspensionModal(datasourceBundle)"
-            class="uk-margin-small-top">
-            <a><i aria-hidden="true" class="fa fa-dot-circle-o uk-margin-small-right"></i>Unsuspend</a>
-          </li>-->
+            @if (datasourceBundle.status==='pending') {
+              <li class="uk-active" (click)="verifyDatasource(datasourceBundle.id, true, 'approved')">
+                <a class="uk-margin-small-top"><i class="fa fa-thumbs-up"></i> Approve </a>
+              </li>
+              <li class="uk-active" (click)="verifyDatasource(datasourceBundle.id, false, 'rejected')">
+                <a class="uk-margin-small-top"><i class="fa fa-thumbs-down"></i> Reject </a>
+              </li>
+            }
+            @if (datasourceBundle.status==='approved' && !datasourceBundle.active) {
+              <li (click)="verifyDatasource(datasourceBundle.id, true, 'approved')" class="uk-margin-small-top">
+                <a><i aria-hidden="true" class="fa fa-thumbs-up uk-margin-small-right"></i>Activate</a>
+              </li>
+            }
+            @if (datasourceBundle.status==='approved' && datasourceBundle.active) {
+              <li (click)="verifyDatasource(datasourceBundle.id, false, 'approved')" class="uk-margin-small-top">
+                <a><i aria-hidden="true" class="fa fa-thumbs-down uk-margin-small-right"></i>Deactivate</a>
+              </li>
+            }
+            @if (datasourceBundle.suspended==false) {
+              <li (click)="showSuspensionModal(datasourceBundle)" class="uk-margin-small-top">
+                <a><i aria-hidden="true" class="fa fa-dot-circle-o uk-margin-small-right"></i>Suspend</a>
+              </li>
+            }
+            @if (datasourceBundle.suspended==true) {
+              <li (click)="showSuspensionModal(datasourceBundle)" class="uk-margin-small-top">
+                <a><i aria-hidden="true" class="fa fa-dot-circle-o uk-margin-small-right"></i>Unsuspend</a>
+              </li>
+            }
         </ul>
       </div>
     }
@@ -436,5 +438,25 @@
   }
 </div>
 
+<div id="suspensionModal" uk-modal>
+  <div *ngIf="!loadingMessage" class="uk-modal-dialog uk-modal-header uk-h4">Suspend Datasource</div>
+  <div *ngIf="!loadingMessage" class="uk-modal-dialog uk-modal-body uk-margin-auto-vertical">
+    <ng-container *ngIf="selectedDatasource">
+      <h6 class="uk-margin-medium-bottom">Are you sure you want to {{selectedDatasource.suspended==true ? 'un' : ''}}suspend "{{ selectedDatasource.datasource.name }}"?</h6>
+      <div class="uk-text-right">
+        <button class="uk-button uk-button-default uk-modal-close uk-margin-small-right" type="button">Cancel</button>
+        <button class="uk-button uk-button-danger uk-modal-close" type="button" (click)="suspendDatasource()">
+          {{selectedDatasource.suspended==true ? 'Unsuspend' : 'Suspend'}}</button>
+      </div>
+    </ng-container>
+  </div>
+  <div *ngIf="loadingMessage">
+    <div class="loader-small" style="text-align: center; padding-top: 170px; color: rgb(47, 64, 80); font-weight: bold;">
+      {{ loadingMessage }}
+    </div>
+    <!--    <div class="whiteFilm"></div>-->
+  </div>
+</div>
 
-<pre>{{this.datasources|json}}</pre>
+
+<!--<pre>{{this.datasources|json}}</pre>-->
