@@ -32,8 +32,8 @@ export class DatasourcesListComponent implements OnInit {
     quantity: '10',
     from: '0',
     query: '',
-    // active: '',
-    // suspended: 'false',
+    active: '',
+    suspended: '',
     catalogue_id: new UntypedFormArray([]),
     service_id: new UntypedFormArray([]), //facets
     status: ''
@@ -180,8 +180,10 @@ export class DatasourcesListComponent implements OnInit {
   getDatasources() {
     this.loadingMessage = 'Loading datasource entries...';
     this.datasources = [];
+    console.log('getting')
     this.datasourceService.getDatasourceBundles(this.dataForm.get('from').value, this.dataForm.get('quantity').value,
       this.dataForm.get('sort').value, this.dataForm.get('order').value, this.dataForm.get('query').value,
+      this.dataForm.get('active').value, this.dataForm.get('suspended').value,
       this.dataForm.get('status').value, this.dataForm.get('catalogue_id').value, this.dataForm.get('service_id').value).subscribe(
       res => {
         this.datasources = res['results'];

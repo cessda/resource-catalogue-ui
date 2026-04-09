@@ -31,13 +31,19 @@ export class DatasourceService {
     return this.http.delete(this.base + '/datasource/' + id, this.options);
   }
 
-  getDatasourceBundles(from: string, quantity: string, sort: string, order: string, query: string,
+  getDatasourceBundles(from: string, quantity: string, sort: string, order: string, query: string, active: string, suspended: string,
                        status: string, catalogue_id: string[], service_id: string[]) {
     let params = new HttpParams();
     params = params.append('from', from);
     params = params.append('quantity', quantity);
     params = params.append('sort', sort);
     params = params.append('order', order);
+    if (active && active !== '') {
+      params = params.append('active', active);
+    }
+    if (suspended && suspended !== '') {
+      params = params.append('suspended', suspended);
+    }
     if (status && status !== '') {
       params = params.append('status', status);
     }
