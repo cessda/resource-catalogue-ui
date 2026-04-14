@@ -94,7 +94,6 @@ export class ResourcesListComponent implements OnInit {
 
   public auditStates: Array<string> = ['Valid', 'Not audited', 'Invalid and updated', 'Invalid and not updated'];
   public auditLabels: Array<string> = ['Valid', 'Not audited', 'Invalid and updated', 'Invalid and not updated'];
-
   @ViewChildren('auditCheckboxes') auditCheckboxes: QueryList<ElementRef>;
 
   public statuses: Array<string> = ['approved', 'pending', 'rejected'];
@@ -286,7 +285,6 @@ export class ResourcesListComponent implements OnInit {
         i++;
       });
     }
-
     this.handleChangeAndResetPage();
   }
 

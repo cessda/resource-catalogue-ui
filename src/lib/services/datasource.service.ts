@@ -32,7 +32,7 @@ export class DatasourceService {
   }
 
   getDatasourceBundles(from: string, quantity: string, sort: string, order: string, query: string, active: string, suspended: string,
-                       status: string, catalogue_id: string[], service_id: string[]) {
+                       status: string, catalogue_id: string[], service_id: string[], auditState: string[]) {
     let params = new HttpParams();
     params = params.append('from', from);
     params = params.append('quantity', quantity);
@@ -49,6 +49,11 @@ export class DatasourceService {
     }
     if (query && query !== '') {
       params = params.append('keyword', query);
+    }
+    if (auditState && auditState.length > 0) {
+      for (const auditValue of auditState) {
+        params = params.append('audit_state', auditValue);
+      }
     }
     if (catalogue_id && catalogue_id.length > 0) {
       for (const catalogueValue of catalogue_id) {
@@ -109,8 +114,12 @@ export class DatasourceService {
     return this.http.patch(this.base + `/datasource/setActive/${id}?active=${active}`, this.options);
   }
 
-  auditDatasource(id: string, action: string, comment: string) {
+  auditDatasource(id: string, action: string, catalogueId: string, comment: string) {
     id = decodeURIComponent(id);
+    if(!catalogueId) catalogueId = this.catalogueConfigId;
+    if (catalogueId === this.catalogueConfigId)
+      return this.http.patch(this.base + `/datasource/audit/${id}?actionType=${action}&catalogueId=${catalogueId}&comment=${comment}`, this.options);
+      else
     return this.http.patch(this.base + `/datasource/audit/${id}?actionType=${action}&comment=${comment}`, this.options);
   }
 

@@ -1,7 +1,14 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, ElementRef, OnInit, QueryList, ViewChildren} from '@angular/core';
 import {ResourceService} from '../../services/resource.service';
 import {ServiceProviderService} from '../../services/service-provider.service';
-import {DatasourceBundle, Provider, ProviderBundle, Service, ServiceBundle} from '../../domain/eic-model';
+import {
+  DatasourceBundle, LoggingInfo,
+  Provider,
+  ProviderBundle,
+  Service,
+  ServiceBundle,
+  TrainingResourceBundle
+} from '../../domain/eic-model';
 import {ConfigService} from "../../services/config.service";
 import {environment} from '../../../environments/environment';
 import {AuthenticationService} from '../../services/authentication.service';
@@ -34,6 +41,7 @@ export class DatasourcesListComponent implements OnInit {
     query: '',
     active: '',
     suspended: '',
+    auditState: new UntypedFormArray([]),
     catalogue_id: new UntypedFormArray([]),
     service_id: new UntypedFormArray([]), //facets
     status: ''
@@ -42,6 +50,12 @@ export class DatasourcesListComponent implements OnInit {
   dataForm: UntypedFormGroup;
 
   urlParams: URLParameter[] = [];
+
+  commentAuditControl = new UntypedFormControl();
+  showSideAuditForm = false;
+  showMainAuditForm = false;
+  initLatestAuditInfo: LoggingInfo =  {date: '', userEmail: '', userFullName: '', userRole: '', type: '', comment: '', actionType: ''};
+  datasourcesForAudit: DatasourceBundle[] = [];
 
   errorMessage: string;
   loadingMessage = '';
@@ -66,6 +80,10 @@ export class DatasourcesListComponent implements OnInit {
   pageTotal: number;
   pages: number[] = [];
   offset = 2;
+
+  public auditStates: Array<string> = ['Valid', 'Not audited', 'Invalid and updated', 'Invalid and not updated'];
+  public auditLabels: Array<string> = ['Valid', 'Not audited', 'Invalid and updated', 'Invalid and not updated'];
+  @ViewChildren('auditCheckboxes') auditCheckboxes: QueryList<ElementRef>;
 
   public statuses: Array<string> = ['approved', 'pending', 'rejected'];
   public labels: Array<string> = [`Approved`, `Pending`, `Rejected`];
@@ -172,6 +190,30 @@ export class DatasourcesListComponent implements OnInit {
     this.router.navigate([`/provider/datasource/all`], {queryParams: map});
   }
 
+  onSelectionChange(event: any, formControlName: string) {
+    const formArray: UntypedFormArray = this.dataForm.get(formControlName) as UntypedFormArray;
+    if (event.target.checked) {
+      // Add a new control in the arrayForm
+      formArray.push(new UntypedFormControl(event.target.value));
+    } else {
+      // find the unselected element
+      let i = 0;
+      formArray.controls.forEach((ctrl: UntypedFormControl) => {
+        if (ctrl.value === event.target.value) {
+          // Remove the unselected element from the arrayForm
+          formArray.removeAt(i);
+          return;
+        }
+        i++;
+      });
+    }
+    this.handleChangeAndResetPage();
+  }
+
+  isAuditStateChecked(value: string) {
+    return this.dataForm.get('auditState').value.includes(value);
+  }
+
   handleChangeAndResetPage() {
     this.dataForm.get('from').setValue(0);
     this.handleChange();
@@ -180,11 +222,11 @@ export class DatasourcesListComponent implements OnInit {
   getDatasources() {
     this.loadingMessage = 'Loading datasource entries...';
     this.datasources = [];
-    console.log('getting')
     this.datasourceService.getDatasourceBundles(this.dataForm.get('from').value, this.dataForm.get('quantity').value,
       this.dataForm.get('sort').value, this.dataForm.get('order').value, this.dataForm.get('query').value,
       this.dataForm.get('active').value, this.dataForm.get('suspended').value,
-      this.dataForm.get('status').value, this.dataForm.get('catalogue_id').value, this.dataForm.get('service_id').value).subscribe(
+      this.dataForm.get('status').value, this.dataForm.get('catalogue_id').value, this.dataForm.get('service_id').value,
+      this.dataForm.get('auditState').value).subscribe(
       res => {
         this.datasources = res['results'];
         this.facets = res['facets'];
@@ -432,5 +474,53 @@ export class DatasourcesListComponent implements OnInit {
   getProviderNameWithId(id: string) {
     return this.providersPage.results.find( x => x.id === id )?.name;
   }
+
+  /** Audit --> **/
+  showAuditForm(view: string, dsBundle: DatasourceBundle) {
+    this.commentAuditControl.reset();
+    this.selectedDatasource = dsBundle;
+    if (view === 'side') {
+      this.showSideAuditForm = true;
+    } else if (view === 'main') {
+      this.showMainAuditForm = true;
+    }
+  }
+
+  resetAuditView() {
+    this.showSideAuditForm = false;
+    this.showMainAuditForm = false;
+    this.commentAuditControl.reset();
+  }
+
+  auditResourceAction(action: string) {
+    this.datasourceService.auditDatasource(this.selectedDatasource.id, action, this.selectedDatasource.catalogueId, this.commentAuditControl.value)
+      .subscribe(
+        res => {
+          if (!this.showSideAuditForm) {
+            this.getDatasources();
+          }
+        },
+        err => {
+          this.errorMessage =
+            (err?.status >= 500 && err?.status < 600)
+              ? `Something went wrong. If the issue persists, please contact support and provide the following error code: ${err?.error?.traceId}`
+              : `Something went bad, server responded: ${err?.error?.message}`;
+          window.scroll(0,0);
+        },
+        () => {
+          this.datasourcesForAudit.forEach(
+            s => {
+              if (s.id === this.selectedDatasource.id) {
+                s.latestAuditInfo = this.initLatestAuditInfo;
+                s.latestAuditInfo.date = Date.now().toString();
+                s.latestAuditInfo.actionType = action;
+              }
+            }
+          );
+          this.resetAuditView();
+        }
+      );
+  }
+  /** <-- Audit **/
 
 }

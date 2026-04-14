@@ -17,6 +17,19 @@
               <h4>Filters</h4>
               <hr class="uk-margin-large-right">
 
+              <h5>Audit State</h5>
+              <form [formGroup]="dataForm">
+                <div formArrayName="auditState" class="uk-padding uk-padding-remove-top">
+                  <div *ngFor="let auditState of auditStates;" class="uk-margin-small-top">
+                    <label class="status-value uk-margin-small-left">
+                      <input #auditCheckboxes class="uk-checkbox" type="checkbox" [value]="auditState"
+                             (change)="onSelectionChange($event, 'auditState')" [checked]="isAuditStateChecked(auditState)">
+                      {{auditLabels[auditStates.indexOf(auditState)] | titlecase}}
+                    </label>
+                  </div>
+                </div>
+              </form>
+
               @if (facets && facets.length>0) {
                 <div class="refineCategory uk-grid-margin">
                   @for (f of facets; track f) {
@@ -146,263 +159,288 @@
                     </select>
                   </div>
 
-      </div>
-
-      <!--                <div class="">-->
-      <!--                  <form [formGroup]="dataForm" (ngSubmit)="handleChangeAndResetPage()" class="uk-search uk-search-default" style="width: 250px;">-->
-      <!--                    <span uk-search-icon></span>-->
-      <!--                    <input class="uk-search-input" type="search" placeholder="Search (id, name)" formControlName="query">-->
-    <!--                  </form>-->
-  <!--                </div>-->
-
-</form>
-
-
-@if (loadingMessage) {
-  <div class="uk-margin-large-top">
-    <div class="loader-big"></div>
-  </div>
-}
-
-@if (!loadingMessage && (!datasources || (datasources.length==0))) {
-  <div class="uk-margin-large-top">
-    No datasources found for your selections.
-  </div>
-}
-
-@if (datasources && (datasources.length>0)) {
-  <div id="serviceForm" class="uk-margin-medium-top">
-    <div class="uk-flex uk-flex-middle uk-flex-between">
-      <div class="resultsInfo">
-        <span class="number">{{total}}</span> DATASOURCES, PAGE <span class="number">{{currentPage}}</span> OF <span class="number">{{pageTotal}}</span>
-      </div>
-      <ul class="uk-pagination">
-        @if (currentPage>2 && pageTotal>5) {
-          <li><a (click)="goToPage(1)"><span uk-pagination-previous></span><span uk-pagination-previous></span></a></li>
-        }
-        @if (currentPage!==1) {
-          <li><a (click)="previousPage()"><span uk-pagination-previous></span></a></li>
-        }
-        @for (i of pages; track i) {
-          <li [ngClass]="i === currentPage ? 'uk-active': ''">
-            <a (click)="goToPage(i)">{{i}}</a>
-          </li>
-        }
-        @if (currentPage!==pageTotal) {
-          <li><a (click)="nextPage()"><span uk-pagination-next></span></a></li>
-        }
-        @if (currentPage<pageTotal-1 && pageTotal>5) {
-          <li><a (click)="goToPage(pageTotal)"><span uk-pagination-next></span><span uk-pagination-next></span></a></li>
-        }
-      </ul>
-    </div>
-    <hr class="adminResultsHeader">
-    @for (datasourceBundle of datasources; track datasourceBundle) {
-      <div class="uk-card provider-card uk-margin-medium-top">
-        <div class="uk-card-body uk-padding-remove-bottom">
-          @if (datasourceBundle.status === 'approved') {
-            <div class="approved">
-              <div class="uk-card-badge uk-label">Approved</div>
-            </div>
-          }
-          @if (datasourceBundle.status === 'pending') {
-            <div class="pending">
-              <div class="uk-card-badge uk-label">Pending</div>
-            </div>
-          }
-          @if ((datasourceBundle.status === 'rejected')) {
-            <div class="rejected">
-              <div class="uk-card-badge uk-label">Rejected</div>
-            </div>
-          }
-          @if (datasourceBundle.active) {
-            <div class="approved">
-              <div class="uk-label uk-align-right">Active</div>
-            </div>
-          }
-          @if (!datasourceBundle.active) {
-            <div class="rejected">
-              <div class="uk-label uk-align-right">Inactive</div>
-            </div>
-          }
-          @if (datasourceBundle.suspended) {
-            <div class="rejected">
-              <div class="uk-label uk-align-right">Suspended</div>
-            </div>
-          }
-          <div class="">
-            <div class="uk-grid">
-              <div class="uk-width-1-5">
-                <div>
-                  <img class="el-image uk-border-rounded"
-                    src="{{ datasourceBundle.datasource.logo ? datasourceBundle.datasource.logo : '/assets/images/broken_image-black-48dp.svg' }}">
-                  </div>
-                </div>
-                <div class="uk-width-4-5" style="padding-left: 100px;">
-                  <div class="providerName uk-margin-bottom">
-                    <a [routerLink]="['/dashboard', datasourceBundle.catalogueId, datasourceBundle.datasource.resourceOwner, 'datasource-dashboard', datasourceBundle.id]"
-                      data-uk-tooltip title="Go to the service dashboard">
-                    {{ datasourceBundle.datasource.name }}
-                    </a>
                 </div>
 
-                  <div class="uk-grid uk-child-width-1-2">
+<!--                      <div class="">
+                        <form [formGroup]="dataForm" (ngSubmit)="handleChangeAndResetPage()" class="uk-search uk-search-default" style="width: 250px;">
+                          <span uk-search-icon></span>
+                          <input class="uk-search-input" type="search" placeholder="Search (id, name)" formControlName="query">
+                      </form>
+                  </div>-->
 
-                    <div>
-                      <div class="uk-margin-small-top uk-text-break">
-                        <span class="statusLabel">ID: </span>
-                        <ng-container *ngIf="datasourceBundle.id">{{ datasourceBundle.id }}</ng-container>
-                        <ng-container *ngIf="!datasourceBundle.id">not available</ng-container>
-                      </div>
-                      <div class="uk-margin-small-top">
-                        <span class="statusLabel">{{serviceORresource}} Status: </span>{{labels[statuses.indexOf(datasourceBundle.status)]}}
-                      </div>
-                      <div class="uk-margin-small-top">
-                        <span class="statusLabel">Catalogue ID: </span>{{ datasourceBundle.catalogueId }}
-                      </div>
-                      <div class="uk-margin-small-top">
-                        <span class="statusLabel">Resource Organisation: </span>{{ providersPage?.results ? getProviderNameWithId(datasourceBundle.datasource.resourceOwner) : ''}}
-                      </div>
-                      <!--                                  <div class="uk-margin-small-top">-->
-                      <!--                                    <span class="statusLabel">Service Providers: </span>{{ providersPage?.results ? getProviderNamesWithIds(datasourceBundle.service.serviceProviders) : ''}}-->
-                      <!--                                  </div>-->
-                      <!--                              <div class="uk-margin-small-top">-->
-                      <!--                                <span class="statusLabel">Status: </span>{{ datasourceBundle.active ? 'Active' : 'Inactive' }}-->
-                      <!--                              </div>-->
+              </form>
+
+
+              @if (loadingMessage) {
+                <div class="uk-margin-large-top">
+                  <div class="loader-big"></div>
+                </div>
+              }
+
+              @if (!loadingMessage && (!datasources || (datasources.length==0))) {
+                <div class="uk-margin-large-top">
+                  No datasources found for your selections.
+                </div>
+              }
+
+              @if (datasources && (datasources.length>0)) {
+                <div id="serviceForm" class="uk-margin-medium-top">
+                  <div class="uk-flex uk-flex-middle uk-flex-between">
+                    <div class="resultsInfo">
+                      <span class="number">{{total}}</span> DATASOURCES, PAGE <span class="number">{{currentPage}}</span> OF <span class="number">{{pageTotal}}</span>
                     </div>
-
-                    <div>
-                      <div class="uk-margin-small-top">
-                        <span class="statusLabel">Creation Date: </span>
-                        <ng-container *ngIf="datasourceBundle.metadata.registeredAt; else noCreationDate">{{ datasourceBundle.metadata.registeredAt | date }}</ng-container>
-                        <ng-template #noCreationDate><i>Unknown</i></ng-template>
-                      </div>
-                      <div class="uk-margin-small-top">
-                        <span class="statusLabel">Last Update: </span>{{ datasourceBundle.metadata.modifiedAt | date }}
-                      </div>
-                      <div class="uk-margin-small-top">
-                        <span class="statusLabel">Last Audit: </span>
-                        <ng-container *ngIf="datasourceBundle.latestAuditInfo">
-                          {{datasourceBundle.latestAuditInfo.actionType | titlecase}}ated
-                          on {{ datasourceBundle.latestAuditInfo.date | date}}
-                          by {{ datasourceBundle.latestAuditInfo.userFullName}}
-                        </ng-container>
-                        <ng-container *ngIf="!datasourceBundle.latestAuditInfo"><i>Never audited</i></ng-container>
-                      </div>
-                    </div>
-
+                    <ul class="uk-pagination">
+                      @if (currentPage>2 && pageTotal>5) {
+                        <li><a (click)="goToPage(1)"><span uk-pagination-previous></span><span uk-pagination-previous></span></a></li>
+                      }
+                      @if (currentPage!==1) {
+                        <li><a (click)="previousPage()"><span uk-pagination-previous></span></a></li>
+                      }
+                      @for (i of pages; track i) {
+                        <li [ngClass]="i === currentPage ? 'uk-active': ''">
+                          <a (click)="goToPage(i)">{{i}}</a>
+                        </li>
+                      }
+                      @if (currentPage!==pageTotal) {
+                        <li><a (click)="nextPage()"><span uk-pagination-next></span></a></li>
+                      }
+                      @if (currentPage<pageTotal-1 && pageTotal>5) {
+                        <li><a (click)="goToPage(pageTotal)"><span uk-pagination-next></span><span uk-pagination-next></span></a></li>
+                      }
+                    </ul>
                   </div>
+                  <hr class="adminResultsHeader">
+                  @for (datasourceBundle of datasources; track datasourceBundle) {
+                    <div class="uk-card provider-card uk-margin-medium-top">
+                      <div class="uk-card-body uk-padding-remove-bottom">
+                        @if (datasourceBundle.status === 'approved') {
+                          <div class="approved">
+                            <div class="uk-card-badge uk-label">Approved</div>
+                          </div>
+                        }
+                        @if (datasourceBundle.status === 'pending') {
+                          <div class="pending">
+                            <div class="uk-card-badge uk-label">Pending</div>
+                          </div>
+                        }
+                        @if ((datasourceBundle.status === 'rejected')) {
+                          <div class="rejected">
+                            <div class="uk-card-badge uk-label">Rejected</div>
+                          </div>
+                        }
+                        @if (datasourceBundle.active) {
+                          <div class="approved">
+                            <div class="uk-label uk-align-right">Active</div>
+                          </div>
+                        }
+                        @if (!datasourceBundle.active) {
+                          <div class="rejected">
+                            <div class="uk-label uk-align-right">Inactive</div>
+                          </div>
+                        }
+                        @if (datasourceBundle.suspended) {
+                          <div class="rejected">
+                            <div class="uk-label uk-align-right">Suspended</div>
+                          </div>
+                        }
+                        <div class="">
+                          <div class="uk-grid">
+                            <div class="uk-width-1-5">
+                              <div>
+                                <img class="el-image uk-border-rounded"
+                                  src="{{ datasourceBundle.datasource.logo ? datasourceBundle.datasource.logo : '/assets/images/broken_image-black-48dp.svg' }}">
+                                </div>
+                              </div>
+                              <div class="uk-width-4-5" style="padding-left: 100px;">
+                                <div class="providerName uk-margin-bottom">
+                                  <a [routerLink]="['/dashboard', datasourceBundle.catalogueId, datasourceBundle.datasource.resourceOwner, 'datasource-dashboard', datasourceBundle.id]"
+                                    data-uk-tooltip title="Go to the service dashboard">
+                                  {{ datasourceBundle.datasource.name }}
+                                  </a>
+                              </div>
+
+                                <div class="uk-grid uk-child-width-1-2">
+
+                                  <div>
+                                    <div class="uk-margin-small-top uk-text-break">
+                                      <span class="statusLabel">ID: </span>
+                                      <ng-container *ngIf="datasourceBundle.id">{{ datasourceBundle.id }}</ng-container>
+                                      <ng-container *ngIf="!datasourceBundle.id">not available</ng-container>
+                                    </div>
+                                    <div class="uk-margin-small-top">
+                                      <span class="statusLabel">{{serviceORresource}} Status: </span>{{labels[statuses.indexOf(datasourceBundle.status)]}}
+                                    </div>
+                                    <div class="uk-margin-small-top">
+                                      <span class="statusLabel">Catalogue ID: </span>{{ datasourceBundle.catalogueId }}
+                                    </div>
+                                    <div class="uk-margin-small-top">
+                                      <span class="statusLabel">Resource Organisation: </span>{{ providersPage?.results ? getProviderNameWithId(datasourceBundle.datasource.resourceOwner) : ''}}
+                                    </div>
+                                    <!--                                  <div class="uk-margin-small-top">-->
+                                    <!--                                    <span class="statusLabel">Service Providers: </span>{{ providersPage?.results ? getProviderNamesWithIds(datasourceBundle.service.serviceProviders) : ''}}-->
+                                    <!--                                  </div>-->
+                                    <!--                              <div class="uk-margin-small-top">-->
+                                    <!--                                <span class="statusLabel">Status: </span>{{ datasourceBundle.active ? 'Active' : 'Inactive' }}-->
+                                    <!--                              </div>-->
+                                  </div>
+
+                                  <div>
+                                    <div class="uk-margin-small-top">
+                                      <span class="statusLabel">Creation Date: </span>
+                                      <ng-container *ngIf="datasourceBundle.metadata.registeredAt; else noCreationDate">{{ datasourceBundle.metadata.registeredAt | date }}</ng-container>
+                                      <ng-template #noCreationDate><i>Unknown</i></ng-template>
+                                    </div>
+                                    <div class="uk-margin-small-top">
+                                      <span class="statusLabel">Last Update: </span>{{ datasourceBundle.metadata.modifiedAt | date }}
+                                    </div>
+                                    <div class="uk-margin-small-top">
+                                      <span class="statusLabel">Last Audit: </span>
+                                      <ng-container *ngIf="datasourceBundle.latestAuditInfo">
+                                        {{datasourceBundle.latestAuditInfo.actionType | titlecase}}ated
+                                        on {{ datasourceBundle.latestAuditInfo.date | date}}
+                                        by {{ datasourceBundle.latestAuditInfo.userFullName}}
+                                      </ng-container>
+                                      <ng-container *ngIf="!datasourceBundle.latestAuditInfo"><i>Never audited</i></ng-container>
+                                    </div>
+                                  </div>
+
+                                </div>
+
+                          </div>
+                          <!--<div class="uk-width-1-5">
+                          <ng-container *ngIf="datasourceBundle.status === 'pending datasource'">
+                            <div class="action-buttons uk-flex uk-flex-middle uk-flex-center" style="flex-direction: column;">
+                              <button (click)="verifyDatasource(datasourceBundle.id, true, 'approved datasource')" class="uk-button uk-button-primary uk-display-block">
+                                <i class="fa fa-thumbs-up fa-lg" aria-hidden="true"></i> Approve
+                              </button>
+                              <button (click)="verifyDatasource(datasourceBundle.id, true, 'rejected datasource')" class="uk-button uk-button-danger uk-display-block uk-margin-small-top">
+                                <i class="fa fa-thumbs-down fa-lg" aria-hidden="true"></i>  Reject
+                              </button>
+                              &lt;!&ndash;                                <button routerLink="/guidelines/{{guidelineBundle.interoperabilityRecord.providerId}}/update/{{guidelineBundle.id}}" class="uk-button uk-button-primary uk-display-block">&ndash;&gt;
+                              &lt;!&ndash;                                  <i class="fa fa-edit fa-lg" aria-hidden="true"></i> Update&ndash;&gt;
+                            &lt;!&ndash;                                </button>&ndash;&gt;
+                            &lt;!&ndash;                                <button (click)="showDeletionModal(guidelineBundle.id)" class="uk-button uk-button-danger uk-display-block">&ndash;&gt;
+                            &lt;!&ndash;                                  <i class="fa fa-trash fa-lg" aria-hidden="true"></i> Delete&ndash;&gt;
+                          &lt;!&ndash;                                </button>&ndash;&gt;
+                        </div>
+                      </ng-container>
+                    </div>-->
+                  </div>
+                  <hr class="uk-margin-top">
+                  <div class="uk-align-right uk-margin-bottom">
+                    @if (datasourceBundle.catalogueId===catalogueConfigId) {
+                      <button
+                        routerLink="/provider/{{pidHandler.customEncodeURIComponent(datasourceBundle.datasource.resourceOwner)}}/datasource/update/{{pidHandler.customEncodeURIComponent(datasourceBundle.id)}}"
+                        class="uk-button uk-button-link"
+                        style="">
+                        <i class="fa fa-pencil fa-lg uk-margin-small-right" aria-hidden="true"></i>
+                        Update
+                      </button>
+                      <button (click)="showDeletionModal(datasourceBundle.id)"
+                        class="uk-button uk-button-link uk-margin-medium-left"
+                        style="padding-left: 40px; border-left: 1px solid #ccc">
+                        <i class="fa fa-trash fa-lg uk-margin-small-right" aria-hidden="true"></i>
+                        Delete
+                      </button>
+                    }
+                    @if (datasourceBundle.catalogueId) {
+                      <button class="uk-button uk-button-link uk-margin-medium-left"
+                        style="padding-left: 40px; border-left: 1px solid #ccc">
+                        <i class="fa fa-ellipsis-v fa-lg uk-margin-small-right"></i>More Options
+                      </button>
+                      <div uk-dropdown="mode: click">
+                        <ul class="uk-nav uk-dropdown-nav uk-dropdown-close">
+                          @if (datasourceBundle.active && datasourceBundle.status=='approved') {
+                            <li class="uk-margin-small-bottom"
+                                (click)="showAuditForm('main', datasourceBundle)">
+                              <a><i class="fa fa-check-circle-o fa-lg uk-margin-small-right"></i>Audit</a>
+                            </li>
+                          }
+                          @if (datasourceBundle.status==='pending') {
+                            <li class="uk-active" (click)="verifyDatasource(datasourceBundle.id, true, 'approved')">
+                              <a class="uk-margin-small-top"><i class="fa fa-thumbs-up"></i> Approve </a>
+                            </li>
+                            <li class="uk-active" (click)="verifyDatasource(datasourceBundle.id, false, 'rejected')">
+                              <a class="uk-margin-small-top"><i class="fa fa-thumbs-down"></i> Reject </a>
+                            </li>
+                          }
+                          @if (datasourceBundle.status==='approved' && !datasourceBundle.active) {
+                            <li (click)="verifyDatasource(datasourceBundle.id, true, 'approved')" class="uk-margin-small-top">
+                              <a><i aria-hidden="true" class="fa fa-thumbs-up uk-margin-small-right"></i>Activate</a>
+                            </li>
+                          }
+                          @if (datasourceBundle.status==='approved' && datasourceBundle.active) {
+                            <li (click)="verifyDatasource(datasourceBundle.id, false, 'approved')" class="uk-margin-small-top">
+                              <a><i aria-hidden="true" class="fa fa-thumbs-down uk-margin-small-right"></i>Deactivate</a>
+                            </li>
+                          }
+                          @if (datasourceBundle.suspended==false) {
+                            <li (click)="showSuspensionModal(datasourceBundle)" class="uk-margin-small-top">
+                              <a><i aria-hidden="true" class="fa fa-dot-circle-o uk-margin-small-right"></i>Suspend</a>
+                            </li>
+                          }
+                          @if (datasourceBundle.suspended==true) {
+                            <li (click)="showSuspensionModal(datasourceBundle)" class="uk-margin-small-top">
+                              <a><i aria-hidden="true" class="fa fa-dot-circle-o uk-margin-small-right"></i>Unsuspend</a>
+                            </li>
+                          }
+                      </ul>
+                    </div>
+                  }
+                </div>
+                @if (datasourceBundle.active) {
+                  @if (showMainAuditForm && selectedDatasource === datasourceBundle) {
+                    <div>
+                      <!--                            <hr>-->
+                      <div>
+                        <p>You are about to audit "{{ selectedDatasource.datasource.name }}".</p>
+                        <p>Please fill in the reason(s) of your action. <span style="color: grey">(optional)</span></p>
+                      </div>
+                      <form>
+                        <div class="uk-margin">
+                          <textarea class="uk-textarea" rows="5" placeholder="" [formControl]="commentAuditControl"></textarea>
+                        </div>
+                      </form>
+                      <button class="uk-button uk-button-primary uk-align-left" type="button" (click)="resetAuditView()">Close</button>
+                      <button class="uk-button uk-button-secondary uk-align-right" type="submit" (click)="auditResourceAction('VALID')">Validate</button>
+                      <button class="uk-button uk-button-danger uk-align-right" type="submit" (click)="auditResourceAction('INVALID')">Invalidate</button>
+                    </div>
+                  }
+                }
+              </div>
+              </div>
+              </div>
+              }
+              <ul class="uk-pagination uk-flex-right uk-margin">
+                @if (currentPage>2 && pageTotal>5) {
+                  <li><a (click)="goToPage(1)"><span uk-pagination-previous></span><span uk-pagination-previous></span></a></li>
+                }
+                @if (currentPage!==1) {
+                  <li><a (click)="previousPage()"><span uk-pagination-previous></span></a></li>
+                }
+                @for (i of pages; track i) {
+                  <li [ngClass]="i === currentPage ? 'uk-active': ''">
+                    <a (click)="goToPage(i)">{{i}}</a>
+                  </li>
+                }
+                @if (currentPage!==pageTotal) {
+                  <li><a (click)="nextPage()"><span uk-pagination-next></span></a></li>
+                }
+                @if (currentPage<pageTotal-1 && pageTotal>5) {
+                  <li><a (click)="goToPage(pageTotal)"><span uk-pagination-next></span><span uk-pagination-next></span></a></li>
+                }
+              </ul>
+              </div>
+              }
+
+              </div>
 
             </div>
-            <!--<div class="uk-width-1-5">
-            <ng-container *ngIf="datasourceBundle.status === 'pending datasource'">
-              <div class="action-buttons uk-flex uk-flex-middle uk-flex-center" style="flex-direction: column;">
-                <button (click)="verifyDatasource(datasourceBundle.id, true, 'approved datasource')" class="uk-button uk-button-primary uk-display-block">
-                  <i class="fa fa-thumbs-up fa-lg" aria-hidden="true"></i> Approve
-                </button>
-                <button (click)="verifyDatasource(datasourceBundle.id, true, 'rejected datasource')" class="uk-button uk-button-danger uk-display-block uk-margin-small-top">
-                  <i class="fa fa-thumbs-down fa-lg" aria-hidden="true"></i>  Reject
-                </button>
-                &lt;!&ndash;                                <button routerLink="/guidelines/{{guidelineBundle.interoperabilityRecord.providerId}}/update/{{guidelineBundle.id}}" class="uk-button uk-button-primary uk-display-block">&ndash;&gt;
-                &lt;!&ndash;                                  <i class="fa fa-edit fa-lg" aria-hidden="true"></i> Update&ndash;&gt;
-              &lt;!&ndash;                                </button>&ndash;&gt;
-              &lt;!&ndash;                                <button (click)="showDeletionModal(guidelineBundle.id)" class="uk-button uk-button-danger uk-display-block">&ndash;&gt;
-              &lt;!&ndash;                                  <i class="fa fa-trash fa-lg" aria-hidden="true"></i> Delete&ndash;&gt;
-            &lt;!&ndash;                                </button>&ndash;&gt;
-          </div>
-        </ng-container>
-      </div>-->
-    </div>
-    <hr class="uk-margin-top">
-    <div class="uk-align-right uk-margin-bottom">
-      @if (datasourceBundle.catalogueId===catalogueConfigId) {
-        <button
-          routerLink="/provider/{{pidHandler.customEncodeURIComponent(datasourceBundle.datasource.resourceOwner)}}/datasource/update/{{pidHandler.customEncodeURIComponent(datasourceBundle.id)}}"
-          class="uk-button uk-button-link"
-          style="">
-          <i class="fa fa-pencil fa-lg uk-margin-small-right" aria-hidden="true"></i>
-          Update
-        </button>
-        <button (click)="showDeletionModal(datasourceBundle.id)"
-          class="uk-button uk-button-link uk-margin-medium-left"
-          style="padding-left: 40px; border-left: 1px solid #ccc">
-          <i class="fa fa-trash fa-lg uk-margin-small-right" aria-hidden="true"></i>
-          Delete
-        </button>
-      }
-      @if (1==1) {
-        <button class="uk-button uk-button-link uk-margin-medium-left"
-          style="padding-left: 40px; border-left: 1px solid #ccc">
-          <i class="fa fa-ellipsis-v fa-lg uk-margin-small-right"></i>More Options
-        </button>
-        <div uk-dropdown="mode: click">
-          <ul class="uk-nav uk-dropdown-nav uk-dropdown-close">
-            @if (datasourceBundle.status==='pending') {
-              <li class="uk-active" (click)="verifyDatasource(datasourceBundle.id, true, 'approved')">
-                <a class="uk-margin-small-top"><i class="fa fa-thumbs-up"></i> Approve </a>
-              </li>
-              <li class="uk-active" (click)="verifyDatasource(datasourceBundle.id, false, 'rejected')">
-                <a class="uk-margin-small-top"><i class="fa fa-thumbs-down"></i> Reject </a>
-              </li>
-            }
-            @if (datasourceBundle.status==='approved' && !datasourceBundle.active) {
-              <li (click)="verifyDatasource(datasourceBundle.id, true, 'approved')" class="uk-margin-small-top">
-                <a><i aria-hidden="true" class="fa fa-thumbs-up uk-margin-small-right"></i>Activate</a>
-              </li>
-            }
-            @if (datasourceBundle.status==='approved' && datasourceBundle.active) {
-              <li (click)="verifyDatasource(datasourceBundle.id, false, 'approved')" class="uk-margin-small-top">
-                <a><i aria-hidden="true" class="fa fa-thumbs-down uk-margin-small-right"></i>Deactivate</a>
-              </li>
-            }
-            @if (datasourceBundle.suspended==false) {
-              <li (click)="showSuspensionModal(datasourceBundle)" class="uk-margin-small-top">
-                <a><i aria-hidden="true" class="fa fa-dot-circle-o uk-margin-small-right"></i>Suspend</a>
-              </li>
-            }
-            @if (datasourceBundle.suspended==true) {
-              <li (click)="showSuspensionModal(datasourceBundle)" class="uk-margin-small-top">
-                <a><i aria-hidden="true" class="fa fa-dot-circle-o uk-margin-small-right"></i>Unsuspend</a>
-              </li>
-            }
-        </ul>
+
+        </div>
       </div>
-    }
+    </div>
   </div>
-</div>
-</div>
-</div>
-}
-<ul class="uk-pagination uk-flex-right uk-margin">
-  @if (currentPage>2 && pageTotal>5) {
-    <li><a (click)="goToPage(1)"><span uk-pagination-previous></span><span uk-pagination-previous></span></a></li>
-  }
-  @if (currentPage!==1) {
-    <li><a (click)="previousPage()"><span uk-pagination-previous></span></a></li>
-  }
-  @for (i of pages; track i) {
-    <li [ngClass]="i === currentPage ? 'uk-active': ''">
-      <a (click)="goToPage(i)">{{i}}</a>
-    </li>
-  }
-  @if (currentPage!==pageTotal) {
-    <li><a (click)="nextPage()"><span uk-pagination-next></span></a></li>
-  }
-  @if (currentPage<pageTotal-1 && pageTotal>5) {
-    <li><a (click)="goToPage(pageTotal)"><span uk-pagination-next></span><span uk-pagination-next></span></a></li>
-  }
-</ul>
-</div>
-}
-
-</div>
-
-</div>
-
-</div>
-</div>
-</div>
-</div>
 </div>
 
 <div id="spinnerModal" uk-modal>
