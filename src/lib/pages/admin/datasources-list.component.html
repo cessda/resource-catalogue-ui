@@ -30,6 +30,24 @@
                 </div>
               </form>
 
+              <h5>Datasource Status</h5>
+              <form [formGroup]="dataForm">
+                <div formArrayName="status" class="uk-padding uk-padding-remove-top">
+                  <div *ngFor="let statusValue of statuses;" class="uk-margin-small-top">
+                    <label class="status-value uk-margin-small-left">
+                      <input #checkboxes class="uk-checkbox" type="checkbox" [value]="statusValue"
+                             (change)="onSelectionChange($event, 'status')" [checked]="isStatusChecked(statusValue)">
+                      {{labels[statuses.indexOf(statusValue)] | titlecase}}
+                    </label>
+                  </div>
+                </div>
+                <!--                    <div class="">-->
+                <!--                      <button type="button" class="uk-button uk-button-primary" (click)="checkAll(false)"> Uncheck All </button>-->
+                <!--                      &nbsp;-->
+                <!--                      <button type="button" class="uk-button uk-button-primary" (click)="checkAll(true)"> Check All </button>-->
+                <!--                    </div>-->
+              </form>
+
               @if (facets && facets.length>0) {
                 <div class="refineCategory uk-grid-margin">
                   @for (f of facets; track f) {
@@ -127,7 +145,7 @@
                     </div>
                   </div>
 
-                  <div class="uk-inline uk-margin-right">
+                  <!--<div class="uk-inline uk-margin-right">
                     <label class="" for="status">Status </label>
                     <div class="uk-inline">
                       <select class="uk-input uk-select" id="status" (change)="handleChangeAndResetPage()" formControlName="status">
@@ -137,7 +155,7 @@
                         <option value="rejected">Rejected</option>
                       </select>
                     </div>
-                  </div>
+                  </div>-->
 
                   <div class="uk-inline uk-margin-right">
                     <label class="" for="active">Active </label>

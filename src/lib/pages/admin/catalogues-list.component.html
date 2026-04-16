@@ -13,13 +13,6 @@
                 <div class="uk-alert uk-alert-danger">{{errorMessage}}</div>
               }
 
-              <div class="uk-flex uk-flex-right">
-                <form [formGroup]="dataForm" (ngSubmit)="handleChangeAndResetPage()" class="uk-search uk-search-default" style="width: 250px;">
-                  <span uk-search-icon></span>
-                  <input class="uk-search-input" type="search" placeholder="Locate catalogue (id, name)" formControlName="query">
-                </form>
-              </div>
-
               <div class="uk-grid uk-margin-top">
 
                 <div class="uk-width-1-4">
@@ -118,6 +111,13 @@
                           <option value="false">No</option>
                         </select>
                       </div>
+                    </div>
+
+                    <div class="uk-flex uk-flex-right">
+                      <form [formGroup]="dataForm" (ngSubmit)="handleChangeAndResetPage()" class="uk-search uk-search-default" style="width: 250px;">
+                        <span uk-search-icon></span>
+                        <input class="uk-search-input" type="search" placeholder="Search (id, name)" formControlName="query">
+                      </form>
                     </div>
 
                   </form>

@@ -44,7 +44,7 @@ export class DatasourcesListComponent implements OnInit {
     auditState: new UntypedFormArray([]),
     catalogue_id: new UntypedFormArray([]),
     service_id: new UntypedFormArray([]), //facets
-    status: ''
+    status: new UntypedFormArray([])
   };
 
   dataForm: UntypedFormGroup;
@@ -89,6 +89,8 @@ export class DatasourcesListComponent implements OnInit {
   public labels: Array<string> = [`Approved`, `Pending`, `Rejected`];
   providersPage: Paging<Provider>;
 
+  @ViewChildren("checkboxes") checkboxes: QueryList<ElementRef>;
+
   constructor(private resourceService: ResourceService,
               private serviceProviderService: ServiceProviderService,
               private datasourceService: DatasourceService,
@@ -113,8 +115,23 @@ export class DatasourcesListComponent implements OnInit {
       this.route.queryParams
         .subscribe(params => {
 
+            let foundStatus = false;
+
             for (const i in params) {
-              if (i === 'service_id') {
+              if (i === 'status') {
+
+                if (this.dataForm.get('status').value.length === 0) {
+                  const formArrayNew: UntypedFormArray = this.dataForm.get('status') as UntypedFormArray;
+                  // formArrayNew = this.fb.array([]);
+                  for (const status of params[i].split(',')) {
+                    if (status !== '') {
+                      formArrayNew.push(new UntypedFormControl(status));
+                    }
+                  }
+                }
+                foundStatus = true;
+
+              } else if (i === 'service_id') {
                 if (this.dataForm.get('service_id').value.length === 0) {
                   const formArrayNew: UntypedFormArray = this.dataForm.get('service_id') as UntypedFormArray;
                   // formArrayNew = this.fb.array([]);
@@ -137,6 +154,16 @@ export class DatasourcesListComponent implements OnInit {
               }
             }
 
+            // if no status in URL, check all statuses by default
+            if (!foundStatus) {
+              const formArray: UntypedFormArray = this.dataForm.get('status') as UntypedFormArray;
+              // formArray = this.fb.array([]);
+
+              this.statuses.forEach(status => {
+                formArray.push(new UntypedFormControl(status));
+              });
+            }
+
             for (const i in this.dataForm.controls) {
               if (this.dataForm.get(i).value) {
                 const urlParam = new URLParameter();
@@ -155,6 +182,10 @@ export class DatasourcesListComponent implements OnInit {
 
     this.getProviderNames();
 
+  }
+
+  isStatusChecked(value: string) {
+    return this.dataForm.get('status').value.includes(value);
   }
 
   handleChange() {

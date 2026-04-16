@@ -4,7 +4,6 @@ import {ServiceProviderService} from '../../services/service-provider.service';
 import {resourceStatusChangeMap, statusList} from '../../domain/resource-status-list';
 import {
   TrainingResourceBundle,
-  ServiceBundle,
   LoggingInfo,
   Provider,
   ProviderBundle,
@@ -16,12 +15,10 @@ import {environment} from '../../../environments/environment';
 import {mergeMap} from 'rxjs/operators';
 import {AuthenticationService} from '../../services/authentication.service';
 import {ActivatedRoute, Router} from '@angular/router';
-import {UntypedFormArray, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators} from '@angular/forms';
+import {UntypedFormArray, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup} from '@angular/forms';
 import {URLParameter} from '../../domain/url-parameter';
 import {NavigationService} from '../../services/navigation.service';
-import {PremiumSortFacetsPipe} from '../../shared/pipes/premium-sort.pipe';
 import {statusChangeMap} from '../../domain/service-provider-status-list';
-import {zip} from 'rxjs';
 import {Paging} from '../../domain/paging';
 import {TrainingResourceService} from "../../services/training-resource.service";
 import {pidHandler} from "../../shared/pid-handler/pid-handler.service";
@@ -146,8 +143,8 @@ export class TrainingListComponent implements OnInit {
                     }
                   }
                 }
-
                 foundStatus = true;
+
               } else if (i === 'resource_organisation') {
 
                 if (this.dataForm.get('resource_organisation').value.length === 0) {
