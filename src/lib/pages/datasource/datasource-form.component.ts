@@ -86,7 +86,7 @@ export class DatasourceFormComponent implements OnInit {
     datasourceValue = FormControlService.cleanObjectInPlace(datasourceValue);
 
     if (this.submitMode === 'draft') {
-      this.datasourceService.temporarySaveDatasource(datasourceValue).subscribe(
+      this.datasourceService.temporarySaveDatasource(datasourceValue, this.openaireId).subscribe(
         _ds => {
           // console.log(_ds);
           this.showLoader = false;
@@ -112,7 +112,7 @@ export class DatasourceFormComponent implements OnInit {
         }
       );
     } else {
-      this.datasourceService.submitDatasource(datasourceValue, this.editMode).subscribe(
+      this.datasourceService.submitDatasource(datasourceValue, this.editMode, this.openaireId).subscribe(
         _ds => {
           this.showLoader = false;
           // if (this.addOpenAIRE) return this.navigator.datasourceSubmitted(_ds.id);
@@ -155,7 +155,6 @@ export class DatasourceFormComponent implements OnInit {
           this.payloadAnswer = {
             'answer': {
               datasource: {
-                'id': this.openaireId,
                 'type': "DataSource",
                 'serviceId': decodeURIComponent(this.resourceId),
                 'catalogueId': this.catalogueConfigId,

@@ -93,14 +93,20 @@ export class DatasourceService {
     return this.http.get<boolean>(this.base + `/datasource/openaire/isRegistered/${datasourceId}`);
   }
 
-  submitDatasource(datasource: Datasource, shouldPut: boolean) {
+  submitDatasource(datasource: Datasource, shouldPut: boolean, openaireId: string | null = null) {
     // console.log(JSON.stringify(datasource));
     // console.log(`knocking on: ${this.base}/datasource`);
     // return this.http[shouldPut ? 'put' : 'post']<Datasource>(this.base + '/datasource', datasource, this.options);
+    let params = new HttpParams();
+    if (openaireId !== null) {
+      params = params.set('openaireId', openaireId);
+    }
+    const optionsWithParams = { ...this.options, params };
+
     if (shouldPut) {
-      return this.http.put<Datasource>(this.base + '/datasource', datasource, this.options); //comment param can be used on update
+      return this.http.put<Datasource>(this.base + '/datasource', datasource, optionsWithParams); //comment param can be used on update
     } else {
-      return this.http.post<Datasource>(this.base + '/datasource', datasource, this.options);
+      return this.http.post<Datasource>(this.base + '/datasource', datasource, optionsWithParams);
     }
   }
 
@@ -148,12 +154,19 @@ export class DatasourceService {
   }
 
   /** Draft Datasources -->**/
-  temporarySaveDatasource(datasource: Datasource) {
+  temporarySaveDatasource(datasource: Datasource, openaireId: string | null = null) {
     const datasourceExists = !!datasource.id;
-    if (datasourceExists) {
-      return this.http.put<Datasource>(this.base + '/datasource/draft', datasource, this.options);
+
+    let params = new HttpParams();
+    if (openaireId !== null) {
+      params = params.set('openaireId', openaireId);
     }
-    return this.http.post<Datasource>(this.base + '/datasource/draft', datasource, this.options);
+    const optionsWithParams = { ...this.options, params };
+
+    if (datasourceExists) {
+      return this.http.put<Datasource>(this.base + '/datasource/draft', datasource, optionsWithParams);
+    }
+    return this.http.post<Datasource>(this.base + '/datasource/draft', datasource, optionsWithParams);
   }
 
   submitDraftDatasource(datasource: Datasource) {
