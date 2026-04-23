@@ -3,22 +3,6 @@
     <div class="uk-grid-margin uk-grid uk-grid-stack" uk-grid="">
       <div class="uk-width-1-1@m uk-first-column">
 
-        <!--<div class="uk-grid ">-->
-        <!--&lt;!&ndash;<h1 class="uk-h3 uk-width-2-3@m">Service Providers</h1>&ndash;&gt;-->
-        <!--<div class="uk-width-1-1@m">-->
-        <!--<div class="uk-inline uk-float-right">-->
-        <!--<button class="uk-button" type="button">Export to csv</button>-->
-        <!--<div uk-dropdown="mode: click">-->
-        <!--<ul class="uk-nav uk-dropdown-nav">-->
-        <!--<li class="" (click)="DownloadProvidersCSV()"><a>Providers</a></li>-->
-        <!--&lt;!&ndash;<li class="uk-nav-divider"></li>&ndash;&gt;-->
-        <!--<li class="" (click)="DownloadServicesCSV()"><a>Services</a></li>-->
-        <!--</ul>-->
-        <!--</div>-->
-        <!--</div>-->
-        <!--</div>-->
-        <!--</div>-->
-
         <div class="uk-margin-medium-bottom">
           <div class="uk-grid">
 
@@ -180,9 +164,8 @@
 
                     <div class="uk-margin-auto-left uk-margin-remove-right" style="margin-left:25px; margin-right:0;">
                       <button class="uk-button uk-button-link">
-                        <i class="fa fa-download uk-margin-small-right"></i>Export to CSV
+                        <i class="material-symbols-outlined uk-margin-small-right" style="vertical-align: middle;">download</i>Export to CSV
                       </button>
-                      <!--<button class="uk-button" type="button">Export to csv</button>-->
                       <div uk-dropdown="mode: click">
                         <ul class="uk-nav uk-dropdown-nav uk-dropdown-close">
                           <li class="" (click)="DownloadProvidersCSV()"><a>Providers</a></li>
@@ -207,7 +190,7 @@
                     <div class="uk-flex uk-flex-middle uk-flex-between">
 
                       <div class="resultsInfo">
-                        <span class="number">{{total}}</span> {{serviceORresource | uppercase}} PROVIDERS, PAGE <span class="number">{{currentPage}}</span> OF <span class="number">{{pageTotal}}</span>
+                        <span class="number">{{total}}</span> PROVIDERS, PAGE <span class="number">{{currentPage}}</span> OF <span class="number">{{pageTotal}}</span>
                       </div>
 
                       <ul class="uk-pagination">
@@ -272,7 +255,7 @@
                                         </ng-container>
                                 <!--                                  <ng-container *ngIf="providerBundle.catalogueId===catalogueConfigId ">-->
                                         <a [routerLink]="['/provider/view', providerBundle.catalogueId, pidHandler.customEncodeURIComponent(providerBundle.id)]" class="uk-display-inline-block"> <!-- TODO:check id-->
-                                          <i aria-hidden="true" class="fa fa-info-circle fa-lg uk-margin-left"></i>
+                                          <span class="material-symbols-outlined uk-margin-small-left" style="vertical-align: middle;">quick_reference</span>
                                         </a>
                                 <!--                                  </ng-container>-->
                                 <!--                                  <ng-template #anotherCatalogue>{{ providerBundle.organisation.name }}</ng-template>-->
@@ -394,26 +377,26 @@
                             </button>
 
                             <button class="uk-button uk-button-link uk-margin-medium-left">
-                              <i class="fa fa-ellipsis-v fa-lg uk-margin-small-right"></i>More Options
+                              <span class="material-symbols-outlined uk-margin-small-right" style="vertical-align: middle;">more_vert</span>More Options
                             </button>
                             <div uk-dropdown="mode: click">
                               <ul class="uk-nav uk-dropdown-nav uk-dropdown-close">
                                 <ng-container *ngIf="providerBundle.status === 'approved'">
                                   <li class="uk-margin-small-bottom"
                                       (click)="showAuditForm('main', providerBundle)">
-                                    <a><i class="fa fa-check-circle-o fa-lg uk-margin-small-right"></i>Audit</a>
+                                    <a><span class="material-symbols-outlined uk-margin-small-right" style="vertical-align: middle;">check_circle</span>Audit</a>
                                   </li>
                                 </ng-container>
                                 <li class="uk-nav-divider"></li>
                                 <li *ngIf="(providerBundle.suspended==false)"
                                     (click)="showSuspensionModal(providerBundle)"
                                     class="uk-margin-small-top">
-                                  <a><i aria-hidden="true" class="fa fa-dot-circle-o uk-margin-small-right"></i>Suspend</a>
+                                  <a><span class="material-symbols-outlined uk-margin-small-right" style="vertical-align: middle;">adjust</span>Suspend</a>
                                 </li>
                                 <li *ngIf="(providerBundle.suspended==true)"
                                     (click)="showSuspensionModal(providerBundle)"
                                     class="uk-margin-small-top">
-                                  <a><i aria-hidden="true" class="fa fa-dot-circle-o uk-margin-small-right"></i>Unsuspend</a>
+                                  <a><span class="material-symbols-outlined uk-margin-small-right" style="vertical-align: middle;">adjust</span>Unsuspend</a>
                                 </li>
                               </ul>
                             </div>
@@ -426,22 +409,22 @@
                             <button [routerLink]="['/provider/update/' + pidHandler.customEncodeURIComponent(providerBundle.id)]"
                                     class="uk-button uk-button-link"
                                     style="padding-right: 40px; border-right: 1px solid #ccc">
-                              <i class="fa fa-edit fa-lg uk-margin-small-right" aria-hidden="true"></i> Edit Provider
+                              <span class="material-symbols-outlined uk-margin-small-right" style="vertical-align: middle;">edit_square</span>Edit
                             </button>
                             <button (click)="showDeletionModal(providerBundle)"
                                     class="uk-button uk-button-link uk-margin-medium-left"
                                     style="padding-right: 40px; border-right: 1px solid #ccc">
-                              <i class="fa fa-trash fa-lg uk-margin-small-right" aria-hidden="true"></i> Delete Provider
+                              <span class="material-symbols-outlined uk-margin-small-right" style="vertical-align: middle;">delete</span>Delete
                             </button>
                             <button class="uk-button uk-button-link uk-margin-medium-left">
-                              <i class="fa fa-ellipsis-v fa-lg uk-margin-small-right"></i>More Options
+                              <span class="material-symbols-outlined" style="vertical-align: middle;">more_vert</span> More Options
                             </button>
                             <div uk-dropdown="mode: click">
                               <ul class="uk-nav uk-dropdown-nav uk-dropdown-close">
                                 <ng-container *ngIf="providerBundle.status === 'approved'">
                                   <li class="uk-margin-small-bottom"
                                       (click)="showAuditForm('main', providerBundle)">
-                                    <a><i class="fa fa-check-circle-o fa-lg uk-margin-small-right"></i>Audit</a>
+                                    <a><span class="material-symbols-outlined uk-margin-small-right" style="vertical-align: middle;">check_circle</span>Audit</a>
                                   </li>
                                   <li class="uk-nav-divider"></li>
                                 </ng-container>
@@ -484,10 +467,10 @@
                                       </a>
                                     </li>
                                     <li class="uk-active" (click)="templateAction(providerBundle.id, true, 'approved', 'service')">
-                                      <a class="uk-margin-small-top"><i class="fa fa-thumbs-up"></i> Approve First {{serviceORresource}}</a>
+                                      <a><span class="material-symbols-outlined uk-margin-small-top" style="vertical-align: middle;">thumb_up</span>Approve First {{serviceORresource}}</a>
                                     </li>
                                     <li class="uk-active" (click)="templateAction(providerBundle.id, false, 'rejected', 'service')">
-                                      <a class="uk-margin-small-top"><i class="fa fa-thumbs-down"></i> Reject First {{serviceORresource}}</a>
+                                      <a><span class="material-symbols-outlined uk-margin-small-top" style="vertical-align: middle;">thumb_down</span>Reject First {{serviceORresource}}</a>
                                     </li>
                                   </ng-container>
                                   <ng-container *ngIf="hasCreatedFirstTrainingResource(providerBundle.id)">
@@ -504,10 +487,10 @@
                                       </a>
                                     </li>
                                     <li class="uk-active" (click)="templateAction(providerBundle.id, true, 'approved', 'trainingResource')">
-                                      <a class="uk-margin-small-top"><i class="fa fa-thumbs-up"></i> Approve First Training Resource</a>
+                                      <a><span class="material-symbols-outlined uk-margin-small-top" style="vertical-align: middle;">thumb_up</span>Approve First Training Resource</a>
                                     </li>
                                     <li class="uk-active" (click)="templateAction(providerBundle.id, false, 'rejected', 'trainingResource')">
-                                      <a class="uk-margin-small-top"><i class="fa fa-thumbs-down"></i> Reject First Training Resource</a>
+                                      <a><span class="material-symbols-outlined uk-margin-small-top" style="vertical-align: middle;">thumb_down</span>Reject First Training Resource</a>
                                     </li>
                                   </ng-container>
                                   <li class="uk-nav-divider ng-star-inserted"></li>
@@ -534,23 +517,23 @@
                                 <li *ngIf="(providerBundle.status === 'approved') && (!providerBundle.active)"
                                     (click)="showActionModal(providerBundle, 'approved', true, false)"
                                     class="uk-margin-small-top">
-                                  <a><i aria-hidden="true" class="fa fa-thumbs-up uk-margin-small-right"></i>Activate</a>
+                                  <a><span class="material-symbols-outlined uk-margin-small-right" style="vertical-align: middle;">thumb_up</span>Activate</a>
                                 </li>
                                 <li *ngIf="(providerBundle.status === 'approved') && (providerBundle.active)"
                                     (click)="showActionModal(providerBundle, 'approved', false, false)"
                                     class="uk-margin-small-top">
-                                  <a><i aria-hidden="true" class="fa fa-thumbs-down uk-margin-small-right"></i>Deactivate</a>
+                                  <a><span class="material-symbols-outlined uk-margin-small-right" style="vertical-align: middle;">thumb_down</span>Deactivate</a>
                                 </li>
                                 <li class="uk-nav-divider"></li>
                                 <li *ngIf="(providerBundle.suspended==false)"
                                     (click)="showSuspensionModal(providerBundle)"
                                     class="uk-margin-small-top">
-                                  <a><i aria-hidden="true" class="fa fa-dot-circle-o uk-margin-small-right"></i>Suspend</a>
+                                  <a><span class="material-symbols-outlined uk-margin-small-right" style="vertical-align: middle;">adjust</span>Suspend</a>
                                 </li>
                                 <li *ngIf="(providerBundle.suspended==true)"
                                     (click)="showSuspensionModal(providerBundle)"
                                     class="uk-margin-small-top">
-                                  <a><i aria-hidden="true" class="fa fa-dot-circle-o uk-margin-small-right"></i>Unsuspend</a>
+                                  <a><span class="material-symbols-outlined uk-margin-small-right" style="vertical-align: middle;">adjust</span>Unsuspend</a>
                                 </li>
                               </ul>
                             </div>
@@ -562,7 +545,7 @@
                           <!--                          <button-->
                           <!--                            class="uk-button uk-button-link uk-margin-medium-left"-->
                           <!--                            (click)="showAuditForm('main', providerBundle)">-->
-                          <!--                            <i class="fa fa-check-circle-o fa-lg"></i> Audit-->
+                          <!--                            <a><span class="material-symbols-outlined" style="vertical-align: middle;">check_circle</span>Audit</a>-->
                           <!--                          </button>-->
                           <div *ngIf="showMainAuditForm && selectedProvider === providerBundle">
                             <!--                            <hr>-->
@@ -764,7 +747,7 @@
                     </a>
                   <!--                  <ng-container *ngIf="providerBundle.catalogueId === catalogueConfigId">-->
                     <a [routerLink]="['/provider/view', providerBundle.catalogueId, pidHandler.customEncodeURIComponent(providerBundle.id)]" target="_blank" class="uk-display-inline-block">
-                      <i aria-hidden="true" class="fa fa-info-circle fa-lg uk-margin-left"></i>
+                      <span class="material-symbols-outlined uk-margin-small-left" style="vertical-align: middle;">quick_reference</span>
                     </a>
                   <!--                  </ng-container>-->
                   <!--                  <ng-template #anotherCatalogue>{{ providerBundle.organisation.name }}</ng-template>-->
@@ -843,25 +826,25 @@
           <button *ngIf="providerBundle.status == 'approved'"
                   class="uk-button uk-button-link uk-margin-medium-right"
                   (click)="showAuditForm('side', providerBundle)">
-            <i class="fa fa-check-circle-o fa-lg"></i> Audit
+            <a><span class="material-symbols-outlined" style="vertical-align: middle;">check_circle</span>Audit</a>
           </button>
           <button class="uk-button uk-button-link">
-            <i class="fa fa-ellipsis-v fa-lg uk-margin-small-right"></i>More Options
+            <span class="material-symbols-outlined uk-margin-small-right" style="vertical-align: middle;">more_vert</span>More Options
           </button>
           <div uk-dropdown="mode: click">
             <ul class="uk-nav uk-dropdown-nav uk-dropdown-close">
               <li *ngIf="(providerBundle.status === 'approved') && (providerBundle.active)"
                   (click)="showActionModal(providerBundle, 'approved', false, false)"
                   class="uk-margin-small-top">
-                <a><i aria-hidden="true" class="fa fa-thumbs-down uk-margin-small-right"></i>Deactivate</a>
+                <a><span class="material-symbols-outlined uk-margin-small-right" style="vertical-align: middle;">thumb_down</span>Deactivate</a>
               </li>
               <li (click)="editProviderInNewTab(pidHandler.customEncodeURIComponent(providerBundle.id))"
                   class="uk-margin-small-top">
-                <a><i class="fa fa-edit uk-margin-small-right" aria-hidden="true"></i>Edit Provider</a>
+                <a><span class="material-symbols-outlined uk-margin-small-right" style="vertical-align: middle;">edit_square</span>Edit</a>
               </li>
               <li (click)="showDeletionModal(providerBundle)"
                   class="uk-margin-small-top">
-                <a><i class="fa fa-trash uk-margin-small-right" aria-hidden="true"></i>Delete Provider</a>
+                <a><span class="material-symbols-outlined uk-margin-small-right" style="vertical-align: middle;">delete</span>Delete</a>
               </li>
             </ul>
           </div>
@@ -871,7 +854,7 @@
           <!--          <button-->
           <!--            class="uk-button uk-button-link uk-margin-medium-left"-->
           <!--            (click)="showAuditForm('side', providerBundle)">-->
-          <!--            <i class="fa fa-check-circle-o fa-lg"></i> Audit-->
+          <!--            <a><span class="material-symbols-outlined" style="vertical-align: middle;">check_circle</span>Audit</a>-->
           <!--          </button>-->
           <div *ngIf="showSideAuditForm && selectedProvider === providerBundle">
             <hr>

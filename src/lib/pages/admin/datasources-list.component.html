@@ -351,27 +351,25 @@
                         routerLink="/provider/{{pidHandler.customEncodeURIComponent(datasourceBundle.datasource.resourceOwner)}}/datasource/update/{{pidHandler.customEncodeURIComponent(datasourceBundle.id)}}"
                         class="uk-button uk-button-link"
                         style="">
-                        <i class="fa fa-pencil fa-lg uk-margin-small-right" aria-hidden="true"></i>
-                        Update
+                        <span class="material-symbols-outlined uk-margin-small-right" style="vertical-align: middle;">edit_square</span>Edit
                       </button>
                       <button (click)="showDeletionModal(datasourceBundle.id)"
                         class="uk-button uk-button-link uk-margin-medium-left"
                         style="padding-left: 40px; border-left: 1px solid #ccc">
-                        <i class="fa fa-trash fa-lg uk-margin-small-right" aria-hidden="true"></i>
-                        Delete
+                        <span class="material-symbols-outlined uk-margin-small-right" style="vertical-align: middle;">delete</span>Delete
                       </button>
                     }
                     @if (datasourceBundle.catalogueId) {
                       <button class="uk-button uk-button-link uk-margin-medium-left"
                         style="padding-left: 40px; border-left: 1px solid #ccc">
-                        <i class="fa fa-ellipsis-v fa-lg uk-margin-small-right"></i>More Options
+                        <span class="material-symbols-outlined" style="vertical-align: middle;">more_vert</span> More Options
                       </button>
                       <div uk-dropdown="mode: click">
                         <ul class="uk-nav uk-dropdown-nav uk-dropdown-close">
                           @if (datasourceBundle.active && datasourceBundle.status=='approved') {
                             <li class="uk-margin-small-bottom"
                                 (click)="showAuditForm('main', datasourceBundle)">
-                              <a><i class="fa fa-check-circle-o fa-lg uk-margin-small-right"></i>Audit</a>
+                              <a><span class="material-symbols-outlined uk-margin-small-right" style="vertical-align: middle;">check_circle</span>Audit</a>
                             </li>
                           }
                           @if (datasourceBundle.status==='pending') {
@@ -384,22 +382,22 @@
                           }
                           @if (datasourceBundle.status==='approved' && !datasourceBundle.active) {
                             <li (click)="verifyDatasource(datasourceBundle.id, true, 'approved')" class="uk-margin-small-top">
-                              <a><i aria-hidden="true" class="fa fa-thumbs-up uk-margin-small-right"></i>Activate</a>
+                              <a><span class="material-symbols-outlined uk-margin-small-right" style="vertical-align: middle;">thumb_up</span>Activate</a>
                             </li>
                           }
                           @if (datasourceBundle.status==='approved' && datasourceBundle.active) {
                             <li (click)="verifyDatasource(datasourceBundle.id, false, 'approved')" class="uk-margin-small-top">
-                              <a><i aria-hidden="true" class="fa fa-thumbs-down uk-margin-small-right"></i>Deactivate</a>
+                              <a><span class="material-symbols-outlined uk-margin-small-right" style="vertical-align: middle;">thumb_down</span>Deactivate</a>
                             </li>
                           }
                           @if (datasourceBundle.suspended==false) {
                             <li (click)="showSuspensionModal(datasourceBundle)" class="uk-margin-small-top">
-                              <a><i aria-hidden="true" class="fa fa-dot-circle-o uk-margin-small-right"></i>Suspend</a>
+                              <a><span class="material-symbols-outlined uk-margin-small-right" style="vertical-align: middle;">adjust</span>Suspend</a>
                             </li>
                           }
                           @if (datasourceBundle.suspended==true) {
                             <li (click)="showSuspensionModal(datasourceBundle)" class="uk-margin-small-top">
-                              <a><i aria-hidden="true" class="fa fa-dot-circle-o uk-margin-small-right"></i>Unsuspend</a>
+                              <a><span class="material-symbols-outlined uk-margin-small-right" style="vertical-align: middle;">adjust</span>Unsuspend</a>
                             </li>
                           }
                       </ul>

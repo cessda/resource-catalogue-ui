@@ -202,7 +202,7 @@
                   <div id="serviceForm" class="uk-margin-medium-top">
                     <div class="uk-flex uk-flex-middle uk-flex-between">
                       <div class="resultsInfo">
-                        <span class="number">{{total}}</span> {{serviceORresource | uppercase}}S, PAGE <span class="number">{{currentPage}}</span> OF <span class="number">{{pageTotal}}</span>
+                        <span class="number">{{total}}</span> DEPLOYABLE APPLICATIONS, PAGE <span class="number">{{currentPage}}</span> OF <span class="number">{{pageTotal}}</span>
                       </div>
                       <ul class="uk-pagination">
                         @if (currentPage>2 && pageTotal>5) {
@@ -339,28 +339,29 @@
                           View Deployable Application
                         </button>
                         <button class="uk-button uk-button-link uk-margin-medium-left">
-                          <i class="fa fa-ellipsis-v fa-lg uk-margin-small-right"></i>More Options
+                          <span class="material-symbols-outlined" style="vertical-align: middle;">more_vert</span> More Options
                         </button>
                         <div uk-dropdown="mode: click">
                           <ul class="uk-nav uk-dropdown-nav uk-dropdown-close">
                             @if (dsBundle.active && dsBundle.status=='approved') {
                               <li class="uk-margin-small-bottom"
                                 (click)="showAuditForm('main', dsBundle)">
-                                <a><i class="fa fa-check-circle-o fa-lg uk-margin-small-right"></i>Audit</a>
+                                <a><span class="material-symbols-outlined uk-margin-small-right" style="vertical-align: middle;">check_circle</span>Audit</a>
                               </li>
                             }
+                            <li class="uk-nav-divider"></li>
                             @if ((dsBundle.suspended==false)) {
                               <li
                                 (click)="showSuspensionModal(dsBundle)"
                                 class="uk-margin-small-top">
-                                <a><i aria-hidden="true" class="fa fa-dot-circle-o uk-margin-small-right"></i>Suspend</a>
+                                <a><span class="material-symbols-outlined uk-margin-small-right" style="vertical-align: middle;">adjust</span>Suspend</a>
                               </li>
                             }
                             @if ((dsBundle.suspended==true)) {
                               <li
                                 (click)="showSuspensionModal(dsBundle)"
                                 class="uk-margin-small-top">
-                                <a><i aria-hidden="true" class="fa fa-dot-circle-o uk-margin-small-right"></i>Unsuspend</a>
+                                <a><span class="material-symbols-outlined uk-margin-small-right" style="vertical-align: middle;">adjust</span>Unsuspend</a>
                               </li>
                             }
                           </ul>
@@ -374,22 +375,20 @@
                           routerLink="/provider/{{pidHandler.customEncodeURIComponent(dsBundle.deployableApplication.resourceOwner)}}/deployable-service/update/{{pidHandler.customEncodeURIComponent(dsBundle.id)}}"
                           class="uk-button uk-button-link"
                           style="">
-                          <i class="fa fa-pencil fa-lg uk-margin-small-right" aria-hidden="true"></i>
-                          Update Deployable Application
+                          <span class="material-symbols-outlined uk-margin-small-right" style="vertical-align: middle;">edit_square</span>Edit
                         </button>
                         @if (dsBundle.status !== 'pending') {
                           <button (click)="showDeletionModal(dsBundle)"
                             class="uk-button uk-button-link uk-margin-medium-left"
                             style="padding-left: 40px; border-left: 1px solid #ccc">
-                            <i class="fa fa-trash fa-lg uk-margin-small-right" aria-hidden="true"></i>
-                            Delete Deployable Application
+                            <span class="material-symbols-outlined uk-margin-small-right" style="vertical-align: middle;">delete</span>Delete
                           </button>
                         }
                         @if (dsBundle.status!=='rejected') {
                           <button
                             class="uk-button uk-button-link uk-margin-medium-left"
                             style="padding-left: 40px; border-left: 1px solid #ccc">
-                            <i class="fa fa-ellipsis-v fa-lg uk-margin-small-right"></i>More Options
+                            <span class="material-symbols-outlined" style="vertical-align: middle;">more_vert</span> More Options
                           </button>
                         }
                         <div uk-dropdown="mode: click">
@@ -398,14 +397,13 @@
                               @if (dsBundle.active) {
                                 <ng-container class="uk-margin-small-bottom">
                                   <li (click)="showAuditForm('main', dsBundle)">
-                                    <a><i class="fa fa-check-circle-o fa-lg uk-margin-small-right"></i>Audit</a>
-                                  </li>
+                                    <a><span class="material-symbols-outlined uk-margin-small-right" style="vertical-align: middle;">check_circle</span>Audit</a>
                                   <li class="uk-nav-divider"></li>
                                 </ng-container>
                               }
                               <ng-container class="uk-margin-small-bottom">
                                 <li (click)="showSendMailModal(dsBundle)">
-                                  <a><i class="fa fa-envelope fa-lg uk-margin-small-right"></i>Request Update</a>
+                                  <a><span class="material-symbols-outlined uk-margin-small-right" style="vertical-align: middle;">forward_to_inbox</span>Request Update</a>
                                 </li>
                                 <li class="uk-nav-divider"></li>
                               </ng-container>
@@ -414,10 +412,10 @@
                                   <li class="uk-button uk-button-link uk-padding-small"
                                     (click)="toggleService(dsBundle)">
                                     @if (dsBundle.active) {
-                                      <i class="fa fa-thumbs-down" aria-hidden="true"></i> Deactivate Deployable Application
+                                      <span class="material-symbols-outlined" style="vertical-align: middle;">thumb_down</span>Deactivate Deployable Application
                                     }
                                     @if (!dsBundle.active) {
-                                      <i class="fa fa-thumbs-up" aria-hidden="true"></i> Activate Deployable Application
+                                      <span class="material-symbols-outlined" style="vertical-align: middle;">thumb_up</span>Activate Deployable Application
                                     }
                                   </li>
                                 </div>
@@ -427,34 +425,36 @@
                                     (click)="toggleService(dsBundle)">
                                     @if (dsBundle.active) {
                                       <i class="fa fa-thumbs-down" aria-hidden="true"></i> Deactivate Deployable Application
+                                      <span class="material-symbols-outlined" style="vertical-align: middle;">thumb_down</span>Deactivate Deployable Application
                                     }
                                     @if (!dsBundle.active) {
-                                      <i class="fa fa-thumbs-up" aria-hidden="true"></i> Activate Deployable Application
+                                      <span class="material-symbols-outlined" style="vertical-align: middle;">thumb_up</span>Activate Deployable Application
                                     }
                                   </li>
                                 </div>
                               }
+                              <li class="uk-nav-divider"></li>
                               @if ((dsBundle.suspended==false)) {
                                 <li
                                   (click)="showSuspensionModal(dsBundle)"
                                   class="uk-margin-small-top">
-                                  <a><i aria-hidden="true" class="fa fa-dot-circle-o uk-margin-small-right"></i>Suspend</a>
+                                  <a><span class="material-symbols-outlined uk-margin-small-right" style="vertical-align: middle;">adjust</span>Suspend</a>
                                 </li>
                               }
                               @if ((dsBundle.suspended==true)) {
                                 <li
                                   (click)="showSuspensionModal(dsBundle)"
                                   class="uk-margin-small-top">
-                                  <a><i aria-hidden="true" class="fa fa-dot-circle-o uk-margin-small-right"></i>Unsuspend</a>
+                                  <a><span class="material-symbols-outlined uk-margin-small-right" style="vertical-align: middle;">adjust</span>Unsuspend</a>
                                 </li>
                               }
                             }
                             @if (dsBundle.status=='pending') {
                               <li class="uk-active" (click)="templateAction(dsBundle.id, true, 'approved')">
-                                <a class="uk-margin-small-top"><i class="fa fa-thumbs-up"></i> Approve First Deployable Application</a>
+                                <a><span class="material-symbols-outlined uk-margin-small-top" style="vertical-align: middle;">thumb_up</span>Approve first Deployable Application</a>
                               </li>
                               <li class="uk-active" (click)="templateAction(dsBundle.id, false, 'rejected')">
-                                <a class="uk-margin-small-top"><i class="fa fa-thumbs-down"></i> Reject First Deployable Application</a>
+                                <a><span class="material-symbols-outlined uk-margin-small-top" style="vertical-align: middle;">thumb_down</span>Reject first Deployable Application</a>
                               </li>
                             }
                           </ul>
