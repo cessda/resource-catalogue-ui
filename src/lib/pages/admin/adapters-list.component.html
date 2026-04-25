@@ -317,14 +317,14 @@
                                   <li
                                     (click)="activateAdapter(adapterBundle.id, true)"
                                     class="uk-margin-small-top">
-                                    <a><span class="material-symbols-outlined uk-margin-small-right" style="vertical-align: middle;">thumb_up</span>Activate</a>
+                                    <a><span class="material-symbols-outlined uk-margin-small-right" style="vertical-align: middle;">check</span>Activate</a>
                                   </li>
                                 }
                                 @if ((adapterBundle.status === 'approved') && (adapterBundle.active)) {
                                   <li
                                     (click)="activateAdapter(adapterBundle.id, false)"
                                     class="uk-margin-small-top">
-                                    <a><span class="material-symbols-outlined uk-margin-small-right" style="vertical-align: middle;">thumb_down</span>Deactivate</a>
+                                    <a><span class="material-symbols-outlined uk-margin-small-right" style="vertical-align: middle;">close</span>Deactivate</a>
                                   </li>
                                 }
                                 @if ((adapterBundle.suspended==false)) {

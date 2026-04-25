@@ -431,7 +431,7 @@
                                 <ng-container>
                                   <li class="uk-margin-small-bottom"
                                       (click)="showHLE(providerBundle)">
-                                    <a><i class="fa fa-eye fa-lg uk-margin-small-right"></i>Show HLE</a>
+                                    <a><span class="material-symbols-outlined uk-margin-small-right" style="vertical-align: middle;">table_eye</span>Show HLE</a>
                                   </li>
                                   <li class="uk-nav-divider"></li>
                                 </ng-container>
@@ -517,12 +517,12 @@
                                 <li *ngIf="(providerBundle.status === 'approved') && (!providerBundle.active)"
                                     (click)="showActionModal(providerBundle, 'approved', true, false)"
                                     class="uk-margin-small-top">
-                                  <a><span class="material-symbols-outlined uk-margin-small-right" style="vertical-align: middle;">thumb_up</span>Activate</a>
+                                  <a><span class="material-symbols-outlined uk-margin-small-right" style="vertical-align: middle;">check</span>Activate</a>
                                 </li>
                                 <li *ngIf="(providerBundle.status === 'approved') && (providerBundle.active)"
                                     (click)="showActionModal(providerBundle, 'approved', false, false)"
                                     class="uk-margin-small-top">
-                                  <a><span class="material-symbols-outlined uk-margin-small-right" style="vertical-align: middle;">thumb_down</span>Deactivate</a>
+                                  <a><span class="material-symbols-outlined uk-margin-small-right" style="vertical-align: middle;">close</span>Deactivate</a>
                                 </li>
                                 <li class="uk-nav-divider"></li>
                                 <li *ngIf="(providerBundle.suspended==false)"
@@ -836,7 +836,7 @@
               <li *ngIf="(providerBundle.status === 'approved') && (providerBundle.active)"
                   (click)="showActionModal(providerBundle, 'approved', false, false)"
                   class="uk-margin-small-top">
-                <a><span class="material-symbols-outlined uk-margin-small-right" style="vertical-align: middle;">thumb_down</span>Deactivate</a>
+                <a><span class="material-symbols-outlined uk-margin-small-right" style="vertical-align: middle;">close</span>Deactivate</a>
               </li>
               <li (click)="editProviderInNewTab(pidHandler.customEncodeURIComponent(providerBundle.id))"
                   class="uk-margin-small-top">

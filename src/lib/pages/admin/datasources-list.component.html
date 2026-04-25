@@ -382,12 +382,12 @@
                           }
                           @if (datasourceBundle.status==='approved' && !datasourceBundle.active) {
                             <li (click)="verifyDatasource(datasourceBundle.id, true, 'approved')" class="uk-margin-small-top">
-                              <a><span class="material-symbols-outlined uk-margin-small-right" style="vertical-align: middle;">thumb_up</span>Activate</a>
+                              <a><span class="material-symbols-outlined uk-margin-small-right" style="vertical-align: middle;">check</span>Activate</a>
                             </li>
                           }
                           @if (datasourceBundle.status==='approved' && datasourceBundle.active) {
                             <li (click)="verifyDatasource(datasourceBundle.id, false, 'approved')" class="uk-margin-small-top">
-                              <a><span class="material-symbols-outlined uk-margin-small-right" style="vertical-align: middle;">thumb_down</span>Deactivate</a>
+                              <a><span class="material-symbols-outlined uk-margin-small-right" style="vertical-align: middle;">close</span>Deactivate</a>
                             </li>
                           }
                           @if (datasourceBundle.suspended==false) {
