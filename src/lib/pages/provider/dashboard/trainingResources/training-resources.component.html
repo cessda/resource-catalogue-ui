@@ -212,7 +212,7 @@
             <button
               [routerLink]="['/provider/'+ pidHandler.customEncodeURIComponent(trBundle.trainingResource.resourceOwner) +'/training-resource/update/'+ pidHandler.customEncodeURIComponent(trBundle.id)]"
               class="uk-button uk-button-action uk-display-block uk-margin-small-top">
-              <i class="fa fa-pencil fa-lg" aria-hidden="true"></i> Update training resource
+              <span class="material-symbols-outlined uk-margin-small-right" style="vertical-align: middle;">edit_square</span>Edit
             </button>
 <!--            @if (providerBundle.templateStatus === 'approved template') {
               <button
@@ -223,12 +223,12 @@
             }-->
             <button class="uk-button uk-button-action uk-display-block uk-margin-small-top" (click)="toggleTrainingResource(trBundle)">
               @if (trBundle.active) {
-                <i class="fa fa-close fa-lg" aria-hidden="true"></i> Deactivate
+                <span class="material-symbols-outlined uk-margin-small-right" style="vertical-align: middle;">close</span>Deactivate
               }
               @if (!trBundle.active) {
                 <!--                        <div *ngIf="providerService.status === 'pending resource' || providerService.status === 'rejected resource'"-->
               <!--                             uk-tooltip="title:Cannot activate a pending/rejected resource."></div>-->
-              <i class="fa fa-check fa-lg" aria-hidden="true"></i> Activate
+              <span class="material-symbols-outlined uk-margin-small-right" style="vertical-align: middle;">check</span>Activate
             }
           </button>
           <!--<button class="uk-button uk-button-action uk-display-block" (click)="navigate(providerService.service.id)">-->
@@ -236,7 +236,7 @@
         <!--</button>-->
         @if (trBundle.status !== 'pending') {
           <button class="uk-button uk-button-action uk-display-block uk-margin-small-top" (click)="setSelectedTrainingResource(trBundle)">
-            <i class="fa fa-trash fa-lg" aria-hidden="true"></i> Delete training resource
+            <span class="material-symbols-outlined uk-margin-small-right" style="vertical-align: middle;">delete</span>Delete
           </button>
         }
       </div>

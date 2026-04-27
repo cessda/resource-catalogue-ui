@@ -191,7 +191,7 @@
                         <button
                           [routerLink]="['/provider/'+ pidHandler.customEncodeURIComponent(dsBundle.deployableApplication.resourceOwner) +'/deployable-service/update/'+ pidHandler.customEncodeURIComponent(dsBundle.id)]"
                           class="uk-button uk-button-action uk-display-block uk-margin-small-top">
-                          <i class="fa fa-pencil fa-lg" aria-hidden="true"></i> Update Deployable Application
+                          <span class="material-symbols-outlined uk-margin-small-right" style="vertical-align: middle;">edit_square</span>Edit
                         </button>
 <!--                        @if (providerBundle.templateStatus === 'approved template') {
                           <button
@@ -202,12 +202,12 @@
                         }-->
                         <button class="uk-button uk-button-action uk-display-block uk-margin-small-top" (click)="toggleDeployableService(dsBundle)">
                           @if (dsBundle.active) {
-                            <i class="fa fa-close fa-lg" aria-hidden="true"></i> Deactivate
+                            <span class="material-symbols-outlined uk-margin-small-right" style="vertical-align: middle;">close</span>Deactivate
                           }
                           @if (!dsBundle.active) {
                             <!--                        <div *ngIf="providerService.status === 'pending resource' || providerService.status === 'rejected resource'"-->
                           <!--                             uk-tooltip="title:Cannot activate a pending/rejected resource."></div>-->
-                          <i class="fa fa-check fa-lg" aria-hidden="true"></i> Activate
+                          <span class="material-symbols-outlined uk-margin-small-right" style="vertical-align: middle;">check</span>Activate
                         }
                       </button>
                       <!--<button class="uk-button uk-button-action uk-display-block" (click)="navigate(providerService.service.id)">-->
@@ -215,7 +215,7 @@
                     <!--</button>-->
                     @if (dsBundle.status !== 'pending') {
                       <button class="uk-button uk-button-action uk-display-block uk-margin-small-top" (click)="setSelectedDeployableService(dsBundle)">
-                        <i class="fa fa-trash fa-lg" aria-hidden="true"></i> Delete Deployable Application
+                        <span class="material-symbols-outlined uk-margin-small-right" style="vertical-align: middle;">delete</span>Delete
                       </button>
                     }
                   </div>
