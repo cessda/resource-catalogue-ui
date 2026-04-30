@@ -10,7 +10,7 @@ import {DatasourceService} from "../../../../services/datasource.service";
 @Component({
     selector: 'app-datasource-history',
     templateUrl: './datasource-history.component.html',
-    styleUrls: ['../resource-dashboard/service-stats.component.css'],
+    styleUrls: ['../resource-dashboard/service-stats.component.less'],
     standalone: false
 })
 

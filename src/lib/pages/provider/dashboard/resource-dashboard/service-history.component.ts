@@ -11,7 +11,7 @@ import {pidHandler} from "../../../../shared/pid-handler/pid-handler.service";
 @Component({
     selector: 'app-service-history',
     templateUrl: './service-history.component.html',
-    styleUrls: ['./service-stats.component.css'],
+    styleUrls: ['./service-stats.component.less'],
     standalone: false
 })
 export class ServiceHistoryComponent implements OnInit, OnDestroy {

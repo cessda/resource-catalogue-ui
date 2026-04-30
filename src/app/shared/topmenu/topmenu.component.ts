@@ -13,7 +13,7 @@ import {environment} from '../../../environments/environment';
 @Component({
     selector: 'app-top-menu-eosc',
     templateUrl: './topmenu.component.html',
-    styleUrls: ['./topmenu.component.css'],
+    styleUrls: ['./topmenu.component.less'],
     encapsulation: ViewEncapsulation.None,
     standalone: false
 })

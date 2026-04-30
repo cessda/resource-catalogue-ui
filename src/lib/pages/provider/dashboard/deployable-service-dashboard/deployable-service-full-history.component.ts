@@ -12,7 +12,7 @@ import {DeployableServiceService} from "../../../../services/deployable-service.
 @Component({
     selector: 'app-deployable-service-full-history',
     templateUrl: './deployable-service-full-history.component.html',
-    styleUrls: ['../resource-dashboard/service-stats.component.css'],
+    styleUrls: ['../resource-dashboard/service-stats.component.less'],
     standalone: false
 })
 

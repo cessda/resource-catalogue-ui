@@ -13,7 +13,7 @@ import {ConfigService} from "../../../../services/config.service";
 @Component({
     selector: 'app-service-dashboard',
     templateUrl: './provider-history.component.html',
-    styleUrls: ['../resource-dashboard/service-stats.component.css'],
+    styleUrls: ['../resource-dashboard/service-stats.component.less'],
     standalone: false
 })
 export class ProviderHistoryComponent implements OnInit {
