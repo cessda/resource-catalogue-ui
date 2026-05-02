@@ -63,7 +63,11 @@
         >
           <td data-label="Number">#{{ ticket.number }}</td>
           <td data-label="Date">{{ formatDate(ticket.created_at) }}</td>
-          <td data-label="Title">{{ ticket.title }}</td>
+          <td data-label="Title">
+            {{ ticket.title }}
+            <span *ngIf="getUnreadCount(ticket) > 0"
+                  class="uk-badge uk-margin-small-left" style="background-color:#f0506e">{{ getUnreadCount(ticket) }}</span>
+          </td>
           <td data-label="Status">
             <span
               class="status-badge"
