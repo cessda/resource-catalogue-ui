@@ -20,7 +20,6 @@ const mapWorld = require('@highcharts/map-collection/custom/world.geo.json')
 @Component({
     selector: 'app-service-stats',
     templateUrl: './service-stats.component.html',
-    styleUrls: ['./service-stats.component.less'],
     standalone: false
 })
 export class ServiceStatsComponent implements OnInit, OnDestroy {
