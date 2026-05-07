@@ -29,7 +29,6 @@ declare var UIkit: any;
     standalone: false
 })
 export class ResourcesListComponent implements OnInit {
-  catalogueConfigId: string | null = null;
   url = environment.API_ENDPOINT;
   serviceORresource = environment.serviceORresource;
   protected readonly environment = environment;
@@ -115,7 +114,6 @@ export class ResourcesListComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.catalogueConfigId = this.config.getProperty('catalogueId');
     if (!this.authenticationService.isAdmin()) {
       this.router.navigateByUrl('/home');
     } else {

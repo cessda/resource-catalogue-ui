@@ -329,7 +329,7 @@
                         </div>
                       </div>
                     </div>
-                    @if (dsBundle.catalogueId !== catalogueConfigId) {
+                    @if (dsBundle.catalogueId != null) {
                       <hr class="uk-margin-top">
                       <div class="uk-align-right">
                         <button
@@ -368,7 +368,7 @@
                         </div>
                       </div>
                     }
-                    @if (dsBundle.catalogueId === catalogueConfigId) {
+                    @if (dsBundle.catalogueId == null) {
                       <hr class="uk-margin-top">
                       <div class="uk-align-right">
                         <button

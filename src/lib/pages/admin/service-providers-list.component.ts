@@ -24,7 +24,6 @@ declare var UIkit: any;
     standalone: false
 })
 export class ServiceProvidersListComponent implements OnInit {
-  catalogueConfigId: string | null = null;
   catalogueName: string | null = null;
   url = environment.API_ENDPOINT;
   serviceORresource = environment.serviceORresource;
@@ -130,7 +129,6 @@ export class ServiceProvidersListComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.catalogueConfigId = this.config.getProperty('catalogueId');
     this.catalogueName = this.config.getProperty('catalogueName');
     if (!this.authenticationService.isAdmin()) {
       this.router.navigateByUrl('/home');

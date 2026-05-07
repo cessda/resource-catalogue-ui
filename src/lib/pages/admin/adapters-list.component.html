@@ -288,7 +288,7 @@
                           </div>
                           <hr class="uk-margin-top">
                           <div class="uk-align-right uk-margin-bottom">
-                            @if (adapterBundle.catalogueId===catalogueConfigId) {
+                            @if (adapterBundle.catalogueId==null) {
                               <button
                                 routerLink="/provider/{{pidHandler.customEncodeURIComponent(adapterBundle.adapter.resourceOwner)}}/adapter/update/{{pidHandler.customEncodeURIComponent(adapterBundle.id)}}"
                                 class="uk-button uk-button-link"

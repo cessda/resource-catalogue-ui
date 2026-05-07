@@ -25,7 +25,6 @@ declare var UIkit: any;
     standalone: false
 })
 export class DeployableServicesListComponent implements OnInit {
-  catalogueConfigId: string | null = null;
   url = environment.API_ENDPOINT;
   serviceORresource = environment.serviceORresource;
   protected readonly environment = environment;
@@ -102,7 +101,6 @@ export class DeployableServicesListComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.catalogueConfigId = this.config.getProperty('catalogueId');
     if (!this.authenticationService.isAdmin()) {
       this.router.navigateByUrl('/home');
     } else {

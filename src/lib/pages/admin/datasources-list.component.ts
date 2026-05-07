@@ -31,7 +31,6 @@ declare var UIkit: any;
 export class DatasourcesListComponent implements OnInit {
   url = environment.API_ENDPOINT;
   serviceORresource = environment.serviceORresource;
-  catalogueConfigId: string | null = null;
 
   formPrepare = {
     order: 'ASC',
@@ -105,7 +104,6 @@ export class DatasourcesListComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.catalogueConfigId = this.config.getProperty('catalogueId');
     if (!this.authenticationService.isAdmin()) {
       this.router.navigateByUrl('/home');
     } else {

@@ -346,7 +346,7 @@
                   </div>
                   <hr class="uk-margin-top">
                   <div class="uk-align-right uk-margin-bottom">
-                    @if (datasourceBundle.catalogueId===catalogueConfigId) {
+                    @if (datasourceBundle.catalogueId==null) {
                       <button
                         routerLink="/provider/{{pidHandler.customEncodeURIComponent(datasourceBundle.datasource.resourceOwner)}}/datasource/update/{{pidHandler.customEncodeURIComponent(datasourceBundle.id)}}"
                         class="uk-button uk-button-link"
@@ -359,19 +359,19 @@
                         <span class="material-symbols-outlined uk-margin-small-right" style="vertical-align: middle;">delete</span>Delete
                       </button>
                     }
-                    @if (datasourceBundle.catalogueId) {
-                      <button class="uk-button uk-button-link uk-margin-medium-left"
-                        style="padding-left: 40px; border-left: 1px solid #ccc">
-                        <span class="material-symbols-outlined" style="vertical-align: middle;">more_vert</span> More Options
-                      </button>
-                      <div uk-dropdown="mode: click">
-                        <ul class="uk-nav uk-dropdown-nav uk-dropdown-close">
-                          @if (datasourceBundle.active && datasourceBundle.status=='approved') {
-                            <li class="uk-margin-small-bottom"
-                                (click)="showAuditForm('main', datasourceBundle)">
-                              <a><span class="material-symbols-outlined uk-margin-small-right" style="vertical-align: middle;">check_circle</span>Audit</a>
-                            </li>
-                          }
+                    <button class="uk-button uk-button-link uk-margin-medium-left"
+                      style="padding-left: 40px; border-left: 1px solid #ccc">
+                      <span class="material-symbols-outlined" style="vertical-align: middle;">more_vert</span> More Options
+                    </button>
+                    <div uk-dropdown="mode: click">
+                      <ul class="uk-nav uk-dropdown-nav uk-dropdown-close">
+                        @if (datasourceBundle.active && datasourceBundle.status=='approved') {
+                          <li class="uk-margin-small-bottom"
+                              (click)="showAuditForm('main', datasourceBundle)">
+                            <a><span class="material-symbols-outlined uk-margin-small-right" style="vertical-align: middle;">check_circle</span>Audit</a>
+                          </li>
+                        }
+                        @if (datasourceBundle.catalogueId == null) {
                           @if (datasourceBundle.status==='pending') {
                             <li class="uk-active" (click)="verifyDatasource(datasourceBundle.id, true, 'approved')">
                               <a class="uk-margin-small-top"><i class="fa fa-thumbs-up"></i> Approve </a>
@@ -390,19 +390,19 @@
                               <a><span class="material-symbols-outlined uk-margin-small-right" style="vertical-align: middle;">close</span>Deactivate</a>
                             </li>
                           }
-                          @if (datasourceBundle.suspended==false) {
-                            <li (click)="showSuspensionModal(datasourceBundle)" class="uk-margin-small-top">
-                              <a><span class="material-symbols-outlined uk-margin-small-right" style="vertical-align: middle;">adjust</span>Suspend</a>
-                            </li>
-                          }
-                          @if (datasourceBundle.suspended==true) {
-                            <li (click)="showSuspensionModal(datasourceBundle)" class="uk-margin-small-top">
-                              <a><span class="material-symbols-outlined uk-margin-small-right" style="vertical-align: middle;">adjust</span>Unsuspend</a>
-                            </li>
-                          }
+                        }
+                        @if (datasourceBundle.suspended==false) {
+                          <li (click)="showSuspensionModal(datasourceBundle)" class="uk-margin-small-top">
+                            <a><span class="material-symbols-outlined uk-margin-small-right" style="vertical-align: middle;">adjust</span>Suspend</a>
+                          </li>
+                        }
+                        @if (datasourceBundle.suspended==true) {
+                          <li (click)="showSuspensionModal(datasourceBundle)" class="uk-margin-small-top">
+                            <a><span class="material-symbols-outlined uk-margin-small-right" style="vertical-align: middle;">adjust</span>Unsuspend</a>
+                          </li>
+                        }
                       </ul>
                     </div>
-                  }
                 </div>
                 @if (datasourceBundle.active) {
                   @if (showMainAuditForm && selectedDatasource === datasourceBundle) {

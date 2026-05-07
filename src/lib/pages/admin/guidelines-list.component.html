@@ -300,7 +300,7 @@
                   </div>
                   <hr class="uk-margin-top">
                   <div class="uk-align-right uk-margin-bottom">
-                    @if (guidelineBundle.catalogueId===catalogueConfigId) {
+                    @if (guidelineBundle.catalogueId==null) {
                       <button
                         routerLink="/guidelines/{{pidHandler.customEncodeURIComponent(guidelineBundle.interoperabilityRecord.resourceOwner)}}/update/{{pidHandler.customEncodeURIComponent(guidelineBundle.id)}}"
                         class="uk-button uk-button-link"
