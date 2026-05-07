@@ -12,7 +12,6 @@ import {pidHandler} from "../../../../shared/pid-handler/pid-handler.service";
 @Component({
     selector: 'app-training-resource-history',
     templateUrl: './training-resource-history.component.html',
-    styleUrls: ['../resource-dashboard/service-stats.component.css'],
     standalone: false
 })
 

@@ -11,7 +11,6 @@ import {ConfigService} from "../../../../services/config.service";
 @Component({
     selector: 'app-service-dashboard',
     templateUrl: './provider-full-history.component.html',
-    styleUrls: ['../resource-dashboard/service-stats.component.css'],
     standalone: false
 })
 export class ProviderFullHistoryComponent implements OnInit {
