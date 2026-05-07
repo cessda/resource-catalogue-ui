@@ -12,11 +12,8 @@ import {ConfigService} from "./config.service";
 @Injectable()
 export class GuidelinesService {
 
-  private catalogueConfigId: string;
+  constructor(public http: HttpClient, public authenticationService: AuthenticationService, private configService: ConfigService) {}
 
-  constructor(public http: HttpClient, public authenticationService: AuthenticationService, private configService: ConfigService) {
-    this.catalogueConfigId = this.configService.getProperty('catalogueId');
-  }
   base = environment.API_ENDPOINT;
   private options = {withCredentials: true};
 
@@ -107,14 +104,16 @@ export class GuidelinesService {
 
   suspendInteroperabilityRecord(interoperabilityRecordId: string, catalogueId: string, suspend: boolean) {
     interoperabilityRecordId = decodeURIComponent(interoperabilityRecordId);
-    return this.http.put<InteroperabilityRecordBundle>(this.base + `/interoperabilityRecord/suspend?id=${interoperabilityRecordId}&catalogueId=${catalogueId}&suspend=${suspend}`, this.options);
+    if (catalogueId == null)
+      return this.http.put<InteroperabilityRecordBundle>(this.base + `/interoperabilityRecord/suspend?id=${interoperabilityRecordId}&suspend=${suspend}`, this.options);
+    else
+      return this.http.put<InteroperabilityRecordBundle>(this.base + `/catalogue/${catalogueId}/interoperabilityRecord/suspend/${interoperabilityRecordId}?suspend=${suspend}`, this.options);
   }
 
   auditGuideline(id: string, action: string, catalogueId: string, comment: string) {
     id = decodeURIComponent(id);
-    if(!catalogueId) catalogueId = this.catalogueConfigId;
-    if (catalogueId === this.catalogueConfigId)
-      return this.http.patch(this.base + `/interoperabilityRecord/audit/${id}?actionType=${action}&catalogueId=${catalogueId}&comment=${comment}`, this.options);
+    if (catalogueId == null)
+      return this.http.patch(this.base + `/interoperabilityRecord/audit/${id}?actionType=${action}&comment=${comment}`, this.options);
     else
       return this.http.patch(this.base + `/catalogue/${catalogueId}/interoperabilityRecord/audit/${id}?actionType=${action}&comment=${comment}`, this.options);
   }

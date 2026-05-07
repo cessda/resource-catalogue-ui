@@ -642,7 +642,7 @@ export class ResourcesListComponent implements OnInit {
   }
 
   auditResourceAction(action: string, bundle: ServiceBundle) {
-    this.resourceService.auditResource(this.selectedService.id, action, this.selectedService.catalogueId, this.commentAuditControl.value)
+    this.resourceService.auditService(this.selectedService.id, action, this.selectedService.catalogueId, this.commentAuditControl.value)
       .subscribe(
         res => {
           if (!this.showSideAuditForm) {

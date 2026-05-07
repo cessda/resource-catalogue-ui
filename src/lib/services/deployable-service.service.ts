@@ -4,10 +4,8 @@ import {AuthenticationService} from './authentication.service';
 import {environment} from '../../environments/environment';
 import {
   VocabularyTree,
-  Provider,
   RichService,
   Service,
-  ServiceHistory,
   Vocabulary,
   Type, ServiceBundle, LoggingInfo, DeployableServiceBundle, DeployableService, TrainingResourceBundle,
 } from '../domain/eic-model';
@@ -23,11 +21,8 @@ declare var UIkit: any;
 @Injectable()
 export class DeployableServiceService {
 
-  private catalogueConfigId: string;
+  constructor(public http: HttpClient, public authenticationService: AuthenticationService, private configService: ConfigService) {}
 
-  constructor(public http: HttpClient, public authenticationService: AuthenticationService, private configService: ConfigService) {
-    this.catalogueConfigId = this.configService.getProperty('catalogueId');
-  }
   base = environment.API_ENDPOINT;
   private options = {withCredentials: true};
 
@@ -98,18 +93,16 @@ export class DeployableServiceService {
 
   getService(id: string, catalogueId?: string) {
     id = decodeURIComponent(id);
-    if (!catalogueId) catalogueId = this.catalogueConfigId;
-    if (catalogueId === this.catalogueConfigId)
-      return this.http.get<DeployableService>(this.base + `/deployableApplication/${id}?catalogue_id=${catalogueId}`, this.options);
+    if (catalogueId == null)
+      return this.http.get<DeployableService>(this.base + `/deployableApplication/${id}`, this.options);
     else
       return this.http.get<Service>(this.base + `/catalogue/${catalogueId}/deployableApplication/${id}`, this.options);
   }
 
   getDeployableServiceBundle(id: string, catalogueId?:string) { //old rich
     id = decodeURIComponent(id);
-    if (!catalogueId) catalogueId = this.catalogueConfigId;
-    if (catalogueId === this.catalogueConfigId)
-      return this.http.get<DeployableServiceBundle>(this.base + `/deployableApplication/bundle/${id}?catalogue_id=${catalogueId}`, this.options);
+    if (catalogueId == null)
+      return this.http.get<DeployableServiceBundle>(this.base + `/deployableApplication/bundle/${id}`, this.options);
     else
       return this.http.get<DeployableServiceBundle>(this.base + `/catalogue/${catalogueId}/deployableApplication/bundle/${id}`, this.options);
   }
@@ -240,17 +233,16 @@ export class DeployableServiceService {
 
   getServiceLoggingInfoHistory(serviceId: string, catalogue_id: string) {
     serviceId = decodeURIComponent(serviceId);
-    if (catalogue_id === this.catalogueConfigId)
-      return this.http.get<LoggingInfo[]>(this.base + `/deployableApplication/loggingInfoHistory/${serviceId}?catalogue_id=${catalogue_id}`);
+    if (catalogue_id == null)
+      return this.http.get<LoggingInfo[]>(this.base + `/deployableApplication/loggingInfoHistory/${serviceId}`);
     else
       return this.http.get<LoggingInfo[]>(this.base + `/catalogue/${catalogue_id}/deployableApplication/loggingInfoHistory/${serviceId}`);
   }
 
   auditDeployableService(id: string, action: string, catalogueId: string, comment: string) {
     id = decodeURIComponent(id);
-    if(!catalogueId) catalogueId = this.catalogueConfigId;
-    if (catalogueId === this.catalogueConfigId)
-      return this.http.patch(this.base + `/deployableApplication/audit/${id}?actionType=${action}&catalogueId=${catalogueId}&comment=${comment}`, this.options);
+    if (catalogueId == null)
+      return this.http.patch(this.base + `/deployableApplication/audit/${id}?actionType=${action}&comment=${comment}`, this.options);
     else
       return this.http.patch(this.base + `/catalogue/${catalogueId}/deployableApplication/audit/${id}?actionType=${action}&comment=${comment}`, this.options);
   }
@@ -306,7 +298,10 @@ export class DeployableServiceService {
 
   suspendDeployableService(deployableServiceId: string, catalogueId: string, suspend: boolean) {
     deployableServiceId = decodeURIComponent(deployableServiceId);
-    return this.http.put<DeployableServiceBundle>(this.base + `/deployableApplication/suspend?id=${deployableServiceId}&catalogueId=${catalogueId}&suspend=${suspend}`, this.options);
+    if (catalogueId == null)
+      return this.http.put<DeployableServiceBundle>(this.base + `/deployableApplication/suspend?id=${deployableServiceId}&suspend=${suspend}`, this.options);
+    else
+      return this.http.put<DeployableServiceBundle>(this.base + `/catalogue/${catalogueId}/deployableApplication/suspend/${deployableServiceId}?suspend=${suspend}`, this.options);
   }
 
   getFormModelById(id: string) {
@@ -327,7 +322,7 @@ export class DeployableServiceService {
         params = params.append('status', statusValue);
       }
     }
-    if (catalogue_id === this.catalogueConfigId) {
+    if (catalogue_id == null) {
       if (active === 'statusAll') {
         return this.http.get<Paging<DeployableServiceBundle>>(this.base +
             `/deployableApplication/byProvider/${id}?catalogue_id=${catalogue_id}&from=${from}&quantity=${quantity}&order=${order}&sort=${sort}&keyword=${query}`, {params});

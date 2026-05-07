@@ -10,11 +10,8 @@ import {Model} from "../../dynamic-catalogue/domain/dynamic-form-model";
 @Injectable()
 export class DatasourceService {
 
-  private catalogueConfigId: string;
+  constructor(public http: HttpClient, public authenticationService: AuthenticationService, private configService: ConfigService) {}
 
-  constructor(public http: HttpClient, public authenticationService: AuthenticationService, private configService: ConfigService) {
-    this.catalogueConfigId = this.configService.getProperty('catalogueId');
-  }
   base = environment.API_ENDPOINT;
   private options = {withCredentials: true};
 
@@ -22,7 +19,7 @@ export class DatasourceService {
     id = decodeURIComponent(id);
     // if version becomes optional this should be reconsidered
     // return this.http.get<Service>(this.base + `/service/${version === undefined ? id : [id, version].join('/')}`, this.options);
-    if (!catalogueId) catalogueId = this.catalogueConfigId;
+    if (!catalogueId) catalogueId = null; // todo: check
     return this.http.get<Datasource>(this.base + `/datasource/${id}?catalogue_id=${catalogueId}`, this.options);
   }
 
@@ -122,11 +119,10 @@ export class DatasourceService {
 
   auditDatasource(id: string, action: string, catalogueId: string, comment: string) {
     id = decodeURIComponent(id);
-    if(!catalogueId) catalogueId = this.catalogueConfigId;
-    if (catalogueId === this.catalogueConfigId)
-      return this.http.patch(this.base + `/datasource/audit/${id}?actionType=${action}&catalogueId=${catalogueId}&comment=${comment}`, this.options);
-      else
-    return this.http.patch(this.base + `/datasource/audit/${id}?actionType=${action}&comment=${comment}`, this.options);
+    if (catalogueId == null)
+      return this.http.patch(this.base + `/datasource/audit/${id}?actionType=${action}&comment=${comment}`, this.options);
+    else
+      return this.http.patch(this.base + `/catalogue/audit/${id}?actionType=${action}&comment=${comment}`, this.options);
   }
 
 /*  getDatasourceByServiceId(serviceId: string, catalogueId?:string){
@@ -147,8 +143,8 @@ export class DatasourceService {
 
   getDatasourceLoggingInfoHistory(datasourceId: string, catalogue_id: string) {
     datasourceId = decodeURIComponent(datasourceId);
-    if (catalogue_id === this.catalogueConfigId)
-      return this.http.get<LoggingInfo[]>(this.base + `/datasource/loggingInfoHistory/${datasourceId}?catalogue_id=${catalogue_id}`);
+    if (catalogue_id == null)
+      return this.http.get<LoggingInfo[]>(this.base + `/datasource/loggingInfoHistory/${datasourceId}`);
     else
       return this.http.get<LoggingInfo[]>(this.base + `/catalogue/${catalogue_id}/datasource/loggingInfoHistory/${datasourceId}`);
   }
@@ -192,7 +188,10 @@ export class DatasourceService {
 
   suspendDatasource(datasourceId: string, catalogueId: string, suspend: boolean) {
     datasourceId = decodeURIComponent(datasourceId);
-    return this.http.put<DatasourceBundle>(this.base + `/datasource/suspend?id=${datasourceId}&catalogueId=${catalogueId}&suspend=${suspend}`, this.options);
+    if (catalogueId == null)
+      return this.http.put<DatasourceBundle>(this.base + `/datasource/suspend?id=${datasourceId}&suspend=${suspend}`, this.options);
+    else
+      return this.http.put<DatasourceBundle>(this.base + `/catalogue/${catalogueId}/datasource/suspend/${datasourceId}?suspend=${suspend}`, this.options);
   }
 
 }

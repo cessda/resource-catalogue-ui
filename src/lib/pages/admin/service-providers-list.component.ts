@@ -10,7 +10,6 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {UntypedFormArray, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup} from '@angular/forms';
 import {URLParameter} from '../../domain/url-parameter';
 import {Paging} from '../../domain/paging';
-import {getLocaleDateFormat} from '@angular/common';
 import {zip} from 'rxjs';
 import {TrainingResourceService} from "../../services/training-resource.service";
 import {pidHandler} from "../../shared/pid-handler/pid-handler.service";
