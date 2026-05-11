@@ -272,7 +272,7 @@
                           <div class="uk-width-4-5">
                             <div class="providerName">
                               <span class="uk-margin-auto-vertical">
-                                <a [routerLink]="['/dashboard', dsBundle.catalogueId, pidHandler.customEncodeURIComponent(dsBundle.deployableApplication.resourceOwner), 'deployable-service-dashboard', pidHandler.customEncodeURIComponent(dsBundle.id)]" data-uk-tooltip title="Go to the Deployable Application dashboard">
+                                <a [routerLink]="['/dashboard', pidHandler.customEncodeURIComponent(dsBundle.deployableApplication.resourceOwner), 'deployable-service-dashboard', pidHandler.customEncodeURIComponent(dsBundle.id)]" data-uk-tooltip title="Go to the Deployable Application dashboard">
                                   {{ dsBundle.deployableApplication.name }}
                                 </a>
                               </span>

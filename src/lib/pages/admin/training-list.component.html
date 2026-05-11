@@ -272,7 +272,7 @@
                           <div class="uk-width-4-5">
                             <div class="providerName">
                               <span class="uk-margin-auto-vertical">
-                                <a [routerLink]="['/dashboard', trBundle.catalogueId, pidHandler.customEncodeURIComponent(trBundle.trainingResource.resourceOwner), 'training-resource-dashboard', pidHandler.customEncodeURIComponent(trBundle.id)]" data-uk-tooltip title="Go to the training resource dashboard">
+                                <a [routerLink]="['/dashboard', pidHandler.customEncodeURIComponent(trBundle.trainingResource.resourceOwner), 'training-resource-dashboard', pidHandler.customEncodeURIComponent(trBundle.id)]" data-uk-tooltip title="Go to the training resource dashboard">
                                   {{ trBundle.trainingResource.name }}
                                 </a>
                               </span>
@@ -335,7 +335,7 @@
                       <hr class="uk-margin-top">
                       <div class="uk-align-right">
                         <button
-                          routerLink="/provider/{{trBundle.catalogueId}}/{{trBundle.trainingResource.resourceOwner}}/training-resource/view/{{trBundle.id}}"
+                          routerLink="/provider/{{trBundle.trainingResource.resourceOwner}}/training-resource/view/{{trBundle.id}}"
                           class="uk-button uk-button-link" style="">
                           <i class="fa fa-eye fa-lg uk-margin-small-right" aria-hidden="true"></i>
                           View Training Resource

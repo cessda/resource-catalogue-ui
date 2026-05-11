@@ -58,11 +58,11 @@ const providerRoutes: Routes = [
     }
   },
   {
-    path: 'view/:catalogueId/:providerId',
+    path: 'view/:providerId',
     component: UpdateServiceProviderComponent,
     canActivate: [CanActivateViaAuthGuard],
     data: {
-      breadcrumb: 'Provider Info'
+      breadcrumb: 'View Provider'
     }
   },
   {
@@ -362,7 +362,7 @@ const providerRoutes: Routes = [
     }
   },
   {
-    path: ':catalogueId/:providerId/resource/view/:resourceId',
+    path: ':providerId/resource/view/:resourceId',
     component: ServiceEditComponent,
     canActivate: [CanActivateViaAuthGuard],
     data: {
@@ -370,7 +370,7 @@ const providerRoutes: Routes = [
     }
   },
   {
-    path: ':catalogueId/:providerId/training-resource/view/:trainingResourceId',
+    path: ':providerId/training-resource/view/:trainingResourceId',
     component: UpdateTrainingResource,
     canActivate: [CanActivateViaAuthGuard],
     data: {

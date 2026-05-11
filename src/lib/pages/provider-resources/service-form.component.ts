@@ -256,14 +256,13 @@ export class ServiceFormComponent implements OnInit {
         // }
 
         this.showProviderName(decodeURIComponent(this.providerId));
-        if(this.catalogueId == this.catalogueConfigId) this.displayedCatalogueName = `| Catalogue: ${this.config.getProperty('catalogueName')}`;
-        else if(this.catalogueId) this.showCatalogueName(this.catalogueId);
+        // if(this.catalogueId == this.catalogueConfigId) this.displayedCatalogueName = `| Catalogue: ${this.config.getProperty('catalogueName')}`;
+        // else if(this.catalogueId) this.showCatalogueName(this.catalogueId);
 
         if(!this.editMode){ //prefill field(s)
           this.payloadAnswer = {'answer': { service:
                 { 'resourceOwner': decodeURIComponent(this.providerId),
-                  'type': "Service",
-                  'catalogueId': this.catalogueConfigId}
+                  'type': "Service" }
           }};
         }
         this.showLoader = false;
@@ -366,13 +365,13 @@ export class ServiceFormComponent implements OnInit {
     this.displayedProviderName = (provider.name ? `| Provider: ${provider.name} ` : '');
   }
 
-  showCatalogueName(catalogueId: string) {
-    if (catalogueId!='undefined' && catalogueId!=undefined){
-    this.catalogueService.getCatalogueById(catalogueId).subscribe(
-      catalogue => this.displayedCatalogueName = `| Catalogue: ${catalogue.name}`,
-      error => console.log(error)
-    );}
-  }
+  // showCatalogueName(catalogueId: string) {
+  //   if (catalogueId!='undefined' && catalogueId!=undefined){
+  //   this.catalogueService.getCatalogueById(catalogueId).subscribe(
+  //     catalogue => this.displayedCatalogueName = `| Catalogue: ${catalogue.name}`,
+  //     error => console.log(error)
+  //   );}
+  // }
   /** <--Display Provider and Catalogue Names **/
 
 }

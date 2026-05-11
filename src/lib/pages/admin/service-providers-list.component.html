@@ -244,17 +244,17 @@
                               <span class="uk-margin-auto-vertical providerName">
     <!--                                  <ng-container *ngIf="providerBundle.catalogueId==null else anotherCatalogue">-->
                                         <ng-container *ngIf="providerBundle.status === 'approved'">
-                                          <a [routerLink]="['/dashboard', providerBundle.catalogueId, pidHandler.customEncodeURIComponent(providerBundle.id)]" data-uk-tooltip title="Go to the resource provider monitoring dashboard">
+                                          <a [routerLink]="['/dashboard', pidHandler.customEncodeURIComponent(providerBundle.id)]" data-uk-tooltip title="Go to the resource provider monitoring dashboard">
                                             {{ providerBundle.organisation.name }}
                                           </a>
                                         </ng-container>
                                         <ng-container *ngIf="providerBundle.status !== 'approved'">
-                                          <a [routerLink]="['/dashboard', providerBundle.catalogueId, pidHandler.customEncodeURIComponent(providerBundle.id)]" data-uk-tooltip title="Go to the resource provider monitoring dashboard">
+                                          <a [routerLink]="['/dashboard', pidHandler.customEncodeURIComponent(providerBundle.id)]" data-uk-tooltip title="Go to the resource provider monitoring dashboard">
                                             {{ providerBundle.organisation.name }}
                                           </a>
                                         </ng-container>
                                 <!--                                  <ng-container *ngIf="providerBundle.catalogueId==null ">-->
-                                        <a [routerLink]="['/provider/view', providerBundle.catalogueId, pidHandler.customEncodeURIComponent(providerBundle.id)]" class="uk-display-inline-block"> <!-- TODO:check id-->
+                                        <a [routerLink]="['/provider/view', pidHandler.customEncodeURIComponent(providerBundle.id)]" class="uk-display-inline-block"> <!-- TODO:check id-->
                                           <span class="material-symbols-outlined uk-margin-small-left" style="vertical-align: middle;">quick_reference</span>
                                         </a>
                                 <!--                                  </ng-container>-->
@@ -744,11 +744,11 @@
               <div class="providerName">
                 <span class="uk-margin-auto-vertical">
 <!--                  <ng-container *ngIf="providerBundle.catalogueId === catalogueConfigId else anotherCatalogue">-->
-                    <a [routerLink]="['/dashboard', providerBundle.catalogueId, pidHandler.customEncodeURIComponent(providerBundle.id)]" target="_blank" data-uk-tooltip title="Go to the resource provider monitoring dashboard">
+                    <a [routerLink]="['/dashboard', pidHandler.customEncodeURIComponent(providerBundle.id)]" target="_blank" data-uk-tooltip title="Go to the resource provider monitoring dashboard">
                         {{ providerBundle.organisation.name }}
                     </a>
                   <!--                  <ng-container *ngIf="providerBundle.catalogueId === catalogueConfigId">-->
-                    <a [routerLink]="['/provider/view', providerBundle.catalogueId, pidHandler.customEncodeURIComponent(providerBundle.id)]" target="_blank" class="uk-display-inline-block">
+                    <a [routerLink]="['/provider/view', pidHandler.customEncodeURIComponent(providerBundle.id)]" target="_blank" class="uk-display-inline-block">
                       <span class="material-symbols-outlined uk-margin-small-left" style="vertical-align: middle;">quick_reference</span>
                     </a>
                   <!--                  </ng-container>-->

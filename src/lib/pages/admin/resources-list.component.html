@@ -293,10 +293,10 @@
 <!--                                  </a>-->
 <!--                                </span>-->
 <!--                                <span *ngIf="serviceBundle.status==='approved'" class="uk-margin-auto-vertical">-->
-                                    <a [routerLink]="['/dashboard', serviceBundle.catalogueId, pidHandler.customEncodeURIComponent(serviceBundle.service.resourceOwner), 'resource-dashboard', pidHandler.customEncodeURIComponent(serviceBundle.id)]" data-uk-tooltip title="Go to the service dashboard">
+                                    <a [routerLink]="['/dashboard', pidHandler.customEncodeURIComponent(serviceBundle.service.resourceOwner), 'resource-dashboard', pidHandler.customEncodeURIComponent(serviceBundle.id)]" data-uk-tooltip title="Go to the service dashboard">
                                       {{ serviceBundle.service.name }}
                                     </a>
-<!--                                  <a [routerLink]="['/dashboard', serviceBundle.catalogueId, serviceBundle.service.resourceOwner, 'resource-dashboard', serviceBundle.id]" data-uk-tooltip title="Go to the service dashboard">-->
+<!--                                  <a [routerLink]="['/dashboard', serviceBundle.service.resourceOwner, 'resource-dashboard', serviceBundle.id]" data-uk-tooltip title="Go to the service dashboard">-->
 <!--                                      {{ serviceBundle.service.name }}-->
 <!--                                  </a>-->
 <!--                                  <a [routerLink]="['/provider/view',serviceBundle.id]" class="uk-display-inline-block">-->
@@ -318,9 +318,11 @@
                                   <div class="uk-margin-small-top">
                                     <span class="statusLabel">{{serviceORresource}} Status: </span>{{labels[statuses.indexOf(serviceBundle.status)]}}
                                   </div>
-                                  <div class="uk-margin-small-top">
-                                    <span class="statusLabel">Catalogue ID: </span>{{ serviceBundle.catalogueId }}
-                                  </div>
+                                  @if (serviceBundle.catalogueId != null) {
+                                    <div class="uk-margin-small-top">
+                                      <span class="statusLabel">Catalogue ID: </span>{{ serviceBundle.catalogueId }}
+                                    </div>
+                                  }
                                   <div class="uk-margin-small-top">
                                     <span class="statusLabel">Resource Organisation: </span>{{ providersPage?.results ? getProviderNameWithId(serviceBundle.service.resourceOwner) : ''}}
                                   </div>
@@ -363,7 +365,7 @@
                           <hr class="uk-margin-top">
                           <div class="uk-align-right">
                             <button
-                              routerLink="/provider/{{serviceBundle.catalogueId}}/{{pidHandler.customEncodeURIComponent(serviceBundle.service.resourceOwner)}}/resource/view/{{pidHandler.customEncodeURIComponent(serviceBundle.id)}}"
+                              routerLink="/provider/{{pidHandler.customEncodeURIComponent(serviceBundle.service.resourceOwner)}}/resource/view/{{pidHandler.customEncodeURIComponent(serviceBundle.id)}}"
                               class="uk-button uk-button-link" style="">
                               <span class="material-symbols-outlined uk-margin-small-left" style="vertical-align: middle;">quick_reference</span>
                               View {{serviceORresource}}

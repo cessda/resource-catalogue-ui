@@ -460,7 +460,7 @@ export class ResourceService {
     serviceId = decodeURIComponent(serviceId);
     // return this.http.get<LoggingInfo[]>(this.base + `/service/loggingInfoHistory/${serviceId}/`);
     if (catalogue_id == null)
-      return this.http.get<LoggingInfo[]>(this.base + `/service/loggingInfoHistory/${serviceId}?catalogue_id=${catalogue_id}`);
+      return this.http.get<LoggingInfo[]>(this.base + `/service/loggingInfoHistory/${serviceId}`);
     else
       return this.http.get<LoggingInfo[]>(this.base + `/catalogue/${catalogue_id}/service/loggingInfoHistory/${serviceId}`);
   }
