@@ -291,9 +291,11 @@
                                 <div class="uk-margin-small-top">
                                   <span class="statusLabel">Deployable Application Status: </span>{{labels[statuses.indexOf(dsBundle.status)]}}
                                 </div>
-                                <div class="uk-margin-small-top">
-                                  <span class="statusLabel">Catalogue ID: </span>{{ dsBundle.catalogueId }}
-                                </div>
+                                @if (dsBundle.catalogueId != null) {
+                                  <div class="uk-margin-small-top">
+                                    <span class="statusLabel">Catalogue ID: </span>{{ dsBundle.catalogueId }}
+                                  </div>
+                                }
                                 <div class="uk-margin-small-top">
                                   <span class="statusLabel">Resource Organisation: </span>{{ providersPage?.results ? getProviderNameWithId(dsBundle.deployableApplication.resourceOwner) : ''}}
                                 </div>

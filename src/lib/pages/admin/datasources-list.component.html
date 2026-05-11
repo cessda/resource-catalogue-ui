@@ -288,9 +288,11 @@
                                     <div class="uk-margin-small-top">
                                       <span class="statusLabel">{{serviceORresource}} Status: </span>{{labels[statuses.indexOf(datasourceBundle.status)]}}
                                     </div>
-                                    <div class="uk-margin-small-top">
-                                      <span class="statusLabel">Catalogue ID: </span>{{ datasourceBundle.catalogueId }}
-                                    </div>
+                                    @if (datasourceBundle.catalogueId != null) {
+                                      <div class="uk-margin-small-top">
+                                        <span class="statusLabel">Catalogue ID: </span>{{ datasourceBundle.catalogueId }}
+                                      </div>
+                                    }
                                     <div class="uk-margin-small-top">
                                       <span class="statusLabel">Resource Organisation: </span>{{ providersPage?.results ? getProviderNameWithId(datasourceBundle.datasource.resourceOwner) : ''}}
                                     </div>

@@ -243,9 +243,11 @@
                                   <div class="uk-margin-small-top">
                                     <span class="statusLabel">Linked Resource ID: </span>{{ adapterBundle.adapter.linkedResource.id }}
                                   </div>
-                                  <div class="uk-margin-small-top">
-                                    <span class="statusLabel">Catalogue ID: </span>{{ adapterBundle.catalogueId }}
-                                  </div>
+                                  @if (adapterBundle.catalogueId != null) {
+                                    <div class="uk-margin-small-top">
+                                      <span class="statusLabel">Catalogue ID: </span>{{ adapterBundle.catalogueId }}
+                                    </div>
+                                  }
                                 </div>
                                 <div>
                                   <div class="uk-margin-small-top">
