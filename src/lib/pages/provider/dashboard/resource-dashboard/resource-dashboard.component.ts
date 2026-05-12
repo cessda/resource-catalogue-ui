@@ -58,7 +58,7 @@ export class ResourceDashboardComponent implements OnInit {
     this.providerPID = decodeURIComponent(this.providerId);
     this.resourcePID = decodeURIComponent(this.resourceId);
     // console.log(this.providerPID);
-    this.resourceService.getServiceBundleById(this.resourceId, this.catalogueId).subscribe(
+    this.resourceService.getServiceBundleById(this.resourceId).subscribe(
       res => { if (res!=null) this.resourceBundle = res },
       error => {},
       () => {

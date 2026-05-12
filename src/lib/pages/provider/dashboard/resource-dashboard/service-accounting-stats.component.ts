@@ -40,7 +40,7 @@ export class ServiceAccountingStatsComponent implements OnInit {
 
       forkJoin({
         stats: this.accountingStatsService.getAccountingStatsForService(this.resourceId, this.startDate, this.endDate),
-        service: this.resourceService.getService(this.resourceId, this.catalogueId)
+        service: this.resourceService.getService(this.resourceId)
       }).subscribe({
         next: ({ stats, service }) => {
           this.service = service;

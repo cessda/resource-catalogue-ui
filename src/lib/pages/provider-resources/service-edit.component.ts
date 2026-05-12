@@ -79,7 +79,7 @@ export class ServiceEditComponent extends ServiceFormComponent implements OnInit
         }
       });
       if (!this.pendingService) {
-        this.resourceService.getServiceBundleById(this.serviceId, this.catalogueId)
+        this.resourceService.getServiceBundleById(this.serviceId)
           .subscribe(serviceBundle => {
               this.service = serviceBundle.service;
               const parsedService = {

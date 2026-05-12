@@ -91,20 +91,14 @@ export class DeployableServiceService {
     return this.http.get(this.base + '/deployableApplication/by/ID/'); // needs capitalized 'ID' after back changes
   }
 
-  getService(id: string, catalogueId?: string) {
+  getService(id: string) {
     id = decodeURIComponent(id);
-    if (catalogueId == null)
-      return this.http.get<DeployableService>(this.base + `/deployableApplication/${id}`, this.options);
-    else
-      return this.http.get<Service>(this.base + `/catalogue/${catalogueId}/deployableApplication/${id}`, this.options);
+    return this.http.get<DeployableService>(this.base + `/deployableApplication/${id}`, this.options);
   }
 
-  getDeployableServiceBundle(id: string, catalogueId?:string) { //old rich
+  getDeployableServiceBundle(id: string) { //old rich
     id = decodeURIComponent(id);
-    if (catalogueId == null)
-      return this.http.get<DeployableServiceBundle>(this.base + `/deployableApplication/bundle/${id}`, this.options);
-    else
-      return this.http.get<DeployableServiceBundle>(this.base + `/catalogue/${catalogueId}/deployableApplication/bundle/${id}`, this.options);
+    return this.http.get<DeployableServiceBundle>(this.base + `/deployableApplication/bundle/${id}`, this.options);
   }
 
   getSelectedServices(ids: string[]) {
@@ -231,20 +225,9 @@ export class DeployableServiceService {
   }
   /** <-- Draft(Pending) Services **/
 
-  getServiceLoggingInfoHistory(serviceId: string, catalogue_id: string) {
+  getServiceLoggingInfoHistory(serviceId: string) {
     serviceId = decodeURIComponent(serviceId);
-    if (catalogue_id == null)
-      return this.http.get<LoggingInfo[]>(this.base + `/deployableApplication/loggingInfoHistory/${serviceId}`);
-    else
-      return this.http.get<LoggingInfo[]>(this.base + `/catalogue/${catalogue_id}/deployableApplication/loggingInfoHistory/${serviceId}`);
-  }
-
-  auditDeployableService(id: string, action: string, catalogueId: string, comment: string) {
-    id = decodeURIComponent(id);
-    if (catalogueId == null)
-      return this.http.patch(this.base + `/deployableApplication/audit/${id}?actionType=${action}&comment=${comment}`, this.options);
-    else
-      return this.http.patch(this.base + `/catalogue/${catalogueId}/deployableApplication/audit/${id}?actionType=${action}&comment=${comment}`, this.options);
+    return this.http.get<LoggingInfo[]>(this.base + `/deployableApplication/loggingInfoHistory/${serviceId}`);
   }
 
   verifyDeployableService(id: string, active: boolean, status: string) { // for 1st service
@@ -294,6 +277,14 @@ export class DeployableServiceService {
   activateDeployableService(id: string, active: boolean) { // toggles active/inactive service
     id = decodeURIComponent(id);
     return this.http.patch(this.base + `/deployableApplication/setActive/${id}?active=${active}`, this.options);
+  }
+
+  auditDeployableService(id: string, action: string, catalogueId: string, comment: string) {
+    id = decodeURIComponent(id);
+    if (catalogueId == null)
+      return this.http.patch(this.base + `/deployableApplication/audit/${id}?actionType=${action}&comment=${comment}`, this.options);
+    else
+      return this.http.patch(this.base + `/catalogue/${catalogueId}/deployableApplication/audit/${id}?actionType=${action}&comment=${comment}`, this.options);
   }
 
   suspendDeployableService(deployableServiceId: string, catalogueId: string, suspend: boolean) {

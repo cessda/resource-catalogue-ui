@@ -5,7 +5,6 @@ import {environment} from '../../environments/environment';
 import {Datasource, DatasourceBundle, LoggingInfo, OpenAIREMetrics, ProviderBundle} from '../domain/eic-model';
 import {Paging} from '../domain/paging';
 import {ConfigService} from "./config.service";
-import {Model} from "../../dynamic-catalogue/domain/dynamic-form-model";
 
 @Injectable()
 export class DatasourceService {
@@ -117,14 +116,6 @@ export class DatasourceService {
     return this.http.patch(this.base + `/datasource/setActive/${id}?active=${active}`, this.options);
   }
 
-  auditDatasource(id: string, action: string, catalogueId: string, comment: string) {
-    id = decodeURIComponent(id);
-    if (catalogueId == null)
-      return this.http.patch(this.base + `/datasource/audit/${id}?actionType=${action}&comment=${comment}`, this.options);
-    else
-      return this.http.patch(this.base + `/catalogue/audit/${id}?actionType=${action}&comment=${comment}`, this.options);
-  }
-
 /*  getDatasourceByServiceId(serviceId: string, catalogueId?:string){
     serviceId = decodeURIComponent(serviceId);
 
@@ -141,12 +132,9 @@ export class DatasourceService {
     return this.http.get<OpenAIREMetrics>(this.base + `/datasource/isMetricsValid/${datasourceId}`);
   }
 
-  getDatasourceLoggingInfoHistory(datasourceId: string, catalogue_id: string) {
+  getDatasourceLoggingInfoHistory(datasourceId: string) {
     datasourceId = decodeURIComponent(datasourceId);
-    if (catalogue_id == null)
-      return this.http.get<LoggingInfo[]>(this.base + `/datasource/loggingInfoHistory/${datasourceId}`);
-    else
-      return this.http.get<LoggingInfo[]>(this.base + `/catalogue/${catalogue_id}/datasource/loggingInfoHistory/${datasourceId}`);
+    return this.http.get<LoggingInfo[]>(this.base + `/datasource/loggingInfoHistory/${datasourceId}`);
   }
 
   /** Draft Datasources -->**/
@@ -185,6 +173,14 @@ export class DatasourceService {
     return this.http.delete(this.base + '/datasource/draft/' + id, this.options);
   }
   /** <-- Draft Datasources **/
+
+  auditDatasource(id: string, action: string, catalogueId: string, comment: string) {
+    id = decodeURIComponent(id);
+    if (catalogueId == null)
+      return this.http.patch(this.base + `/datasource/audit/${id}?actionType=${action}&comment=${comment}`, this.options);
+    else
+      return this.http.patch(this.base + `/catalogue/audit/${id}?actionType=${action}&comment=${comment}`, this.options);
+  }
 
   suspendDatasource(datasourceId: string, catalogueId: string, suspend: boolean) {
     datasourceId = decodeURIComponent(datasourceId);

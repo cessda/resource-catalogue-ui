@@ -57,14 +57,6 @@ export class ServiceProviderService {
     return this.http.patch(this.base + `/provider/verify/${id}?active=${active}&status=${status}`, {}, this.options);
   }
 
-  auditProvider(id: string, action: string, catalogueId: string, comment: string) {
-    id = decodeURIComponent(id);
-    if (catalogueId == null)
-      return this.http.patch(this.base + `/provider/audit/${id}?actionType=${action}&comment=${comment}`, this.options);
-    else
-      return this.http.patch(this.base + `/catalogue/${catalogueId}/provider/audit/${id}?actionType=${action}&comment=${comment}`, this.options);
-  }
-
   requestProviderDeletion(id: string) {
     id = decodeURIComponent(id);
     return this.http.get(this.base + `/provider/requestProviderDeletion?id=${id}`, this.options);
@@ -84,20 +76,14 @@ export class ServiceProviderService {
     return this.http.get<ProviderBundle[]>(this.base + `/provider/random?quantity=${quantity}`, this.options);
   }
 
-  getServiceProviderBundleById(id: string, catalogue_id?: string) {
+  getServiceProviderBundleById(id: string) {
     id = decodeURIComponent(id); // fixme me: revisit for double decode if necessary
-    if (catalogue_id == null)
-      return this.http.get<ProviderBundle>(this.base + `/provider/bundle/${id}`, this.options);
-    else
-      return this.http.get<ProviderBundle>(this.base + `/catalogue/${catalogue_id}/provider/bundle/${id}`, this.options);
+    return this.http.get<ProviderBundle>(this.base + `/provider/bundle/${id}`, this.options);
   }
 
-  getServiceProviderById(id: string, catalogue_id?: string) {
+  getServiceProviderById(id: string) {
     id = decodeURIComponent(id); // fixme me: revisit for double decode if necessary
-    if (catalogue_id == null)
-      return this.http.get<Provider>(this.base + `/provider/${id}`, this.options);
-    else
-      return this.http.get<Provider>(this.base + `/catalogue/${catalogue_id}/provider/${id}`, this.options);
+    return this.http.get<Provider>(this.base + `/provider/${id}`, this.options);
   }
 
   getPendingProviderById(id: string) {
@@ -277,14 +263,17 @@ export class ServiceProviderService {
     return this.http.put<VocabularyCuration>(this.base + `/vocabularyCuration/approveOrRejectVocabularyCuration?approved=false&rejectionReason=${rejectionReason}`, curation, this.options);
   }
 
-  getProviderLoggingInfoHistory(providerId: string, catalogue_id: string) {
+  getProviderLoggingInfoHistory(providerId: string) {
     providerId = decodeURIComponent(providerId);
-    // return this.http.get<LoggingInfo[]>(this.base + `/provider/loggingInfoHistory/${providerId}/`);
-    // return this.http.get<LoggingInfo[]>(this.base + `/provider/loggingInfoHistory/${providerId}?catalogue_id=${catalogue_id}`);
-    if (catalogue_id == null)
-      return this.http.get<LoggingInfo[]>(this.base + `/provider/loggingInfoHistory/${providerId}`);
+    return this.http.get<LoggingInfo[]>(this.base + `/provider/loggingInfoHistory/${providerId}`);
+  }
+
+  auditProvider(id: string, action: string, catalogueId: string, comment: string) {
+    id = decodeURIComponent(id);
+    if (catalogueId == null)
+      return this.http.patch(this.base + `/provider/audit/${id}?actionType=${action}&comment=${comment}`, this.options);
     else
-      return this.http.get<LoggingInfo[]>(this.base + `/catalogue/${catalogue_id}/provider/loggingInfoHistory/${providerId}`);
+      return this.http.patch(this.base + `/catalogue/${catalogueId}/provider/audit/${id}?actionType=${action}&comment=${comment}`, this.options);
   }
 
   suspendProvider(providerId: string, catalogueId: string, suspend: boolean) {

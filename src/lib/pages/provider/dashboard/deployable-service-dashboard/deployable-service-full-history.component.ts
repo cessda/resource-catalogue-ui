@@ -35,7 +35,7 @@ export class DeployableServiceFullHistoryComponent implements OnInit, OnDestroy 
     // this.sub = this.route.params.subscribe(params => {
     this.sub = this.route.parent.params.subscribe(params => {
       zip(
-        this.deployableServiceService.getService(params['deployableServiceId'], params['catalogueId'])
+        this.deployableServiceService.getService(params['deployableServiceId'])
       ).subscribe(suc => {
           this.deployableApplication = <DeployableService>suc[0];
           this.getDataForDeployableService();
@@ -52,7 +52,7 @@ export class DeployableServiceFullHistoryComponent implements OnInit, OnDestroy 
   }
 
   getDataForDeployableService() {
-    this.deployableServiceService.getServiceLoggingInfoHistory(this.deployableApplication.id, this.catalogueId).subscribe(
+    this.deployableServiceService.getServiceLoggingInfoHistory(this.deployableApplication.id).subscribe(
       res => this.deployableServiceHistory = res,
       err => {
         this.errorMessage = 'An error occurred while retrieving the history of this Deployable Application. ' + err.error;

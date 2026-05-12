@@ -42,7 +42,7 @@ export class ProviderHistoryComponent implements OnInit {
     this.catalogueId = this.route.parent.snapshot.paramMap.get('catalogueId');
     this.getProvider();
 
-    this.providerService.getProviderLoggingInfoHistory(this.providerId, this.catalogueId).subscribe(
+    this.providerService.getProviderLoggingInfoHistory(this.providerId).subscribe(
       res => this.providerHistory = res,
       err => {
         this.errorMessage = 'An error occurred while retrieving the history of this service. ' + err.error;
@@ -51,7 +51,7 @@ export class ProviderHistoryComponent implements OnInit {
   }
 
   getProvider() {
-    this.providerService.getServiceProviderBundleById(this.providerId, this.catalogueId).subscribe(
+    this.providerService.getServiceProviderBundleById(this.providerId).subscribe(
       providerBundle => {
         this.providerBundle = providerBundle;
       }, error => {

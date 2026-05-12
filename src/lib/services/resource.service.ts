@@ -9,16 +9,13 @@ import {
   RichService,
   Service,
   Vocabulary,
-  Type, ProviderBundle, ServiceBundle, LoggingInfo, Bundle, Datasource, DatasourceBundle, TrainingResourceBundle
+  Type, ServiceBundle, LoggingInfo, Bundle, TrainingResourceBundle
 } from '../domain/eic-model';
 import {BrowseResults} from '../domain/browse-results';
 import {Paging} from '../domain/paging';
-import {URLParameter} from '../domain/url-parameter';
 import {Observable, throwError} from 'rxjs';
 import {catchError, map} from 'rxjs/operators';
-import {Info} from '../domain/info';
 import {Model} from "../../dynamic-catalogue/domain/dynamic-form-model";
-import {ConfigService} from "./config.service";
 
 declare var UIkit: any;
 
@@ -124,14 +121,9 @@ export class ResourceService {
   //   return this.http.get(this.base + `/reference/idToNameMap?catalogueId=${catalogueId}&resourceType=${resourceType}`);
   // }
 
-  getService(serviceId: string, catalogueId?: string) { // can handle public ids too
+  getService(serviceId: string) { // can handle public ids too
     serviceId = decodeURIComponent(serviceId);
-    // if version becomes optional this should be reconsidered
-    // return this.http.get<Service>(this.base + `/service/${version === undefined ? serviceId : [serviceId, version].join('/')}`, this.options);
-    if (catalogueId == null)
-      return this.http.get<Service>(this.base + `/service/${serviceId}`, this.options);
-    else
-      return this.http.get<Service>(this.base + `/catalogue/${catalogueId}/service/${serviceId}`, this.options);
+    return this.http.get<Service>(this.base + `/service/${serviceId}`, this.options);
   }
 
   getRichService(id: string, catalogueId?:string, version?: string) { //deprecated
@@ -375,12 +367,9 @@ export class ResourceService {
     return this.http.get<Bundle<Service>>(this.base + `/service/adminPage/all`, {params});
   }
 
-  getServiceBundleById(id: string, catalogueId?: string) {
+  getServiceBundleById(id: string) {
     id = decodeURIComponent(id);
-    if (catalogueId == null)
-      return this.http.get<ServiceBundle>(this.base + `/service/bundle/${id}`, this.options);
-    else
-      return this.http.get<ServiceBundle>(this.base + `/catalogue/${catalogueId}/service/bundle/${id}`, this.options);
+    return this.http.get<ServiceBundle>(this.base + `/service/bundle/${id}`, this.options);
   }
 
   getRandomResources(quantity: string) {
@@ -456,27 +445,9 @@ export class ResourceService {
   }
   /** <-- Draft(Pending) Services **/
 
-  getServiceLoggingInfoHistory(serviceId: string, catalogue_id: string) {
+  getServiceLoggingInfoHistory(serviceId: string) {
     serviceId = decodeURIComponent(serviceId);
-    // return this.http.get<LoggingInfo[]>(this.base + `/service/loggingInfoHistory/${serviceId}/`);
-    if (catalogue_id == null)
-      return this.http.get<LoggingInfo[]>(this.base + `/service/loggingInfoHistory/${serviceId}`);
-    else
-      return this.http.get<LoggingInfo[]>(this.base + `/catalogue/${catalogue_id}/service/loggingInfoHistory/${serviceId}`);
-  }
-
-  auditService(id: string, action: string, catalogueId: string, comment: string) {
-    id = decodeURIComponent(id);
-    if (catalogueId == null)
-      return this.http.patch(this.base + `/service/audit/${id}?actionType=${action}&comment=${comment}`, this.options);
-    else
-      return this.http.patch(this.base + `/catalogue/${catalogueId}/service/audit/${id}?actionType=${action}&comment=${comment}`, this.options);
-  }
-
-  //TODO: unsued - remove
-  auditDatasource(id: string, action: string, catalogueId: string, comment: string) {
-    id = decodeURIComponent(id);
-    return this.http.patch(this.base + `/datasource/audit/${id}?actionType=${action}&catalogueId=${catalogueId}&comment=${comment}`, this.options);
+    return this.http.get<LoggingInfo[]>(this.base + `/service/loggingInfoHistory/${serviceId}`);
   }
 
   verifyResource(id: string, active: boolean, status: string) { // for 1st service
@@ -521,6 +492,14 @@ export class ResourceService {
     UIkit.notification.closeAll();
     UIkit.notification({message: message, status: 'danger', pos: 'top-center', timeout: 5000});
     return throwError(error);
+  }
+
+  auditService(id: string, action: string, catalogueId: string, comment: string) {
+    id = decodeURIComponent(id);
+    if (catalogueId == null)
+      return this.http.patch(this.base + `/service/audit/${id}?actionType=${action}&comment=${comment}`, this.options);
+    else
+      return this.http.patch(this.base + `/catalogue/${catalogueId}/service/audit/${id}?actionType=${action}&comment=${comment}`, this.options);
   }
 
   suspendService(serviceId: string, catalogueId: string, suspend: boolean): Observable<any> {

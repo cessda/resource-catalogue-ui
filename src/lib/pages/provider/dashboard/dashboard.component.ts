@@ -48,7 +48,7 @@ export class DashboardComponent implements OnInit {
   }
 
   getProvider() {
-    this.serviceProviderService.getServiceProviderBundleById(this.providerId, this.catalogueId).subscribe(
+    this.serviceProviderService.getServiceProviderBundleById(this.providerId).subscribe(
       providerBundle => this.providerBundle = providerBundle,
       error =>  console.log(error),
       () => this.providerStatus = this.providerBundle.status

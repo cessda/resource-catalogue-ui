@@ -44,7 +44,7 @@ export class DeployableServiceDashboardComponent implements OnInit {
     this.catalogueId = this.route.snapshot.paramMap.get('catalogueId');
     this.providerId = this.route.snapshot.paramMap.get('providerId');
     this.deployableServiceId = this.route.snapshot.paramMap.get('deployableServiceId');
-    this.deployableServiceService.getDeployableServiceBundle(this.deployableServiceId, this.catalogueId).subscribe(
+    this.deployableServiceService.getDeployableServiceBundle(this.deployableServiceId).subscribe(
       res => { if (res!=null) this.deployableServiceBundle = res },
       error => {},
       () => {

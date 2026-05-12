@@ -50,7 +50,7 @@ export class UpdateTrainingResource extends TrainingResourceForm implements OnIn
           this.pendingResource = true;
         }
         // this.trainingResourceService.getService(this.resourceId).subscribe(service => {
-        this.trainingResourceService[this.pendingResource ? 'getPendingService' : 'getTrainingResourceBundle'](this.trainingResourceId, this.catalogueId)
+        this.trainingResourceService[this.pendingResource ? 'getPendingService' : 'getTrainingResourceBundle'](this.trainingResourceId)
           .subscribe(trBundle => {
               if (trBundle.trainingResource.contact === null) //in case of unauthorized access backend will not show sensitive info
                 this.navigator.go('/forbidden')

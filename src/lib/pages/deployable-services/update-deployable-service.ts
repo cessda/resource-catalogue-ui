@@ -48,7 +48,7 @@ export class UpdateDeployableService extends DeployableServiceForm implements On
           this.pendingResource = true;
         }
         // this.deployableServiceService.getService(this.resourceId).subscribe(service => {
-        this.deployableServiceService[this.pendingResource ? 'getPendingService' : 'getDeployableServiceBundle'](this.deployableServiceId, this.catalogueId)
+        this.deployableServiceService[this.pendingResource ? 'getPendingService' : 'getDeployableServiceBundle'](this.deployableServiceId)
           .subscribe(dsBundle => {
               this.payloadAnswer = {'answer': {deployableApplication: dsBundle.deployableApplication}};
               // if (dsBundle.deployableApplication.contact === null) //in case of unauthorized access backend will not show sensitive info

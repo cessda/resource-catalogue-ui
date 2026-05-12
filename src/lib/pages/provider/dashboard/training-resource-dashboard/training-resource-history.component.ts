@@ -35,7 +35,7 @@ export class TrainingResourceHistoryComponent implements OnInit, OnDestroy {
     // this.sub = this.route.params.subscribe(params => {
     this.sub = this.route.parent.params.subscribe(params => {
       zip(
-        this.trainingResourceService.getService(params['trainingResourceId'], params['catalogueId'])
+        this.trainingResourceService.getTrainingResource(params['trainingResourceId'])
       ).subscribe(suc => {
           this.trainingResource = <TrainingResource>suc[0];
           this.getDataForTrainingResource();
@@ -52,7 +52,7 @@ export class TrainingResourceHistoryComponent implements OnInit, OnDestroy {
   }
 
   getDataForTrainingResource() {
-    this.trainingResourceService.getServiceLoggingInfoHistory(this.trainingResource.id, this.catalogueId).subscribe(
+    this.trainingResourceService.getTrainingResourceLoggingInfoHistory(this.trainingResource.id).subscribe(
       res => this.trainingResourceHistory = res,
       err => {
         this.errorMessage = 'An error occurred while retrieving the history of this training resource. ' + err.error;

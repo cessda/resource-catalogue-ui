@@ -34,7 +34,7 @@ export class ServiceHistoryComponent implements OnInit, OnDestroy {
     // this.sub = this.route.params.subscribe(params => {
     this.sub = this.route.parent.params.subscribe(params => {
       zip(
-        this.resourceService.getService(params['resourceId'], params['catalogueId'])
+        this.resourceService.getService(params['resourceId'])
       ).subscribe(suc => {
           this.service = <Service>suc[0];
           this.getDataForService();
@@ -51,7 +51,7 @@ export class ServiceHistoryComponent implements OnInit, OnDestroy {
   }
 
   getDataForService() {
-    this.resourceService.getServiceLoggingInfoHistory(this.service.id, this.catalogueId).subscribe(
+    this.resourceService.getServiceLoggingInfoHistory(this.service.id).subscribe(
       res => this.serviceHistory = res,
       err => {
         this.errorMessage = 'An error occurred while retrieving the history of this service. ' + err.error;

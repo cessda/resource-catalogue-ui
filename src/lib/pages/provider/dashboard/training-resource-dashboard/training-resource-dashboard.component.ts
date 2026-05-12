@@ -44,7 +44,7 @@ export class TrainingResourceDashboardComponent implements OnInit {
     this.catalogueId = this.route.snapshot.paramMap.get('catalogueId');
     this.providerId = this.route.snapshot.paramMap.get('providerId');
     this.trainingResourceId = this.route.snapshot.paramMap.get('trainingResourceId');
-    this.trainingResourceService.getTrainingResourceBundle(this.trainingResourceId, this.catalogueId).subscribe(
+    this.trainingResourceService.getTrainingResourceBundle(this.trainingResourceId).subscribe(
       res => { if (res!=null) this.trainingResourceBundle = res },
       error => {},
       () => {
