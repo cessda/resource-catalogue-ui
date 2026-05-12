@@ -254,7 +254,7 @@
                                           </a>
                                         </ng-container>
                                 <!--                                  <ng-container *ngIf="providerBundle.catalogueId==null ">-->
-                                        <a [routerLink]="['/provider/view', pidHandler.customEncodeURIComponent(providerBundle.id)]" class="uk-display-inline-block"> <!-- TODO:check id-->
+                                        <a [routerLink]="['/provider/view', providerBundle.catalogueId, pidHandler.customEncodeURIComponent(providerBundle.id)]" class="uk-display-inline-block"> <!-- TODO:check id-->
                                           <span class="material-symbols-outlined uk-margin-small-left" style="vertical-align: middle;">quick_reference</span>
                                         </a>
                                 <!--                                  </ng-container>-->
@@ -374,7 +374,7 @@
                         <ng-container *ngIf="providerBundle.catalogueId != null">
                           <hr class="uk-margin-top">
                           <div class="uk-align-right">
-                            <button [routerLink]="['/provider/view/',providerBundle.catalogueId, pidHandler.customEncodeURIComponent(providerBundle.id)]" class="uk-button uk-button-link">
+                            <button [routerLink]="['/provider/view/', providerBundle.catalogueId, pidHandler.customEncodeURIComponent(providerBundle.id)]" class="uk-button uk-button-link">
                               <i class="fa fa-eye fa-lg uk-margin-small-right" aria-hidden="true"></i> View Provider
                             </button>
 
@@ -748,7 +748,7 @@
                         {{ providerBundle.organisation.name }}
                     </a>
                   <!--                  <ng-container *ngIf="providerBundle.catalogueId === catalogueConfigId">-->
-                    <a [routerLink]="['/provider/view', pidHandler.customEncodeURIComponent(providerBundle.id)]" target="_blank" class="uk-display-inline-block">
+                    <a [routerLink]="['/provider/view', providerBundle.catalogueId, pidHandler.customEncodeURIComponent(providerBundle.id)]" target="_blank" class="uk-display-inline-block">
                       <span class="material-symbols-outlined uk-margin-small-left" style="vertical-align: middle;">quick_reference</span>
                     </a>
                   <!--                  </ng-container>-->

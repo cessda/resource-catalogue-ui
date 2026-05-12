@@ -58,7 +58,7 @@ const providerRoutes: Routes = [
     }
   },
   {
-    path: 'view/:providerId',
+    path: 'view/:catalogueId/:providerId',
     component: UpdateServiceProviderComponent,
     canActivate: [CanActivateViaAuthGuard],
     data: {
