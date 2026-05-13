@@ -216,15 +216,6 @@
                                     </span>
                                   </div>
                                   <div class="uk-margin-small-top">
-                                    <span class="statusLabel">Abbreviation: </span>
-                                    @if (catalogueBundle.catalogue.abbreviation && (catalogueBundle.catalogue.abbreviation!==null)) {
-                                      {{ catalogueBundle.catalogue.abbreviation }}
-                                    }
-                                    @if (!catalogueBundle.catalogue.abbreviation || (catalogueBundle.catalogue.abbreviation===null)) {
-                                      not available
-                                    }
-                                  </div>
-                                  <div class="uk-margin-small-top">
                                     <span class="statusLabel">Catalogue Status: </span>{{ labels[statuses.indexOf(catalogueBundle.status)] | titlecase }}
                                   </div>
                                   <!--                              <div class="uk-margin-small-top">-->
