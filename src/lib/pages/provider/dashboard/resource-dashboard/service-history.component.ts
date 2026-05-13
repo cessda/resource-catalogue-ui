@@ -29,8 +29,6 @@ export class ServiceHistoryComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    const path = this.route.snapshot.routeConfig.path;
-    if (path.includes(':catalogueId')) { this.catalogueId = this.route.snapshot.paramMap.get('catalogueId') }
     // this.sub = this.route.params.subscribe(params => {
     this.sub = this.route.parent.params.subscribe(params => {
       zip(

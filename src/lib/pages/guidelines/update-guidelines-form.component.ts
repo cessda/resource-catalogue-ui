@@ -50,7 +50,6 @@ export class UpdateGuidelinesFormComponent extends GuidelinesFormComponent imple
 
   getGuideline() {
     this.errorMessage = '';
-    const path = this.route.snapshot.routeConfig.path;
     this.guidelinesService.getInteroperabilityRecordById(this.guidelineId).subscribe(
         guideline => {
           this.guideline = guideline;

@@ -44,8 +44,6 @@ export class ServiceEditComponent extends ServiceFormComponent implements OnInit
 
   ngOnInit() {
     const path = this.route.snapshot.routeConfig.path;
-    // if (path.includes(':catalogueId')) { this.catalogueId = this.route.snapshot.paramMap.get('catalogueId') }
-    // else { this.catalogueId = this.catalogueConfigId }
     if (path === ':providerId/resource/view/:resourceId') this.disable = true; // view-only mode
     super.ngOnInit();
     if (sessionStorage.getItem('service')) {

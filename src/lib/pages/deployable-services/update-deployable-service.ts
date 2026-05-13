@@ -33,8 +33,6 @@ export class UpdateDeployableService extends DeployableServiceForm implements On
 
   ngOnInit() {
     const path = this.route.snapshot.routeConfig.path;
-    if (path.includes(':catalogueId')) { this.catalogueId = this.route.snapshot.paramMap.get('catalogueId') }
-    else { this.catalogueId = this.catalogueConfigId }
     if (path === ':catalogueId/:providerId/deployable-service/view/:resourceId') this.disable = true; // view-only mode
     super.ngOnInit();
     if (sessionStorage.getItem('service')) {
