@@ -154,7 +154,7 @@
 
       <ul>
 
-        @if (catalogueId == null) {
+        @if (providerBundle.catalogueId == null) {
 
           @if (providerBundle?.status === 'pending') {
             <li class="sidebar-hover-parent" (click)="showPendingNotification()">
@@ -324,9 +324,9 @@
         </li>
       }
 
-      @if (catalogueId != null) {
+      @if (providerBundle.catalogueId != null) {
         <li>
-          <a href="/provider/view/{{providerBundle.catalogueId}}/{{pidHandler.customEncodeURIComponent(providerBundle?.id)}}">
+          <a href="/provider/view/{{pidHandler.customEncodeURIComponent(providerBundle.catalogueId)}}/{{pidHandler.customEncodeURIComponent(providerBundle?.id)}}">
             <i class="fa fa-eye fa-lg uk-margin-small-right" aria-hidden="true" style="color: #26c0e2"></i> View Provider
           </a>
         </li>
