@@ -39,6 +39,7 @@ export class TrainingResourceForm implements OnInit {
   pendingResource = false;
   catalogueId: string;
   providerId: string;
+  viewOnlyMode = false;
   editMode = false;
   hasChanges = false;
   serviceForm: UntypedFormGroup;
@@ -50,7 +51,6 @@ export class TrainingResourceForm implements OnInit {
   weights: string[] = [];
   tabs: boolean[] = [false, false, false, false, false, false, false, false, false, false, false, false];
   fb: UntypedFormBuilder = this.injector.get(UntypedFormBuilder);
-  disable = false;
   isPortalAdmin = false;
 
   requiredOnTab0 = 4;
@@ -306,6 +306,10 @@ export class TrainingResourceForm implements OnInit {
 
   ngOnInit() {
     this.showLoader = true;
+    const path = this.route.snapshot.routeConfig.path;
+    if (path.includes('view/:trainingResourceId')) {
+      this.viewOnlyMode = true;
+    }
     zip(
       this.trainingResourceService.getProvidersNames('approved'),
       this.serviceProviderService.getFormModelById('m-b-training')

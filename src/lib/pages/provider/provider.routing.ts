@@ -370,11 +370,27 @@ const providerRoutes: Routes = [
     }
   },
   {
+    path: ':providerId/datasource/view/:datasourceId',
+    component: UpdateDatasource,
+    canActivate: [CanActivateViaAuthGuard],
+    data: {
+      breadcrumb: 'View Datasource'
+    }
+  },
+  {
     path: ':providerId/training-resource/view/:trainingResourceId',
     component: UpdateTrainingResource,
     canActivate: [CanActivateViaAuthGuard],
     data: {
       breadcrumb: 'View Training Resource'
+    }
+  },
+  {
+    path: ':providerId/deployable-service/view/:deployableServiceId',
+    component: UpdateDeployableService,
+    canActivate: [CanActivateViaAuthGuard],
+    data: {
+      breadcrumb: 'View Deployable Application'
     }
   },
   {

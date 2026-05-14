@@ -361,6 +361,14 @@
                         <span class="material-symbols-outlined uk-margin-small-right" style="vertical-align: middle;">delete</span>Delete
                       </button>
                     }
+                    @if (datasourceBundle.catalogueId!=null) {
+                      <button
+                        routerLink="/provider/{{datasourceBundle.catalogueId}}/{{datasourceBundle.datasource.resourceOwner}}/datasource/view/{{datasourceBundle.id}}"
+                        class="uk-button uk-button-link" style="">
+                        <i class="fa fa-eye fa-lg uk-margin-small-right" aria-hidden="true"></i>
+                        View Datasource
+                      </button>
+                    }
                     <button class="uk-button uk-button-link uk-margin-medium-left"
                       style="padding-left: 40px; border-left: 1px solid #ccc">
                       <span class="material-symbols-outlined" style="vertical-align: middle;">more_vert</span> More Options

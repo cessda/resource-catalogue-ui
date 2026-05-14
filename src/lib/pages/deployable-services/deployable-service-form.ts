@@ -37,6 +37,7 @@ export class DeployableServiceForm implements OnInit {
   catalogueConfigId: string | null = null;
   catalogueId: string;
   providerId: string;
+  viewOnlyMode = false;
   editMode = false;
   hasChanges = false;
   serviceForm: UntypedFormGroup;
@@ -128,6 +129,10 @@ export class DeployableServiceForm implements OnInit {
   }
 
   ngOnInit() {
+    const path = this.route.snapshot.routeConfig.path;
+    if (path.includes('view/:deployableServiceId')) {
+      this.viewOnlyMode = true;
+    }
     this.catalogueConfigId = this.config.getProperty('catalogueId');
     this.showLoader = true;
     zip(

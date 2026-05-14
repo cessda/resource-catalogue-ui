@@ -43,6 +43,7 @@ export class ServiceProviderFormComponent implements OnInit {
   userInfo = {sub: '', family_name: '', given_name: '', email: ''};
   vocabularies: Map<string, Vocabulary[]> = null;
   subVocabularies: Map<string, Vocabulary[]> = null;
+  viewOnlyMode = false;
   submitMode: 'draft' | 'submit' = 'submit';
   editMode = false;
   hasChanges = false;
@@ -127,9 +128,9 @@ export class ServiceProviderFormComponent implements OnInit {
     if (path.includes('add/:providerId')) {
       this.pendingProvider = true;
     }
-    // if (path.includes('view/:providerId')) {
-    //   this.pendingProvider = true;
-    // }
+    if (path.includes('view/:catalogueId/:providerId')) {
+      this.viewOnlyMode = true;
+    }
     if (!this.router.url.includes('/update/')) {
       this.saveAsDraftAvailable = true;
     }

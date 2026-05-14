@@ -37,6 +37,7 @@ export class DatasourceFormComponent implements OnInit {
   openaireId: string = null; //datasource OA id
   providerId: string;
   catalogueId: string;
+  viewOnlyMode = false;
   submitMode: 'draft' | 'submit' = 'submit';
   editMode = false;
   hasChanges = false;
@@ -47,7 +48,6 @@ export class DatasourceFormComponent implements OnInit {
   successMessage: string = null;
   weights: string[] = [];
   tabs: boolean[] = [false];
-  disable = false;
   isPortalAdmin = false;
 
   serviceId: string = null; //filled for all types (service, datasource, training)
@@ -133,6 +133,10 @@ export class DatasourceFormComponent implements OnInit {
 
   ngOnInit() {
     this.showLoader = true;
+    const path = this.route.snapshot.routeConfig.path;
+    if (path.includes('view/:datasourceId')) {
+      this.viewOnlyMode = true;
+    }
     if ( !this.router.url.includes('/update/') || this.router.url.includes('/draft-datasource/update/')) {
       this.saveAsDraftAvailable = true;
     }

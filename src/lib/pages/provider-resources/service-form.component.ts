@@ -36,7 +36,6 @@ export class ServiceFormComponent implements OnInit {
 
   protected readonly isDevMode = isDevMode;
   catalogueConfigId: string = this.config.getProperty('catalogueId');
-  catalogueName: string | null = null;
   protected readonly environment = environment;
   protected _marketplaceServicesURL = environment.marketplaceServicesURL;
   serviceORresource = environment.serviceORresource;
@@ -48,7 +47,7 @@ export class ServiceFormComponent implements OnInit {
   catalogueId: string;
   providerId: string;
   displayedProviderName: string;
-  displayedCatalogueName: string;
+  viewOnlyMode = false;
   submitMode: 'draft' | 'submit' = 'submit';
   editMode = false;
   hasChanges = false;
@@ -211,7 +210,10 @@ export class ServiceFormComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.catalogueName = this.config.getProperty('catalogueName');
+    const path = this.route.snapshot.routeConfig.path;
+    if (path.includes('view/:resourceId')) {
+      this.viewOnlyMode = true;
+    }
     this.showLoader = true;
     if ( !this.router.url.includes('/update/') || this.router.url.includes('/draft-resource/update/')) {
       this.saveAsDraftAvailable = true;
@@ -365,13 +367,6 @@ export class ServiceFormComponent implements OnInit {
     this.displayedProviderName = (provider.name ? `| Provider: ${provider.name} ` : '');
   }
 
-  // showCatalogueName(catalogueId: string) {
-  //   if (catalogueId!='undefined' && catalogueId!=undefined){
-  //   this.catalogueService.getCatalogueById(catalogueId).subscribe(
-  //     catalogue => this.displayedCatalogueName = `| Catalogue: ${catalogue.name}`,
-  //     error => console.log(error)
-  //   );}
-  // }
   /** <--Display Provider and Catalogue Names **/
 
 }

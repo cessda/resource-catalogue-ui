@@ -34,8 +34,6 @@ export class UpdateTrainingResource extends TrainingResourceForm implements OnIn
   }
 
   ngOnInit() {
-    const path = this.route.snapshot.routeConfig.path;
-    if (path === ':providerId/training-resource/view/:resourceId') this.disable = true; // view-only mode
     super.ngOnInit();
     if (sessionStorage.getItem('service')) {
       sessionStorage.removeItem('service');
@@ -75,7 +73,7 @@ export class UpdateTrainingResource extends TrainingResourceForm implements OnIn
                 this.serviceForm.get('id').setValue('');
                 this.serviceForm.get('name').setValue('');
               }
-              if (this.disable) {
+              if (this.viewOnlyMode) {
                 this.serviceForm.disable();
                 this.serviceName = this.serviceForm.get('name').value;
               } else {
