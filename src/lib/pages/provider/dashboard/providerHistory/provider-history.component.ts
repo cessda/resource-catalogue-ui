@@ -3,7 +3,6 @@ import {ActivatedRoute} from '@angular/router';
 import {LoggingInfo, ProviderBundle, Service} from '../../../../domain/eic-model';
 import {NavigationService} from '../../../../services/navigation.service';
 import {ResourceService} from '../../../../services/resource.service';
-import {Paging} from '../../../../domain/paging';
 import {environment} from '../../../../../environments/environment';
 import {ServiceProviderService} from '../../../../services/service-provider.service';
 import {pidHandler} from "../../../../shared/pid-handler/pid-handler.service";
@@ -45,7 +44,7 @@ export class ProviderHistoryComponent implements OnInit {
     this.providerService.getProviderLoggingInfoHistory(this.providerId).subscribe(
       res => this.providerHistory = res,
       err => {
-        this.errorMessage = 'An error occurred while retrieving the history of this service. ' + err.error;
+        this.errorMessage = 'An error occurred while retrieving the history of this provider. ' + err.error;
       }
     );
   }

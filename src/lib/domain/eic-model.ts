@@ -19,7 +19,7 @@ export class Bundle<T> implements Identifiable {
 
 export class Catalogue implements Identifiable {
   id: string;
-  abbreviation: string;
+  resourceOwner: string;
   name: string;
   website: URL;
   legalEntity: boolean;

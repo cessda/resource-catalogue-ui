@@ -3,7 +3,7 @@ import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import {AuthenticationService} from './authentication.service';
 import {
   Catalogue,
-  CatalogueBundle, DatasourceBundle, ServiceBundle, ProviderBundle
+  CatalogueBundle, DatasourceBundle, ServiceBundle, ProviderBundle, LoggingInfo
 } from '../domain/eic-model';
 import {environment} from '../../environments/environment';
 import {Observable} from 'rxjs';
@@ -52,6 +52,7 @@ export class CatalogueService {
   }
 
   getCatalogueBundleById(id: string) {
+    id = decodeURIComponent(id);
     return this.http.get<CatalogueBundle>(this.base + `/catalogue/bundle/${id}`, this.options);
   }
 
@@ -171,20 +172,6 @@ export class CatalogueService {
       `/datasource/byCatalogue/${id}?from=${from}&quantity=${quantity}&order=${order}&sort=${sort}&active=${active}&keyword=${query}`, {params});
   }
 
-  hasAdminAcceptedTerms(id: string, pendingCatalogue: boolean) {
-    if (pendingCatalogue) {
-      return this.http.get<boolean>(this.base + `/catalogue/hasAdminAcceptedTerms?id=${id}&isDraft=true`);
-    }
-    return this.http.get<boolean>(this.base + `/catalogue/hasAdminAcceptedTerms?id=${id}&isDraft=false`);
-  }
-
-  adminAcceptedTerms(id: string, pendingCatalogue: boolean) {
-    if (pendingCatalogue) {
-      return this.http.put(this.base + `/pendingCatalogue/adminAcceptedTerms?id=${id}&isDraft=true`, this.options);
-    }
-    return this.http.put(this.base + `/catalogue/adminAcceptedTerms?id=${id}&isDraft=false`, this.options);
-  }
-
   suspendCatalogue(catalogueId: string, suspend: boolean) {
     return this.http.put<CatalogueBundle>(this.base + `/catalogue/suspend?id=${catalogueId}&suspend=${suspend}`, this.options);
   }
@@ -201,4 +188,8 @@ export class CatalogueService {
     return this.http.put(this.base + `/contactInformation/updateContactInfoTransfer?acceptedTransfer=${bool}`, this.options);
   }
 
+  getCatalogueLoggingInfoHistory(catalogueId: string) {
+    catalogueId = decodeURIComponent(catalogueId);
+    return this.http.get<LoggingInfo[]>(this.base + `/catalogue/loggingInfoHistory/${catalogueId}`);
+  }
 }
