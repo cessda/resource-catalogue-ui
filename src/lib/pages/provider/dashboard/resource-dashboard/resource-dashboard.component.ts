@@ -22,7 +22,6 @@ export class ResourceDashboardComponent implements OnInit {
 
   _marketplaceServicesURL = environment.marketplaceServicesURL;
   serviceORresource = environment.serviceORresource;
-  catalogueConfigId: string = this.config.getProperty('catalogueId');
   catalogueId: string;
   providerId: string;
   resourceId: string;
@@ -65,7 +64,7 @@ export class ResourceDashboardComponent implements OnInit {
 /*        this.datasourceService.getDatasourceByServiceId(this.resourceId, this.catalogueId).subscribe( // TODO check
           res => { if (res!=null) this.datasourceId = res.id }
         );*/
-        if (this.catalogueId === this.catalogueConfigId){
+        if (this.catalogueId == null){
           // this.serviceExtensionsService.getMonitoringByServiceId(this.resourceId).subscribe(
           //   res => { if (res!=null) this.monitoringId = res.id }
           // );

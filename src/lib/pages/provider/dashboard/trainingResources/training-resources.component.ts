@@ -21,7 +21,6 @@ declare var UIkit: any;
 
 export class TrainingResourcesComponent implements OnInit {
 
-  catalogueConfigId: string = this.config.getProperty('catalogueId');
   protected readonly environment = environment;
   serviceORresource = environment.serviceORresource;
 

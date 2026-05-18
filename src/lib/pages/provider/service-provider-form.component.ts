@@ -29,13 +29,12 @@ export class ServiceProviderFormComponent implements OnInit {
   formDataToSubmit: any = null;
 
   protected readonly isDevMode = isDevMode;
-  catalogueConfigId: string = this.config.getProperty('catalogueId');
   catalogueName: string | null = null;
   protected readonly environment = environment;
   _hasUserConsent = environment.hasUserConsent;
   serviceORresource = environment.serviceORresource;
   privacyPolicyURL = environment.privacyPolicyURL;
-  catalogueId: string = this.catalogueConfigId;
+  catalogueId: string = null;
   providerId: string = null;
   displayedCatalogueName: string;
   providerName = '';
@@ -108,7 +107,7 @@ export class ServiceProviderFormComponent implements OnInit {
           this.payloadAnswer = {
             'answer': {
               organisation: {
-                'catalogueId': this.catalogueConfigId,
+                'catalogueId': this.catalogueId,
                 'users': [
                   {
                     name: currentUser.firstname,
@@ -156,9 +155,6 @@ export class ServiceProviderFormComponent implements OnInit {
     }
 
     this.isPortalAdmin = this.authService.isAdmin();
-
-    if (this.catalogueId == this.catalogueConfigId) this.displayedCatalogueName = `| Catalogue: ${this.catalogueName}`
-    else if (this.catalogueId) this.showCatalogueName(this.catalogueId)
 
     this.vocabularyEntryForm = this.fb.group(this.suggestionsForm);
   }
@@ -301,13 +297,6 @@ export class ServiceProviderFormComponent implements OnInit {
       }
       return Object.assign(hash, {[obj[key]]: (hash[obj[key]] || []).concat(obj)});
     }, {});
-  }
-
-  showCatalogueName(catalogueId: string) {
-    this.catalogueService.getCatalogueById(catalogueId).subscribe(
-      catalogue => this.displayedCatalogueName = `| Catalogue: ${catalogue.name}`,
-      error => console.log(error)
-    );
   }
 
   getCurrentUserInfo(): { firstname: string; lastname: string; email: string } {

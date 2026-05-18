@@ -36,7 +36,6 @@ export class GuidelinesComponent implements OnInit {
   // toggleLoading = false;
   urlParams: URLParameter[] = [];
   providerId: string;
-  catalogueConfigId: string = this.config.getProperty('catalogueId');
   catalogueId: string;
   providerBundle: ProviderBundle;
   guidelines: Paging<InteroperabilityRecordBundle>;

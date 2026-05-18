@@ -31,7 +31,6 @@ export class TrainingResourceForm implements OnInit {
   payloadAnswer: object = null;
   formDataToSubmit: any = null;
 
-  catalogueConfigId: string = this.config.getProperty('catalogueId');
   protected _marketplaceServicesURL = environment.marketplaceServicesURL;
   serviceName = '';
   firstServiceForm = false;
@@ -333,7 +332,7 @@ export class TrainingResourceForm implements OnInit {
                 {
                   'resourceOwner': decodeURIComponent(this.providerId),
                   'type': "TrainingMaterial",
-                  'catalogueId': this.catalogueConfigId
+                  'catalogueId': null
                 }
             }
           };

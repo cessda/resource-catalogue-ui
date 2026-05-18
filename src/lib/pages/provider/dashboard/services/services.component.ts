@@ -20,7 +20,6 @@ declare var UIkit: any;
 })
 
 export class ServicesComponent implements OnInit {
-  catalogueConfigId: string = this.config.getProperty('catalogueId');
   protected readonly environment = environment;
   serviceORresource = environment.serviceORresource;
 

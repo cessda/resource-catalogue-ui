@@ -65,9 +65,9 @@ export class DatasourceService {
     return this.http.get(this.base + `/datasource/adminPage/all`, {params});
   }
 
-  getDatasourceBundleById(id: string, catalogueId: string) {
+  getDatasourceBundleById(id: string) {
     id = decodeURIComponent(id);
-    return this.http.get<DatasourceBundle>(this.base + `/datasource/bundle/${id}?catalogue_id=${catalogueId}`, this.options);
+    return this.http.get<DatasourceBundle>(this.base + `/datasource/bundle/${id}`, this.options);
   }
 
   getOpenAIREDatasources(from: string, quantity: string, sort: string, order: string, query: string) {
@@ -120,7 +120,7 @@ export class DatasourceService {
     serviceId = decodeURIComponent(serviceId);
 
     if(!catalogueId) catalogueId = this.catalogueConfigId;
-    if (catalogueId === this.catalogueConfigId)
+    if (catalogueId == null)
 
       return this.http.get<Datasource>(this.base + `/datasource/byService/${serviceId}?catalogue_id=${catalogueId}`, this.options);
     else

@@ -17,7 +17,6 @@ import {DeployableServiceService} from "../../../../services/deployable-service.
     standalone: false
 })
 export class DeployableServiceDashboardComponent implements OnInit {
-  catalogueConfigId: string | null = null;
   protected readonly environment = environment;
   _marketplaceTrainingResourcesURL = environment.marketplaceTrainingResourcesURL;
 
@@ -40,7 +39,6 @@ export class DeployableServiceDashboardComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.catalogueConfigId = this.config.getProperty('catalogueId');
     this.catalogueId = this.route.snapshot.paramMap.get('catalogueId');
     this.providerId = this.route.snapshot.paramMap.get('providerId');
     this.deployableServiceId = this.route.snapshot.paramMap.get('deployableServiceId');

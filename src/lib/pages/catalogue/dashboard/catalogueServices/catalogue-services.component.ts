@@ -19,7 +19,6 @@ declare var UIkit: any;
 })
 
 export class CatalogueServicesComponent implements OnInit {
-  catalogueConfigId: string | null = null;
   protected readonly environment = environment;
   serviceORresource = environment.serviceORresource;
 
@@ -64,7 +63,6 @@ export class CatalogueServicesComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.catalogueConfigId = this.config.getProperty('catalogueId');
     this.catalogueId = this.route.parent.snapshot.paramMap.get('catalogue');
 
     this.getCatalogue();

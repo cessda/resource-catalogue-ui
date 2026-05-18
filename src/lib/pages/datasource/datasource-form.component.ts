@@ -26,7 +26,6 @@ export class DatasourceFormComponent implements OnInit {
   model: Model = null;
   payloadAnswer: object = null;
 
-  catalogueConfigId: string = this.config.getProperty('catalogueId');
   serviceORresource = environment.serviceORresource;
   serviceName = '';
   firstServiceForm = false;
@@ -161,7 +160,7 @@ export class DatasourceFormComponent implements OnInit {
               datasource: {
                 'type': "DataSource",
                 'serviceId': decodeURIComponent(this.resourceId),
-                'catalogueId': this.catalogueConfigId,
+                'catalogueId': null,
                 'resourceOwner': decodeURIComponent(this.providerId)
               }
             }

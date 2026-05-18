@@ -185,7 +185,7 @@
                   <span class="">Last Update: </span>{{ serviceBundle.metadata.modifiedAt | date }}
                 </div>
               </div>
-              @if (catalogueId === catalogueConfigId) {
+              @if (catalogueId == null) {
                 <div class="uk-width-1-6">
                   <div class="action-buttons">
                     <button class="uk-button uk-button-action uk-display-block uk-margin-small-top" (click)="toggleService(serviceBundle)">
@@ -208,7 +208,7 @@
             </div>
           }
         </div>
-        @if (serviceBundle.catalogueId !== catalogueConfigId) {
+        @if (serviceBundle.catalogueId != null) {
           <hr class="uk-margin-top">
           <div class="uk-align-right">
             <button

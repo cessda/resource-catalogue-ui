@@ -19,8 +19,6 @@ declare var UIkit: any;
 
 export class CatalogueTrainingResourcesComponent implements OnInit {
 
-  catalogueConfigId: string | null = null;
-
   formPrepare = {
     from: '0',
     quantity: '10',
@@ -59,7 +57,6 @@ export class CatalogueTrainingResourcesComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.catalogueConfigId = this.config.getProperty('catalogueId');
     this.catalogueId = this.route.parent.snapshot.paramMap.get('catalogue');
 
     this.getCatalogue();

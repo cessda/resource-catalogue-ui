@@ -15,7 +15,6 @@ import {pidHandler} from "../../shared/pid-handler/pid-handler.service";
 })
 export class MyServiceProvidersComponent implements OnInit {
 
-  catalogueConfigId: string = this.config.getProperty('catalogueId');
   serviceORresource = environment.serviceORresource;
 
   errorMessage: string;
@@ -88,7 +87,7 @@ export class MyServiceProvidersComponent implements OnInit {
                 );
               }
               // if (p.status === 'pending template submission') {
-              if (p.status === 'approved' && p.organisation.catalogueId === this.catalogueConfigId) {
+              if (p.status === 'approved' && p.organisation.catalogueId == null) {
                 // console.log(p.id);
                 this.resourceService.getDraftServicesByProvider(p.id, '0', '50', 'ASC', 'name').subscribe(
                   res => {

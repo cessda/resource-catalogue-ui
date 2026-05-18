@@ -16,7 +16,6 @@ import {ConfigService} from "../../../../services/config.service";
 export class ProviderFullHistoryComponent implements OnInit {
 
   serviceORresource = environment.serviceORresource;
-  catalogueConfigId: string | null = null;
   catalogueId: string;
   providerId: string;
   providerBundle: ProviderBundle;
@@ -34,7 +33,6 @@ export class ProviderFullHistoryComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.catalogueConfigId = this.config.getProperty('catalogueId');
     this.providerId = this.route.parent.snapshot.paramMap.get('provider');
     this.catalogueId = this.route.parent.snapshot.paramMap.get('catalogueId');
     this.getProvider();

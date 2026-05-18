@@ -95,7 +95,7 @@
                 <div class="uk-margin-top uk-text-center">
                   @if (providerId) {
                     <a
-                      [routerLink]="['/dashboard/' + catalogueConfigId +'/'+ pidHandler.customEncodeURIComponent(providerId) + '/fullHistory']"
+                      [routerLink]="['/dashboard/' + pidHandler.customEncodeURIComponent(providerId) + '/fullHistory']"
                     class="uk-h3 uk-link">See more results ...</a>
                   }
                 </div>

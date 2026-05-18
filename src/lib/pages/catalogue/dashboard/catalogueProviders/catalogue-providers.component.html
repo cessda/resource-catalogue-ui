@@ -185,7 +185,7 @@
                   <span class="">Last Update: </span>{{ providerBundle.metadata.modifiedAt | date }}
                 </div>
               </div>
-              @if (catalogueId === catalogueConfigId) {
+              @if (catalogueId == null) {
                 <div class="uk-width-1-6">
                   <div class="action-buttons">
                     <!--                    <button class="uk-button uk-button-action uk-display-block uk-margin-small-top" (click)="toggleService(providerService)">-->
@@ -206,7 +206,7 @@
         </div>
       }
     </div>
-    @if (providerBundle.catalogueId !== catalogueConfigId) {
+    @if (providerBundle.catalogueId != null) {
       <hr class="uk-margin-top">
       <div class="uk-align-right">
         <button [routerLink]="['/provider/view/', providerBundle.catalogueId, providerBundle.id]" class="uk-button uk-button-link">

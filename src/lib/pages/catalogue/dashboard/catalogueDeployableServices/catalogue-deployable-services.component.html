@@ -185,7 +185,7 @@
                   <span class="">Last Update: </span>{{ bundle.metadata.modifiedAt | date }}
                 </div>
               </div>
-              @if (catalogueId === catalogueConfigId) {
+              @if (catalogueId == null) {
                 <div class="uk-width-1-6">
                   <div class="action-buttons">
                     <button class="uk-button uk-button-action uk-display-block uk-margin-small-top" (click)="toggleDeployableService(bundle)">
@@ -207,7 +207,7 @@
             </div>
           }
         </div>
-        @if (bundle.deployableApplication.catalogueId !== catalogueConfigId) {
+        @if (bundle.deployableApplication.catalogueId != null) {
           <hr class="uk-margin-top">
           <div class="uk-align-right">
             <button

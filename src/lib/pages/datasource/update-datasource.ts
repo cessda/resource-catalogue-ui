@@ -51,7 +51,7 @@ export class UpdateDatasource extends DatasourceFormComponent implements OnInit 
             );
         } else {
           // this.datasourceService[this.pendingResource ? 'getPendingDatasource' : 'getDatasourceBundleById'](this.datasourceId, this.catalogueId)
-          this.datasourceService.getDatasourceBundleById(this.datasourceId, this.catalogueId).subscribe(dsBundle => {
+          this.datasourceService.getDatasourceBundleById(this.datasourceId).subscribe(dsBundle => {
               this.payloadAnswer = {'answer': {datasource: dsBundle.datasource}};
               ResourceService.removeNulls(dsBundle.datasource);
             },

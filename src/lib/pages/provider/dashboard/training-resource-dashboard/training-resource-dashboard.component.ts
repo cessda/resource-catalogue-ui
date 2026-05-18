@@ -18,7 +18,6 @@ import {pidHandler} from "../../../../shared/pid-handler/pid-handler.service";
 })
 export class TrainingResourceDashboardComponent implements OnInit {
 
-  catalogueConfigId: string = this.config.getProperty('catalogueId');
   protected readonly environment = environment;
   _marketplaceTrainingResourcesURL = environment.marketplaceTrainingResourcesURL;
 

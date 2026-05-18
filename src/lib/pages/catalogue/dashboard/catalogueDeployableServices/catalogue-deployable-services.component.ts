@@ -18,7 +18,6 @@ declare var UIkit: any;
 
 export class CatalogueDeployableServicesComponent implements OnInit {
 
-  catalogueConfigId: string | null = null;
   protected readonly environment = environment;
 
   formPrepare = {
@@ -59,7 +58,6 @@ export class CatalogueDeployableServicesComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.catalogueConfigId = this.config.getProperty('catalogueId');
     this.catalogueId = this.route.parent.snapshot.paramMap.get('catalogue');
 
     this.getCatalogue();

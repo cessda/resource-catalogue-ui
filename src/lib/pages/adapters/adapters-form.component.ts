@@ -28,7 +28,6 @@ export class AdaptersFormComponent implements OnInit {
   model: Model = null;
   payloadAnswer: object = null;
 
-  catalogueConfigId: string | null = null;
   catalogueName: string | null = null;
   serviceORresource = environment.serviceORresource;
   serviceName = '';
@@ -86,7 +85,7 @@ export class AdaptersFormComponent implements OnInit {
     this.adaptersService.uploadAdapter(adapterValue, this.editMode).subscribe(
       _service => {
         this.showLoader = false;
-        this.router.navigate(['/dashboard/' + this.catalogueConfigId +'/'+ this.pidHandler.customEncodeURIComponent(this.providerId) +'/adapters/']);
+        this.router.navigate(['/dashboard/' + this.pidHandler.customEncodeURIComponent(this.providerId) +'/adapters/']);
       },
       err => {
         this.showLoader = false;
@@ -103,7 +102,6 @@ export class AdaptersFormComponent implements OnInit {
   ngOnInit() {
     this.providerId = this.route.snapshot.paramMap.get('providerId');
     this.catalogueName = this.config.getProperty('catalogueName');
-    this.catalogueConfigId = this.config.getProperty('catalogueId');
     // this.showLoader = true;
     this.getIdsFromCurrentPath();
 
@@ -118,7 +116,7 @@ export class AdaptersFormComponent implements OnInit {
               adapter: {
                 'resourceOwner': decodeURIComponent(this.providerId),
                 'type': "Adapter",
-                'catalogueId': this.catalogueConfigId
+                'catalogueId': null
               }
             }
           };

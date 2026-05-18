@@ -36,7 +36,6 @@ export class AdaptersComponent implements OnInit {
   // toggleLoading = false;
   urlParams: URLParameter[] = [];
   providerId: string;
-  catalogueConfigId: string = this.config.getProperty('catalogueId');
   catalogueId: string;
   providerBundle: ProviderBundle;
   adapters: Paging<AdapterBundle>;

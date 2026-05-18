@@ -17,7 +17,6 @@ declare var UIkit: any;
     standalone: false
 })
 export class ResourceGuidelinesFormComponent implements OnInit {
-  catalogueConfigId: string = this.config.getProperty('catalogueId');
   catalogueSupportEmail: string | null = null;
   showLoader = false;
   pendingService = false; // revisit

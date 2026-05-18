@@ -34,7 +34,6 @@ export class DeployableServiceForm implements OnInit {
   firstServiceForm = false;
   showLoader = false;
   pendingResource = false;
-  catalogueConfigId: string | null = null;
   catalogueId: string;
   providerId: string;
   viewOnlyMode = false;
@@ -133,7 +132,6 @@ export class DeployableServiceForm implements OnInit {
     if (path.includes('view/:deployableServiceId')) {
       this.viewOnlyMode = true;
     }
-    this.catalogueConfigId = this.config.getProperty('catalogueId');
     this.showLoader = true;
     zip(
       this.trainingResourceService.getProvidersNames('approved'),
@@ -158,7 +156,7 @@ export class DeployableServiceForm implements OnInit {
                 {
                   'resourceOwner': decodeURIComponent(this.providerId),
                   'type': "DeployableApplication",
-                  'catalogueId': this.catalogueConfigId
+                  'catalogueId': null
                 }
             }
           };

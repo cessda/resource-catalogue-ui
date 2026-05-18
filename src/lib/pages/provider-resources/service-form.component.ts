@@ -35,7 +35,6 @@ export class ServiceFormComponent implements OnInit {
   formDataToSubmit: any = null;
 
   protected readonly isDevMode = isDevMode;
-  catalogueConfigId: string = this.config.getProperty('catalogueId');
   protected readonly environment = environment;
   protected _marketplaceServicesURL = environment.marketplaceServicesURL;
   serviceORresource = environment.serviceORresource;
