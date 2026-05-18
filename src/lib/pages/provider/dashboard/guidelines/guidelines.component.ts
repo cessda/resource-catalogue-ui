@@ -156,7 +156,7 @@ export class GuidelinesComponent implements OnInit {
       }
     }
 
-    this.router.navigate([`/dashboard`, this.catalogueId, this.providerId, `guidelines`], {queryParams: map});
+    this.router.navigate([`/dashboard`, this.providerId, `guidelines`], {queryParams: map});
   }
 
   paginationInit() {

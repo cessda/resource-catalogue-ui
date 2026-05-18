@@ -112,7 +112,7 @@
                                   &lt;!&ndash;                                <ul class="uk-nav uk-dropdown-nav uk-dropdown-close">&ndash;&gt;
                                   <li class="uk-margin-small-bottom">
                                     &lt;!&ndash;                                    <ng-container *ngIf="catalogueBundle.status === 'approved provider'">&ndash;&gt;
-                                    <a [routerLink]="['/dashboard', catalogueBundle.id, 'stats']">
+                                    <a [routerLink]="['/dashboard', 'stats']">
                                       Go to Dashboard
                                     </a>
                                   &lt;!&ndash;                                    </ng-container>&ndash;&gt;
@@ -149,7 +149,7 @@
                           <ul class="uk-nav uk-dropdown-nav uk-dropdown-close">
                             <li class="uk-margin-small-bottom">
                               <ng-container *ngIf="catalogueBundle.status === 'approved provider'">
-                                <a [routerLink]="['/dashboard', catalogueBundle.id, 'stats']">
+                                <a [routerLink]="['/dashboard', 'stats']">
                                   Go to Dashboard
                                 </a>
                               </ng-container>

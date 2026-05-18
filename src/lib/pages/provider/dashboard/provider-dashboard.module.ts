@@ -20,6 +20,7 @@ import {DeployableServicesComponent} from "./deployable-services/deployable-serv
 import {ProviderAccountingStatsComponent} from "./providerAccountingStats/provider-accounting-stats.component";
 import {AdaptersComponent} from "./adapters/adapters.component";
 import {DatasourcesComponent} from "./datasources/datasources.component";
+import {CataloguesComponent} from "./catalogues/catalogues.component";
 
 @NgModule({
   imports: [
@@ -41,6 +42,7 @@ import {DatasourcesComponent} from "./datasources/datasources.component";
     ProviderHistoryComponent,
     ProviderFullHistoryComponent,
     ServicesComponent,
+    CataloguesComponent,
     DatasourcesComponent,
     TrainingResourcesComponent,
     DeployableServicesComponent,

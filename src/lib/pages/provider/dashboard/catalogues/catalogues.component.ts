@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {DatasourceBundle, ProviderBundle} from '../../../../domain/eic-model';
+import {CatalogueBundle, ProviderBundle} from '../../../../domain/eic-model';
 import {ServiceProviderService} from '../../../../services/service-provider.service';
 import {ActivatedRoute, Router} from '@angular/router';
 import {Paging} from '../../../../domain/paging';
@@ -9,17 +9,17 @@ import {ConfigService} from "../../../../services/config.service";
 import {environment} from '../../../../../environments/environment';
 import {ServiceExtensionsService} from "../../../../services/service-extensions.service";
 import {pidHandler} from "../../../../shared/pid-handler/pid-handler.service";
-import {DatasourceService} from "../../../../services/datasource.service";
+import {CatalogueService} from "../../../../services/catalogue.service";
 
 declare var UIkit: any;
 
 @Component({
-    selector: 'app-datasources',
-    templateUrl: './datasources.component.html',
+    selector: 'app-catalogues',
+    templateUrl: './catalogues.component.html',
     standalone: false
 })
 
-export class DatasourcesComponent implements OnInit {
+export class CataloguesComponent implements OnInit {
 
   protected readonly environment = environment;
   serviceORresource = environment.serviceORresource;
@@ -42,10 +42,10 @@ export class DatasourcesComponent implements OnInit {
   providerId: string;
   catalogueId: string;
   providerBundle: ProviderBundle;
-  datasources: Paging<DatasourceBundle>;
+  catalogues: Paging<CatalogueBundle>;
   // providerCoverage: string[];
   // providerServicesGroupedByPlace: any;
-  selectedDatasource: DatasourceBundle = null;
+  seletectedCatalogue: CatalogueBundle = null;
   path: string;
 
   numberOfServicesOnView: number;
@@ -62,7 +62,7 @@ export class DatasourcesComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private providerService: ServiceProviderService,
-    private datasourceService: DatasourceService,
+    private catalogueService: CatalogueService,
     private serviceExtensionsService: ServiceExtensionsService,
     public pidHandler: pidHandler,
     public config: ConfigService
@@ -91,14 +91,14 @@ export class DatasourcesComponent implements OnInit {
           }
 
           // this.handleChange();
-          this.getDatasources();
+          this.getCatalogues();
         },
         error => this.errorMessage = <any>error
       );
   }
 
   useAsTemplate(id: string) {
-    this.router.navigate([`/provider/${this.providerId}/datasource/add/use-template`, id]);
+    this.router.navigate([`/provider/${this.providerId}/catalogue/add/use-template`, id]);
   }
 
   getProvider() {
@@ -111,20 +111,20 @@ export class DatasourcesComponent implements OnInit {
     );
   }
 
-  toggleDatasource(dsBundle: DatasourceBundle) {
-    if (dsBundle.status === 'pending' || dsBundle.status === 'rejected') {
-      this.errorMessage = `You cannot activate a ${dsBundle.status} datasource.`;
+  toggleCatalogue(bundle: CatalogueBundle) {
+    if (bundle.status === 'pending' || bundle.status === 'rejected') {
+      this.errorMessage = `You cannot activate a ${bundle.status} catalogue.`;
       window.scrollTo(0, 0);
       return;
     }
     UIkit.modal('#spinnerModal').show();
-    this.datasourceService.activateDatasource(dsBundle.id, !dsBundle.active).subscribe(
+    this.catalogueService.activateCatalogue(bundle.id, !bundle.active).subscribe(
       res => {},
       err => {
         this.errorMessage = (err?.status >= 500 && err?.status < 600)
             ? `Something went wrong. If the issue persists, please contact support and provide the following error code: ${err?.error?.traceId}`
             : `Something went bad, server responded: ${err?.error?.message}`;
-        this.getDatasources();
+        this.getCatalogues();
         UIkit.modal('#spinnerModal').hide();
         // console.log(error);
       },
@@ -135,12 +135,12 @@ export class DatasourcesComponent implements OnInit {
     );
   }
 
-  getDatasources() {
-    this.providerService.getDatasourcesOfProvider(this.providerId, this.dataForm.get('from').value, this.dataForm.get('quantity').value,
+  getCatalogues() {
+    this.providerService.getCataloguesOfProvider(this.providerId, this.dataForm.get('from').value, this.dataForm.get('quantity').value,
       this.dataForm.get('order').value, this.dataForm.get('sort').value,
       this.dataForm.get('active').value, this.dataForm.get('status').value, this.dataForm.get('query').value)
       .subscribe(res => {
-          this.datasources = res;
+          this.catalogues = res;
           this.total = res['total'];
           this.numberOfServicesOnView = res['to']-res['from'];
           this.paginationInit();
@@ -151,33 +151,33 @@ export class DatasourcesComponent implements OnInit {
         () => {
           this.statusesOnView = [];
           for (let i = 0; i < this.numberOfServicesOnView; i++) {
-            this.serviceExtensionsService.getMonitoringStatus(this.datasources.results[i].id).subscribe(
+            this.serviceExtensionsService.getMonitoringStatus(this.catalogues.results[i].id).subscribe(
               monitoringStatus => {
                 if(monitoringStatus) { this.statusesOnView.push(monitoringStatus[0].value) }
                 else { this.statusesOnView.push('NA') } //no response hence Not Available status (NA)
               },
-              err => { this.errorMessage = 'An error occurred while retrieving data for a datasource. ' + err.error; }
+              err => { this.errorMessage = 'An error occurred while retrieving data for a catalogue. ' + err.error; }
             );
           }
         }
       );
   }
 
-  setSelectedDatasource(dsBundle: DatasourceBundle) {
-    this.selectedDatasource = dsBundle;
+  setSelectedCatalogue(bundle: CatalogueBundle) {
+    this.seletectedCatalogue = bundle;
     UIkit.modal('#actionModal').show();
   }
 
-  deleteDatasource(id: string) {
+  deleteCatalogue(id: string) {
     UIkit.modal('#spinnerModal').show();
-    this.datasourceService.deleteDatasource(id).subscribe(
+    this.catalogueService.deleteCatalogue(id).subscribe(
       res => {},
       err => {
         UIkit.modal('#spinnerModal').hide();
         this.errorMessage = (err?.status >= 500 && err?.status < 600)
             ? `Something went wrong. If the issue persists, please contact support and provide the following error code: ${err?.error?.traceId}`
             : `Something went bad, server responded: ${err?.error?.message}`;
-        this.getDatasources();
+        this.getCatalogues();
       },
       () => {
         UIkit.modal('#spinnerModal').hide();
@@ -204,7 +204,7 @@ export class DatasourcesComponent implements OnInit {
       }
     }
 
-    this.router.navigate([`/dashboard`, this.providerId, `datasources`], {queryParams: map});
+    this.router.navigate([`/dashboard`, this.providerId, `catalogues`], {queryParams: map});
   }
 
   paginationInit() {

@@ -7,7 +7,7 @@ import {
   Provider,
   ProviderBundle,
   ProviderRequest,
-  VocabularyCuration, TrainingResourceBundle, DatasourceBundle
+  VocabularyCuration, TrainingResourceBundle, DatasourceBundle, CatalogueBundle
 } from '../domain/eic-model';
 import {environment} from '../../environments/environment';
 import {Observable} from 'rxjs';
@@ -117,6 +117,29 @@ export class ServiceProviderService {
       return this.http.get<Paging<ServiceBundle>>(this.base +
         `/catalogue/${catalogue_id}/${id}/service/bundle/all?from=${from}&quantity=${quantity}&order=${order}&sort=${sort}&keyword=${query}`, {params});
     }
+  }
+
+  getCataloguesOfProvider(id: string, from: string, quantity: string, order: string, sort: string, active: string, status?: string, query?: string) {
+    id = decodeURIComponent(id);
+    if (!query) { query = ''; }
+    if (!status) { status = 'approved,pending,rejected'; }
+    let params = new HttpParams();
+    if (status && status.length > 0) {
+      for (const statusValue of status) {
+        params = params.append('status', statusValue);
+      }
+    } else {
+      const allStatus = ["approved","pending","rejected"];
+      for (const statusValue of allStatus) {
+        params = params.append('status', statusValue);
+      }
+    }
+    if (active === 'statusAll') {
+      return this.http.get<Paging<CatalogueBundle>>(this.base +
+        `/catalogue/byProvider/${id}?from=${from}&quantity=${quantity}&order=${order}&sort=${sort}&status=${status}&keyword=${query}`);
+    }
+    return this.http.get<Paging<CatalogueBundle>>(this.base +
+      `/catalogue/byProvider/${id}?from=${from}&quantity=${quantity}&order=${order}&sort=${sort}&active=${active}&status=${status}&keyword=${query}`);
   }
 
   getDatasourcesOfProvider(id: string, from: string, quantity: string, order: string, sort: string, active: string, status?: string, query?: string) {

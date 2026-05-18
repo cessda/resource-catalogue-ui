@@ -156,7 +156,7 @@ export class AdaptersComponent implements OnInit {
       }
     }
 
-    this.router.navigate([`/dashboard`, this.catalogueId, this.providerId, `adapters`], {queryParams: map});
+    this.router.navigate([`/dashboard`, this.providerId, `adapters`], {queryParams: map});
   }
 
   paginationInit() {

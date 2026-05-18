@@ -55,6 +55,18 @@
                 {{serviceORresource}}s
               </a>
             </li>
+            <li [routerLinkActive]="['current_section']" #catalogues="routerLinkActive">
+              <a [routerLink]="['/dashboard', providerId, 'catalogues']">
+                <img src="{{catalogues.isActive ? 'assets/images/new-icons/services-active.svg' : 'assets/images/new-icons/services.svg'}}" class="uk-margin-small-right">
+                Catalogues
+              </a>
+            </li>
+<!--            <li [routerLinkActive]="['current_section']" #catalogues="routerLinkActive">-->
+<!--              <a [routerLink]="['/dashboard', providerId, 'catalogues']">-->
+<!--                <img src="{{catalogues.isActive ? 'assets/images/new-icons/services-active.svg' : 'assets/images/new-icons/services.svg'}}" class="uk-margin-small-right">-->
+<!--                Catalogues-->
+<!--              </a>-->
+<!--            </li>-->
             <li [routerLinkActive]="['current_section']" #datasources="routerLinkActive">
               <a [routerLink]="['/dashboard', providerId, 'datasources']">
                 <img src="{{datasources.isActive ? 'assets/images/new-icons/services-active.svg' : 'assets/images/new-icons/services.svg'}}" class="uk-margin-small-right">
@@ -98,6 +110,12 @@
                   <a [routerLink]="['/dashboard', providerId, 'draft-resources']">
                     <img src="{{draftServices.isActive ? 'assets/images/new-icons/draft-services-active.svg' : 'assets/images/new-icons/draft-services.svg'}}" class="uk-margin-small-right">
                     Draft {{serviceORresource}}s
+                  </a>
+                </li>
+                <li [routerLinkActive]="['current_section']" #catalogues="routerLinkActive">
+                  <a [routerLink]="['/dashboard', providerId, 'catalogues']">
+                    <img src="{{catalogues.isActive ? 'assets/images/new-icons/services-active.svg' : 'assets/images/new-icons/services.svg'}}" class="uk-margin-small-right">
+                    Catalogues
                   </a>
                 </li>
                 <li [routerLinkActive]="['current_section']" #datasources="routerLinkActive">

@@ -185,7 +185,7 @@ export class DeployableServicesComponent implements OnInit {
       }
     }
 
-    this.router.navigate([`/dashboard`, this.catalogueId, this.providerId, `deployable-services`], {queryParams: map});
+    this.router.navigate([`/dashboard`, this.providerId, `deployable-services`], {queryParams: map});
   }
 
   paginationInit() {

@@ -204,7 +204,7 @@ export class TrainingResourcesComponent implements OnInit {
       }
     }
 
-    this.router.navigate([`/dashboard`, this.catalogueId, this.providerId, `training-resources`], {queryParams: map});
+    this.router.navigate([`/dashboard`, this.providerId, `training-resources`], {queryParams: map});
   }
 
   paginationInit() {

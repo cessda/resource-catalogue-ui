@@ -192,4 +192,9 @@ export class CatalogueService {
     catalogueId = decodeURIComponent(catalogueId);
     return this.http.get<LoggingInfo[]>(this.base + `/catalogue/loggingInfoHistory/${catalogueId}`);
   }
+
+  activateCatalogue(id: string, active: boolean) { // toggles active/inactive catalogue
+    id = decodeURIComponent(id);
+    return this.http.patch(this.base + `/catalogue/setActive/${id}?active=${active}`, this.options);
+  }
 }
