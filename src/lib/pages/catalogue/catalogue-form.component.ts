@@ -10,6 +10,7 @@ import {environment} from '../../../environments/environment';
 import {Model} from "../../../dynamic-catalogue/domain/dynamic-form-model";
 import {FormControlService} from "../../../dynamic-catalogue/services/form-control.service";
 import {SurveyComponent} from "../../../dynamic-catalogue/pages/dynamic-form/survey.component";
+import {pidHandler} from "../../shared/pid-handler/pid-handler.service";
 
 declare var UIkit: any;
 
@@ -29,8 +30,8 @@ export class CatalogueFormComponent implements OnInit {
   protected readonly environment = environment;
   serviceORresource = environment.serviceORresource;
   catalogueId: string = null;
+  providerId: string = null;
   errorMessage = '';
-  userInfo = {sub:'', family_name: '', given_name: '', email: ''};
   viewOnlyMode = false;
   editMode = false;
   hasChanges = false;
@@ -61,11 +62,13 @@ export class CatalogueFormComponent implements OnInit {
               public router: Router,
               public route: ActivatedRoute,
               public dynamicFormService: FormControlService,
-              public config: ConfigService) {
+              public config: ConfigService,
+              public pidHandler: pidHandler) {
   }
 
   ngOnInit() {
     this.showLoader = true;
+    this.providerId = this.route.snapshot.paramMap.get('providerId');
     this.serviceProviderService.getFormModelById('m-b-catalogue').subscribe(
       res => this.model = res,
       err => {
@@ -74,17 +77,11 @@ export class CatalogueFormComponent implements OnInit {
       },
       () =>  {
         if (!this.editMode) { //prefill field(s)
-          const currentUser = this.getCurrentUserInfo();
           this.payloadAnswer = {
             'answer': {
               catalogue: {
-                'users': [
-                  {
-                    name: currentUser.firstname,
-                    surname: currentUser.lastname,
-                    email: currentUser.email
-                  }
-                ]
+                'resourceOwner': decodeURIComponent(this.providerId),
+                'type': "Catalogue"
               }
             }
           };
@@ -149,6 +146,7 @@ export class CatalogueFormComponent implements OnInit {
 
       this.catalogueService[method](catalogueValue, this.commentControl.value).subscribe(
         res => {
+          this.catalogueId = res.id;
         },
         err => {
           this.showLoader = false;
@@ -160,12 +158,7 @@ export class CatalogueFormComponent implements OnInit {
         },
         () => {
           this.showLoader = false;
-          if (this.editMode) {
-            this.router.navigate(['/catalogue/my']);
-          } else {
-            this.router.navigate(['/catalogue/my']);
-            // this.authService.refreshLogin('/catalogue/my'); // fixme: not redirecting
-          }
+          this.router.navigate(['/catalogue-dashboard/' + this.pidHandler.customEncodeURIComponent(this.catalogueId) +'/info']);
         }
       );
     }
@@ -191,12 +184,4 @@ export class CatalogueFormComponent implements OnInit {
   }
 
   /** <--Submit Comment Modal **/
-
-  getCurrentUserInfo(): { firstname: string; lastname: string; email: string } {
-    return {
-      firstname: this.authService.getUserName(),
-      lastname: this.authService.getUserSurname(),
-      email: this.authService.getUserEmail()
-    };
-  }
 }

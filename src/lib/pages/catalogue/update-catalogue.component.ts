@@ -1,6 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {Catalogue, Provider, Type} from '../../domain/eic-model';
-import {ServiceProviderFormComponent} from '../provider/service-provider-form.component';
+        import {Catalogue} from '../../domain/eic-model';
 import {ResourceService} from '../../services/resource.service';
 import {UntypedFormBuilder} from '@angular/forms';
 import {AuthenticationService} from '../../services/authentication.service';
@@ -10,6 +9,7 @@ import {CatalogueFormComponent} from "./catalogue-form.component";
 import {CatalogueService} from "../../services/catalogue.service";
 import {FormControlService} from "../../../dynamic-catalogue/services/form-control.service";
 import {ConfigService} from "../../services/config.service";
+import {pidHandler} from "../../shared/pid-handler/pid-handler.service";
 
 declare var UIkit: any;
 
@@ -30,8 +30,9 @@ export class UpdateCatalogueComponent extends CatalogueFormComponent implements 
               public router: Router,
               public route: ActivatedRoute,
               public dynamicFormService: FormControlService,
-              public config: ConfigService) {
-    super(fb, authService, serviceProviderService, catalogueService, resourceService, router, route, dynamicFormService, config);
+              public config: ConfigService,
+              public pidhandler: pidHandler) {
+    super(fb, authService, serviceProviderService, catalogueService, resourceService, router, route, dynamicFormService, config, pidhandler);
   }
 
   ngOnInit() {

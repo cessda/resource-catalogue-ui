@@ -272,6 +272,11 @@
                 }
                 @if (providerBundle?.status === 'approved') {
                   <li>
+                    <a [routerLink]="['/catalogue/' + providerId + '/add/']">
+                      Add new Catalogue
+                    </a>
+                  </li>
+                  <li>
                     <a [routerLink]="['/provider/' + providerId + '/adapter/add/']">
                       Add new Adapter
                     </a>
