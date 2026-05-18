@@ -107,7 +107,7 @@ export class DatasourceFormComponent implements OnInit {
         err => {
           this.showLoader = false;
           window.scrollTo(0, 0);
-          this.errorMessage = 'Something went bad, server responded: ' + err?.error?.message;
+          this.errorMessage = 'Something went bad, server responded: ' + err?.error?.details;
         }
       );
     } else {
@@ -124,7 +124,7 @@ export class DatasourceFormComponent implements OnInit {
           this.errorMessage =
             (err?.status >= 500 && err?.status < 600)
               ? `Something went wrong. If the issue persists, please contact support and provide the following error code: ${err?.error?.traceId}`
-              : `Something went bad, server responded: ${err?.error?.message}`;
+              : `Something went bad, server responded: ${err?.error?.details}`;
         }
       );
     }
@@ -151,7 +151,7 @@ export class DatasourceFormComponent implements OnInit {
                 this.errorMessage =
           (err?.status >= 500 && err?.status < 600)
             ? `Something went wrong. If the issue persists, please contact support and provide the following error code: ${err?.error?.traceId}`
-            : `Something went bad while getting the data for page initialization: ${err?.error?.message}`;
+            : `Something went bad while getting the data for page initialization: ${err?.error?.details}`;
       },
       () => {
         if (!this.editMode) { //prefill field(s)
@@ -201,7 +201,7 @@ export class DatasourceFormComponent implements OnInit {
         this.showLoader = false;
         this.errorMessage = (err?.status >= 500 && err?.status < 600)
             ? `Something went wrong. If the issue persists, please contact support and provide the following error code: ${err?.error?.traceId}`
-            : `Something went bad, server responded: ${err?.error?.message}`;
+            : `Something went bad, server responded: ${err?.error?.details}`;
         // return this.navigator.resourceDashboard(this.providerId, this.datasource.serviceId); // fixme: Datasource providerId -2test
       },
       () => {

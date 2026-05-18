@@ -103,7 +103,7 @@ export class DeployableServiceForm implements OnInit {
       //     this.errorMessage =
       //           (err?.status >= 500 && err?.status < 600)
       //             ? `Something went wrong. If the issue persists, please contact support and provide the following error code: ${err?.error?.traceId}`
-      //             : `Something went bad, server responded: ${err?.error?.message}`;
+      //             : `Something went bad, server responded: ${err?.error?.details}`;
       //   }
       // );
     } else {
@@ -119,7 +119,7 @@ export class DeployableServiceForm implements OnInit {
           this.errorMessage =
           (err?.status >= 500 && err?.status < 600)
             ? `Something went wrong. If the issue persists, please contact support and provide the following error code: ${err?.error?.traceId}`
-            : `Something went bad, server responded: ${err?.error?.message}`;
+            : `Something went bad, server responded: ${err?.error?.details}`;
           console.log(err);
           console.log(this.errorMessage);
         }
@@ -144,7 +144,7 @@ export class DeployableServiceForm implements OnInit {
                 this.errorMessage =
           (err?.status >= 500 && err?.status < 600)
             ? `Something went wrong. If the issue persists, please contact support and provide the following error code: ${err?.error?.traceId}`
-            : `Something went bad while getting the data for page initialization: ${err?.error?.message}`;
+            : `Something went bad while getting the data for page initialization: ${err?.error?.details}`;
       },
       () => {
         this.providerId = this.route.snapshot.paramMap.get('providerId');

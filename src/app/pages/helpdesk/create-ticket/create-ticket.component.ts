@@ -76,7 +76,7 @@ export class CreateTicketComponent implements OnInit {
             message: err.message,
           });
           this.loading = false;
-          this.errorMessage = `${err.error.message || 'Failed to create ticket.'}`;
+          this.errorMessage = `${err.error.details || 'Failed to create ticket.'}`;
         }
       });
     } else {

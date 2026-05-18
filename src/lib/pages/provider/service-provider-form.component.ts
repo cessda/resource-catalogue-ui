@@ -188,7 +188,7 @@ export class ServiceProviderFormComponent implements OnInit {
                     this.errorMessage =
           (err?.status >= 500 && err?.status < 600)
             ? `Something went wrong. If the issue persists, please contact support and provide the following error code: ${err?.error?.traceId}`
-            : `Something went bad, server responded: ${err?.error?.message}`;
+            : `Something went bad, server responded: ${err?.error?.details}`;
           },
           () => {
             this.showLoader = false;
@@ -204,7 +204,7 @@ export class ServiceProviderFormComponent implements OnInit {
                   this.errorMessage =
           (err?.status >= 500 && err?.status < 600)
             ? `Something went wrong. If the issue persists, please contact support and provide the following error code: ${err?.error?.traceId}`
-            : `Something went bad, server responded: ${err?.error?.message}`;
+            : `Something went bad, server responded: ${err?.error?.details}`;
         },
         () => {
           this.showLoader = false;
@@ -271,7 +271,7 @@ export class ServiceProviderFormComponent implements OnInit {
         },
         error => {
           console.log(error);
-          this.vocabularyEntryForm.get('errorMessage').setValue(error.error.message);
+          this.vocabularyEntryForm.get('errorMessage').setValue(error.error.details);
         },
         () => {
           this.vocabularyEntryForm.reset();

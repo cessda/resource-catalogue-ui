@@ -188,7 +188,7 @@ export class ServiceFormComponent implements OnInit {
         err => {
           this.showLoader = false;
           window.scrollTo(0, 0);
-          this.errorMessage = 'Something went bad, server responded: ' + err?.error?.message;
+          this.errorMessage = 'Something went bad, server responded: ' + err?.error?.details;
         }
       );
     } else {
@@ -202,7 +202,7 @@ export class ServiceFormComponent implements OnInit {
         err => {
           this.showLoader = false;
           window.scrollTo(0, 0);
-          this.errorMessage = 'Something went bad, server responded: ' + err?.error?.message;
+          this.errorMessage = 'Something went bad, server responded: ' + err?.error?.details;
         }
       );
     }
@@ -240,7 +240,7 @@ export class ServiceFormComponent implements OnInit {
                 this.errorMessage =
           (err?.status >= 500 && err?.status < 600)
             ? `Something went wrong. If the issue persists, please contact support and provide the following error code: ${err?.error?.traceId}`
-            : `Something went bad while getting the data for page initialization: ${err?.error?.message}`;
+            : `Something went bad while getting the data for page initialization: ${err?.error?.details}`;
       },
       () => {
         this.premiumSort.transform(this.geographicalVocabulary, ['Europe', 'Worldwide']);
@@ -341,7 +341,7 @@ export class ServiceFormComponent implements OnInit {
         },
         error => {
           console.log(error);
-          this.vocabularyEntryForm.get('errorMessage').setValue(error.error.message);
+          this.vocabularyEntryForm.get('errorMessage').setValue(error.error.details);
         },
         () => {
           this.vocabularyEntryForm.reset();

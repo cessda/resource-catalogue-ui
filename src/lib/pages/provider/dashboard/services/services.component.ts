@@ -121,7 +121,7 @@ export class ServicesComponent implements OnInit {
       res => {},
       error => {
         UIkit.modal('#spinnerModal').hide();
-        this.errorMessage = 'Something went bad. ' + error.error.message ;
+        this.errorMessage = 'Something went bad. ' + error.error.details ;
       },
       () => {
         UIkit.modal('#spinnerModal').hide();
@@ -171,7 +171,7 @@ export class ServicesComponent implements OnInit {
         UIkit.modal('#spinnerModal').hide();
         this.errorMessage = (err?.status >= 500 && err?.status < 600)
             ? `Something went wrong. If the issue persists, please contact support and provide the following error code: ${err?.error?.traceId}`
-            : `Something went bad, server responded: ${err?.error?.message}`;
+            : `Something went bad, server responded: ${err?.error?.details}`;
         this.getServices();
       },
       () => {

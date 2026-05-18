@@ -480,7 +480,7 @@ export class ResourceService {
     const message = error.error;
     if (error.error instanceof ErrorEvent) {
       // A client-side or network error occurred. Handle it accordingly.
-      console.error('An error occurred:', error.error.message);
+      console.error('An error occurred:', error.error.details);
     } else {
       // The backend returned an unsuccessful response code.
       // The response body may contain clues as to what went wrong,

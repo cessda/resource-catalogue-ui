@@ -52,7 +52,7 @@ export class ProviderAccountingStatsComponent implements OnInit {
         }
       },
       error: (err) => {
-        this.errorMessage = 'An error occurred while retrieving data for this provider: ' + err.error.message;
+        this.errorMessage = 'An error occurred while retrieving data for this provider: ' + err.error.details;
       }
     });
   }
@@ -115,7 +115,7 @@ export class ProviderAccountingStatsComponent implements OnInit {
         }
       },
       error: (err) => {
-        this.errorMessage = 'An error occurred while retrieving data for this provider: ' + err.error.message;
+        this.errorMessage = 'An error occurred while retrieving data for this provider: ' + err.error.details;
       }
     });
   }

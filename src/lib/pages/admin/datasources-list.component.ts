@@ -287,7 +287,7 @@ export class DatasourcesListComponent implements OnInit {
         // UIkit.modal('#spinnerModal').hide();
         this.errorMessage = (err?.status >= 500 && err?.status < 600)
             ? `Something went wrong. If the issue persists, please contact support and provide the following error code: ${err?.error?.traceId}`
-            : `Something went bad, server responded: ${err?.error?.message}`;
+            : `Something went bad, server responded: ${err?.error?.details}`;
         this.getDatasources();
       },
       () => {
@@ -312,7 +312,7 @@ export class DatasourcesListComponent implements OnInit {
           this.errorMessage =
             (err?.status >= 500 && err?.status < 600)
               ? `Something went wrong. If the issue persists, please contact support and provide the following error code: ${err?.error?.traceId}`
-              : `Something went bad, server responded: ${err?.error?.message}`;
+              : `Something went bad, server responded: ${err?.error?.details}`;
           window.scroll(0,0);
         },
         () => {
@@ -491,7 +491,7 @@ export class DatasourcesListComponent implements OnInit {
         this.errorMessage =
           (err?.status >= 500 && err?.status < 600)
             ? `Something went wrong. If the issue persists, please contact support and provide the following error code: ${err?.error?.traceId}`
-            : `Something went bad while getting the data for page initialization: ${err?.error?.message}`;
+            : `Something went bad while getting the data for page initialization: ${err?.error?.details}`;
       },
       () => {
         this.providersPage.results.sort((a, b) => 0 - (a.name > b.name ? -1 : 1));
@@ -533,7 +533,7 @@ export class DatasourcesListComponent implements OnInit {
           this.errorMessage =
             (err?.status >= 500 && err?.status < 600)
               ? `Something went wrong. If the issue persists, please contact support and provide the following error code: ${err?.error?.traceId}`
-              : `Something went bad, server responded: ${err?.error?.message}`;
+              : `Something went bad, server responded: ${err?.error?.details}`;
           window.scroll(0,0);
         },
         () => {

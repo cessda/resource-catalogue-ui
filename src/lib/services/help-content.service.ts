@@ -24,7 +24,7 @@ export class HelpContentService {
     // We'd also dig deeper into the error to get a better message
     let errMsg = '';
     if (error.error instanceof ErrorEvent) {
-      const body = error.error.message || '';
+      const body = error.error.details || '';
       // const err = body.error || JSON.stringify(body);
       errMsg = `${error.status} - ${error.statusText || ''} ${body}`;
     } else {

@@ -19,8 +19,8 @@ export class AuthenticationInterceptor implements HttpInterceptor {
     return next.handle(request).pipe(
       catchError((response: HttpErrorResponse) => {
         let errorMessage: string;
-        if (response.error.message) {
-          errorMessage = response.error.message;
+        if (response.error.details) {
+          errorMessage = response.error.details;
         } else {
           // if (response.error.length > 100) {
           //   errorMessage = 'Server error';
@@ -31,7 +31,7 @@ export class AuthenticationInterceptor implements HttpInterceptor {
         const message = errorMessage;
         if (response.error instanceof ErrorEvent) {
           // A client-side or network error occurred. Handle it accordingly.
-          console.error('An error occurred:', response.error.message);
+          console.error('An error occurred:', response.error.details);
         } else {
           if (response.status === 401) {
             this.authenticationService.refreshLogin(this.router.url);
