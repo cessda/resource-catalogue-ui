@@ -134,7 +134,7 @@ export class CatalogueFormComponent implements OnInit {
                     this.errorMessage =
           (err?.status >= 500 && err?.status < 600)
             ? `Something went wrong. If the issue persists, please contact support and provide the following error code: ${err?.error?.traceId}`
-            : `Something went bad, server responded: ${err?.error?.details}`;
+            : `Something went bad, server responded: ${err?.error?.detail}`;
           },
           () => {
             this.showLoader = false;
@@ -154,7 +154,7 @@ export class CatalogueFormComponent implements OnInit {
                   this.errorMessage =
           (err?.status >= 500 && err?.status < 600)
             ? `Something went wrong. If the issue persists, please contact support and provide the following error code: ${err?.error?.traceId}`
-            : `Something went bad, server responded: ${err?.error?.details}`;
+            : `Something went bad, server responded: ${err?.error?.detail}`;
         },
         () => {
           this.showLoader = false;

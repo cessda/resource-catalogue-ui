@@ -216,7 +216,7 @@ export class ResourcesListComponent implements OnInit {
                   this.errorMessage =
           (err?.status >= 500 && err?.status < 600)
             ? `Something went wrong. If the issue persists, please contact support and provide the following error code: ${err?.error?.traceId}`
-            : `Something went bad while getting the data for page initialization: ${err?.error?.details}`;
+            : `Something went bad while getting the data for page initialization: ${err?.error?.detail}`;
         },
         () => {
           this.providersPage.results.sort((a, b) => 0 - (a.name > b.name ? -1 : 1));
@@ -530,7 +530,7 @@ export class ResourcesListComponent implements OnInit {
         // UIkit.modal('#spinnerModal').hide();
         this.errorMessage = (err?.status >= 500 && err?.status < 600)
             ? `Something went wrong. If the issue persists, please contact support and provide the following error code: ${err?.error?.traceId}`
-            : `Something went bad, server responded: ${err?.error?.details}`;
+            : `Something went bad, server responded: ${err?.error?.detail}`;
         this.getResources();
       },
       () => {
@@ -556,7 +556,7 @@ export class ResourcesListComponent implements OnInit {
           this.errorMessage =
           (err?.status >= 500 && err?.status < 600)
             ? `Something went wrong. If the issue persists, please contact support and provide the following error code: ${err?.error?.traceId}`
-            : `Something went bad, server responded: ${err?.error?.details}`;
+            : `Something went bad, server responded: ${err?.error?.detail}`;
           window.scroll(0,0);
         },
         () => {
@@ -577,7 +577,7 @@ export class ResourcesListComponent implements OnInit {
       res => {},
       error => {
         UIkit.modal('#spinnerModal').hide();
-        this.errorMessage = 'Something went bad. ' + error.error.details ;
+        this.errorMessage = 'Something went bad. ' + error.error.detail ;
       },
       () => {
         UIkit.modal('#spinnerModal').hide();
@@ -653,7 +653,7 @@ export class ResourcesListComponent implements OnInit {
           this.errorMessage =
             (err?.status >= 500 && err?.status < 600)
               ? `Something went wrong. If the issue persists, please contact support and provide the following error code: ${err?.error?.traceId}`
-              : `Something went bad, server responded: ${err?.error?.details}`;
+              : `Something went bad, server responded: ${err?.error?.detail}`;
           window.scroll(0,0);
         },
         () => {

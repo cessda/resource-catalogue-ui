@@ -53,7 +53,7 @@ export class ServiceAccountingStatsComponent implements OnInit {
           }
         },
         error: (err) => {
-          this.errorMessage = 'An error occurred while retrieving data for this service: ' + err.error.details;
+          this.errorMessage = 'An error occurred while retrieving data for this service: ' + err.error.detail;
         }
       });
     });
@@ -114,7 +114,7 @@ export class ServiceAccountingStatsComponent implements OnInit {
         }
       },
       error: (err) => {
-        this.errorMessage = 'An error occurred while retrieving data for this service: ' + err.error.details;
+        this.errorMessage = 'An error occurred while retrieving data for this service: ' + err.error.detail;
       }
     });
   }

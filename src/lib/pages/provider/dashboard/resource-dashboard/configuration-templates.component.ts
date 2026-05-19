@@ -182,7 +182,7 @@ export class ConfigurationTemplatesComponent implements OnInit {
         setTimeout(() => this.saveMessageMap[templateId] = '', 5000);
       },
       error: (err) => {
-        this.saveMessageMap[templateId] = isUpdate ? 'Update failed. ' + + err.error.details : 'Save failed. ' + err.error.details;
+        this.saveMessageMap[templateId] = isUpdate ? 'Update failed. ' + + err.error.detail : 'Save failed. ' + err.error.detail;
         setTimeout(() => this.saveMessageMap[templateId] = '', 5000);
         console.error(`Failed to save template instance for ${templateId}`, err);
       }
