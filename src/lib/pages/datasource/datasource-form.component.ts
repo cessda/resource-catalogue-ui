@@ -162,7 +162,7 @@ export class DatasourceFormComponent implements OnInit {
                 'serviceId': decodeURIComponent(this.resourceId),
                 'catalogueId': null,
                 'resourceOwner': decodeURIComponent(this.providerId),
-                'nodePID': (!this.config.getProperty('nodePidAllowVocabularyValues')) ? this.config.getProperty('nodePid') : null
+                'nodePID': (this.config.getProperty('nodePidFixed')) ? this.config.getProperty('nodePid') : null
               }
             }
           };

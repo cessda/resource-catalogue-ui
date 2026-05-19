@@ -120,7 +120,7 @@ export class ConfigurationTemplatesComponent implements OnInit {
                           resourceId: decodeURIComponent(this.resourceId),
                           configurationTemplateId: modelId.split("-").slice(2).join("/"),
                           catalogueId: null,
-                          nodePID: (!this.config.getProperty('nodePidAllowVocabularyValues')) ? this.config.getProperty('nodePid') : null
+                          nodePID: (this.config.getProperty('nodePidFixed')) ? this.config.getProperty('nodePid') : null
                         }
                       }
                     };

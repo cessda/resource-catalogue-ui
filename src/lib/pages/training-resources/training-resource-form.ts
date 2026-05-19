@@ -333,7 +333,7 @@ export class TrainingResourceForm implements OnInit {
                   'resourceOwner': decodeURIComponent(this.providerId),
                   'type': "TrainingMaterial",
                   'catalogueId': null,
-                  'nodePID': (!this.config.getProperty('nodePidAllowVocabularyValues')) ? this.config.getProperty('nodePid') : null
+                  'nodePID': (this.config.getProperty('nodePidFixed')) ? this.config.getProperty('nodePid') : null
                 }
             }
           };

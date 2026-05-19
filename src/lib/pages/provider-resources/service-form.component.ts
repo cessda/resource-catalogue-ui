@@ -265,7 +265,7 @@ export class ServiceFormComponent implements OnInit {
                 {
                   'resourceOwner': decodeURIComponent(this.providerId),
                   'type': "Service",
-                  'nodePID': (!this.config.getProperty('nodePidAllowVocabularyValues')) ? this.config.getProperty('nodePid') : null
+                  'nodePID': (this.config.getProperty('nodePidFixed')) ? this.config.getProperty('nodePid') : null
                 }
           }};
         }

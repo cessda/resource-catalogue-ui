@@ -117,7 +117,7 @@ export class AdaptersFormComponent implements OnInit {
                 'resourceOwner': decodeURIComponent(this.providerId),
                 'type': "Adapter",
                 'catalogueId': null,
-                'nodePID': (!this.config.getProperty('nodePidAllowVocabularyValues')) ? this.config.getProperty('nodePid') : null
+                'nodePID': (this.config.getProperty('nodePidFixed')) ? this.config.getProperty('nodePid') : null
               }
             }
           };

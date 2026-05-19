@@ -82,7 +82,7 @@ export class CatalogueFormComponent implements OnInit {
               catalogue: {
                 'resourceOwner': decodeURIComponent(this.providerId),
                 'type': "Catalogue",
-                'nodePID': (!this.config.getProperty('nodePidAllowVocabularyValues')) ? this.config.getProperty('nodePid') : null
+                'nodePID': (this.config.getProperty('nodePidFixed')) ? this.config.getProperty('nodePid') : null
               }
             }
           };
