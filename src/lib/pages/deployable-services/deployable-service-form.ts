@@ -156,7 +156,8 @@ export class DeployableServiceForm implements OnInit {
                 {
                   'resourceOwner': decodeURIComponent(this.providerId),
                   'type': "DeployableApplication",
-                  'catalogueId': null
+                  'catalogueId': null,
+                  'nodePID': (!this.config.getProperty('nodePidAllowVocabularyValues')) ? this.config.getProperty('nodePid') : null
                 }
             }
           };

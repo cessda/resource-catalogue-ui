@@ -108,6 +108,7 @@ export class ServiceProviderFormComponent implements OnInit {
             'answer': {
               organisation: {
                 'catalogueId': this.catalogueId,
+                'nodePID': (!this.config.getProperty('nodePidAllowVocabularyValues')) ? this.config.getProperty('nodePid') : null,
                 'users': [
                   {
                     name: currentUser.firstname,

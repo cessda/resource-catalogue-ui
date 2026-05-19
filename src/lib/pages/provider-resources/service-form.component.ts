@@ -5,7 +5,7 @@ import {NavigationService} from '../../services/navigation.service';
 import {ResourceService} from '../../services/resource.service';
 import {Provider, Service, Type, Vocabulary} from '../../domain/eic-model';
 import {Paging} from '../../domain/paging';
-import {Observable, of, zip} from 'rxjs';
+import {config, Observable, of, zip} from 'rxjs';
 import {PremiumSortPipe} from '../../shared/pipes/premium-sort.pipe';
 import {ConfigService} from '../../services/config.service';
 import {environment} from '../../../environments/environment';
@@ -262,8 +262,11 @@ export class ServiceFormComponent implements OnInit {
 
         if(!this.editMode){ //prefill field(s)
           this.payloadAnswer = {'answer': { service:
-                { 'resourceOwner': decodeURIComponent(this.providerId),
-                  'type': "Service" }
+                {
+                  'resourceOwner': decodeURIComponent(this.providerId),
+                  'type': "Service",
+                  'nodePID': (!this.config.getProperty('nodePidAllowVocabularyValues')) ? this.config.getProperty('nodePid') : null
+                }
           }};
         }
         this.showLoader = false;
