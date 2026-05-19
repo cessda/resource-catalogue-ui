@@ -85,7 +85,7 @@
                                           <button class="uk-button uk-button-action uk-margin-small-left"
                                                   routerLink="{{ getLinkToFirstService(providerBundle.id) }}">
                                             <i class="fa fa-lg fa-edit"></i>
-                                            Update First Resource
+                                            Update First {{serviceORresource}}
                                           </button>
                                         }
                                         @if (hasCreatedFirstDatasource(providerBundle.id)) {
@@ -122,7 +122,7 @@
                                               <li class="uk-active">
                                                 <a
                                                   routerLink="{{ getLinkToFirstService(pidHandler.customEncodeURIComponent(providerBundle.id)) }}">Add
-                                                  First Resource</a>
+                                                  First {{serviceORresource}}</a>
                                               </li>
                                               <li class="uk-active">
                                                 <a
@@ -348,7 +348,7 @@
                                       @if (providerBundle.templateStatus === 'rejected template') {
                                         <button class="uk-button uk-button-action"
                                                 routerLink="{{ getLinkToFirstService(providerBundle.id) }}">
-                                          <i class="fa fa-lg fa-edit"></i> Update First Resource
+                                          <i class="fa fa-lg fa-edit"></i> Update First {{serviceORresource}}
                                         </button>
                                       }
                                     </div>
