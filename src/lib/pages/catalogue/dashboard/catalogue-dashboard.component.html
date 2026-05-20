@@ -14,7 +14,7 @@
 
         <ul>
 
-          <!--          <ng-container *ngIf="catalogueStatus === 'approved provider'">-->
+          <!--          <ng-container *ngIf="catalogueStatus === 'approved'">-->
           <!--            <li [routerLinkActive]="['current_section']" #stats="routerLinkActive">-->
           <!--              <a [routerLink]="['/catalogue-dashboard/' + catalogueId + '/stats']">-->
           <!--                <img src="{{stats.isActive ? 'assets/images/new-icons/stats-active.svg' : 'assets/images/new-icons/stats.svg'}}" class="uk-margin-small-right">-->
@@ -46,7 +46,7 @@
             </a>
           </li>
           <li [routerLinkActive]="['current_section']" #providers="routerLinkActive">
-            <a [routerLink]="['/catalogue-dashboard/' + catalogueId + '/providers']">
+            <a [routerLink]="['/catalogue-dashboard/' + pidHandler.customEncodeURIComponent(catalogueId) + '/providers']">
               <img
                 src="{{providers.isActive ? 'assets/images/new-icons/services-active.svg' : 'assets/images/new-icons/services.svg'}}"
                 class="uk-margin-small-right">
@@ -54,15 +54,23 @@
             </a>
           </li>
           <li [routerLinkActive]="['current_section']" #services="routerLinkActive">
-            <a [routerLink]="['/catalogue-dashboard/' + catalogueId + '/services']">
+            <a [routerLink]="['/catalogue-dashboard/' + pidHandler.customEncodeURIComponent(catalogueId) + '/services']">
               <img
                 src="{{services.isActive ? 'assets/images/new-icons/services-active.svg' : 'assets/images/new-icons/services.svg'}}"
                 class="uk-margin-small-right">
               {{ serviceORresource }}s
             </a>
           </li>
+          <li [routerLinkActive]="['current_section']" #datasources="routerLinkActive">
+            <a [routerLink]="['/catalogue-dashboard/' + pidHandler.customEncodeURIComponent(catalogueId) + '/datasources']">
+              <img
+                src="{{datasources.isActive ? 'assets/images/new-icons/services-active.svg' : 'assets/images/new-icons/services.svg'}}"
+                class="uk-margin-small-right">
+              Datasources
+            </a>
+          </li>
           <li [routerLinkActive]="['current_section']" #trainings="routerLinkActive">
-            <a [routerLink]="['/catalogue-dashboard/' + catalogueId + '/training-resources']">
+            <a [routerLink]="['/catalogue-dashboard/' + pidHandler.customEncodeURIComponent(catalogueId) + '/training-resources']">
               <img
                 src="{{trainings.isActive ? 'assets/images/new-icons/services-active.svg' : 'assets/images/new-icons/services.svg'}}"
                 class="uk-margin-small-right">
@@ -70,7 +78,7 @@
             </a>
           </li>
           <li [routerLinkActive]="['current_section']" #deployables="routerLinkActive">
-            <a [routerLink]="['/catalogue-dashboard/' + catalogueId + '/deployable-services']">
+            <a [routerLink]="['/catalogue-dashboard/' + pidHandler.customEncodeURIComponent(catalogueId) + '/deployable-services']">
               <img
                 src="{{deployables.isActive ? 'assets/images/new-icons/services-active.svg' : 'assets/images/new-icons/services.svg'}}"
                 class="uk-margin-small-right">

@@ -14,6 +14,7 @@ import {CatalogueDeployableServicesComponent} from "./catalogueDeployableService
 import {CatalogueInfoComponent} from "./catalogueInfo/catalogue-info.component";
 import {CatalogueHistoryComponent} from "./catalogueHistory/catalogue-history.component";
 import {CatalogueFullHistoryComponent} from "./catalogueHistory/catalogue-full-history.component";
+import {CatalogueDatasourcesComponent} from "./catalogueDatasources/catalogue-datasources.component";
 
 @NgModule({
   imports: [
@@ -33,6 +34,7 @@ import {CatalogueFullHistoryComponent} from "./catalogueHistory/catalogue-full-h
     // ProviderStatsComponent,
     CatalogueProvidersComponent,
     CatalogueServicesComponent,
+    CatalogueDatasourcesComponent,
     CatalogueTrainingResourcesComponent,
     CatalogueDeployableServicesComponent,
     CatalogueHistoryComponent,

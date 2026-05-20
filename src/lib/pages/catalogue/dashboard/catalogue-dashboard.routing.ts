@@ -9,6 +9,7 @@ import {CatalogueTrainingResourcesComponent} from "./catalogueTrainingResources/
 import {CatalogueDeployableServicesComponent} from "./catalogueDeployableServices/catalogue-deployable-services.component";
 import {CatalogueHistoryComponent} from "./catalogueHistory/catalogue-history.component";
 import {CatalogueFullHistoryComponent} from "./catalogueHistory/catalogue-full-history.component";
+import {CatalogueDatasourcesComponent} from "./catalogueDatasources/catalogue-datasources.component";
 // import {ProviderStatsComponent} from './providerStats/provider-stats.component';
 // import {ServiceStatsComponent} from './resource-dashboard/service-stats.component';
 // import {ResourceDashboardModule} from './resource-dashboard/resource-dashboard.module';
@@ -68,6 +69,13 @@ const catalogueDashboardRoutes: Routes = [
       {
         path: 'services',
         component: CatalogueServicesComponent,
+        data: {
+          isResource: false
+        }
+      },
+      {
+        path: 'datasources',
+        component: CatalogueDatasourcesComponent,
         data: {
           isResource: false
         }
