@@ -109,11 +109,11 @@ export class ServiceProviderService {
     if (catalogue_id == null) {
       if (active === 'statusAll') {
         return this.http.get<Paging<ServiceBundle>>(this.base +
-          `/service/byProvider/${id}?catalogue_id=${catalogue_id}&from=${from}&quantity=${quantity}&order=${order}&sort=${sort}&keyword=${query}`, {params});
+          `/service/byProvider/${id}?from=${from}&quantity=${quantity}&order=${order}&sort=${sort}&keyword=${query}`, {params});
       }
       return this.http.get<Paging<ServiceBundle>>(this.base +
-        `/service/byProvider/${id}?catalogue_id=${catalogue_id}&from=${from}&quantity=${quantity}&order=${order}&sort=${sort}&active=${active}&keyword=${query}`, {params});
-    } else {
+        `/service/byProvider/${id}?from=${from}&quantity=${quantity}&order=${order}&sort=${sort}&active=${active}&keyword=${query}`, {params});
+    } else { //external catalogue
       return this.http.get<Paging<ServiceBundle>>(this.base +
         `/catalogue/${catalogue_id}/${id}/service/bundle/all?from=${from}&quantity=${quantity}&order=${order}&sort=${sort}&keyword=${query}`, {params});
     }
@@ -182,11 +182,11 @@ export class ServiceProviderService {
     if (catalogue_id == null) {
       if (active === 'statusAll') {
         return this.http.get<Paging<TrainingResourceBundle>>(this.base +
-          `/trainingResource/byProvider/${id}?catalogue_id=${catalogue_id}&from=${from}&quantity=${quantity}&order=${order}&sort=${sort}&keyword=${query}`, {params});
+          `/trainingResource/byProvider/${id}?from=${from}&quantity=${quantity}&order=${order}&sort=${sort}&keyword=${query}`, {params});
       }
       return this.http.get<Paging<TrainingResourceBundle>>(this.base +
-        `/trainingResource/byProvider/${id}?catalogue_id=${catalogue_id}&from=${from}&quantity=${quantity}&order=${order}&sort=${sort}&active=${active}&keyword=${query}`, {params});
-    } else {
+        `/trainingResource/byProvider/${id}?from=${from}&quantity=${quantity}&order=${order}&sort=${sort}&active=${active}&keyword=${query}`, {params});
+    } else { //external catalogue
       return this.http.get<Paging<TrainingResourceBundle>>(this.base +
         `/catalogue/${catalogue_id}/${id}/trainingResource/bundle/all?from=${from}&quantity=${quantity}&order=${order}&sort=${sort}&keyword=${query}`, {params});
     }
