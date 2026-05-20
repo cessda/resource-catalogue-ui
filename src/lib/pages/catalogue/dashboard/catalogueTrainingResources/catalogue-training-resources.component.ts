@@ -8,6 +8,7 @@ import {CatalogueService} from "../../../../services/catalogue.service";
 import {TrainingResourceService} from "../../../../services/training-resource.service";
 import {ConfigService} from "../../../../services/config.service";
 import {environment} from "../../../../../environments/environment";
+import {ResourceService} from "../../../../services/resource.service";
 
 declare var UIkit: any;
 
@@ -52,6 +53,7 @@ export class CatalogueTrainingResourcesComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private catalogueService: CatalogueService,
+    private resourceService: ResourceService,
     private trainingResourceService: TrainingResourceService,
     private config: ConfigService
   ) {}
@@ -125,10 +127,9 @@ export class CatalogueTrainingResourcesComponent implements OnInit {
 
   getResources() {
     this.toggleLoading = true;
-    this.catalogueService.getTrainingsOfCatalogue(this.dataForm.get('catalogue_id').value,
-      this.dataForm.get('from').value, this.dataForm.get('quantity').value,
-      this.dataForm.get('order').value, this.dataForm.get('sort').value,
-      this.dataForm.get('status').value, this.dataForm.get('query').value).subscribe(
+    this.trainingResourceService.getResourceBundles(this.dataForm.get('from').value, this.dataForm.get('quantity').value,
+      this.dataForm.get('sort').value, this.dataForm.get('order').value, this.dataForm.get('query').value,
+      null, null, this.dataForm.get('status').value, [], [], this.catalogueId ? [this.catalogueId] : []).subscribe(
       res => {
           this.toggleLoading = false;
           this.trainingResourceBundles = res['results'];

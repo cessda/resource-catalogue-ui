@@ -1,14 +1,12 @@
 import {Component, OnInit} from '@angular/core';
-import {CatalogueBundle, ServiceBundle, Service, Datasource} from '../../../../domain/eic-model';
+import {CatalogueBundle, DatasourceBundle} from '../../../../domain/eic-model';
 import {ServiceProviderService} from '../../../../services/service-provider.service';
 import {ActivatedRoute, Router} from '@angular/router';
-import {ResourceService} from '../../../../services/resource.service';
 import {Paging} from '../../../../domain/paging';
 import {UntypedFormArray, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup} from '@angular/forms';
 import {URLParameter} from '../../../../domain/url-parameter';
-import {ConfigService} from "../../../../services/config.service";
-import {environment} from '../../../../../environments/environment';
 import {CatalogueService} from "../../../../services/catalogue.service";
+import {DatasourceService} from "../../../../services/datasource.service";
 
 declare var UIkit: any;
 
@@ -19,8 +17,6 @@ declare var UIkit: any;
 })
 
 export class CatalogueDatasourcesComponent implements OnInit {
-  protected readonly environment = environment;
-  serviceORresource = environment.serviceORresource;
 
   formPrepare = {
     order: 'ASC',
@@ -41,9 +37,9 @@ export class CatalogueDatasourcesComponent implements OnInit {
   urlParams: URLParameter[] = [];
   catalogueId;
   catalogueBundle: CatalogueBundle;
-  // services: Paging<ServiceBundle>;
-  services: ServiceBundle[] = new Array<ServiceBundle>();
-  selectedService: ServiceBundle = null;
+  // datasources: Paging<DatasourceBundle>;
+  datasources: DatasourceBundle[] = new Array<DatasourceBundle>();
+  selectedDatasource: DatasourceBundle = null; //TODO: change to Datasource
   path: string;
 
   total: number;
@@ -58,8 +54,7 @@ export class CatalogueDatasourcesComponent implements OnInit {
     private router: Router,
     private providerService: ServiceProviderService,
     private catalogueService: CatalogueService,
-    private resourceService: ResourceService,
-    private config: ConfigService
+    private datasourceService: DatasourceService
   ) {}
 
   ngOnInit(): void {
@@ -85,7 +80,7 @@ export class CatalogueDatasourcesComponent implements OnInit {
           }
 
           // this.handleChange();
-          this.getServices();
+          this.getDatasources();
         },
         error => this.errorMessage = <any>error
       );
@@ -105,39 +100,38 @@ export class CatalogueDatasourcesComponent implements OnInit {
     );
   }
 
-  toggleService(bundle: ServiceBundle) {
+  toggleDatasource(bundle: DatasourceBundle) {
     if (bundle.status === 'pending' || bundle.status === 'rejected') {
       this.errorMessage = `You cannot activate a ${bundle.status}.`;
       window.scrollTo(0, 0);
       return;
     }
     this.toggleLoading = true;
-    this.providerService.activateService(bundle.id, bundle.service.version, !bundle.active).subscribe(
+    this.providerService.activateDatasource(bundle.id, bundle.datasource.version, !bundle.active).subscribe(
       res => {},
       err => {
         this.errorMessage = (err?.status >= 500 && err?.status < 600)
             ? `Something went wrong. If the issue persists, please contact support and provide the following error code: ${err?.error?.traceId}`
             : `Something went bad, server responded: ${err?.error?.details}`;
-        this.getServices();
+        this.getDatasources();
         this.toggleLoading = false;
         // console.log(error);
       },
       () => {
-        this.getServices();
+        this.getDatasources();
         this.toggleLoading = false;
       }
     );
   }
 
-  getServices() {
+  getDatasources() {
     this.toggleLoading = true;
-    this.catalogueService.getServicesOfCatalogue(this.dataForm.get('catalogue_id').value,
-      this.dataForm.get('from').value, this.dataForm.get('quantity').value,
-      this.dataForm.get('order').value, this.dataForm.get('sort').value,
-      this.dataForm.get('status').value, this.dataForm.get('query').value).subscribe(
+    this.datasourceService.getDatasourceBundles(this.dataForm.get('from').value, this.dataForm.get('quantity').value,
+      this.dataForm.get('sort').value, this.dataForm.get('order').value, this.dataForm.get('query').value,
+      null, null, this.dataForm.get('status').value, [], [], this.catalogueId ? [this.catalogueId] : []).subscribe(
         res => {
           this.toggleLoading = false;
-          this.services = res['results'];
+          this.datasources = res['results'];
           // this.facets = res['facets'];
           this.total = res['total'];
           // this.numberOfServicesOnView = res['to']-res['from'];
@@ -145,19 +139,19 @@ export class CatalogueDatasourcesComponent implements OnInit {
         },
         err => {
           this.toggleLoading = false;
-          this.errorMessage = 'An error occurred while retrieving the services of this provider. ' + err.error;
+          this.errorMessage = 'An error occurred while retrieving the datasources of this provider. ' + err.error;
         }
       );
   }
 
-  setSelectedService(bundle: ServiceBundle) {
-    this.selectedService = bundle;
+  setSelectedDatasource(bundle: DatasourceBundle) {
+    this.selectedDatasource = bundle;
     UIkit.modal('#actionModal').show();
   }
 
-  deleteService(bundle: ServiceBundle) {
+  deleteDatasource(bundle: DatasourceBundle) {
     // UIkit.modal('#spinnerModal').show();
-    this.resourceService[bundle.service ? 'deleteService' : 'deleteDatasource'](bundle.id).subscribe(
+    this.datasourceService.deleteDatasource(bundle.id).subscribe(
       res => {},
       err => {
         // console.log(error);
@@ -165,10 +159,10 @@ export class CatalogueDatasourcesComponent implements OnInit {
         this.errorMessage = (err?.status >= 500 && err?.status < 600)
             ? `Something went wrong. If the issue persists, please contact support and provide the following error code: ${err?.error?.traceId}`
             : `Something went bad, server responded: ${err?.error?.details}`;
-        this.getServices();
+        this.getDatasources();
       },
       () => {
-        this.getServices();
+        this.getDatasources();
         // UIkit.modal('#spinnerModal').hide();
       }
     );
@@ -192,7 +186,7 @@ export class CatalogueDatasourcesComponent implements OnInit {
       }
     }
 
-    this.router.navigate([`/catalogue-dashboard/` + this.catalogueId + `/services`], {queryParams: map});
+    this.router.navigate([`/catalogue-dashboard/` + this.catalogueId + `/datasources`], {queryParams: map});
   }
 
   paginationInit() {

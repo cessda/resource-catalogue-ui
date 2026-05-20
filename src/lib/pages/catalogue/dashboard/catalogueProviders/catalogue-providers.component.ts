@@ -39,7 +39,7 @@ export class CatalogueProvidersComponent implements OnInit {
   urlParams: URLParameter[] = [];
   catalogueId;
   catalogueBundle: CatalogueBundle;
-  catalogueProviders: Paging<ProviderBundle>; // change to providerBundle
+  catalogueProviders: any; //Paging<ProviderBundle>;
   // providerCoverage: string[];
   // providerServicesGroupedByPlace: any;
   selectedProvider: ProviderBundle = null;
@@ -57,6 +57,7 @@ export class CatalogueProvidersComponent implements OnInit {
     private router: Router,
     private providerService: ServiceProviderService,
     private catalogueService: CatalogueService,
+    private resourceService: ResourceService,
     private service: ResourceService,
     private config: ConfigService
   ) {}
@@ -104,13 +105,15 @@ export class CatalogueProvidersComponent implements OnInit {
   }
 
   getProviders() {
+    console.log(this.catalogueId);
     this.toggleLoading = true;
-    this.catalogueService.getProvidersOfCatalogue(this.catalogueId, this.dataForm.get('from').value, this.dataForm.get('quantity').value,
-      this.dataForm.get('order').value, this.dataForm.get('sort').value,
-      this.dataForm.get('status').value, this.dataForm.get('query').value)
+    this.resourceService.getProviderBundles(this.dataForm.get('from').value, this.dataForm.get('quantity').value,
+      this.dataForm.get('sort').value, this.dataForm.get('order').value, this.dataForm.get('query').value,
+      null, null, this.dataForm.get('status').value, [], [], this.catalogueId ? [this.catalogueId] : [])
       .subscribe(res => {
           this.toggleLoading = false;
           this.catalogueProviders = res;
+          console.log(this.catalogueProviders)
           this.total = res['total'];
           this.paginationInit();
         },

@@ -101,17 +101,17 @@
 </form>
 
 
-@if (services && services.length === 0) {
+@if (datasources && datasources.length === 0) {
   <div>
-    <p>No {{serviceORresource | lowercase}}s found</p>
+    <p>No datasources found</p>
   </div>
 }
 
-@if (services && services.length > 0) {
+@if (datasources && datasources.length > 0) {
   <div>
     <div class="uk-flex uk-flex-middle uk-flex-between">
       <div class="resultsInfo">
-        <span class="number">{{total}}</span> {{serviceORresource | uppercase}}S, PAGE <span class="number">{{currentPage}}</span> OF <span class="number">{{pageTotal}}</span>
+        <span class="number">{{total}}</span> DATASOURCES, PAGE <span class="number">{{currentPage}}</span> OF <span class="number">{{pageTotal}}</span>
       </div>
       <ul class="uk-pagination" uk-margin>
         <li><a (click)="previousPage()"><span uk-pagination-previous></span></a></li>
@@ -125,20 +125,20 @@
     </div>
     <hr class="adminResultsHeader">
     <div class="uk-margin-medium-top">
-      @for (serviceBundle of services; track serviceBundle) {
+      @for (datasourceBundle of datasources; track datasourceBundle) {
         <div class="uk-card uk-card-small uk-card-default uk-margin-bottom service-card">
           <div class="uk-card-body">
-            @if (serviceBundle.status === 'approved') {
+            @if (datasourceBundle.status === 'approved') {
               <div class="approved">
                 <div class="uk-card-badge uk-label">Approved</div>
               </div>
             }
-            @if (serviceBundle.status === 'pending') {
+            @if (datasourceBundle.status === 'pending') {
               <div class="pending">
                 <div class="uk-card-badge uk-label">Pending</div>
               </div>
             }
-            @if ((serviceBundle.status === 'rejected')) {
+            @if ((datasourceBundle.status === 'rejected')) {
               <div class="rejected">
                 <div class="uk-card-badge uk-label">Rejected</div>
               </div>
@@ -146,17 +146,17 @@
             <div class="uk-grid">
               <div class="uk-width-9-10"></div>
               <div class="uk-width-1-10">
-                @if (serviceBundle.active) {
+                @if (datasourceBundle.active) {
                   <div class="approved">
                     <div class="uk-label uk-align-right">Active</div>
                   </div>
                 }
-                @if (!serviceBundle.active) {
+                @if (!datasourceBundle.active) {
                   <div class="rejected">
                     <div class="uk-label uk-align-right">Inactive</div>
                   </div>
                 }
-                @if (serviceBundle.suspended) {
+                @if (datasourceBundle.suspended) {
                   <div class="rejected">
                     <div class="uk-label uk-align-right">Suspended</div>
                   </div>
@@ -165,57 +165,57 @@
             </div>
             <div class="uk-grid uk-flex-middle uk-margin-remove-top">
               <div class="uk-width-1-6">
-                <img src="{{serviceBundle.service.logo ? serviceBundle.service.logo : '/assets/images/broken_image-black-48dp.svg'}}">
+                <img src="{{datasourceBundle.datasource.logo ? datasourceBundle.datasource.logo : '/assets/images/broken_image-black-48dp.svg'}}">
               </div>
               <div class="uk-width-2-3">
                 <h4 class="uk-margin-remove">
-                  <a [routerLink]="['/dashboard', serviceBundle.catalogueId, serviceBundle.service.resourceOwner, 'resource-dashboard', serviceBundle.id]" data-uk-tooltip title="Go to the service dashboard">
-                    {{ serviceBundle.service.name }}
+                  <a [routerLink]="['/dashboard', datasourceBundle.datasource.resourceOwner, 'datasource-dashboard', datasourceBundle.id]" data-uk-tooltip title="Go to the datasource dashboard">
+                    {{ datasourceBundle.datasource.name }}
                   </a>
                 </h4>
                 <div class="uk-margin-small-top">
-                  @if (serviceBundle.service.description) {
-                    <span class="uk-margin-small-top"><markdown [data]="serviceBundle.service.description"></markdown></span>
+                  @if (datasourceBundle.datasource.description) {
+                    <span class="uk-margin-small-top"><markdown [data]="datasourceBundle.datasource.description"></markdown></span>
                   }
                 </div>
                 <div class="uk-margin-small-top">
-                  <span class="">Creation Date: </span>{{ serviceBundle.metadata.registeredAt | date }}
+                  <span class="">Creation Date: </span>{{ datasourceBundle.metadata.registeredAt | date }}
                 </div>
                 <div class="uk-margin-small-top">
-                  <span class="">Last Update: </span>{{ serviceBundle.metadata.modifiedAt | date }}
+                  <span class="">Last Update: </span>{{ datasourceBundle.metadata.modifiedAt | date }}
                 </div>
               </div>
               @if (catalogueId == null) {
                 <div class="uk-width-1-6">
                   <div class="action-buttons">
-                    <button class="uk-button uk-button-action uk-display-block uk-margin-small-top" (click)="toggleService(serviceBundle)">
-                      @if (serviceBundle.active) {
+                    <button class="uk-button uk-button-action uk-display-block uk-margin-small-top" (click)="toggleDatasource(datasourceBundle)">
+                      @if (datasourceBundle.active) {
                         <span class="material-symbols-outlined uk-margin-small-right" style="vertical-align: middle;">close</span>Deactivate
                       }
-                      @if (!serviceBundle.active) {
+                      @if (!datasourceBundle.active) {
                         <!--                        <div *ngIf="providerService.status === 'pending resource' || providerService.status === 'rejected resource'"-->
                       <!--                             uk-tooltip="title:Cannot activate a pending/rejected resource."></div>-->
                       <span class="material-symbols-outlined uk-margin-small-right" style="vertical-align: middle;">check</span>Activate
                     }
                   </button>
-                  <!--<button class="uk-button uk-button-action uk-display-block" (click)="navigate(providerService.service.id)">-->
+                  <!--<button class="uk-button uk-button-action uk-display-block" (click)="navigate(providerService.datasource.id)">-->
                   <!--<span class="material-symbols-outlined uk-margin-small-right" style="vertical-align: middle;">edit_square</span>Edit-->
                 <!--</button>-->
-                <button class="uk-button uk-button-action uk-display-block uk-margin-small-top" (click)="setSelectedService(serviceBundle)">
+                <button class="uk-button uk-button-action uk-display-block uk-margin-small-top" (click)="setSelectedDatasource(datasourceBundle)">
                   <span class="material-symbols-outlined uk-margin-small-right" style="vertical-align: middle;">delete</span>Delete
                 </button>
               </div>
             </div>
           }
         </div>
-        @if (serviceBundle.catalogueId != null) {
+        @if (datasourceBundle.catalogueId != null) {
           <hr class="uk-margin-top">
           <div class="uk-align-right">
             <button
-              routerLink="/provider/{{serviceBundle.service.resourceOwner}}/resource/view/{{serviceBundle.id}}"
+              routerLink="/provider/{{datasourceBundle.datasource.resourceOwner}}/resource/view/{{datasourceBundle.id}}"
               class="uk-button uk-button-link" style="">
               <i class="fa fa-eye fa-lg uk-margin-small-right" aria-hidden="true"></i>
-              View {{serviceORresource}}
+              View Datasources
             </button>
           </div>
         }
@@ -254,12 +254,12 @@
 
 <div id="actionModal" uk-modal>
   <div class="uk-modal-dialog uk-modal-body uk-margin-auto-vertical">
-    @if (selectedService) {
-      <h6 class="uk-margin-bottom">Are you sure you want to delete the {{serviceORresource | lowercase}} '{{selectedService.service.name}}'?</h6>
+    @if (selectedDatasource) {
+      <h6 class="uk-margin-bottom">Are you sure you want to delete the datasource '{{selectedDatasource.datasource.name}}'?</h6>
     }
     <div class="uk-text-right">
       <button class="uk-button uk-button-default uk-modal-close uk-margin-small-right" type="button">Cancel</button>
-      <button class="uk-button uk-button-danger uk-modal-close uk-margin-small-right" type="button" (click)="deleteService(selectedService)">Delete</button>
+      <button class="uk-button uk-button-danger uk-modal-close uk-margin-small-right" type="button" (click)="deleteDatasource(selectedDatasource)">Delete</button>
     </div>
   </div>
 </div>

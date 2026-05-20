@@ -470,6 +470,7 @@ export class Datasource implements Identifiable {
   researchProductMetadataLicensing: ResearchProductMetadataLicensing;
   researchProductMetadataAccessPolicies: string[];
   harvestable: boolean;
+  version: string;
 }
 
 export class PersistentIdentitySystem {
