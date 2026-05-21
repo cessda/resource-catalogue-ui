@@ -40,11 +40,16 @@ export class TrainingResourceDashboardComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.catalogueId = this.route.snapshot.paramMap.get('catalogueId');
     this.providerId = this.route.snapshot.paramMap.get('providerId');
     this.trainingResourceId = this.route.snapshot.paramMap.get('trainingResourceId');
     this.trainingResourceService.getTrainingResourceBundle(this.trainingResourceId).subscribe(
-      res => { if (res!=null) this.trainingResourceBundle = res },
+      res => {
+        if (res != null) {
+          this.trainingResourceBundle = res;
+          this.catalogueId = this.trainingResourceBundle.catalogueId;
+          console.log('catalogueId:', this.catalogueId);
+        }
+      },
       error => {},
       () => {
         // this.serviceExtensionsService.getMonitoringByServiceId(this.trainingResourceId).subscribe(

@@ -50,15 +50,19 @@ export class ResourceDashboardComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.catalogueId = this.route.snapshot.paramMap.get('catalogueId');
     this.providerId = this.route.snapshot.paramMap.get('providerId');
     this.resourceId = this.route.snapshot.paramMap.get('resourceId');
-    // console.log(this.providerId);
-    this.providerPID = decodeURIComponent(this.providerId);
-    this.resourcePID = decodeURIComponent(this.resourceId);
-    // console.log(this.providerPID);
+
+    // this.providerPID = decodeURIComponent(this.providerId);
+    // this.resourcePID = decodeURIComponent(this.resourceId);
     this.resourceService.getServiceBundleById(this.resourceId).subscribe(
-      res => { if (res!=null) this.resourceBundle = res },
+      res => {
+        if (res != null) {
+          this.resourceBundle = res;
+          this.catalogueId = this.resourceBundle.catalogueId;
+          console.log('catalogueId:', this.catalogueId);
+        }
+      },
       error => {},
       () => {
 /*        this.datasourceService.getDatasourceByServiceId(this.resourceId, this.catalogueId).subscribe( // TODO check
