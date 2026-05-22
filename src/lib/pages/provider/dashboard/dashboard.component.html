@@ -172,7 +172,7 @@
 
       <ul>
 
-        @if (providerBundle.catalogueId == null) {
+        @if (catalogueId == null) {
 
           @if (providerBundle?.status === 'pending') {
             <li class="sidebar-hover-parent" (click)="showPendingNotification()">

@@ -426,7 +426,6 @@
                                   <li class="uk-button uk-button-link uk-disabled uk-padding-small"
                                     (click)="toggleService(dsBundle)">
                                     @if (dsBundle.active) {
-                                      <i class="fa fa-thumbs-down" aria-hidden="true"></i> Deactivate Deployable Application
                                       <span class="material-symbols-outlined" style="vertical-align: middle;">close</span>Deactivate Deployable Application
                                     }
                                     @if (!dsBundle.active) {
@@ -453,10 +452,10 @@
                             }
                             @if (dsBundle.status=='pending') {
                               <li class="uk-active" (click)="templateAction(dsBundle.id, true, 'approved')">
-                                <a><span class="material-symbols-outlined uk-margin-small-top" style="vertical-align: middle;">thumb_up</span>Approve first Deployable Application</a>
+                                <a><span class="material-symbols-outlined uk-margin-small-right" style="vertical-align: middle;">thumb_up</span>Approve first Deployable Application</a>
                               </li>
                               <li class="uk-active" (click)="templateAction(dsBundle.id, false, 'rejected')">
-                                <a><span class="material-symbols-outlined uk-margin-small-top" style="vertical-align: middle;">thumb_down</span>Reject first Deployable Application</a>
+                                <a><span class="material-symbols-outlined uk-margin-small-right" style="vertical-align: middle;">thumb_down</span>Reject first Deployable Application</a>
                               </li>
                             }
                           </ul>

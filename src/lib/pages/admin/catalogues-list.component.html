@@ -276,13 +276,13 @@
                           @if ((catalogueBundle.status === 'pending') || (catalogueBundle.status === 'rejected')) {
                             <li
                               (click)="showActionModal(catalogueBundle, 'approved')" class="uk-margin-small-top">
-                              <a><i aria-hidden="true" class="fa fa-thumbs-up uk-margin-small-right"></i>Approve</a>
+                              <a><span class="material-symbols-outlined uk-margin-small-right" style="vertical-align: middle;">thumb_up</span>Approve</a>
                             </li>
                           }
                           @if ((catalogueBundle.status === 'pending')) {
                             <li
                               (click)="showActionModal(catalogueBundle, 'rejected')" class="uk-margin-small-top">
-                              <a><i aria-hidden="true" class="fa fa-thumbs-down uk-margin-small-right"></i>Reject</a>
+                              <a><span class="material-symbols-outlined uk-margin-small-right" style="vertical-align: middle;">thumb_down</span>Reject</a>
                             </li>
                           }
                           @if (catalogueBundle.status === 'approved') {

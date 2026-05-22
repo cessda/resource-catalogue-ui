@@ -285,10 +285,10 @@
                           @if (guidelineBundle.status === 'pending') {
                             <div class="action-buttons uk-flex uk-flex-middle uk-flex-center" style="flex-direction: column;">
                               <button (click)="verifyGuideline(guidelineBundle.id, true, 'approved')" class="uk-button uk-button-primary uk-display-block">
-                                <i class="fa fa-thumbs-up fa-lg" aria-hidden="true"></i> Approve
+                                <span class="material-symbols-outlined uk-margin-small-right" style="vertical-align: middle;">thumb_up</span>Approve
                               </button>
                               <button (click)="verifyGuideline(guidelineBundle.id, false, 'rejected')" class="uk-button uk-button-danger uk-display-block uk-margin-small-top">
-                                <i class="fa fa-thumbs-down fa-lg" aria-hidden="true"></i>  Reject
+                                <span class="material-symbols-outlined uk-margin-small-right" style="vertical-align: middle;">thumb_down</span>Reject
                               </button>
                               <!--                                <button routerLink="/guidelines/{{guidelineBundle.interoperabilityRecord.providerId}}/update/{{guidelineBundle.id}}" class="uk-button uk-button-primary uk-display-block">-->
                               <!--                                  <i class="fa fa-edit fa-lg" aria-hidden="true"></i> Update-->

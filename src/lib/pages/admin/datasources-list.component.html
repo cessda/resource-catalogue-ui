@@ -384,10 +384,10 @@
                         @if (datasourceBundle.catalogueId == null) {
                           @if (datasourceBundle.status==='pending') {
                             <li class="uk-active" (click)="verifyDatasource(datasourceBundle.id, true, 'approved')">
-                              <a class="uk-margin-small-top"><i class="fa fa-thumbs-up"></i> Approve </a>
+                              <a><span class="material-symbols-outlined uk-margin-small-right" style="vertical-align: middle;">thumb_up</span>Approve</a>
                             </li>
                             <li class="uk-active" (click)="verifyDatasource(datasourceBundle.id, false, 'rejected')">
-                              <a class="uk-margin-small-top"><i class="fa fa-thumbs-down"></i> Reject </a>
+                              <a><span class="material-symbols-outlined uk-margin-small-right" style="vertical-align: middle;">thumb_down</span>Reject</a>
                             </li>
                           }
                           @if (datasourceBundle.status==='approved' && !datasourceBundle.active) {

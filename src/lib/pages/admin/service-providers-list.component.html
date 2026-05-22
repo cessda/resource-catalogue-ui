@@ -469,10 +469,10 @@
                                       </a>
                                     </li>
                                     <li class="uk-active" (click)="templateAction(providerBundle.id, true, 'approved', 'service')">
-                                      <a><span class="material-symbols-outlined uk-margin-small-top" style="vertical-align: middle;">thumb_up</span>Approve First {{serviceORresource}}</a>
+                                      <a><span class="material-symbols-outlined uk-margin-small-right" style="vertical-align: middle;">thumb_up</span>Approve First {{serviceORresource}}</a>
                                     </li>
                                     <li class="uk-active" (click)="templateAction(providerBundle.id, false, 'rejected', 'service')">
-                                      <a><span class="material-symbols-outlined uk-margin-small-top" style="vertical-align: middle;">thumb_down</span>Reject First {{serviceORresource}}</a>
+                                      <a><span class="material-symbols-outlined uk-margin-small-right" style="vertical-align: middle;">thumb_down</span>Reject First {{serviceORresource}}</a>
                                     </li>
                                   </ng-container>
                                   <ng-container *ngIf="hasCreatedFirstTrainingResource(providerBundle.id)">
@@ -489,10 +489,10 @@
                                       </a>
                                     </li>
                                     <li class="uk-active" (click)="templateAction(providerBundle.id, true, 'approved', 'trainingResource')">
-                                      <a><span class="material-symbols-outlined uk-margin-small-top" style="vertical-align: middle;">thumb_up</span>Approve First Training Resource</a>
+                                      <a><span class="material-symbols-outlined uk-margin-small-right" style="vertical-align: middle;">thumb_up</span>Approve First Training Resource</a>
                                     </li>
                                     <li class="uk-active" (click)="templateAction(providerBundle.id, false, 'rejected', 'trainingResource')">
-                                      <a><span class="material-symbols-outlined uk-margin-small-top" style="vertical-align: middle;">thumb_down</span>Reject First Training Resource</a>
+                                      <a><span class="material-symbols-outlined uk-margin-small-right" style="vertical-align: middle;">thumb_down</span>Reject First Training Resource</a>
                                     </li>
                                   </ng-container>
                                   <li class="uk-nav-divider ng-star-inserted"></li>
@@ -503,7 +503,7 @@
                                     *ngIf="adminActionsMap[providerBundle.status] && adminActionsMap[providerBundle.status].appButtonTitle"
                                     (click)="showActionModal(providerBundle, adminActionsMap[providerBundle.status].onApprove, true, true)"
                                     class="uk-margin-small-top">
-                                    <a><i aria-hidden="true" class="fa fa-thumbs-up uk-margin-small-right"></i>
+                                    <a><span class="material-symbols-outlined uk-margin-small-right" style="vertical-align: middle;">thumb_up</span>
                                       {{ adminActionsMap[providerBundle.status].appButtonTitle }}</a>
                                   </li>
                                 </ng-container>
@@ -511,7 +511,7 @@
                                         && adminActionsMap[providerBundle.status].rejButtonTitle))"
                                     class="uk-margin-small-top"
                                     (click)="showActionModal(providerBundle, adminActionsMap[providerBundle.status].onReject, false, true)">
-                                  <a><i class="fa fa-thumbs-down uk-margin-small-right" aria-hidden="true"></i>
+                                  <a><span class="material-symbols-outlined uk-margin-small-right" style="vertical-align: middle;">thumb_down</span>
                                     {{ adminActionsMap[providerBundle.status].rejButtonTitle }}</a>
                                 </li>
                                 <!--                                Those 2 above use the verify method to proceed with the onboarding process-->
