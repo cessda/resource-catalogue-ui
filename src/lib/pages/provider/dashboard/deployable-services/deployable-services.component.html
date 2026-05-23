@@ -52,7 +52,7 @@
           </div>
 
           <div class="uk-inline">
-            <label class="" for="sort">Order by </label>
+            <label class="" for="sort">Sort by </label>
             <div class="uk-inline">
               <select class="uk-input uk-select" id="sort" (change)="handleChangeAndResetPage()" formControlName="sort">
                 <option value="name" selected>Name</option>
@@ -169,7 +169,7 @@
                   <!--                </div>-->
                   <div class="uk-width-3-4">
                     <h4 class="uk-margin-remove uk-padding-small uk-padding-remove-top uk-padding-remove-left uk-padding-remove-right">
-                      <a [routerLink]="['/dashboard', dsBundle.catalogueId, dsBundle.deployableApplication.resourceOwner, 'deployable-service-dashboard', dsBundle.id]" data-uk-tooltip title="Go to the Deployable Application dashboard">
+                      <a [routerLink]="['/dashboard', dsBundle.deployableApplication.resourceOwner, 'deployable-service-dashboard', dsBundle.id]" data-uk-tooltip title="Go to the Deployable Application dashboard">
                         {{dsBundle.deployableApplication.name}}
                       </a>
                     </h4>
@@ -185,13 +185,13 @@
                       <span class="">Last Update: </span>{{ dsBundle.metadata.modifiedAt | date }}
                     </div>
                   </div>
-                  @if (catalogueId === catalogueConfigId) {
+                  @if (catalogueId == null) {
                     <div class="uk-width-1-4">
                       <div class="action-buttons">
                         <button
                           [routerLink]="['/provider/'+ pidHandler.customEncodeURIComponent(dsBundle.deployableApplication.resourceOwner) +'/deployable-service/update/'+ pidHandler.customEncodeURIComponent(dsBundle.id)]"
                           class="uk-button uk-button-action uk-display-block uk-margin-small-top">
-                          <i class="fa fa-pencil fa-lg" aria-hidden="true"></i> Update Deployable Application
+                          <span class="material-symbols-outlined uk-margin-small-right" style="vertical-align: middle;">edit_square</span>Edit
                         </button>
 <!--                        @if (providerBundle.templateStatus === 'approved template') {
                           <button
@@ -202,12 +202,12 @@
                         }-->
                         <button class="uk-button uk-button-action uk-display-block uk-margin-small-top" (click)="toggleDeployableService(dsBundle)">
                           @if (dsBundle.active) {
-                            <i class="fa fa-close fa-lg" aria-hidden="true"></i> Deactivate
+                            <span class="material-symbols-outlined uk-margin-small-right" style="vertical-align: middle;">close</span>Deactivate
                           }
                           @if (!dsBundle.active) {
                             <!--                        <div *ngIf="providerService.status === 'pending resource' || providerService.status === 'rejected resource'"-->
                           <!--                             uk-tooltip="title:Cannot activate a pending/rejected resource."></div>-->
-                          <i class="fa fa-check fa-lg" aria-hidden="true"></i> Activate
+                          <span class="material-symbols-outlined uk-margin-small-right" style="vertical-align: middle;">check</span>Activate
                         }
                       </button>
                       <!--<button class="uk-button uk-button-action uk-display-block" (click)="navigate(providerService.service.id)">-->
@@ -215,7 +215,7 @@
                     <!--</button>-->
                     @if (dsBundle.status !== 'pending') {
                       <button class="uk-button uk-button-action uk-display-block uk-margin-small-top" (click)="setSelectedDeployableService(dsBundle)">
-                        <i class="fa fa-trash fa-lg" aria-hidden="true"></i> Delete Deployable Application
+                        <span class="material-symbols-outlined uk-margin-small-right" style="vertical-align: middle;">delete</span>Delete
                       </button>
                     }
                   </div>

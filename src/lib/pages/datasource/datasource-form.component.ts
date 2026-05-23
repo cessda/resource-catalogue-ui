@@ -26,7 +26,6 @@ export class DatasourceFormComponent implements OnInit {
   model: Model = null;
   payloadAnswer: object = null;
 
-  catalogueConfigId: string = this.config.getProperty('catalogueId');
   serviceORresource = environment.serviceORresource;
   serviceName = '';
   firstServiceForm = false;
@@ -37,6 +36,7 @@ export class DatasourceFormComponent implements OnInit {
   openaireId: string = null; //datasource OA id
   providerId: string;
   catalogueId: string;
+  viewOnlyMode = false;
   submitMode: 'draft' | 'submit' = 'submit';
   editMode = false;
   hasChanges = false;
@@ -47,7 +47,6 @@ export class DatasourceFormComponent implements OnInit {
   successMessage: string = null;
   weights: string[] = [];
   tabs: boolean[] = [false];
-  disable = false;
   isPortalAdmin = false;
 
   serviceId: string = null; //filled for all types (service, datasource, training)
@@ -86,7 +85,7 @@ export class DatasourceFormComponent implements OnInit {
     datasourceValue = FormControlService.cleanObjectInPlace(datasourceValue);
 
     if (this.submitMode === 'draft') {
-      this.datasourceService.temporarySaveDatasource(datasourceValue).subscribe(
+      this.datasourceService.temporarySaveDatasource(datasourceValue, this.openaireId).subscribe(
         _ds => {
           // console.log(_ds);
           this.showLoader = false;
@@ -108,11 +107,11 @@ export class DatasourceFormComponent implements OnInit {
         err => {
           this.showLoader = false;
           window.scrollTo(0, 0);
-          this.errorMessage = 'Something went bad, server responded: ' + err?.error?.message;
+          this.errorMessage = 'Something went bad, server responded: ' + err?.error?.detail;
         }
       );
     } else {
-      this.datasourceService.submitDatasource(datasourceValue, this.editMode).subscribe(
+      this.datasourceService.submitDatasource(datasourceValue, this.editMode, this.openaireId).subscribe(
         _ds => {
           this.showLoader = false;
           // if (this.addOpenAIRE) return this.navigator.datasourceSubmitted(_ds.id);
@@ -125,7 +124,7 @@ export class DatasourceFormComponent implements OnInit {
           this.errorMessage =
             (err?.status >= 500 && err?.status < 600)
               ? `Something went wrong. If the issue persists, please contact support and provide the following error code: ${err?.error?.traceId}`
-              : `Something went bad, server responded: ${err?.error?.message}`;
+              : `Something went bad, server responded: ${err?.error?.detail}`;
         }
       );
     }
@@ -133,6 +132,10 @@ export class DatasourceFormComponent implements OnInit {
 
   ngOnInit() {
     this.showLoader = true;
+    const path = this.route.snapshot.routeConfig.path;
+    if (path.includes('view/:datasourceId')) {
+      this.viewOnlyMode = true;
+    }
     if ( !this.router.url.includes('/update/') || this.router.url.includes('/draft-datasource/update/')) {
       this.saveAsDraftAvailable = true;
     }
@@ -148,18 +151,18 @@ export class DatasourceFormComponent implements OnInit {
                 this.errorMessage =
           (err?.status >= 500 && err?.status < 600)
             ? `Something went wrong. If the issue persists, please contact support and provide the following error code: ${err?.error?.traceId}`
-            : `Something went bad while getting the data for page initialization: ${err?.error?.message}`;
+            : `Something went bad while getting the data for page initialization: ${err?.error?.detail}`;
       },
       () => {
         if (!this.editMode) { //prefill field(s)
           this.payloadAnswer = {
             'answer': {
               datasource: {
-                'id': this.openaireId,
                 'type': "DataSource",
                 'serviceId': decodeURIComponent(this.resourceId),
-                'catalogueId': this.catalogueConfigId,
-                'resourceOwner': decodeURIComponent(this.providerId)
+                'catalogueId': null,
+                'resourceOwner': decodeURIComponent(this.providerId),
+                'nodePID': (this.config.getProperty('nodePidFixed')) ? this.config.getProperty('nodePid') : null
               }
             }
           };
@@ -199,7 +202,7 @@ export class DatasourceFormComponent implements OnInit {
         this.showLoader = false;
         this.errorMessage = (err?.status >= 500 && err?.status < 600)
             ? `Something went wrong. If the issue persists, please contact support and provide the following error code: ${err?.error?.traceId}`
-            : `Something went bad, server responded: ${err?.error?.message}`;
+            : `Something went bad, server responded: ${err?.error?.detail}`;
         // return this.navigator.resourceDashboard(this.providerId, this.datasource.serviceId); // fixme: Datasource providerId -2test
       },
       () => {

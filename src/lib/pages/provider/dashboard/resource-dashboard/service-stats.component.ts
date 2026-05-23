@@ -20,12 +20,10 @@ const mapWorld = require('@highcharts/map-collection/custom/world.geo.json')
 @Component({
     selector: 'app-service-stats',
     templateUrl: './service-stats.component.html',
-    styleUrls: ['./service-stats.component.css'],
     standalone: false
 })
 export class ServiceStatsComponent implements OnInit, OnDestroy {
 
-  catalogueConfigId: string = this.config.getProperty('catalogueId');
   catalogueName: string | null = null;
   marketplaceServicesURL = environment.marketplaceServicesURL;
   serviceORresource = environment.serviceORresource;
@@ -71,7 +69,7 @@ export class ServiceStatsComponent implements OnInit, OnDestroy {
       zip(
         this.resourceService.getEU(),
         this.resourceService.getWW(),
-        this.resourceService.getService(params['resourceId'], params['catalogueId'])
+        this.resourceService.getService(params['resourceId'])
       ).subscribe(suc => {
           this.EU = <string[]>suc[0];
           this.WW = <string[]>suc[1];
@@ -126,7 +124,7 @@ export class ServiceStatsComponent implements OnInit, OnDestroy {
     if (dontGetServices) {
 
     } else {
-      this.resourceService.getServiceBundleById(this.service.id, this.catalogueId).subscribe(
+      this.resourceService.getServiceBundleById(this.service.id).subscribe(
         res => { if (res!=null) this.resourceBundle = res },
         err => {
           this.errorMessage = 'An error occurred while retrieving the history of this service. ' + err.error;
@@ -368,8 +366,7 @@ export class ServiceStatsComponent implements OnInit, OnDestroy {
       for (const competitor of item.competitors) {
         // if (competitor.service_id !== 'tnp.lumi_etais__regular_access') {
           // competitorPublicIds.push(competitor.service_id);
-          const isPublicId = /\..*\./.test(competitor.service_id); // if it has two dot occurrences its a publicId
-          this.resourceService.getService(competitor.service_id, isPublicId ? competitor.service_id.split(".")[0] : this.catalogueConfigId).subscribe(
+          this.resourceService.getService(competitor.service_id).subscribe(
             res => {
               const competitorWithDetails = {
                 service_id: competitor.service_id,
@@ -396,8 +393,7 @@ export class ServiceStatsComponent implements OnInit, OnDestroy {
     }
 
     for (const item of this.enrichedRecommendationsOfCompetitorsServices) {
-      const isPublicId = /\..*\./.test(item.service_id); // if it has two dot occurrences its a publicId
-      this.resourceService.getService(item.service_id, isPublicId ? item.service_id.split(".")[0] : this.catalogueConfigId).subscribe(
+      this.resourceService.getService(item.service_id).subscribe(
         res => {
           item.logo = res.logo;
           item.name = res.name;

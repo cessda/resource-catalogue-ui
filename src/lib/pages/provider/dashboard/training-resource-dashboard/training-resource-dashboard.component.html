@@ -15,14 +15,14 @@
         <ul>
 
           <li [routerLinkActive]="['current_section']" #stats="routerLinkActive">
-            <a [routerLink]="['/dashboard', catalogueId, providerId, 'training-resource-dashboard', trainingResourceId, 'stats']">
+            <a [routerLink]="['/dashboard', providerId, 'training-resource-dashboard', trainingResourceId, 'stats']">
               <img src="{{stats.isActive ? 'assets/images/new-icons/stats-active.svg' : 'assets/images/new-icons/stats.svg'}}" class="uk-margin-small-right">
               Statistics
             </a>
           </li>
-          <li [routerLinkActive]="['current_section']" #datasources="routerLinkActive">
-            <a [routerLink]="['/dashboard', catalogueId, providerId, 'training-resource-dashboard', trainingResourceId, 'history']">
-              <img src="{{datasources.isActive ? 'assets/images/new-icons/history-active.svg' : 'assets/images/new-icons/history.svg'}}" class="uk-margin-small-right">
+          <li [routerLinkActive]="['current_section']" #hist="routerLinkActive">
+            <a [routerLink]="['/dashboard', providerId, 'training-resource-dashboard', trainingResourceId, 'history']">
+              <img src="{{hist.isActive ? 'assets/images/new-icons/history-active.svg' : 'assets/images/new-icons/history.svg'}}" class="uk-margin-small-right">
               Update History
             </a>
           </li>
@@ -35,14 +35,14 @@
 
         <ul>
 
-          @if (catalogueId === catalogueConfigId) {
+          @if (catalogueId == null) {
             <li>
               <a [routerLink]="['/provider/' + pidHandler.customEncodeURIComponent(providerId) + '/training-resource/update/' + pidHandler.customEncodeURIComponent(trainingResourceId)]">
                 <img src="../../../../../assets/images/new-icons/add-service.svg" class="uk-margin-small-right">
                 Update Training Resource
               </a>
             </li>
-            @if (trainingResourceBundle && trainingResourceBundle.status==='approved' && trainingResourceBundle.active===true) {
+<!--            @if (trainingResourceBundle && trainingResourceBundle.status==='approved' && trainingResourceBundle.active===true) {
               <li>
                 <a [routerLink]="['/provider/' + providerId + '/training-resource/monitoring/' + trainingResourceId]">
                   <img src="../../../../../assets/images/new-icons/add-service.svg" class="uk-margin-small-right">
@@ -55,18 +55,17 @@
                   {{helpdeskId ? 'Edit' : 'Add'}} Helpdesk Extension
                 </a>
               </li>
-            }
+            }-->
           }
 
           <li>
-            <!--            <a href="{{_marketplaceTrainingResourcesURL}}{{catalogueId}}.{{trainingResourceId}}" target="_blank">-->
             <a href="{{_marketplaceTrainingResourcesURL}}" target="_blank">
               <img src="../../../../../assets/images/new-icons/update-provider.svg" class="uk-margin-small-right">
               View in Catalogue
             </a>
           </li>
           <li>
-            <a [routerLink]="['/dashboard', catalogueId, pidHandler.customEncodeURIComponent(providerId)]">
+            <a [routerLink]="['/dashboard', pidHandler.customEncodeURIComponent(providerId)]">
               <img src="../../../../../assets/images/new-icons/stats.svg" class="uk-margin-small-right">
               Back to Provider Dashboard
             </a>

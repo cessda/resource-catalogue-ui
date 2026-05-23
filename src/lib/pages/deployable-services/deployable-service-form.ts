@@ -34,9 +34,9 @@ export class DeployableServiceForm implements OnInit {
   firstServiceForm = false;
   showLoader = false;
   pendingResource = false;
-  catalogueConfigId: string | null = null;
   catalogueId: string;
   providerId: string;
+  viewOnlyMode = false;
   editMode = false;
   hasChanges = false;
   serviceForm: UntypedFormGroup;
@@ -103,7 +103,7 @@ export class DeployableServiceForm implements OnInit {
       //     this.errorMessage =
       //           (err?.status >= 500 && err?.status < 600)
       //             ? `Something went wrong. If the issue persists, please contact support and provide the following error code: ${err?.error?.traceId}`
-      //             : `Something went bad, server responded: ${err?.error?.message}`;
+      //             : `Something went bad, server responded: ${err?.error?.detail}`;
       //   }
       // );
     } else {
@@ -119,7 +119,7 @@ export class DeployableServiceForm implements OnInit {
           this.errorMessage =
           (err?.status >= 500 && err?.status < 600)
             ? `Something went wrong. If the issue persists, please contact support and provide the following error code: ${err?.error?.traceId}`
-            : `Something went bad, server responded: ${err?.error?.message}`;
+            : `Something went bad, server responded: ${err?.error?.detail}`;
           console.log(err);
           console.log(this.errorMessage);
         }
@@ -128,7 +128,10 @@ export class DeployableServiceForm implements OnInit {
   }
 
   ngOnInit() {
-    this.catalogueConfigId = this.config.getProperty('catalogueId');
+    const path = this.route.snapshot.routeConfig.path;
+    if (path.includes('view/:deployableServiceId')) {
+      this.viewOnlyMode = true;
+    }
     this.showLoader = true;
     zip(
       this.trainingResourceService.getProvidersNames('approved'),
@@ -141,7 +144,7 @@ export class DeployableServiceForm implements OnInit {
                 this.errorMessage =
           (err?.status >= 500 && err?.status < 600)
             ? `Something went wrong. If the issue persists, please contact support and provide the following error code: ${err?.error?.traceId}`
-            : `Something went bad while getting the data for page initialization: ${err?.error?.message}`;
+            : `Something went bad while getting the data for page initialization: ${err?.error?.detail}`;
       },
       () => {
         this.providerId = this.route.snapshot.paramMap.get('providerId');
@@ -153,7 +156,8 @@ export class DeployableServiceForm implements OnInit {
                 {
                   'resourceOwner': decodeURIComponent(this.providerId),
                   'type': "DeployableApplication",
-                  'catalogueId': this.catalogueConfigId
+                  'catalogueId': null,
+                  'nodePID': (this.config.getProperty('nodePidFixed')) ? this.config.getProperty('nodePid') : null
                 }
             }
           };

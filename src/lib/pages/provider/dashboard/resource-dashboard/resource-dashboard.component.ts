@@ -22,7 +22,6 @@ export class ResourceDashboardComponent implements OnInit {
 
   _marketplaceServicesURL = environment.marketplaceServicesURL;
   serviceORresource = environment.serviceORresource;
-  catalogueConfigId: string = this.config.getProperty('catalogueId');
   catalogueId: string;
   providerId: string;
   resourceId: string;
@@ -51,21 +50,25 @@ export class ResourceDashboardComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.catalogueId = this.route.snapshot.paramMap.get('catalogueId');
     this.providerId = this.route.snapshot.paramMap.get('providerId');
     this.resourceId = this.route.snapshot.paramMap.get('resourceId');
-    // console.log(this.providerId);
-    this.providerPID = decodeURIComponent(this.providerId);
-    this.resourcePID = decodeURIComponent(this.resourceId);
-    // console.log(this.providerPID);
-    this.resourceService.getServiceBundleById(this.resourceId, this.catalogueId).subscribe(
-      res => { if (res!=null) this.resourceBundle = res },
+
+    // this.providerPID = decodeURIComponent(this.providerId);
+    // this.resourcePID = decodeURIComponent(this.resourceId);
+    this.resourceService.getServiceBundleById(this.resourceId).subscribe(
+      res => {
+        if (res != null) {
+          this.resourceBundle = res;
+          this.catalogueId = this.resourceBundle.catalogueId;
+          console.log('catalogueId:', this.catalogueId);
+        }
+      },
       error => {},
       () => {
 /*        this.datasourceService.getDatasourceByServiceId(this.resourceId, this.catalogueId).subscribe( // TODO check
           res => { if (res!=null) this.datasourceId = res.id }
         );*/
-        if (this.catalogueId === this.catalogueConfigId){
+        if (this.catalogueId == null){
           // this.serviceExtensionsService.getMonitoringByServiceId(this.resourceId).subscribe(
           //   res => { if (res!=null) this.monitoringId = res.id }
           // );
@@ -107,7 +110,7 @@ export class ResourceDashboardComponent implements OnInit {
         UIkit.modal('#spinnerModal').hide();
                 this.errorMessage = (err?.status >= 500 && err?.status < 600)
             ? `Something went wrong. If the issue persists, please contact support and provide the following error code: ${err?.error?.traceId}`
-            : `Something went bad, server responded: ${err?.error?.message}`;
+            : `Something went bad, server responded: ${err?.error?.detail}`;
       },
       () => {
         UIkit.modal('#spinnerModal').hide();

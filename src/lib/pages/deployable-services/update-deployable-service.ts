@@ -33,8 +33,6 @@ export class UpdateDeployableService extends DeployableServiceForm implements On
 
   ngOnInit() {
     const path = this.route.snapshot.routeConfig.path;
-    if (path.includes(':catalogueId')) { this.catalogueId = this.route.snapshot.paramMap.get('catalogueId') }
-    else { this.catalogueId = this.catalogueConfigId }
     if (path === ':catalogueId/:providerId/deployable-service/view/:resourceId') this.disable = true; // view-only mode
     super.ngOnInit();
     if (sessionStorage.getItem('service')) {
@@ -48,7 +46,7 @@ export class UpdateDeployableService extends DeployableServiceForm implements On
           this.pendingResource = true;
         }
         // this.deployableServiceService.getService(this.resourceId).subscribe(service => {
-        this.deployableServiceService[this.pendingResource ? 'getPendingService' : 'getDeployableServiceBundle'](this.deployableServiceId, this.catalogueId)
+        this.deployableServiceService[this.pendingResource ? 'getPendingService' : 'getDeployableServiceBundle'](this.deployableServiceId)
           .subscribe(dsBundle => {
               this.payloadAnswer = {'answer': {deployableApplication: dsBundle.deployableApplication}};
               // if (dsBundle.deployableApplication.contact === null) //in case of unauthorized access backend will not show sensitive info

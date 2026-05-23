@@ -25,7 +25,6 @@ export class GuidelinesFormComponent implements OnInit {
   model: Model = null;
   payloadAnswer: object = null;
 
-  catalogueConfigId: string | null = null;
   providerId: string;
   guideline: InteroperabilityRecord;
   guidelineId: string = null;
@@ -50,7 +49,6 @@ export class GuidelinesFormComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.catalogueConfigId = this.config.getProperty('catalogueId');
     this.showLoader = true;
     this.providerId = this.route.snapshot.paramMap.get('providerId');
     this.serviceProviderService.getFormModelById('m-b-guidelines').subscribe(
@@ -64,7 +62,8 @@ export class GuidelinesFormComponent implements OnInit {
                 {
                   'resourceOwner': decodeURIComponent(this.providerId),
                   'type': "InteroperabilityGuidelines",
-                  'catalogueId': this.catalogueConfigId
+                  'catalogueId': null,
+                  'nodePID': (this.config.getProperty('nodePidFixed')) ? this.config.getProperty('nodePid') : null
                 }
             }
           };
@@ -98,11 +97,11 @@ export class GuidelinesFormComponent implements OnInit {
                 this.errorMessage =
           (err?.status >= 500 && err?.status < 600)
             ? `Something went wrong. If the issue persists, please contact support and provide the following error code: ${err?.error?.traceId}`
-            : `Something went bad, server responded: ${err?.error?.message}`;
+            : `Something went bad, server responded: ${err?.error?.detail}`;
       },
       () => {
         this.showLoader = false;
-        this.router.navigate(['/dashboard/' + this.catalogueConfigId +'/'+ this.pidHandler.customEncodeURIComponent(this.providerId) +'/guidelines/']);
+        this.router.navigate(['/dashboard/' + this.pidHandler.customEncodeURIComponent(this.providerId) +'/guidelines/']);
       }
     );
   }

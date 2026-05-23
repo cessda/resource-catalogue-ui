@@ -21,19 +21,21 @@
               <p class="uk-margin-bottom" [innerHTML]="model.notice"></p>
             </div>
           }
-          <div class="form-action-bar titleAndActionsBar uk-flex uk-flex-right justify-content-end" style="min-height: 40px">
-            <div>
-              @if (saveAsDraftAvailable) {
-                <button
-                  class="uk-button uk-button-secondary uk-margin-left" (click)="submitMode = 'draft'; child.parentSubmit()">
-                  Save as Draft
+          @if (!viewOnlyMode) {
+            <div class="form-action-bar titleAndActionsBar uk-flex uk-flex-right justify-content-end" style="min-height: 40px">
+              <div>
+                @if (saveAsDraftAvailable) {
+                  <button
+                    class="uk-button uk-button-secondary uk-margin-left" (click)="submitMode = 'draft'; child.parentSubmit()">
+                    Save as Draft
+                  </button>
+                }
+                <button class="uk-button uk-button-secondary uk-margin-left" (click)="submitMode = 'submit'; child.parentSubmit()">
+                  Submit
                 </button>
-              }
-              <button class="uk-button uk-button-secondary uk-margin-left" (click)="submitMode = 'submit'; child.parentSubmit()">
-                Submit
-              </button>
+              </div>
             </div>
-          </div>
+          }
         </app-survey>
       }
     </div>

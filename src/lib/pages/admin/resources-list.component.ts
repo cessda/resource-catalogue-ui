@@ -29,7 +29,6 @@ declare var UIkit: any;
     standalone: false
 })
 export class ResourcesListComponent implements OnInit {
-  catalogueConfigId: string | null = null;
   url = environment.API_ENDPOINT;
   serviceORresource = environment.serviceORresource;
   protected readonly environment = environment;
@@ -94,7 +93,6 @@ export class ResourcesListComponent implements OnInit {
 
   public auditStates: Array<string> = ['Valid', 'Not audited', 'Invalid and updated', 'Invalid and not updated'];
   public auditLabels: Array<string> = ['Valid', 'Not audited', 'Invalid and updated', 'Invalid and not updated'];
-
   @ViewChildren('auditCheckboxes') auditCheckboxes: QueryList<ElementRef>;
 
   public statuses: Array<string> = ['approved', 'pending', 'rejected'];
@@ -116,7 +114,6 @@ export class ResourcesListComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.catalogueConfigId = this.config.getProperty('catalogueId');
     if (!this.authenticationService.isAdmin()) {
       this.router.navigateByUrl('/home');
     } else {
@@ -219,7 +216,7 @@ export class ResourcesListComponent implements OnInit {
                   this.errorMessage =
           (err?.status >= 500 && err?.status < 600)
             ? `Something went wrong. If the issue persists, please contact support and provide the following error code: ${err?.error?.traceId}`
-            : `Something went bad while getting the data for page initialization: ${err?.error?.message}`;
+            : `Something went bad while getting the data for page initialization: ${err?.error?.detail}`;
         },
         () => {
           this.providersPage.results.sort((a, b) => 0 - (a.name > b.name ? -1 : 1));
@@ -286,7 +283,6 @@ export class ResourcesListComponent implements OnInit {
         i++;
       });
     }
-
     this.handleChangeAndResetPage();
   }
 
@@ -333,11 +329,18 @@ export class ResourcesListComponent implements OnInit {
   getResources() {
     this.loadingMessage = 'Loading ' + this.serviceORresource + 's...';
     this.services = [];
-    this.resourceService.getResourceBundles(this.dataForm.get('from').value, this.dataForm.get('quantity').value,
-      this.dataForm.get('sort').value, this.dataForm.get('order').value, this.dataForm.get('query').value,
-      this.dataForm.get('active').value, this.dataForm.get('suspended').value,
-      this.dataForm.get('resource_organisation').value, this.dataForm.get('status').value,
-      this.dataForm.get('auditState').value).subscribe(
+    this.resourceService.getResourceBundles(
+      this.dataForm.get('from').value,
+      this.dataForm.get('quantity').value,
+      this.dataForm.get('sort').value,
+      this.dataForm.get('order').value,
+      this.dataForm.get('query').value,
+      this.dataForm.get('active').value,
+      this.dataForm.get('suspended').value,
+      this.dataForm.get('resource_organisation').value,
+      this.dataForm.get('status').value,
+      this.dataForm.get('auditState').value,
+      this.dataForm.get('catalogue_id').value).subscribe(
       res => {
         this.services = res['results'];
         this.facets = res['facets'];
@@ -534,7 +537,7 @@ export class ResourcesListComponent implements OnInit {
         // UIkit.modal('#spinnerModal').hide();
         this.errorMessage = (err?.status >= 500 && err?.status < 600)
             ? `Something went wrong. If the issue persists, please contact support and provide the following error code: ${err?.error?.traceId}`
-            : `Something went bad, server responded: ${err?.error?.message}`;
+            : `Something went bad, server responded: ${err?.error?.detail}`;
         this.getResources();
       },
       () => {
@@ -560,7 +563,7 @@ export class ResourcesListComponent implements OnInit {
           this.errorMessage =
           (err?.status >= 500 && err?.status < 600)
             ? `Something went wrong. If the issue persists, please contact support and provide the following error code: ${err?.error?.traceId}`
-            : `Something went bad, server responded: ${err?.error?.message}`;
+            : `Something went bad, server responded: ${err?.error?.detail}`;
           window.scroll(0,0);
         },
         () => {
@@ -581,7 +584,7 @@ export class ResourcesListComponent implements OnInit {
       res => {},
       error => {
         UIkit.modal('#spinnerModal').hide();
-        this.errorMessage = 'Something went bad. ' + error.error.message ;
+        this.errorMessage = 'Something went bad. ' + error.error.detail ;
       },
       () => {
         UIkit.modal('#spinnerModal').hide();
@@ -646,14 +649,20 @@ export class ResourcesListComponent implements OnInit {
   }
 
   auditResourceAction(action: string, bundle: ServiceBundle) {
-    this.resourceService.auditResource(this.selectedService.id, action, this.selectedService.catalogueId, this.commentAuditControl.value)
+    this.resourceService.auditService(this.selectedService.id, action, this.selectedService.catalogueId, this.commentAuditControl.value)
       .subscribe(
         res => {
           if (!this.showSideAuditForm) {
             this.getResources();
           }
         },
-        err => { console.log(err); },
+        err => {
+          this.errorMessage =
+            (err?.status >= 500 && err?.status < 600)
+              ? `Something went wrong. If the issue persists, please contact support and provide the following error code: ${err?.error?.traceId}`
+              : `Something went bad, server responded: ${err?.error?.detail}`;
+          window.scroll(0,0);
+        },
         () => {
           this.servicesForAudit.forEach(
             s => {

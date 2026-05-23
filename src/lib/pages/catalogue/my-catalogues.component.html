@@ -3,7 +3,7 @@
     <div class="uk-grid-margin uk-grid uk-grid-stack" uk-grid="">
       <div class="uk-width-1-1@m uk-first-column">
 
-        <div class="uk-h2 uk-text-center">My Catalogues</div>
+        <div class="uk-text-center">My Catalogues</div>
 
         <div class="uk-container uk-margin-medium-bottom">
           <div class="uk-grid">
@@ -112,7 +112,7 @@
                                   &lt;!&ndash;                                <ul class="uk-nav uk-dropdown-nav uk-dropdown-close">&ndash;&gt;
                                   <li class="uk-margin-small-bottom">
                                     &lt;!&ndash;                                    <ng-container *ngIf="catalogueBundle.status === 'approved provider'">&ndash;&gt;
-                                    <a [routerLink]="['/dashboard', catalogueBundle.id, 'stats']">
+                                    <a [routerLink]="['/dashboard', 'stats']">
                                       Go to Dashboard
                                     </a>
                                   &lt;!&ndash;                                    </ng-container>&ndash;&gt;
@@ -143,13 +143,13 @@
                           <i class="fa fa-edit fa-lg uk-margin-small-right" aria-hidden="true"></i> Update Catalogue
                         </button>
                         <button class="uk-button uk-button-link uk-margin-medium-left">
-                          <i class="fa fa-ellipsis-v fa-lg uk-margin-small-right"></i>More Options
+                          <span class="material-symbols-outlined uk-margin-small-right" style="vertical-align: middle;">more_vert</span>More Options
                         </button>
                         <div uk-dropdown="mode: click">
                           <ul class="uk-nav uk-dropdown-nav uk-dropdown-close">
                             <li class="uk-margin-small-bottom">
                               <ng-container *ngIf="catalogueBundle.status === 'approved provider'">
-                                <a [routerLink]="['/dashboard', catalogueBundle.id, 'stats']">
+                                <a [routerLink]="['/dashboard', 'stats']">
                                   Go to Dashboard
                                 </a>
                               </ng-container>

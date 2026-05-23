@@ -15,10 +15,6 @@ export class NavigationService {
                 public configService: ConfigService) {
     }
 
-    public get catalogueConfigId(): string | null {
-      return this.configService.getProperty('catalogueId');
-    }
-
     createId(route: ActivatedRoute, prefix: string, suffix: string) {
       // console.log(route.snapshot);
       if (!route.snapshot.paramMap.get(prefix) || !route.snapshot.paramMap.get(suffix)) return null;
@@ -32,19 +28,19 @@ export class NavigationService {
 
     dashboard(id: string, catalogueId?: string) {
       id = this.pidHandler.customEncodeURIComponent(id);
-      if(!catalogueId) return this.router.navigate([`/dashboard/${this.catalogueConfigId}`, id]);
+      if(!catalogueId) return this.router.navigate([`/dashboard`, id]);
         return this.router.navigate([`/dashboard`, id]);
     }
 
     dashboardDatasources(providerId: string, catalogueId?: string) {
       providerId = this.pidHandler.customEncodeURIComponent(providerId);
-      if (!catalogueId) return this.router.navigate([`/dashboard/${this.catalogueConfigId}/${providerId}/datasources`]);
+      if (!catalogueId) return this.router.navigate([`/dashboard/${providerId}/datasources`]);
       return this.router.navigate([`/dashboard/${catalogueId}/${providerId}/datasources`]);
     }
 
     dashboardResources(providerId: string, catalogueId?: string) {
       providerId = this.pidHandler.customEncodeURIComponent(providerId);
-      if (!catalogueId) return this.router.navigate([`/dashboard/${this.catalogueConfigId}/${providerId}/resources`]);
+      if (!catalogueId) return this.router.navigate([`/dashboard/${providerId}/resources`]);
       return this.router.navigate([`/dashboard/${catalogueId}/${providerId}/resources`]);
     }
 
@@ -56,28 +52,28 @@ export class NavigationService {
     resourceDashboard(providerId: string, serviceId: string, catalogueId?: string){
       providerId = this.pidHandler.customEncodeURIComponent(providerId);
       serviceId = this.pidHandler.customEncodeURIComponent(serviceId);
-      if(!catalogueId) return this.router.navigate([`/dashboard/${this.catalogueConfigId}/${providerId}/resource-dashboard/${serviceId}/history`]);
+      if(!catalogueId) return this.router.navigate([`/dashboard/${providerId}/resource-dashboard/${serviceId}/history`]);
       return this.router.navigate([`/dashboard/${providerId}/resource-dashboard/${serviceId}/history`]);
     }
 
     datasourceDashboard(providerId: string, datasourceId: string, catalogueId?: string) {
       providerId = this.pidHandler.customEncodeURIComponent(providerId);
       datasourceId = this.pidHandler.customEncodeURIComponent(datasourceId);
-      if(!catalogueId) return this.router.navigate([`/dashboard/${this.catalogueConfigId}/${providerId}/datasource-dashboard/${datasourceId}/history`]);
+      if(!catalogueId) return this.router.navigate([`/dashboard/${providerId}/datasource-dashboard/${datasourceId}/history`]);
       return this.router.navigate([`/dashboard/${providerId}/datasource-dashboard/${datasourceId}/history`]);
     }
 
     trainingResourceDashboard(providerId: string, trainingResourceId: string, catalogueId?: string) {
       providerId = this.pidHandler.customEncodeURIComponent(providerId);
       trainingResourceId = this.pidHandler.customEncodeURIComponent(trainingResourceId);
-      if(!catalogueId) return this.router.navigate([`/dashboard/${this.catalogueConfigId}/${providerId}/training-resource-dashboard/${trainingResourceId}/history`]);
+      if(!catalogueId) return this.router.navigate([`/dashboard/${providerId}/training-resource-dashboard/${trainingResourceId}/history`]);
       return this.router.navigate([`/dashboard/${providerId}/training-resource-dashboard/${trainingResourceId}/history`]);
     }
 
     deployableServiceDashboard(providerId: string, deployableServiceId: string, catalogueId?: string) {
       providerId = this.pidHandler.customEncodeURIComponent(providerId);
       deployableServiceId = this.pidHandler.customEncodeURIComponent(deployableServiceId);
-      if(!catalogueId) return this.router.navigate([`/dashboard/${this.catalogueConfigId}/${providerId}/deployable-service-dashboard/${deployableServiceId}/history`]);
+      if(!catalogueId) return this.router.navigate([`/dashboard/${providerId}/deployable-service-dashboard/${deployableServiceId}/history`]);
       return this.router.navigate([`/dashboard/${providerId}/deployable-service-dashboard/${deployableServiceId}/history`]);
     }
 

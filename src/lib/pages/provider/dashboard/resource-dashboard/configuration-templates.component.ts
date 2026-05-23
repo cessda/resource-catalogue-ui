@@ -29,7 +29,6 @@ export class ConfigurationTemplatesComponent implements OnInit {
 
   protected readonly isDevMode = isDevMode;
 
-  catalogueConfigId: string = this.config.getProperty('catalogueId');
   serviceORresource = environment.serviceORresource;
   // projectMail = environment.projectMail;
   showLoader = false;
@@ -120,7 +119,8 @@ export class ConfigurationTemplatesComponent implements OnInit {
                         configurationTemplateInstance: {
                           resourceId: decodeURIComponent(this.resourceId),
                           configurationTemplateId: modelId.split("-").slice(2).join("/"),
-                          catalogueId: this.catalogueConfigId
+                          catalogueId: null,
+                          nodePID: (this.config.getProperty('nodePidFixed')) ? this.config.getProperty('nodePid') : null
                         }
                       }
                     };
@@ -183,7 +183,7 @@ export class ConfigurationTemplatesComponent implements OnInit {
         setTimeout(() => this.saveMessageMap[templateId] = '', 5000);
       },
       error: (err) => {
-        this.saveMessageMap[templateId] = isUpdate ? 'Update failed. ' + + err.error.message : 'Save failed. ' + err.error.message;
+        this.saveMessageMap[templateId] = isUpdate ? 'Update failed. ' + + err.error.detail : 'Save failed. ' + err.error.detail;
         setTimeout(() => this.saveMessageMap[templateId] = '', 5000);
         console.error(`Failed to save template instance for ${templateId}`, err);
       }

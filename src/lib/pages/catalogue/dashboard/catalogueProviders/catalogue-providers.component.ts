@@ -19,7 +19,6 @@ declare var UIkit: any;
 })
 
 export class CatalogueProvidersComponent implements OnInit {
-  catalogueConfigId: string | null = null;
   protected readonly environment = environment;
   serviceORresource = environment.serviceORresource;
 
@@ -40,7 +39,7 @@ export class CatalogueProvidersComponent implements OnInit {
   urlParams: URLParameter[] = [];
   catalogueId;
   catalogueBundle: CatalogueBundle;
-  catalogueProviders: Paging<ProviderBundle>; // change to providerBundle
+  catalogueProviders: any; //Paging<ProviderBundle>;
   // providerCoverage: string[];
   // providerServicesGroupedByPlace: any;
   selectedProvider: ProviderBundle = null;
@@ -58,12 +57,12 @@ export class CatalogueProvidersComponent implements OnInit {
     private router: Router,
     private providerService: ServiceProviderService,
     private catalogueService: CatalogueService,
+    private resourceService: ResourceService,
     private service: ResourceService,
     private config: ConfigService
   ) {}
 
   ngOnInit(): void {
-    this.catalogueConfigId = this.config.getProperty('catalogueId');
     this.catalogueId = this.route.parent.snapshot.paramMap.get('catalogue');
 
     this.getCatalogue();
@@ -106,13 +105,15 @@ export class CatalogueProvidersComponent implements OnInit {
   }
 
   getProviders() {
+    console.log(this.catalogueId);
     this.toggleLoading = true;
-    this.catalogueService.getProvidersOfCatalogue(this.catalogueId, this.dataForm.get('from').value, this.dataForm.get('quantity').value,
-      this.dataForm.get('order').value, this.dataForm.get('sort').value,
-      this.dataForm.get('status').value, this.dataForm.get('query').value)
+    this.resourceService.getProviderBundles(this.dataForm.get('from').value, this.dataForm.get('quantity').value,
+      this.dataForm.get('sort').value, this.dataForm.get('order').value, this.dataForm.get('query').value,
+      null, null, this.dataForm.get('status').value, [], [], this.catalogueId ? [this.catalogueId] : [])
       .subscribe(res => {
           this.toggleLoading = false;
           this.catalogueProviders = res;
+          console.log(this.catalogueProviders)
           this.total = res['total'];
           this.paginationInit();
         },
@@ -136,7 +137,7 @@ export class CatalogueProvidersComponent implements OnInit {
         // UIkit.modal('#spinnerModal').hide();
         this.errorMessage = (err?.status >= 500 && err?.status < 600)
             ? `Something went wrong. If the issue persists, please contact support and provide the following error code: ${err?.error?.traceId}`
-            : `Something went bad, server responded: ${err?.error?.message}`;
+            : `Something went bad, server responded: ${err?.error?.detail}`;
         this.getProviders();
       },
       () => {

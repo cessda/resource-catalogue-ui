@@ -20,7 +20,6 @@ declare var UIkit: any;
 export class GuidelinesListComponent implements OnInit {
   url = environment.API_ENDPOINT;
   serviceORresource = environment.serviceORresource;
-  catalogueConfigId: string | null = null;
 
   formPrepare = {
     order: 'ASC',
@@ -81,7 +80,6 @@ export class GuidelinesListComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.catalogueConfigId = this.config.getProperty('catalogueId');
     if (!this.authenticationService.isAdmin()) {
       this.router.navigateByUrl('/home');
     } else {
@@ -234,7 +232,7 @@ export class GuidelinesListComponent implements OnInit {
         // UIkit.modal('#spinnerModal').hide();
         this.errorMessage = (err?.status >= 500 && err?.status < 600)
             ? `Something went wrong. If the issue persists, please contact support and provide the following error code: ${err?.error?.traceId}`
-            : `Something went bad, server responded: ${err?.error?.message}`;
+            : `Something went bad, server responded: ${err?.error?.detail}`;
         this.getGuidelines();
       },
       () => {
@@ -267,7 +265,7 @@ export class GuidelinesListComponent implements OnInit {
           this.errorMessage =
           (err?.status >= 500 && err?.status < 600)
             ? `Something went wrong. If the issue persists, please contact support and provide the following error code: ${err?.error?.traceId}`
-            : `Something went bad, server responded: ${err?.error?.message}`;
+            : `Something went bad, server responded: ${err?.error?.detail}`;
           window.scroll(0,0);
         },
         () => {
@@ -319,7 +317,13 @@ export class GuidelinesListComponent implements OnInit {
     this.guidelinesService.auditGuideline(this.selectedGuideline.id, action, this.selectedGuideline.catalogueId, this.commentAuditControl.value)
       .subscribe(
         res => {this.getGuidelines();},
-        err => {console.log(err);},
+        err => {
+          this.errorMessage =
+            (err?.status >= 500 && err?.status < 600)
+              ? `Something went wrong. If the issue persists, please contact support and provide the following error code: ${err?.error?.traceId}`
+              : `Something went bad, server responded: ${err?.error?.detail}`;
+          window.scroll(0,0);
+        },
         () => {
           this.guidelinesForAudit.forEach(
             s => {

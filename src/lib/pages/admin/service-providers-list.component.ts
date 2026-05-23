@@ -10,7 +10,6 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {UntypedFormArray, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup} from '@angular/forms';
 import {URLParameter} from '../../domain/url-parameter';
 import {Paging} from '../../domain/paging';
-import {getLocaleDateFormat} from '@angular/common';
 import {zip} from 'rxjs';
 import {TrainingResourceService} from "../../services/training-resource.service";
 import {pidHandler} from "../../shared/pid-handler/pid-handler.service";
@@ -24,7 +23,6 @@ declare var UIkit: any;
     standalone: false
 })
 export class ServiceProvidersListComponent implements OnInit {
-  catalogueConfigId: string | null = null;
   catalogueName: string | null = null;
   url = environment.API_ENDPOINT;
   serviceORresource = environment.serviceORresource;
@@ -130,7 +128,6 @@ export class ServiceProvidersListComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.catalogueConfigId = this.config.getProperty('catalogueId');
     this.catalogueName = this.config.getProperty('catalogueName');
     if (!this.authenticationService.isAdmin()) {
       this.router.navigateByUrl('/home');
@@ -251,7 +248,7 @@ export class ServiceProvidersListComponent implements OnInit {
                 this.errorMessage =
           (err?.status >= 500 && err?.status < 600)
             ? `Something went wrong. If the issue persists, please contact support and provide the following error code: ${err?.error?.traceId}`
-            : `Something went bad while getting the data for page initialization: ${err?.error?.message}`;
+            : `Something went bad while getting the data for page initialization: ${err?.error?.detail}`;
       },
       () => {}
     );
@@ -582,7 +579,7 @@ export class ServiceProvidersListComponent implements OnInit {
           this.errorMessage =
           (err?.status >= 500 && err?.status < 600)
             ? `Something went wrong. If the issue persists, please contact support and provide the following error code: ${err?.error?.traceId}`
-            : `Something went bad, server responded: ${err?.error?.message}`;
+            : `Something went bad, server responded: ${err?.error?.detail}`;
           window.scroll(0,0);
         },
         () => {

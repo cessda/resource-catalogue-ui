@@ -21,7 +21,6 @@ declare var UIkit: any;
 
 export class DatasourcesComponent implements OnInit {
 
-  catalogueConfigId: string = this.config.getProperty('catalogueId');
   protected readonly environment = environment;
   serviceORresource = environment.serviceORresource;
 
@@ -103,7 +102,7 @@ export class DatasourcesComponent implements OnInit {
   }
 
   getProvider() {
-    this.providerService.getServiceProviderBundleById(this.providerId, this.catalogueId).subscribe(
+    this.providerService.getServiceProviderBundleById(this.providerId).subscribe(
       providerBundle => {
         this.providerBundle = providerBundle;
       }, error => {
@@ -124,7 +123,7 @@ export class DatasourcesComponent implements OnInit {
       err => {
         this.errorMessage = (err?.status >= 500 && err?.status < 600)
             ? `Something went wrong. If the issue persists, please contact support and provide the following error code: ${err?.error?.traceId}`
-            : `Something went bad, server responded: ${err?.error?.message}`;
+            : `Something went bad, server responded: ${err?.error?.detail}`;
         this.getDatasources();
         UIkit.modal('#spinnerModal').hide();
         // console.log(error);
@@ -177,7 +176,7 @@ export class DatasourcesComponent implements OnInit {
         UIkit.modal('#spinnerModal').hide();
         this.errorMessage = (err?.status >= 500 && err?.status < 600)
             ? `Something went wrong. If the issue persists, please contact support and provide the following error code: ${err?.error?.traceId}`
-            : `Something went bad, server responded: ${err?.error?.message}`;
+            : `Something went bad, server responded: ${err?.error?.detail}`;
         this.getDatasources();
       },
       () => {
@@ -205,7 +204,7 @@ export class DatasourcesComponent implements OnInit {
       }
     }
 
-    this.router.navigate([`/dashboard`, this.catalogueId, this.providerId, `datasources`], {queryParams: map});
+    this.router.navigate([`/dashboard`, this.providerId, `datasources`], {queryParams: map});
   }
 
   paginationInit() {

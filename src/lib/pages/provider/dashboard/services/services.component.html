@@ -52,7 +52,7 @@
           </div>
 
           <div class="uk-inline">
-            <label class="" for="sort">Order by </label>
+            <label class="" for="sort">Sort by </label>
             <div class="uk-inline">
               <select class="uk-input uk-select" id="sort" (change)="handleChangeAndResetPage()" formControlName="sort">
                 <option value="name" selected>Name</option>
@@ -169,7 +169,7 @@
                     </div>
                     <div class="uk-width-2-3">
                       <h4 class="uk-margin-remove uk-padding-small uk-padding-remove-top uk-padding-remove-left uk-padding-remove-right">
-                        <a [routerLink]="['/dashboard', serviceBundle.catalogueId, serviceBundle.service.resourceOwner, 'resource-dashboard', serviceBundle.id]" data-uk-tooltip title="Go to the service dashboard">
+                        <a [routerLink]="['/dashboard', serviceBundle.service.resourceOwner, 'resource-dashboard', serviceBundle.id]" data-uk-tooltip title="Go to the service dashboard">
                           {{serviceBundle.service.name}}
                         </a>
                       </h4>
@@ -206,13 +206,13 @@
             <span class="">Last Update: </span>{{ serviceBundle.metadata.modifiedAt | date }}
           </div>
         </div>
-        @if (catalogueId === catalogueConfigId) {
+        @if (catalogueId == null) {
           <div class="uk-width-1-6">
             <div class="action-buttons">
               <button
                 [routerLink]="['/provider/' + pidHandler.customEncodeURIComponent(serviceBundle.service.resourceOwner)+'/resource/update/'+pidHandler.customEncodeURIComponent(serviceBundle.id)]"
                 class="uk-button uk-button-action uk-display-block uk-margin-small-top">
-                <i class="fa fa-pencil fa-lg" aria-hidden="true"></i> Update {{serviceORresource | lowercase}}
+                <span class="material-symbols-outlined uk-margin-small-right" style="vertical-align: middle;">edit_square</span>Edit
               </button>
 <!--              @if (providerBundle.templateStatus === 'approved template' && serviceBundle?.service) {
                 <button
@@ -223,12 +223,12 @@
               }-->
               <button class="uk-button uk-button-action uk-display-block uk-margin-small-top" (click)="toggleService(serviceBundle)">
                 @if (serviceBundle.active) {
-                  <i class="fa fa-close fa-lg" aria-hidden="true"></i> Deactivate
+                  <span class="material-symbols-outlined uk-margin-small-right" style="vertical-align: middle;">close</span>Deactivate
                 }
                 @if (!serviceBundle.active) {
                   <!--                        <div *ngIf="providerService.status === 'pending resource' || providerService.status === 'rejected resource'"-->
                 <!--                             uk-tooltip="title:Cannot activate a pending/rejected resource."></div>-->
-                <i class="fa fa-check fa-lg" aria-hidden="true"></i> Activate
+                <span class="material-symbols-outlined uk-margin-small-right" style="vertical-align: middle;">check</span>Activate
               }
             </button>
             <!--<button class="uk-button uk-button-action uk-display-block" (click)="navigate(providerService.service.id)">-->
@@ -236,7 +236,7 @@
           <!--</button>-->
           @if (serviceBundle.status !== 'pending') {
             <button class="uk-button uk-button-action uk-display-block uk-margin-small-top" (click)="setSelectedService(serviceBundle)">
-              <i class="fa fa-trash fa-lg" aria-hidden="true"></i> Delete {{serviceORresource | lowercase}}
+              <span class="material-symbols-outlined uk-margin-small-right" style="vertical-align: middle;">delete</span>Delete
             </button>
           }
         </div>

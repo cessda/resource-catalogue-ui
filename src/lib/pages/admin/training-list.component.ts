@@ -4,7 +4,6 @@ import {ServiceProviderService} from '../../services/service-provider.service';
 import {resourceStatusChangeMap, statusList} from '../../domain/resource-status-list';
 import {
   TrainingResourceBundle,
-  ServiceBundle,
   LoggingInfo,
   Provider,
   ProviderBundle,
@@ -16,12 +15,10 @@ import {environment} from '../../../environments/environment';
 import {mergeMap} from 'rxjs/operators';
 import {AuthenticationService} from '../../services/authentication.service';
 import {ActivatedRoute, Router} from '@angular/router';
-import {UntypedFormArray, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators} from '@angular/forms';
+import {UntypedFormArray, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup} from '@angular/forms';
 import {URLParameter} from '../../domain/url-parameter';
 import {NavigationService} from '../../services/navigation.service';
-import {PremiumSortFacetsPipe} from '../../shared/pipes/premium-sort.pipe';
 import {statusChangeMap} from '../../domain/service-provider-status-list';
-import {zip} from 'rxjs';
 import {Paging} from '../../domain/paging';
 import {TrainingResourceService} from "../../services/training-resource.service";
 import {pidHandler} from "../../shared/pid-handler/pid-handler.service";
@@ -34,7 +31,6 @@ declare var UIkit: any;
     standalone: false
 })
 export class TrainingListComponent implements OnInit {
-  catalogueConfigId: string | null = null;
   url = environment.API_ENDPOINT;
   serviceORresource = environment.serviceORresource;
   protected readonly environment = environment;
@@ -120,7 +116,6 @@ export class TrainingListComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.catalogueConfigId = this.config.getProperty('catalogueId');
     if (!this.authenticationService.isAdmin()) {
       this.router.navigateByUrl('/home');
     } else {
@@ -146,8 +141,8 @@ export class TrainingListComponent implements OnInit {
                     }
                   }
                 }
-
                 foundStatus = true;
+
               } else if (i === 'resource_organisation') {
 
                 if (this.dataForm.get('resource_organisation').value.length === 0) {
@@ -223,7 +218,7 @@ export class TrainingListComponent implements OnInit {
                   this.errorMessage =
           (err?.status >= 500 && err?.status < 600)
             ? `Something went wrong. If the issue persists, please contact support and provide the following error code: ${err?.error?.traceId}`
-            : `Something went bad while getting the data for page initialization: ${err?.error?.message}`;
+            : `Something went bad while getting the data for page initialization: ${err?.error?.detail}`;
         },
         () => {
           this.providersPage.results.sort((a, b) => 0 - (a.name > b.name ? -1 : 1));
@@ -519,7 +514,7 @@ export class TrainingListComponent implements OnInit {
         // UIkit.modal('#spinnerModal').hide();
         this.errorMessage = (err?.status >= 500 && err?.status < 600)
             ? `Something went wrong. If the issue persists, please contact support and provide the following error code: ${err?.error?.traceId}`
-            : `Something went bad, server responded: ${err?.error?.message}`;
+            : `Something went bad, server responded: ${err?.error?.detail}`;
         this.getResources();
       },
       () => {
@@ -545,7 +540,7 @@ export class TrainingListComponent implements OnInit {
           this.errorMessage =
           (err?.status >= 500 && err?.status < 600)
             ? `Something went wrong. If the issue persists, please contact support and provide the following error code: ${err?.error?.traceId}`
-            : `Something went bad, server responded: ${err?.error?.message}`;
+            : `Something went bad, server responded: ${err?.error?.detail}`;
           window.scroll(0,0);
         },
         () => {
@@ -562,7 +557,7 @@ export class TrainingListComponent implements OnInit {
       err => {
         this.errorMessage = (err?.status >= 500 && err?.status < 600)
             ? `Something went wrong. If the issue persists, please contact support and provide the following error code: ${err?.error?.traceId}`
-            : `Something went bad, server responded: ${err?.error?.message}`;
+            : `Something went bad, server responded: ${err?.error?.detail}`;
         this.getResources();
         UIkit.modal('#spinnerModal').hide();
         // console.log(error);
@@ -600,7 +595,7 @@ export class TrainingListComponent implements OnInit {
         UIkit.modal('#spinnerModal').hide();
         this.errorMessage = (err?.status >= 500 && err?.status < 600)
             ? `Something went wrong. If the issue persists, please contact support and provide the following error code: ${err?.error?.traceId}`
-            : `Something went bad, server responded: ${err?.error?.message}`;
+            : `Something went bad, server responded: ${err?.error?.detail}`;
         this.getResources();
       },
       () => {
@@ -635,7 +630,13 @@ export class TrainingListComponent implements OnInit {
             this.getResources();
           }
         },
-        err => { console.log(err); },
+        err => {
+          this.errorMessage =
+            (err?.status >= 500 && err?.status < 600)
+              ? `Something went wrong. If the issue persists, please contact support and provide the following error code: ${err?.error?.traceId}`
+              : `Something went bad, server responded: ${err?.error?.detail}`;
+          window.scroll(0,0);
+        },
         () => {
           this.trainingResourcesForAudit.forEach(
             s => {

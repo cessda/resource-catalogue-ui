@@ -4,19 +4,13 @@ import {AuthenticationService} from './authentication.service';
 import {environment} from '../../environments/environment';
 import {Adapter, AdapterBundle, InteroperabilityRecordBundle} from '../domain/eic-model';
 import {Model} from "../../dynamic-catalogue/domain/dynamic-form-model";
-import {ConfigService} from "./config.service";
 import {Paging} from "../domain/paging";
 
 @Injectable()
 export class AdaptersService {
 
-  private catalogueConfigId: string;
-
   constructor(public http: HttpClient,
-              public authenticationService: AuthenticationService,
-              private configService: ConfigService) {
-    this.catalogueConfigId = this.configService.getProperty('catalogueId');
-  }
+              public authenticationService: AuthenticationService) {}
   base = environment.API_ENDPOINT;
   private options = {withCredentials: true};
 
@@ -89,14 +83,16 @@ export class AdaptersService {
 
   suspendAdapter(adapterId: string, catalogueId: string, suspend: boolean) {
     adapterId = decodeURIComponent(adapterId);
-    return this.http.put<AdapterBundle>(this.base + `/adapter/suspend?id=${adapterId}&catalogueId=${catalogueId}&suspend=${suspend}`, this.options);
+    if (catalogueId == null)
+      return this.http.put<AdapterBundle>(this.base + `/adapter/suspend?id=${adapterId}&suspend=${suspend}`, this.options);
+    else
+      return this.http.put<AdapterBundle>(this.base + `/catalogue/${catalogueId}/adapter/suspend/${adapterId}?suspend=${suspend}`, this.options);
   }
 
   auditAdapter(id: string, action: string, catalogueId: string, comment: string) {
     id = decodeURIComponent(id);
-    if(!catalogueId) catalogueId = this.catalogueConfigId;
-    if (catalogueId === this.catalogueConfigId)
-      return this.http.patch(this.base + `/adapter/audit/${id}?actionType=${action}&catalogueId=${catalogueId}&comment=${comment}`, this.options);
+    if (catalogueId == null)
+      return this.http.patch(this.base + `/adapter/audit/${id}?actionType=${action}&comment=${comment}`, this.options);
     else
       return this.http.patch(this.base + `/catalogue/${catalogueId}/adapter/audit/${id}?actionType=${action}&comment=${comment}`, this.options);
   }

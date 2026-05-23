@@ -29,13 +29,12 @@ export class ServiceProviderFormComponent implements OnInit {
   formDataToSubmit: any = null;
 
   protected readonly isDevMode = isDevMode;
-  catalogueConfigId: string = this.config.getProperty('catalogueId');
   catalogueName: string | null = null;
   protected readonly environment = environment;
   _hasUserConsent = environment.hasUserConsent;
   serviceORresource = environment.serviceORresource;
   privacyPolicyURL = environment.privacyPolicyURL;
-  catalogueId: string = this.catalogueConfigId;
+  catalogueId: string = null;
   providerId: string = null;
   displayedCatalogueName: string;
   providerName = '';
@@ -43,6 +42,7 @@ export class ServiceProviderFormComponent implements OnInit {
   userInfo = {sub: '', family_name: '', given_name: '', email: ''};
   vocabularies: Map<string, Vocabulary[]> = null;
   subVocabularies: Map<string, Vocabulary[]> = null;
+  viewOnlyMode = false;
   submitMode: 'draft' | 'submit' = 'submit';
   editMode = false;
   hasChanges = false;
@@ -107,7 +107,8 @@ export class ServiceProviderFormComponent implements OnInit {
           this.payloadAnswer = {
             'answer': {
               organisation: {
-                'catalogueId': this.catalogueConfigId,
+                'catalogueId': this.catalogueId,
+                'nodePID': (this.config.getProperty('nodePidFixed')) ? this.config.getProperty('nodePid') : null,
                 'users': [
                   {
                     name: currentUser.firstname,
@@ -127,9 +128,9 @@ export class ServiceProviderFormComponent implements OnInit {
     if (path.includes('add/:providerId')) {
       this.pendingProvider = true;
     }
-    // if (path.includes('view/:providerId')) {
-    //   this.pendingProvider = true;
-    // }
+    if (path.includes('view/:catalogueId/:providerId')) {
+      this.viewOnlyMode = true;
+    }
     if (!this.router.url.includes('/update/')) {
       this.saveAsDraftAvailable = true;
     }
@@ -155,9 +156,6 @@ export class ServiceProviderFormComponent implements OnInit {
     }
 
     this.isPortalAdmin = this.authService.isAdmin();
-
-    if (this.catalogueId == this.catalogueConfigId) this.displayedCatalogueName = `| Catalogue: ${this.catalogueName}`
-    else if (this.catalogueId) this.showCatalogueName(this.catalogueId)
 
     this.vocabularyEntryForm = this.fb.group(this.suggestionsForm);
   }
@@ -191,7 +189,7 @@ export class ServiceProviderFormComponent implements OnInit {
                     this.errorMessage =
           (err?.status >= 500 && err?.status < 600)
             ? `Something went wrong. If the issue persists, please contact support and provide the following error code: ${err?.error?.traceId}`
-            : `Something went bad, server responded: ${err?.error?.message}`;
+            : `Something went bad, server responded: ${err?.error?.detail}`;
           },
           () => {
             this.showLoader = false;
@@ -207,7 +205,7 @@ export class ServiceProviderFormComponent implements OnInit {
                   this.errorMessage =
           (err?.status >= 500 && err?.status < 600)
             ? `Something went wrong. If the issue persists, please contact support and provide the following error code: ${err?.error?.traceId}`
-            : `Something went bad, server responded: ${err?.error?.message}`;
+            : `Something went bad, server responded: ${err?.error?.detail}`;
         },
         () => {
           this.showLoader = false;
@@ -274,7 +272,7 @@ export class ServiceProviderFormComponent implements OnInit {
         },
         error => {
           console.log(error);
-          this.vocabularyEntryForm.get('errorMessage').setValue(error.error.message);
+          this.vocabularyEntryForm.get('errorMessage').setValue(error.error.detail);
         },
         () => {
           this.vocabularyEntryForm.reset();
@@ -300,13 +298,6 @@ export class ServiceProviderFormComponent implements OnInit {
       }
       return Object.assign(hash, {[obj[key]]: (hash[obj[key]] || []).concat(obj)});
     }, {});
-  }
-
-  showCatalogueName(catalogueId: string) {
-    this.catalogueService.getCatalogueById(catalogueId).subscribe(
-      catalogue => this.displayedCatalogueName = `| Catalogue: ${catalogue.name}`,
-      error => console.log(error)
-    );
   }
 
   getCurrentUserInfo(): { firstname: string; lastname: string; email: string } {

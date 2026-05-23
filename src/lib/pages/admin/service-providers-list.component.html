@@ -3,22 +3,6 @@
     <div class="uk-grid-margin uk-grid uk-grid-stack" uk-grid="">
       <div class="uk-width-1-1@m uk-first-column">
 
-        <!--<div class="uk-grid ">-->
-        <!--&lt;!&ndash;<h1 class="uk-h3 uk-width-2-3@m">Service Providers</h1>&ndash;&gt;-->
-        <!--<div class="uk-width-1-1@m">-->
-        <!--<div class="uk-inline uk-float-right">-->
-        <!--<button class="uk-button" type="button">Export to csv</button>-->
-        <!--<div uk-dropdown="mode: click">-->
-        <!--<ul class="uk-nav uk-dropdown-nav">-->
-        <!--<li class="" (click)="DownloadProvidersCSV()"><a>Providers</a></li>-->
-        <!--&lt;!&ndash;<li class="uk-nav-divider"></li>&ndash;&gt;-->
-        <!--<li class="" (click)="DownloadServicesCSV()"><a>Services</a></li>-->
-        <!--</ul>-->
-        <!--</div>-->
-        <!--</div>-->
-        <!--</div>-->
-        <!--</div>-->
-
         <div class="uk-margin-medium-bottom">
           <div class="uk-grid">
 
@@ -26,13 +10,6 @@
             <div class=" uk-width-expand@m">
 
               <div *ngIf="errorMessage" class="uk-alert uk-alert-danger">{{errorMessage}}</div>
-
-              <div class="uk-flex uk-flex-right">
-                <form [formGroup]="dataForm" (ngSubmit)="handleChangeAndResetPage()" class="uk-search uk-search-default" style="width: 250px;">
-                  <span uk-search-icon></span>
-                  <input class="uk-search-input" type="search" placeholder="Locate provider (id, name)" formControlName="query">
-                </form>
-              </div>
 
               <div class="uk-grid uk-margin-top">
 
@@ -142,7 +119,7 @@
                       </div>
 
                       <div class="uk-inline">
-                        <label class="" for="sort">Order by </label>
+                        <label class="" for="sort">Sort by </label>
                         <div class="uk-inline">
                           <select class="uk-input uk-select" id="sort" (change)="handleChangeAndResetPage()" formControlName="sort">
                             <option value="name" selected>Name</option>
@@ -178,11 +155,17 @@
                       </div>
                     </div>
 
+                    <div class="uk-flex uk-flex-right">
+                      <form [formGroup]="dataForm" (ngSubmit)="handleChangeAndResetPage()" class="uk-search uk-search-default" style="width: 250px;">
+                        <span uk-search-icon></span>
+                        <input class="uk-search-input" type="search" placeholder="Search" formControlName="query">
+                      </form>
+                    </div>
+
                     <div class="uk-margin-auto-left uk-margin-remove-right" style="margin-left:25px; margin-right:0;">
                       <button class="uk-button uk-button-link">
-                        <i class="fa fa-download uk-margin-small-right"></i>Export to CSV
+                        <i class="material-symbols-outlined uk-margin-small-right" style="vertical-align: middle;">download</i>Export to CSV
                       </button>
-                      <!--<button class="uk-button" type="button">Export to csv</button>-->
                       <div uk-dropdown="mode: click">
                         <ul class="uk-nav uk-dropdown-nav uk-dropdown-close">
                           <li class="" (click)="DownloadProvidersCSV()"><a>Providers</a></li>
@@ -207,7 +190,7 @@
                     <div class="uk-flex uk-flex-middle uk-flex-between">
 
                       <div class="resultsInfo">
-                        <span class="number">{{total}}</span> {{serviceORresource | uppercase}} PROVIDERS, PAGE <span class="number">{{currentPage}}</span> OF <span class="number">{{pageTotal}}</span>
+                        <span class="number">{{total}}</span> PROVIDERS, PAGE <span class="number">{{currentPage}}</span> OF <span class="number">{{pageTotal}}</span>
                       </div>
 
                       <ul class="uk-pagination">
@@ -258,60 +241,65 @@
                               </div>
                             </div>
                             <div class="uk-width-4-5">
-                              <div class="providerName">
-                                <span class="uk-margin-auto-vertical">
-<!--                                  <ng-container *ngIf="providerBundle.catalogueId===catalogueConfigId else anotherCatalogue">-->
-                                    <ng-container *ngIf="providerBundle.status === 'approved'">
-                                      <a [routerLink]="['/dashboard', providerBundle.catalogueId, pidHandler.customEncodeURIComponent(providerBundle.id)]" data-uk-tooltip title="Go to the resource provider monitoring dashboard">
-                                        {{ providerBundle.organisation.name }}
-                                      </a>
+                              <span class="uk-margin-auto-vertical providerName">
+    <!--                                  <ng-container *ngIf="providerBundle.catalogueId==null else anotherCatalogue">-->
+                                        <ng-container *ngIf="providerBundle.status === 'approved'">
+                                          <a [routerLink]="['/dashboard', pidHandler.customEncodeURIComponent(providerBundle.id)]" data-uk-tooltip title="Go to the resource provider monitoring dashboard">
+                                            {{ providerBundle.organisation.name }}
+                                          </a>
+                                        </ng-container>
+                                        <ng-container *ngIf="providerBundle.status !== 'approved'">
+                                          <a [routerLink]="['/dashboard', pidHandler.customEncodeURIComponent(providerBundle.id)]" data-uk-tooltip title="Go to the resource provider monitoring dashboard">
+                                            {{ providerBundle.organisation.name }}
+                                          </a>
+                                        </ng-container>
+                                <!--                                  <ng-container *ngIf="providerBundle.catalogueId==null ">-->
+                                        <a [routerLink]="['/provider/view', providerBundle.catalogueId, pidHandler.customEncodeURIComponent(providerBundle.id)]" class="uk-display-inline-block"> <!-- TODO:check id-->
+                                          <span class="material-symbols-outlined uk-margin-small-left" style="vertical-align: middle;">quick_reference</span>
+                                        </a>
+                                <!--                                  </ng-container>-->
+                                <!--                                  <ng-template #anotherCatalogue>{{ providerBundle.organisation.name }}</ng-template>-->
+                              </span>
+                              <div class="uk-grid uk-child-width-1-2">
+                                <div>
+                                  <div class="uk-margin-small-top">
+                                    <span class="statusLabel">Abbreviation: </span>
+                                    <ng-container *ngIf="providerBundle.organisation.abbreviation && (providerBundle.organisation.abbreviation!==null)">{{ providerBundle.organisation.abbreviation }}</ng-container>
+                                    <ng-container *ngIf="!providerBundle.organisation.abbreviation || (providerBundle.organisation.abbreviation===null)">not available</ng-container>
+                                  </div>
+                                  <div class="uk-margin-small-top">
+                                    <span class="statusLabel">Provider Status: </span>{{ labels[statuses.indexOf(providerBundle.status)] | titlecase }}
+                                  </div>
+                                  <div class="uk-margin-small-top">
+                                    <span class="statusLabel">First {{serviceORresource}} Status: </span>{{templateLabels[templateStatuses.indexOf(providerBundle.templateStatus)]}}
+                                  </div>
+                                  @if (providerBundle.catalogueId != null) {
+                                    <div class="uk-margin-small-top">
+                                      <span class="statusLabel">Catalogue ID: </span>{{ providerBundle.catalogueId }}
+                                    </div>
+                                  }
+                                </div>
+                                <div>
+                                  <div class="uk-margin-small-top">
+                                    <span class="statusLabel">Creation Date: </span>
+                                    <ng-container *ngIf="providerBundle.metadata.registeredAt>0; else noCreationDate">{{providerBundle.metadata.registeredAt | date}}</ng-container>
+                                    <ng-template #noCreationDate><i>Unknown</i></ng-template>
+                                  </div>
+                                  <div class="uk-margin-small-top">
+                                    <span class="statusLabel">Last Update: </span>{{ providerBundle.metadata.modifiedAt | date }}
+                                  </div>
+                                  <div class="uk-margin-small-top">
+                                    <span class="statusLabel">Last Audit: </span>
+                                    <ng-container *ngIf="providerBundle.latestAuditInfo">
+                                      {{providerBundle.latestAuditInfo.actionType | titlecase}}ated
+                                      on {{providerBundle.latestAuditInfo.date | date}}
+                                      by {{providerBundle.latestAuditInfo.userFullName}}
                                     </ng-container>
-                                    <ng-container *ngIf="providerBundle.status !== 'approved'">
-                                      <a [routerLink]="['/dashboard', providerBundle.catalogueId, pidHandler.customEncodeURIComponent(providerBundle.id)]" data-uk-tooltip title="Go to the resource provider monitoring dashboard">
-                                        {{ providerBundle.organisation.name }}
-                                      </a>
-                                    </ng-container>
-                                  <!--                                  <ng-container *ngIf="providerBundle.catalogueId===catalogueConfigId ">-->
-                                    <a [routerLink]="['/provider/view', providerBundle.catalogueId, pidHandler.customEncodeURIComponent(providerBundle.id)]" class="uk-display-inline-block"> <!-- TODO:check id-->
-                                      <i aria-hidden="true" class="fa fa-info-circle fa-lg uk-margin-left"></i>
-                                    </a>
-                                  <!--                                  </ng-container>-->
-                                  <!--                                  <ng-template #anotherCatalogue>{{ providerBundle.organisation.name }}</ng-template>-->
-                                </span>
-                              </div>
-                              <div class="uk-margin-small-top">
-                                <span class="statusLabel">Abbreviation: </span>
-                                <ng-container *ngIf="providerBundle.organisation.abbreviation && (providerBundle.organisation.abbreviation!==null)">{{ providerBundle.organisation.abbreviation }}</ng-container>
-                                <ng-container *ngIf="!providerBundle.organisation.abbreviation || (providerBundle.organisation.abbreviation===null)">not available</ng-container>
-                              </div>
-                              <div class="uk-margin-small-top">
-                                <span class="statusLabel">Provider Status: </span>{{ labels[statuses.indexOf(providerBundle.status)] | titlecase }}
-                              </div>
-                              <div class="uk-margin-small-top">
-                                <span class="statusLabel">First {{serviceORresource}} Status: </span>{{templateLabels[templateStatuses.indexOf(providerBundle.templateStatus)]}}
-                              </div>
-                              <div class="uk-margin-small-top">
-                                <span class="statusLabel">Creation Date: </span>
-                                <ng-container *ngIf="providerBundle.metadata.registeredAt>0; else noCreationDate">{{providerBundle.metadata.registeredAt | date}}</ng-container>
-                                <ng-template #noCreationDate><i>Unknown</i></ng-template>
-                              </div>
-                              <div class="uk-margin-small-top">
-                                <span class="statusLabel">Last Update: </span>{{ providerBundle.metadata.modifiedAt | date }}
-                              </div>
-                              <div class="uk-margin-small-top">
-                                <span class="statusLabel">Last Audit: </span>
-                                <ng-container *ngIf="providerBundle.latestAuditInfo">
-                                  {{providerBundle.latestAuditInfo.actionType | titlecase}}ated
-                                  on {{providerBundle.latestAuditInfo.date | date}}
-                                  by {{providerBundle.latestAuditInfo.userFullName}}
-                                </ng-container>
-                                <ng-container *ngIf="!providerBundle.latestAuditInfo"><i>Never audited</i></ng-container>
-                              </div>
-                              <div class="uk-margin-small-top">
-                                <span class="statusLabel">Catalogue id: </span>{{ providerBundle.catalogueId }}
+                                    <ng-container *ngIf="!providerBundle.latestAuditInfo"><i>Never audited</i></ng-container>
+                                  </div>
+                                </div>
                               </div>
                             </div>
-
                             <!--                            <div class="uk-width-1-5">-->
                             <!--                              <div class="action-buttons">-->
 
@@ -383,69 +371,69 @@
                         <!--                          </div>-->
                         <!--                        </ng-container>-->
 
-                        <ng-container *ngIf="providerBundle.catalogueId !== catalogueConfigId">
+                        <ng-container *ngIf="providerBundle.catalogueId != null">
                           <hr class="uk-margin-top">
                           <div class="uk-align-right">
-                            <button [routerLink]="['/provider/view/',providerBundle.catalogueId, pidHandler.customEncodeURIComponent(providerBundle.id)]" class="uk-button uk-button-link">
+                            <button [routerLink]="['/provider/view/', providerBundle.catalogueId, pidHandler.customEncodeURIComponent(providerBundle.id)]" class="uk-button uk-button-link">
                               <i class="fa fa-eye fa-lg uk-margin-small-right" aria-hidden="true"></i> View Provider
                             </button>
 
                             <button class="uk-button uk-button-link uk-margin-medium-left">
-                              <i class="fa fa-ellipsis-v fa-lg uk-margin-small-right"></i>More Options
+                              <span class="material-symbols-outlined uk-margin-small-right" style="vertical-align: middle;">more_vert</span>More Options
                             </button>
                             <div uk-dropdown="mode: click">
                               <ul class="uk-nav uk-dropdown-nav uk-dropdown-close">
                                 <ng-container *ngIf="providerBundle.status === 'approved'">
                                   <li class="uk-margin-small-bottom"
                                       (click)="showAuditForm('main', providerBundle)">
-                                    <a><i class="fa fa-check-circle-o fa-lg uk-margin-small-right"></i>Audit</a>
+                                    <a><span class="material-symbols-outlined uk-margin-small-right" style="vertical-align: middle;">check_circle</span>Audit</a>
                                   </li>
                                 </ng-container>
                                 <li class="uk-nav-divider"></li>
                                 <li *ngIf="(providerBundle.suspended==false)"
                                     (click)="showSuspensionModal(providerBundle)"
                                     class="uk-margin-small-top">
-                                  <a><i aria-hidden="true" class="fa fa-dot-circle-o uk-margin-small-right"></i>Suspend</a>
+                                  <a><span class="material-symbols-outlined uk-margin-small-right" style="vertical-align: middle;">adjust</span>Suspend</a>
                                 </li>
                                 <li *ngIf="(providerBundle.suspended==true)"
                                     (click)="showSuspensionModal(providerBundle)"
                                     class="uk-margin-small-top">
-                                  <a><i aria-hidden="true" class="fa fa-dot-circle-o uk-margin-small-right"></i>Unsuspend</a>
+                                  <a><span class="material-symbols-outlined uk-margin-small-right" style="vertical-align: middle;">adjust</span>Unsuspend</a>
                                 </li>
                               </ul>
                             </div>
                           </div>
                         </ng-container>
 
-                        <ng-container *ngIf="providerBundle.catalogueId === catalogueConfigId">
+                        <ng-container *ngIf="providerBundle.catalogueId == null">
                           <hr class="uk-margin-top">
                           <div class="uk-align-right">
                             <button [routerLink]="['/provider/update/' + pidHandler.customEncodeURIComponent(providerBundle.id)]"
                                     class="uk-button uk-button-link"
                                     style="padding-right: 40px; border-right: 1px solid #ccc">
-                              <i class="fa fa-edit fa-lg uk-margin-small-right" aria-hidden="true"></i> Edit Provider
+                              <span class="material-symbols-outlined uk-margin-small-right" style="vertical-align: middle;">edit_square</span>Edit
                             </button>
                             <button (click)="showDeletionModal(providerBundle)"
                                     class="uk-button uk-button-link uk-margin-medium-left"
                                     style="padding-right: 40px; border-right: 1px solid #ccc">
-                              <i class="fa fa-trash fa-lg uk-margin-small-right" aria-hidden="true"></i> Delete Provider
+                              <span class="material-symbols-outlined uk-margin-small-right" style="vertical-align: middle;">delete</span>Delete
                             </button>
                             <button class="uk-button uk-button-link uk-margin-medium-left">
-                              <i class="fa fa-ellipsis-v fa-lg uk-margin-small-right"></i>More Options
+                              <span class="material-symbols-outlined" style="vertical-align: middle;">more_vert</span> More Options
                             </button>
                             <div uk-dropdown="mode: click">
                               <ul class="uk-nav uk-dropdown-nav uk-dropdown-close">
                                 <ng-container *ngIf="providerBundle.status === 'approved'">
                                   <li class="uk-margin-small-bottom"
                                       (click)="showAuditForm('main', providerBundle)">
-                                    <a><i class="fa fa-check-circle-o fa-lg uk-margin-small-right"></i>Audit</a>
+                                    <a><span class="material-symbols-outlined uk-margin-small-right" style="vertical-align: middle;">check_circle</span>Audit</a>
                                   </li>
                                   <li class="uk-nav-divider"></li>
                                 </ng-container>
                                 <ng-container>
                                   <li class="uk-margin-small-bottom"
                                       (click)="showHLE(providerBundle)">
-                                    <a><i class="fa fa-eye fa-lg uk-margin-small-right"></i>Show HLE</a>
+                                    <a><span class="material-symbols-outlined uk-margin-small-right" style="vertical-align: middle;">table_eye</span>Show HLE</a>
                                   </li>
                                   <li class="uk-nav-divider"></li>
                                 </ng-container>
@@ -481,10 +469,10 @@
                                       </a>
                                     </li>
                                     <li class="uk-active" (click)="templateAction(providerBundle.id, true, 'approved', 'service')">
-                                      <a class="uk-margin-small-top"><i class="fa fa-thumbs-up"></i> Approve First {{serviceORresource}}</a>
+                                      <a><span class="material-symbols-outlined uk-margin-small-right" style="vertical-align: middle;">thumb_up</span>Approve First {{serviceORresource}}</a>
                                     </li>
                                     <li class="uk-active" (click)="templateAction(providerBundle.id, false, 'rejected', 'service')">
-                                      <a class="uk-margin-small-top"><i class="fa fa-thumbs-down"></i> Reject First {{serviceORresource}}</a>
+                                      <a><span class="material-symbols-outlined uk-margin-small-right" style="vertical-align: middle;">thumb_down</span>Reject First {{serviceORresource}}</a>
                                     </li>
                                   </ng-container>
                                   <ng-container *ngIf="hasCreatedFirstTrainingResource(providerBundle.id)">
@@ -501,10 +489,10 @@
                                       </a>
                                     </li>
                                     <li class="uk-active" (click)="templateAction(providerBundle.id, true, 'approved', 'trainingResource')">
-                                      <a class="uk-margin-small-top"><i class="fa fa-thumbs-up"></i> Approve First Training Resource</a>
+                                      <a><span class="material-symbols-outlined uk-margin-small-right" style="vertical-align: middle;">thumb_up</span>Approve First Training Resource</a>
                                     </li>
                                     <li class="uk-active" (click)="templateAction(providerBundle.id, false, 'rejected', 'trainingResource')">
-                                      <a class="uk-margin-small-top"><i class="fa fa-thumbs-down"></i> Reject First Training Resource</a>
+                                      <a><span class="material-symbols-outlined uk-margin-small-right" style="vertical-align: middle;">thumb_down</span>Reject First Training Resource</a>
                                     </li>
                                   </ng-container>
                                   <li class="uk-nav-divider ng-star-inserted"></li>
@@ -515,7 +503,7 @@
                                     *ngIf="adminActionsMap[providerBundle.status] && adminActionsMap[providerBundle.status].appButtonTitle"
                                     (click)="showActionModal(providerBundle, adminActionsMap[providerBundle.status].onApprove, true, true)"
                                     class="uk-margin-small-top">
-                                    <a><i aria-hidden="true" class="fa fa-thumbs-up uk-margin-small-right"></i>
+                                    <a><span class="material-symbols-outlined uk-margin-small-right" style="vertical-align: middle;">thumb_up</span>
                                       {{ adminActionsMap[providerBundle.status].appButtonTitle }}</a>
                                   </li>
                                 </ng-container>
@@ -523,7 +511,7 @@
                                         && adminActionsMap[providerBundle.status].rejButtonTitle))"
                                     class="uk-margin-small-top"
                                     (click)="showActionModal(providerBundle, adminActionsMap[providerBundle.status].onReject, false, true)">
-                                  <a><i class="fa fa-thumbs-down uk-margin-small-right" aria-hidden="true"></i>
+                                  <a><span class="material-symbols-outlined uk-margin-small-right" style="vertical-align: middle;">thumb_down</span>
                                     {{ adminActionsMap[providerBundle.status].rejButtonTitle }}</a>
                                 </li>
                                 <!--                                Those 2 above use the verify method to proceed with the onboarding process-->
@@ -531,23 +519,23 @@
                                 <li *ngIf="(providerBundle.status === 'approved') && (!providerBundle.active)"
                                     (click)="showActionModal(providerBundle, 'approved', true, false)"
                                     class="uk-margin-small-top">
-                                  <a><i aria-hidden="true" class="fa fa-thumbs-up uk-margin-small-right"></i>Activate</a>
+                                  <a><span class="material-symbols-outlined uk-margin-small-right" style="vertical-align: middle;">check</span>Activate</a>
                                 </li>
                                 <li *ngIf="(providerBundle.status === 'approved') && (providerBundle.active)"
                                     (click)="showActionModal(providerBundle, 'approved', false, false)"
                                     class="uk-margin-small-top">
-                                  <a><i aria-hidden="true" class="fa fa-thumbs-down uk-margin-small-right"></i>Deactivate</a>
+                                  <a><span class="material-symbols-outlined uk-margin-small-right" style="vertical-align: middle;">close</span>Deactivate</a>
                                 </li>
                                 <li class="uk-nav-divider"></li>
                                 <li *ngIf="(providerBundle.suspended==false)"
                                     (click)="showSuspensionModal(providerBundle)"
                                     class="uk-margin-small-top">
-                                  <a><i aria-hidden="true" class="fa fa-dot-circle-o uk-margin-small-right"></i>Suspend</a>
+                                  <a><span class="material-symbols-outlined uk-margin-small-right" style="vertical-align: middle;">adjust</span>Suspend</a>
                                 </li>
                                 <li *ngIf="(providerBundle.suspended==true)"
                                     (click)="showSuspensionModal(providerBundle)"
                                     class="uk-margin-small-top">
-                                  <a><i aria-hidden="true" class="fa fa-dot-circle-o uk-margin-small-right"></i>Unsuspend</a>
+                                  <a><span class="material-symbols-outlined uk-margin-small-right" style="vertical-align: middle;">adjust</span>Unsuspend</a>
                                 </li>
                               </ul>
                             </div>
@@ -559,7 +547,7 @@
                           <!--                          <button-->
                           <!--                            class="uk-button uk-button-link uk-margin-medium-left"-->
                           <!--                            (click)="showAuditForm('main', providerBundle)">-->
-                          <!--                            <i class="fa fa-check-circle-o fa-lg"></i> Audit-->
+                          <!--                            <a><span class="material-symbols-outlined" style="vertical-align: middle;">check_circle</span>Audit</a>-->
                           <!--                          </button>-->
                           <div *ngIf="showMainAuditForm && selectedProvider === providerBundle">
                             <!--                            <hr>-->
@@ -610,6 +598,7 @@
     </div>
   </div>
 </div>
+
 
 <div id="spinnerModal" uk-modal>
   <div class="loader-small" style="text-align: center; padding-top: 170px; color: rgb(47, 64, 80); font-weight: bold;">
@@ -694,9 +683,9 @@
   </div>
 </div>
 
-<div class="audit-overlay-toolbar uk-animation-scale-up ng-star-inserted">
+<div class="audit-overlay-toolbar uk-animation-scale-up">
   <button class="uk-button audit-overlay-button" type="button" uk-toggle="target: #offcanvas-overlay" (click)="getRandomProviders('10')">
-    <span class=""><i class="fa fa-check-circle-o fa-lg"></i></span>
+    <span class=""><i class="material-symbols-outlined" style="vertical-align: middle; font-size: 24px;">check_circle</i></span>
   </button>
 </div>
 
@@ -755,12 +744,12 @@
               <div class="providerName">
                 <span class="uk-margin-auto-vertical">
 <!--                  <ng-container *ngIf="providerBundle.catalogueId === catalogueConfigId else anotherCatalogue">-->
-                    <a [routerLink]="['/dashboard', providerBundle.catalogueId, pidHandler.customEncodeURIComponent(providerBundle.id)]" target="_blank" data-uk-tooltip title="Go to the resource provider monitoring dashboard">
+                    <a [routerLink]="['/dashboard', pidHandler.customEncodeURIComponent(providerBundle.id)]" target="_blank" data-uk-tooltip title="Go to the resource provider monitoring dashboard">
                         {{ providerBundle.organisation.name }}
                     </a>
                   <!--                  <ng-container *ngIf="providerBundle.catalogueId === catalogueConfigId">-->
                     <a [routerLink]="['/provider/view', providerBundle.catalogueId, pidHandler.customEncodeURIComponent(providerBundle.id)]" target="_blank" class="uk-display-inline-block">
-                      <i aria-hidden="true" class="fa fa-info-circle fa-lg uk-margin-left"></i>
+                      <span class="material-symbols-outlined uk-margin-small-left" style="vertical-align: middle;">quick_reference</span>
                     </a>
                   <!--                  </ng-container>-->
                   <!--                  <ng-template #anotherCatalogue>{{ providerBundle.organisation.name }}</ng-template>-->
@@ -791,7 +780,7 @@
                 <ng-container *ngIf="!providerBundle.latestAuditInfo"><i>Never audited</i></ng-container>
               </div>
               <div class="uk-margin-small-top">
-                <span class="statusLabel">Catalogue id: </span>{{ providerBundle.catalogueId }}
+                <span class="statusLabel">Catalogue ID: </span>{{ providerBundle.catalogueId }}
               </div>
             </div>
 
@@ -834,30 +823,30 @@
           </div>
         </div>
 
-        <ng-container *ngIf="providerBundle.catalogueId === catalogueConfigId">
+        <ng-container *ngIf="providerBundle.catalogueId == null">
           <hr class="uk-margin-top">
           <button *ngIf="providerBundle.status == 'approved'"
                   class="uk-button uk-button-link uk-margin-medium-right"
                   (click)="showAuditForm('side', providerBundle)">
-            <i class="fa fa-check-circle-o fa-lg"></i> Audit
+            <a><span class="material-symbols-outlined" style="vertical-align: middle;">check_circle</span>Audit</a>
           </button>
           <button class="uk-button uk-button-link">
-            <i class="fa fa-ellipsis-v fa-lg uk-margin-small-right"></i>More Options
+            <span class="material-symbols-outlined uk-margin-small-right" style="vertical-align: middle;">more_vert</span>More Options
           </button>
           <div uk-dropdown="mode: click">
             <ul class="uk-nav uk-dropdown-nav uk-dropdown-close">
               <li *ngIf="(providerBundle.status === 'approved') && (providerBundle.active)"
                   (click)="showActionModal(providerBundle, 'approved', false, false)"
                   class="uk-margin-small-top">
-                <a><i aria-hidden="true" class="fa fa-thumbs-down uk-margin-small-right"></i>Deactivate</a>
+                <a><span class="material-symbols-outlined uk-margin-small-right" style="vertical-align: middle;">close</span>Deactivate</a>
               </li>
               <li (click)="editProviderInNewTab(pidHandler.customEncodeURIComponent(providerBundle.id))"
                   class="uk-margin-small-top">
-                <a><i class="fa fa-edit uk-margin-small-right" aria-hidden="true"></i>Edit Provider</a>
+                <a><span class="material-symbols-outlined uk-margin-small-right" style="vertical-align: middle;">edit_square</span>Edit</a>
               </li>
               <li (click)="showDeletionModal(providerBundle)"
                   class="uk-margin-small-top">
-                <a><i class="fa fa-trash uk-margin-small-right" aria-hidden="true"></i>Delete Provider</a>
+                <a><span class="material-symbols-outlined uk-margin-small-right" style="vertical-align: middle;">delete</span>Delete</a>
               </li>
             </ul>
           </div>
@@ -867,7 +856,7 @@
           <!--          <button-->
           <!--            class="uk-button uk-button-link uk-margin-medium-left"-->
           <!--            (click)="showAuditForm('side', providerBundle)">-->
-          <!--            <i class="fa fa-check-circle-o fa-lg"></i> Audit-->
+          <!--            <a><span class="material-symbols-outlined" style="vertical-align: middle;">check_circle</span>Audit</a>-->
           <!--          </button>-->
           <div *ngIf="showSideAuditForm && selectedProvider === providerBundle">
             <hr>

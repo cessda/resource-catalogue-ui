@@ -10,7 +10,7 @@ import {CataloguesListComponent} from "../admin/catalogues-list.component";
 const catalogueRoutes: Routes = [
 
   {
-    path: 'add',
+    path: ':providerId/add',
     component: CatalogueFormComponent,
     canActivate: [CanActivateViaAuthGuard],
     data: {

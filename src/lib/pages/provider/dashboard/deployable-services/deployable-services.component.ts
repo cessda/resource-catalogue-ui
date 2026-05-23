@@ -19,7 +19,6 @@ declare var UIkit: any;
 })
 
 export class DeployableServicesComponent implements OnInit {
-  catalogueConfigId: string | null = null;
   protected readonly environment = environment;
   serviceORresource = environment.serviceORresource;
 
@@ -64,7 +63,6 @@ export class DeployableServicesComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.catalogueConfigId = this.config.getProperty('catalogueId');
     this.providerId = this.route.parent.snapshot.paramMap.get('provider');
     this.catalogueId = this.route.parent.snapshot.paramMap.get('catalogueId');
 
@@ -98,7 +96,7 @@ export class DeployableServicesComponent implements OnInit {
   }
 
   getProvider() {
-    this.providerService.getServiceProviderBundleById(this.providerId, this.catalogueId).subscribe(
+    this.providerService.getServiceProviderBundleById(this.providerId).subscribe(
       providerBundle => {
         this.providerBundle = providerBundle;
       }, error => {
@@ -119,7 +117,7 @@ export class DeployableServicesComponent implements OnInit {
       err => {
         this.errorMessage = (err?.status >= 500 && err?.status < 600)
             ? `Something went wrong. If the issue persists, please contact support and provide the following error code: ${err?.error?.traceId}`
-            : `Something went bad, server responded: ${err?.error?.message}`;
+            : `Something went bad, server responded: ${err?.error?.detail}`;
         this.getDeployableServices();
         UIkit.modal('#spinnerModal').hide();
         // console.log(error);
@@ -159,7 +157,7 @@ export class DeployableServicesComponent implements OnInit {
         UIkit.modal('#spinnerModal').hide();
         this.errorMessage = (err?.status >= 500 && err?.status < 600)
             ? `Something went wrong. If the issue persists, please contact support and provide the following error code: ${err?.error?.traceId}`
-            : `Something went bad, server responded: ${err?.error?.message}`;
+            : `Something went bad, server responded: ${err?.error?.detail}`;
         this.getDeployableServices();
       },
       () => {
@@ -187,7 +185,7 @@ export class DeployableServicesComponent implements OnInit {
       }
     }
 
-    this.router.navigate([`/dashboard`, this.catalogueId, this.providerId, `deployable-services`], {queryParams: map});
+    this.router.navigate([`/dashboard`, this.providerId, `deployable-services`], {queryParams: map});
   }
 
   paginationInit() {

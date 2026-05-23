@@ -26,7 +26,6 @@ export class HelpdeskExtensionFormComponent implements OnInit {
   // vocabulariesMap: { [name: string]: { id: string, name: string }[]; } = {}
   // payloadAnswer: object = null;
 
-  catalogueConfigId: string = this.config.getProperty('catalogueId');
   serviceORresource = environment.serviceORresource;
   serviceName = '';
   firstServiceForm = false;
@@ -128,7 +127,7 @@ export class HelpdeskExtensionFormComponent implements OnInit {
           this.getFieldAsFormArray('signatures').removeAt(0);
         }
       }
-      this.serviceExtensionsService.uploadHelpdeskService(this.serviceForm.value, this.editMode, this.catalogueConfigId, this.resourceType).subscribe(
+      this.serviceExtensionsService.uploadHelpdeskService(this.serviceForm.value, this.editMode, null, this.resourceType).subscribe(
         _service => {
           this.showLoader = false;
           if (this.resourceType==='service') return this.navigator.resourceDashboard(this.providerId, this.serviceId); // navigate to resource-dashboard

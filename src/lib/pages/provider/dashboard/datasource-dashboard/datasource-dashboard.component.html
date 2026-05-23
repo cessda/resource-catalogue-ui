@@ -15,7 +15,7 @@
         <ul>
 
           <li [routerLinkActive]="['current_section']" #datasources="routerLinkActive">
-            <a [routerLink]="['/dashboard', catalogueId, providerId, 'datasource-dashboard', datasourceId, 'history']">
+            <a [routerLink]="['/dashboard', providerId, 'datasource-dashboard', datasourceId, 'history']">
               <img src="{{datasources.isActive ? 'assets/images/new-icons/history-active.svg' : 'assets/images/new-icons/history.svg'}}" class="uk-margin-small-right">
               Update History
             </a>
@@ -29,7 +29,7 @@
 
         <ul>
 
-          @if (catalogueId === catalogueConfigId) {
+          @if (catalogueId == null) {
             @if (datasourceBundle?.status === 'approved' && datasourceBundle?.active === true) {
               @if (resourceGuidelines?.interoperabilityRecordIds?.length > 0) {
                 @for (id of resourceGuidelines.interoperabilityRecordIds; track id) {
@@ -46,7 +46,7 @@
                 }
               }
               <li [routerLinkActive]="['current_section']" #addGuidelines="routerLinkActive">
-                <a [routerLink]="['/dashboard', catalogueId, pidHandler.customEncodeURIComponent(providerId),
+                <a [routerLink]="['/dashboard', pidHandler.customEncodeURIComponent(providerId),
                 'datasource-dashboard', pidHandler.customEncodeURIComponent(datasourceId), 'assignGuidelines']">
                   <img src="../../../../../assets/images/new-icons/add-service.svg" class="uk-margin-small-right">
                   Add/Remove Guidelines
@@ -63,7 +63,7 @@
 
         <ul>
 
-          @if (catalogueId === catalogueConfigId) {
+          @if (catalogueId == null) {
             <li>
               <a [routerLink]="['/provider/' + pidHandler.customEncodeURIComponent(providerId) + '/datasource/update/' + pidHandler.customEncodeURIComponent(datasourceId)]">
                 <img src="../../../../../assets/images/new-icons/add-service.svg" class="uk-margin-small-right">
@@ -73,14 +73,13 @@
           }
 
           <li>
-            <!--            <a href="{{_marketplaceTrainingResourcesURL}}{{catalogueId}}.{{datasourceId}}" target="_blank">-->
             <a href="{{_marketplaceTrainingResourcesURL}}" target="_blank">
               <img src="../../../../../assets/images/new-icons/update-provider.svg" class="uk-margin-small-right">
               View in Catalogue
             </a>
           </li>
           <li>
-            <a [routerLink]="['/dashboard', catalogueId, pidHandler.customEncodeURIComponent(providerId)]">
+            <a [routerLink]="['/dashboard', pidHandler.customEncodeURIComponent(providerId)]">
               <img src="../../../../../assets/images/new-icons/stats.svg" class="uk-margin-small-right">
               Back to Provider Dashboard
             </a>

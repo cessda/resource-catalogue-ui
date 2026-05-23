@@ -34,10 +34,6 @@ export class UpdateDatasource extends DatasourceFormComponent implements OnInit 
   }
 
   ngOnInit() {
-    const path = this.route.snapshot.routeConfig.path;
-    if (path.includes(':catalogueId')) { this.catalogueId = this.route.snapshot.paramMap.get('catalogueId') }
-    else { this.catalogueId = this.catalogueConfigId }
-    if (path === ':catalogueId/:providerId/datasource/view/:resourceId') this.disable = true; // view-only mode
     super.ngOnInit();
     if (sessionStorage.getItem('service')) {
       sessionStorage.removeItem('service');
@@ -55,7 +51,7 @@ export class UpdateDatasource extends DatasourceFormComponent implements OnInit 
             );
         } else {
           // this.datasourceService[this.pendingResource ? 'getPendingDatasource' : 'getDatasourceBundleById'](this.datasourceId, this.catalogueId)
-          this.datasourceService.getDatasourceBundleById(this.datasourceId, this.catalogueId).subscribe(dsBundle => {
+          this.datasourceService.getDatasourceBundleById(this.datasourceId).subscribe(dsBundle => {
               this.payloadAnswer = {'answer': {datasource: dsBundle.datasource}};
               ResourceService.removeNulls(dsBundle.datasource);
             },

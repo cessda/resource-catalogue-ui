@@ -20,7 +20,6 @@ declare var UIkit: any;
 export class AdaptersListComponent implements OnInit {
   url = environment.API_ENDPOINT;
   serviceORresource = environment.serviceORresource;
-  catalogueConfigId: string | null = null;
 
   formPrepare = {
     order: 'ASC',
@@ -81,7 +80,6 @@ export class AdaptersListComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.catalogueConfigId = this.config.getProperty('catalogueId');
     if (!this.authenticationService.isAdmin()) {
       this.router.navigateByUrl('/home');
     } else {
@@ -234,7 +232,7 @@ export class AdaptersListComponent implements OnInit {
         // UIkit.modal('#spinnerModal').hide();
         this.errorMessage = (err?.status >= 500 && err?.status < 600)
             ? `Something went wrong. If the issue persists, please contact support and provide the following error code: ${err?.error?.traceId}`
-            : `Something went bad, server responded: ${err?.error?.message}`;
+            : `Something went bad, server responded: ${err?.error?.detail}`;
         this.getAdapters();
       },
       () => {
@@ -267,7 +265,7 @@ export class AdaptersListComponent implements OnInit {
           this.errorMessage =
           (err?.status >= 500 && err?.status < 600)
             ? `Something went wrong. If the issue persists, please contact support and provide the following error code: ${err?.error?.traceId}`
-            : `Something went bad, server responded: ${err?.error?.message}`;
+            : `Something went bad, server responded: ${err?.error?.detail}`;
           window.scroll(0,0);
         },
         () => {
@@ -319,7 +317,13 @@ export class AdaptersListComponent implements OnInit {
     this.adaptersService.auditAdapter(this.selectedAdapter.id, action, this.selectedAdapter.catalogueId, this.commentAuditControl.value)
       .subscribe(
         res => {this.getAdapters();},
-        err => {console.log(err);},
+        err => {
+          this.errorMessage =
+            (err?.status >= 500 && err?.status < 600)
+              ? `Something went wrong. If the issue persists, please contact support and provide the following error code: ${err?.error?.traceId}`
+              : `Something went bad, server responded: ${err?.error?.detail}`;
+          window.scroll(0,0);
+        },
         () => {
           this.adaptersForAudit.forEach(
             s => {

@@ -11,13 +11,11 @@ import {ConfigService} from "../../../../services/config.service";
 @Component({
     selector: 'app-service-dashboard',
     templateUrl: './provider-full-history.component.html',
-    styleUrls: ['../resource-dashboard/service-stats.component.css'],
     standalone: false
 })
 export class ProviderFullHistoryComponent implements OnInit {
 
   serviceORresource = environment.serviceORresource;
-  catalogueConfigId: string | null = null;
   catalogueId: string;
   providerId: string;
   providerBundle: ProviderBundle;
@@ -35,12 +33,11 @@ export class ProviderFullHistoryComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.catalogueConfigId = this.config.getProperty('catalogueId');
     this.providerId = this.route.parent.snapshot.paramMap.get('provider');
     this.catalogueId = this.route.parent.snapshot.paramMap.get('catalogueId');
     this.getProvider();
 
-    this.providerService.getProviderLoggingInfoHistory(this.providerId, this.catalogueId).subscribe(
+    this.providerService.getProviderLoggingInfoHistory(this.providerId).subscribe(
       res => this.providerHistory = res,
       err => {
         this.errorMessage = 'An error occurred while retrieving the history of this service. ' + err.error;
@@ -49,7 +46,7 @@ export class ProviderFullHistoryComponent implements OnInit {
   }
 
   getProvider() {
-    this.providerService.getServiceProviderBundleById(this.providerId, this.catalogueId).subscribe(
+    this.providerService.getServiceProviderBundleById(this.providerId).subscribe(
       providerBundle => {
         this.providerBundle = providerBundle;
       }, error => {

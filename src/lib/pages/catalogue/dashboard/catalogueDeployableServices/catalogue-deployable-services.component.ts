@@ -18,7 +18,6 @@ declare var UIkit: any;
 
 export class CatalogueDeployableServicesComponent implements OnInit {
 
-  catalogueConfigId: string | null = null;
   protected readonly environment = environment;
 
   formPrepare = {
@@ -59,7 +58,6 @@ export class CatalogueDeployableServicesComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.catalogueConfigId = this.config.getProperty('catalogueId');
     this.catalogueId = this.route.parent.snapshot.paramMap.get('catalogue');
 
     this.getCatalogue();
@@ -114,7 +112,7 @@ export class CatalogueDeployableServicesComponent implements OnInit {
       err => {
         this.errorMessage = (err?.status >= 500 && err?.status < 600)
             ? `Something went wrong. If the issue persists, please contact support and provide the following error code: ${err?.error?.traceId}`
-            : `Something went bad, server responded: ${err?.error?.message}`;
+            : `Something went bad, server responded: ${err?.error?.detail}`;
         this.getDeployableServices();
         this.toggleLoading = false;
         // console.log(error);
@@ -128,10 +126,9 @@ export class CatalogueDeployableServicesComponent implements OnInit {
 
   getDeployableServices() {
     this.toggleLoading = true;
-    this.catalogueService.getDeployableServicesOfCatalogue(this.dataForm.get('catalogue_id').value,
-      this.dataForm.get('from').value, this.dataForm.get('quantity').value,
-      this.dataForm.get('order').value, this.dataForm.get('sort').value,
-      this.dataForm.get('status').value, this.dataForm.get('query').value).subscribe(
+    this.deployableServiceService.getResourceBundles(this.dataForm.get('from').value, this.dataForm.get('quantity').value,
+      this.dataForm.get('sort').value, this.dataForm.get('order').value, this.dataForm.get('query').value,
+      null, null, this.dataForm.get('status').value, [], [], this.catalogueId ? [this.catalogueId] : []).subscribe(
       res => {
           this.toggleLoading = false;
           this.deployableServiceBundles = res['results'];
@@ -159,7 +156,7 @@ export class CatalogueDeployableServicesComponent implements OnInit {
         // UIkit.modal('#spinnerModal').hide();
         this.errorMessage = (err?.status >= 500 && err?.status < 600)
             ? `Something went wrong. If the issue persists, please contact support and provide the following error code: ${err?.error?.traceId}`
-            : `Something went bad, server responded: ${err?.error?.message}`;
+            : `Something went bad, server responded: ${err?.error?.detail}`;
         this.getDeployableServices();
       },
       () => {

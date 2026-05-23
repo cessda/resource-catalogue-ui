@@ -1,9 +1,10 @@
-<div class="uk-section-default uk-section uk-section-xsmall uk-padding-remove-bottom" style="min-height: 325px">
+<div class="uk-section-default uk-section uk-section-xsmall uk-padding-remove-top uk-padding-remove-bottom"
+     style="min-height: 325px">
   <div class="uk-container" style="min-height: 500px">
     <div class="uk-grid-margin uk-grid uk-grid-stack" uk-grid="">
       <div class="uk-width-1-1@m uk-first-column">
 
-        <div class="uk-h2 uk-text-center">My Providers</div>
+        <h2 class="uk-text-center">My Providers</h2>
 
         <div class="uk-container uk-margin-large-bottom">
           <div class="uk-grid">
@@ -23,16 +24,20 @@
                     <div class="uk-margin-bottom uk-grid-small uk-child-width-auto uk-grid serviceStatuses">
                       <span class="status-label">Show:</span>
                       <label class="status-value uk-margin-small-left">
-                        <input class="uk-checkbox" type="checkbox" (change)="onCheckChanged($event, 'approved')" [checked]="isApprovedChecked"> Approved
+                        <input class="uk-checkbox" type="checkbox" (change)="onCheckChanged($event, 'approved')"
+                               [checked]="isApprovedChecked"> Approved
                       </label>
                       <label class="status-value uk-margin-small-left">
-                        <input class="uk-checkbox" type="checkbox" (change)="onCheckChanged($event, 'pending')" [checked]="isPendingChecked"> Pending
+                        <input class="uk-checkbox" type="checkbox" (change)="onCheckChanged($event, 'pending')"
+                               [checked]="isPendingChecked"> Pending
                       </label>
                       <label class="status-value uk-margin-small-left">
-                        <input class="uk-checkbox" type="checkbox" (change)="onCheckChanged($event, 'rejected')" [checked]="isRejectedChecked"> Rejected
+                        <input class="uk-checkbox" type="checkbox" (change)="onCheckChanged($event, 'rejected')"
+                               [checked]="isRejectedChecked"> Rejected
                       </label>
                       <label class="status-value uk-margin-small-left">
-                        <input class="uk-checkbox" type="checkbox" (change)="onCheckChanged($event, 'incomplete')" [checked]="isIncompleteChecked"> Incomplete
+                        <input class="uk-checkbox" type="checkbox" (change)="onCheckChanged($event, 'incomplete')"
+                               [checked]="isIncompleteChecked"> Incomplete
                       </label>
                     </div>
                     @if (isApprovedChecked && (myApprovedProviders.length > 0)) {
@@ -47,12 +52,15 @@
                                 </div>
                                 <div class="provider-logo">
                                   <span class="provider-logo-helper"></span>
-                                  <img src="{{ providerBundle.organisation.logo ? providerBundle.organisation.logo : '/assets/images/broken_image-black-48dp.svg' }}">
+                                  <img
+                                    src="{{ providerBundle.organisation.logo ? providerBundle.organisation.logo : '/assets/images/broken_image-black-48dp.svg' }}">
                                 </div>
                                 <div class="uk-card-body">
                                   <div class="providerName">
-                                    <span class="uk-margin-auto-vertical" data-uk-tooltip title="Go to the {{serviceORresource | lowercase}} provider monitoring dashboard">
-                                      <a [routerLink]="['/dashboard', providerBundle.catalogueId, pidHandler.customEncodeURIComponent(providerBundle.id)]">
+                                    <span class="uk-margin-auto-vertical" data-uk-tooltip
+                                          title="Go to the {{serviceORresource | lowercase}} provider monitoring dashboard">
+                                      <a
+                                        [routerLink]="['/dashboard', pidHandler.customEncodeURIComponent(providerBundle.id)]">
                                         {{ providerBundle.organisation.name }}
                                       </a>
                                     </span>
@@ -62,360 +70,348 @@
                                     <!--                              <span class="statusLabel">Provider Status: </span>{{labels[statuses.indexOf(providerBundle.status)]}}-->
                                     <span class="statusLabel">Provider Status: </span>Approved
                                     <br>
-                                      <span class="statusLabel">First Resource Status: </span>{{templateLabels[templateStatuses.indexOf(providerBundle.templateStatus)]}}
-                                    </div>
+                                    <span
+                                      class="statusLabel">First Resource Status: </span>{{ templateLabels[templateStatuses.indexOf(providerBundle.templateStatus)] }}
+                                  </div>
+                                  @if (providerBundle.catalogueId == null) {
                                     <div class="uk-margin-top cardActionButtons">
-                                      <button class="uk-button uk-button-action" routerLink="/provider/update/{{pidHandler.customEncodeURIComponent(providerBundle.id)}}">
-                                        <i class="fa fa-lg fa-edit uk-margin-small-right"></i>Update Provider</button>
-                                        @if ((providerBundle.templateStatus !== 'approved template')) {
-                                          @if (hasCreatedFirstService(providerBundle.id)) {
-                                            <!--<ng-container *ngIf="(providerBundle.templateStatus === 'pending template')">-->
-                                            <button class="uk-button uk-button-action uk-margin-small-left"
-                                              routerLink="{{ getLinkToFirstService(providerBundle.id) }}">
-                                              <i class="fa fa-lg fa-edit"></i>
-                                              Update First Resource
-                                            </button>
-                                          }
-                                          @if (hasCreatedFirstDatasource(providerBundle.id)) {
-                                            <!--<ng-container *ngIf="(providerBundle.templateStatus === 'pending template')">-->
-                                            <button class="uk-button uk-button-action uk-margin-small-left"
-                                                    routerLink="{{ getLinkToFirstDatasource(providerBundle.id) }}">
-                                              <i class="fa fa-lg fa-edit"></i>
-                                              Update First Datasource
-                                            </button>
-                                          }
-                                          @if (hasCreatedFirstTrainingResource(providerBundle.id)) {
-                                            <!--<ng-container *ngIf="(providerBundle.templateStatus === 'pending template')">-->
-                                            <button class="uk-button uk-button-action uk-margin-small-left"
-                                              routerLink="{{ getLinkToFirstTrainingResource(providerBundle.id) }}">
-                                              <i class="fa fa-lg fa-edit"></i>
-                                              Update First Training Resource
-                                            </button>
-                                          }
-                                          @if (hasCreatedFirstDeployableApplication(providerBundle.id)) {
-                                            <!--<ng-container *ngIf="(providerBundle.templateStatus === 'pending template')">-->
-                                            <button class="uk-button uk-button-action uk-margin-small-left"
-                                                    routerLink="{{ getLinkToFirstDeployableApplication(providerBundle.id) }}">
-                                              <i class="fa fa-lg fa-edit"></i>
-                                              Update First Deployable Application
-                                            </button>
-                                          }
-                                          @if (!hasCreatedFirstService(providerBundle.id) && !hasCreatedFirstDatasource(providerBundle.id) && !hasCreatedFirstTrainingResource(providerBundle.id) && !hasCreatedFirstDeployableApplication(providerBundle.id)) {
-                                            <button class="uk-button uk-button-action uk-margin-small-left">
-                                              <i class="fa fa-plus"></i>
-                                              Add First Resource
-                                            </button>
-                                            <div uk-dropdown>
-                                              <ul class="uk-nav uk-dropdown-nav">
-                                                <li class="uk-active">
-                                                  <a routerLink="{{ getLinkToFirstService(pidHandler.customEncodeURIComponent(providerBundle.id)) }}">Add First Resource</a>
-                                                </li>
-                                                <li class="uk-active">
-                                                  <a routerLink="{{ getLinkToFirstDatasource(pidHandler.customEncodeURIComponent(providerBundle.id)) }}">Add First Datasource</a>
-                                                </li>
-                                                <li class="uk-active">
-                                                  <a routerLink="{{ getLinkToFirstTrainingResource(pidHandler.customEncodeURIComponent(providerBundle.id)) }}">Add First Training Resource</a>
-                                                </li>
-                                                <li class="uk-active">
-                                                  <a routerLink="{{ getLinkToFirstDeployableApplication(pidHandler.customEncodeURIComponent(providerBundle.id)) }}">Add First Deployable Application</a>
-                                                </li>
-                                                @if (checkForDraftServices(providerBundle.id)) {
-                                                  <li class="uk-active">
-                                                    <a [routerLink]="['/provider/draft-resources/' + pidHandler.customEncodeURIComponent(providerBundle.id)] ">
-                                                      Select from draft {{serviceORresource | lowercase}}s
-                                                    </a>
-                                                  </li>
-                                                }
-                                                @if (checkForDraftDatasources(providerBundle.id)) {
-                                                  <li class="uk-active">
-                                                    <a [routerLink]="['/provider/draft-resources/' + pidHandler.customEncodeURIComponent(providerBundle.id)] ">
-                                                      Select from draft datasources
-                                                    </a>
-                                                  </li>
-                                                }
-                                                @if (checkForRejectedServices(providerBundle.id)) {
-                                                  <li class="uk-active">
-                                                    <a [routerLink]="['/provider/rejected-resources/' + pidHandler.customEncodeURIComponent(providerBundle.id)] ">
-                                                      Select from rejected {{serviceORresource | lowercase}}s
-                                                    </a>
-                                                  </li>
-                                                }
-                                                @if (checkForRejectedDatasources(providerBundle.id)) {
-                                                  <li class="uk-active">
-                                                    <a [routerLink]="['/provider/rejected-datasources/' + pidHandler.customEncodeURIComponent(providerBundle.id)] ">
-                                                      Select from rejected datasources
-                                                    </a>
-                                                  </li>
-                                                }
-                                                @if (checkForRejectedTrainingResources(providerBundle.id)) {
-                                                  <li class="uk-active">
-                                                    <a [routerLink]="['/provider/rejected-training-resources/' + pidHandler.customEncodeURIComponent(providerBundle.id)] ">
-                                                      Select from rejected training resources
-                                                    </a>
-                                                  </li>
-                                                }
-                                                @if (checkForRejectedDeployableServices(providerBundle.id)) {
-                                                  <li class="uk-active">
-                                                    <a [routerLink]="['/provider/rejected-deployable-services/' + pidHandler.customEncodeURIComponent(providerBundle.id)] ">
-                                                      Select from rejected Deployable Application
-                                                    </a>
-                                                  </li>
-                                                }
-                                              </ul>
-                                            </div>
-                                          }
+                                      <button class="uk-button uk-button-action"
+                                              routerLink="/provider/update/{{pidHandler.customEncodeURIComponent(providerBundle.id)}}">
+                                        <i class="fa fa-lg fa-edit uk-margin-small-right"></i>Update Provider
+                                      </button>
+                                      @if ((providerBundle.templateStatus !== 'approved template')) {
+                                        @if (hasCreatedFirstService(providerBundle.id)) {
+                                          <!--<ng-container *ngIf="(providerBundle.templateStatus === 'pending template')">-->
+                                          <button class="uk-button uk-button-action uk-margin-small-left"
+                                                  routerLink="{{ getLinkToFirstService(providerBundle.id) }}">
+                                            <i class="fa fa-lg fa-edit"></i>
+                                            Update First {{serviceORresource}}
+                                          </button>
                                         }
-                                        <button [disabled]="true" class="uk-button uk-margin-small-left uk-button-action" routerLink="">
-                                          <i class="fa fa-ellipsis-v fa-lg uk-margin-small-right"></i>More
-                                        </button>
-                                        <div uk-dropdown>
-                                          <ul class="uk-nav uk-dropdown-nav">
-                                            <!--                              <div uk-dropdown="mode: click">-->
-                                            <!--                                <ul class="uk-nav uk-dropdown-nav uk-dropdown-close">-->
-                                            <li class="uk-margin-small-bottom">
-                                              <!--                                    <ng-container *ngIf="providerBundle.status === 'approved provider'">-->
-                                              <a [routerLink]="['/dashboard', providerBundle.catalogueId, pidHandler.customEncodeURIComponent(providerBundle.id)]">
-                                                Go to Dashboard
-                                              </a>
+                                        @if (hasCreatedFirstDatasource(providerBundle.id)) {
+                                          <!--<ng-container *ngIf="(providerBundle.templateStatus === 'pending template')">-->
+                                          <button class="uk-button uk-button-action uk-margin-small-left"
+                                                  routerLink="{{ getLinkToFirstDatasource(providerBundle.id) }}">
+                                            <i class="fa fa-lg fa-edit"></i>
+                                            Update First Datasource
+                                          </button>
+                                        }
+                                        @if (hasCreatedFirstTrainingResource(providerBundle.id)) {
+                                          <!--<ng-container *ngIf="(providerBundle.templateStatus === 'pending template')">-->
+                                          <button class="uk-button uk-button-action uk-margin-small-left"
+                                                  routerLink="{{ getLinkToFirstTrainingResource(providerBundle.id) }}">
+                                            <i class="fa fa-lg fa-edit"></i>
+                                            Update First Training Resource
+                                          </button>
+                                        }
+                                        @if (hasCreatedFirstDeployableApplication(providerBundle.id)) {
+                                          <!--<ng-container *ngIf="(providerBundle.templateStatus === 'pending template')">-->
+                                          <button class="uk-button uk-button-action uk-margin-small-left"
+                                                  routerLink="{{ getLinkToFirstDeployableApplication(providerBundle.id) }}">
+                                            <i class="fa fa-lg fa-edit"></i>
+                                            Update First Deployable Application
+                                          </button>
+                                        }
+                                        @if (!hasCreatedFirstService(providerBundle.id) && !hasCreatedFirstDatasource(providerBundle.id) && !hasCreatedFirstTrainingResource(providerBundle.id) && !hasCreatedFirstDeployableApplication(providerBundle.id)) {
+                                          <button class="uk-button uk-button-action uk-margin-small-left">
+                                            <i class="fa fa-plus"></i>
+                                            Add First Resource
+                                          </button>
+                                          <div uk-dropdown>
+                                            <ul class="uk-nav uk-dropdown-nav">
+                                              <li class="uk-active">
+                                                <a
+                                                  routerLink="{{ getLinkToFirstService(pidHandler.customEncodeURIComponent(providerBundle.id)) }}">Add
+                                                  First {{serviceORresource}}</a>
+                                              </li>
+                                              <li class="uk-active">
+                                                <a
+                                                  routerLink="{{ getLinkToFirstDatasource(pidHandler.customEncodeURIComponent(providerBundle.id)) }}">Add
+                                                  First Datasource</a>
+                                              </li>
+                                              <li class="uk-active">
+                                                <a
+                                                  routerLink="{{ getLinkToFirstTrainingResource(pidHandler.customEncodeURIComponent(providerBundle.id)) }}">Add
+                                                  First Training Resource</a>
+                                              </li>
+                                              <li class="uk-active">
+                                                <a
+                                                  routerLink="{{ getLinkToFirstDeployableApplication(pidHandler.customEncodeURIComponent(providerBundle.id)) }}">Add
+                                                  First Deployable Application</a>
+                                              </li>
+                                              @if (checkForDraftServices(providerBundle.id)) {
+                                                <li class="uk-active">
+                                                  <a
+                                                    [routerLink]="['/provider/draft-resources/' + pidHandler.customEncodeURIComponent(providerBundle.id)] ">
+                                                    Select from draft {{ serviceORresource | lowercase }}s
+                                                  </a>
+                                                </li>
+                                              }
+                                              @if (checkForDraftDatasources(providerBundle.id)) {
+                                                <li class="uk-active">
+                                                  <a
+                                                    [routerLink]="['/provider/draft-resources/' + pidHandler.customEncodeURIComponent(providerBundle.id)] ">
+                                                    Select from draft datasources
+                                                  </a>
+                                                </li>
+                                              }
+                                              @if (checkForRejectedServices(providerBundle.id)) {
+                                                <li class="uk-active">
+                                                  <a
+                                                    [routerLink]="['/provider/rejected-resources/' + pidHandler.customEncodeURIComponent(providerBundle.id)] ">
+                                                    Select from rejected {{ serviceORresource | lowercase }}s
+                                                  </a>
+                                                </li>
+                                              }
+                                              @if (checkForRejectedDatasources(providerBundle.id)) {
+                                                <li class="uk-active">
+                                                  <a
+                                                    [routerLink]="['/provider/rejected-datasources/' + pidHandler.customEncodeURIComponent(providerBundle.id)] ">
+                                                    Select from rejected datasources
+                                                  </a>
+                                                </li>
+                                              }
+                                              @if (checkForRejectedTrainingResources(providerBundle.id)) {
+                                                <li class="uk-active">
+                                                  <a
+                                                    [routerLink]="['/provider/rejected-training-resources/' + pidHandler.customEncodeURIComponent(providerBundle.id)] ">
+                                                    Select from rejected training resources
+                                                  </a>
+                                                </li>
+                                              }
+                                              @if (checkForRejectedDeployableServices(providerBundle.id)) {
+                                                <li class="uk-active">
+                                                  <a
+                                                    [routerLink]="['/provider/rejected-deployable-services/' + pidHandler.customEncodeURIComponent(providerBundle.id)] ">
+                                                    Select from rejected Deployable Application
+                                                  </a>
+                                                </li>
+                                              }
+                                            </ul>
+                                          </div>
+                                        }
+                                      }
+                                      <button [disabled]="true" class="uk-button uk-margin-small-left uk-button-action"
+                                              routerLink="">
+                                        <i class="fa fa-ellipsis-v fa-lg uk-margin-small-right"></i>More
+                                      </button>
+                                      <div uk-dropdown>
+                                        <ul class="uk-nav uk-dropdown-nav">
+                                          <!--                              <div uk-dropdown="mode: click">-->
+                                          <!--                                <ul class="uk-nav uk-dropdown-nav uk-dropdown-close">-->
+                                          <li class="uk-margin-small-bottom">
+                                            <!--                                    <ng-container *ngIf="providerBundle.status === 'approved provider'">-->
+                                            <a
+                                              [routerLink]="['/dashboard', pidHandler.customEncodeURIComponent(providerBundle.id)]">
+                                              Go to Dashboard
+                                            </a>
                                             <!--                                    </ng-container>-->
                                             <!--                                    <ng-container *ngIf="providerBundle.status !== 'approved provider'">-->
                                             <!--                                      <a [routerLink]="['/dashboard', providerBundle.id]">-->
                                             <!--                                        Go to Dashboard-->
-                                          <!--                                      </a>-->
-                                        <!--                                    </ng-container>-->
-                                            </li>
-                                            <li class="uk-nav-divider"></li>
-                                            <li class="uk-active"><a routerLink="/developers">Use API</a></li>
-<!--                                      @if (providerBundle.templateStatus==='approved template') {
-                                        <li class="uk-margin-small-bottom">
-                                          <a [routerLink]="['/dashboard', providerBundle.catalogueId, pidHandler.customEncodeURIComponent(providerBundle.id), 'resources']">
-                                            View {{serviceORresource}}s
-                                          </a>
-                                        </li>
-                                        <li class="uk-margin-small-bottom">
-                                          <a [routerLink]="['/provider/' + pidHandler.customEncodeURIComponent(providerBundle.id) + '/resource/add/']">
-                                            Add new {{serviceORresource}}
-                                          </a>
-                                        </li>
-                                      }-->
-                                    </ul>
-                                  </div>
+                                            <!--                                      </a>-->
+                                            <!--                                    </ng-container>-->
+                                          </li>
+                                          <li class="uk-nav-divider"></li>
+                                          <li class="uk-active"><a routerLink="/developers">Use API</a></li>
+                                          <!--                                      @if (providerBundle.templateStatus==='approved template') {
+                                                                                  <li class="uk-margin-small-bottom">
+                                                                                    <a [routerLink]="['/dashboard', pidHandler.customEncodeURIComponent(providerBundle.id), 'resources']">
+                                                                                      View {{serviceORresource}}s
+                                                                                    </a>
+                                                                                  </li>
+                                                                                  <li class="uk-margin-small-bottom">
+                                                                                    <a [routerLink]="['/provider/' + pidHandler.customEncodeURIComponent(providerBundle.id) + '/resource/add/']">
+                                                                                      Add new {{serviceORresource}}
+                                                                                    </a>
+                                                                                  </li>
+                                                                                }-->
+                                        </ul>
+                                      </div>
+                                    </div>
+                                  }
+
+                                  @if (providerBundle.catalogueId != null) { <!-- external provider -->
+                                    <div class="uk-margin-top cardActionButtons">
+                                      <button class="uk-button uk-button-action"
+                                              routerLink="/provider/view/{{pidHandler.customEncodeURIComponent(providerBundle.catalogueId)}}/{{pidHandler.customEncodeURIComponent(providerBundle.id)}}">
+                                        <i class="fa fa-lg fa-edit uk-margin-small-right"></i>View Provider
+                                      </button>
+                                      <button [disabled]="true" class="uk-button uk-margin-small-left uk-button-action"
+                                              routerLink="">
+                                        <i class="fa fa-ellipsis-v fa-lg uk-margin-small-right"></i>More
+                                      </button>
+                                      <div uk-dropdown>
+                                        <ul class="uk-nav uk-dropdown-nav">
+                                          <li class="uk-margin-small-bottom">
+                                            <a [routerLink]="['/dashboard', pidHandler.customEncodeURIComponent(providerBundle.id)]"> Go to Dashboard</a>
+                                          </li>
+                                          <li class="uk-nav-divider"></li>
+                                          <li class="uk-active"><a routerLink="/developers">Use API</a></li>
+                                        </ul>
+                                      </div>
+                                    </div>
+                                  }
+
                                 </div>
-                                <!--                            <hr class="uk-margin-top">-->
-                                <!--                            <div class="uk-align-center uk-flex uk-flex-center">-->
-                                <!--                              <button [routerLink]="['/provider/update/' + providerBundle.id]"-->
-                                <!--                                      class="uk-button uk-button-link"-->
-                                <!--                                      style="padding-right: 40px; border-right: 1px solid #ccc">-->
-                                <!--                                <i class="fa fa-edit fa-lg uk-margin-small-right" aria-hidden="true"></i> Update Provider-->
-                              <!--                              </button>-->
-                              <!--                              <button class="uk-button uk-button-link uk-margin-medium-left">-->
-                              <!--                                <i class="fa fa-ellipsis-v fa-lg uk-margin-small-right"></i>More Options-->
-                            <!--                              </button>-->
-                            <!--                              <div uk-dropdown="mode: click">-->
-                            <!--                                <ul class="uk-nav uk-dropdown-nav uk-dropdown-close">-->
-                            <!--                                  <li class="uk-margin-small-bottom">-->
-                            <!--                                    <ng-container *ngIf="providerBundle.status === 'approved provider'">-->
-                            <!--                                      <a [routerLink]="['/dashboard', providerBundle.id]">-->
-                            <!--                                        Go to Dashboard-->
-                          <!--                                      </a>-->
-                        <!--                                    </ng-container>-->
-                        <!--                                    <ng-container *ngIf="providerBundle.status !== 'approved provider'">-->
-                        <!--                                      <a [routerLink]="['/dashboard', providerBundle.id]">-->
-                        <!--                                        Go to Dashboard-->
-                      <!--                                      </a>-->
-                    <!--                                    </ng-container>-->
-                  <!--                                  </li>-->
-                  <!--                                  <li class="uk-margin-small-bottom">-->
-                  <!--                                    <a [routerLink]="['/dashboard/' + providerBundle.id + '/resources']">-->
-                  <!--                                      View {{serviceORresource}}s-->
-                <!--                                    </a>-->
-              <!--                                  </li>-->
-              <!--                                  <li class="uk-margin-small-bottom">-->
-              <!--                                    <a [routerLink]="['/provider/' + providerBundle.id + '/resource/add/']">-->
-              <!--                                      Add new {{serviceORresource}}-->
-            <!--                                    </a>-->
-          <!--                                  </li>-->
-        <!--                                </ul>-->
-      <!--                              </div>-->
-    <!--                            </div>-->
-  </div>
-</div>
-</div>
-}
-</div>
-</div>
-}
-@if (isPendingChecked && (myPendingActionProviders.length > 0)) {
-  <div class="uk-margin-medium-top">
-    <h3 class="uk-margin-remove">Pending</h3>
-    <div class="uk-grid uk-grid-match uk-child-width-1-2">
-      @for (providerBundle of myPendingActionProviders; track providerBundle) {
-        <div class="uk-grid-margin">
-          <div class="uk-card uk-card-default provider-card">
-            <div class="uk-card-media-top pending">
-              <div class="uk-card-badge uk-label">Pending</div>
-            </div>
-            <div class="provider-logo">
-              <span class="provider-logo-helper"></span>
-              <img src="{{ providerBundle.organisation.logo ? providerBundle.organisation.logo : '/assets/images/broken_image-black-48dp.svg' }}">
-            </div>
-            <div class="uk-card-body">
-              <div class="providerName">
-                <span class="uk-margin-auto-vertical" data-uk-tooltip title="Go to the {{serviceORresource | lowercase}} provider monitoring dashboard">
-                  <a [routerLink]="['/dashboard', providerBundle.catalogueId, pidHandler.customEncodeURIComponent(providerBundle.id)]">
-                    {{ providerBundle.organisation.name }}
-                  </a>
-                </span>
-              </div>
-              <div class="uk-margin-small-top">
-                <span class="statusLabel">Provider Status: </span>Pending
-                <br>
-                  <span class="statusLabel">First Resource Status: </span>{{templateLabels[templateStatuses.indexOf(providerBundle.templateStatus)]}}
-                </div>
-                <div class="uk-margin-top cardActionButtons">
-                  <button class="uk-button uk-button-action" routerLink="/provider/update/{{pidHandler.customEncodeURIComponent(providerBundle.id)}}">
-                    <i class="fa fa-lg fa-edit uk-margin-small-right"></i>Update Provider
-                  </button>
-                              <!--                              <ng-container *ngIf="(providerBundle.templateStatus === 'no template status')-->
-                              <!--                                        || (providerBundle.templateStatus === 'pending template')">-->
-                              <!--                                <ng-container *ngIf="hasCreatedFirstService(providerBundle.id)">-->
-                              <!--                                  <button class="uk-button uk-button-action uk-margin-small-left"-->
-                              <!--                                          routerLink="{{ getLinkToFirstService(providerBundle.id) }}">-->
-                              <!--                                    <i class="fa fa-lg fa-edit"></i>-->
-                              <!--                                    Update First Resource-->
-                              <!--                                  </button>-->
-                              <!--                                </ng-container>-->
-                              <!--                                <ng-container *ngIf="!hasCreatedFirstService(providerBundle.id)">-->
-                              <!--                                  <button class="uk-button uk-button-action uk-margin-small-left">-->
-                              <!--                                    <i class="fa fa-plus"></i>-->
-                              <!--                                    Add First Resource-->
-                              <!--                                  </button>-->
-                              <!--                                  <div uk-dropdown>-->
-                              <!--                                    <ul class="uk-nav uk-dropdown-nav">-->
-                              <!--                                      <li class="uk-active">-->
-                              <!--                                        <a routerLink="{{ getLinkToFirstService(providerBundle.id) }}">Create First Resource</a>-->
-                              <!--                                      </li>-->
-                              <!--                                      <li *ngIf="checkForPendingServices(providerBundle.id)" class="uk-active">-->
-                              <!--                                        <a [routerLink]="['/provider/draft-resources/' + providerBundle.id] ">-->
-                              <!--                                          Select from draft {{serviceORresource | lowercase}}s-->
-                              <!--                                        </a>-->
-                              <!--                                      </li>-->
-                              <!--                                      <li *ngIf="checkForRejectedServices(providerBundle.id)" class="uk-active">-->
-                              <!--&lt;!&ndash;                                      <li class="uk-active">&ndash;&gt;-->
-                              <!--                                        <a [routerLink]="['/provider/rejected-resources/' + providerBundle.id] ">-->
-                              <!--                                          Select from rejected {{serviceORresource | lowercase}}s-->
-                              <!--                                        </a>-->
-                              <!--                                      </li>-->
-                              <!--                                      <li class="uk-nav-divider"></li>-->
-                              <!--                                      <li class="uk-active"><a routerLink="/developers">Use API</a></li>-->
-                              <!--                                    </ul>-->
-                              <!--                                  </div>-->
-                              <!--                                </ng-container>-->
-                              <!--                              </ng-container>-->
+                              </div>
+                            </div>
+                          }
+                        </div>
+                      </div>
+                    }
+                    @if (isPendingChecked && (myPendingActionProviders.length > 0)) {
+                      <div class="uk-margin-medium-top">
+                        <h3 class="uk-margin-remove">Pending</h3>
+                        <div class="uk-grid uk-grid-match uk-child-width-1-2">
+                          @for (providerBundle of myPendingActionProviders; track providerBundle) {
+                            <div class="uk-grid-margin">
+                              <div class="uk-card uk-card-default provider-card">
+                                <div class="uk-card-media-top pending">
+                                  <div class="uk-card-badge uk-label">Pending</div>
+                                </div>
+                                <div class="provider-logo">
+                                  <span class="provider-logo-helper"></span>
+                                  <img
+                                    src="{{ providerBundle.organisation.logo ? providerBundle.organisation.logo : '/assets/images/broken_image-black-48dp.svg' }}">
+                                </div>
+                                <div class="uk-card-body">
+                                  <div class="providerName">
+                                    <span class="uk-margin-auto-vertical" data-uk-tooltip
+                                          title="Go to the {{serviceORresource | lowercase}} provider monitoring dashboard">
+                                      <a [routerLink]="['/dashboard', pidHandler.customEncodeURIComponent(providerBundle.id)]">
+                                        {{ providerBundle.organisation.name }}
+                                      </a>
+                                    </span>
+                                  </div>
+                                  <div class="uk-margin-small-top">
+                                    <span class="statusLabel">Provider Status: </span>Pending
+                                    <br>
+                                    <span
+                                      class="statusLabel">First Resource Status: </span>{{ templateLabels[templateStatuses.indexOf(providerBundle.templateStatus)] }}
+                                  </div>
+                                  @if (providerBundle.catalogueId == null) {
+                                    <div class="uk-margin-top cardActionButtons">
+                                      <button class="uk-button uk-button-action"
+                                              routerLink="/provider/update/{{pidHandler.customEncodeURIComponent(providerBundle.id)}}">
+                                        <i class="fa fa-lg fa-edit uk-margin-small-right"></i>Update Provider
+                                      </button>
+                                    </div>
+                                  }
+                                </div>
+                              </div>
 
                             </div>
-                          </div>
+                          }
                         </div>
-
                       </div>
-}
-                    </div>
-                  </div>
-}
+                    }
 
-                  @if (isRejectedChecked && (myRejectedProviders.length > 0)) {
-<div class="uk-margin-medium-top">
-                    <h3 class="uk-margin-remove">Rejected</h3>
-                    <div class="uk-grid uk-grid-match uk-child-width-1-2">
-                      @for (providerBundle of myRejectedProviders; track providerBundle) {
-<div class="uk-grid-margin">
+                    @if (isRejectedChecked && (myRejectedProviders.length > 0)) {
+                      <div class="uk-margin-medium-top">
+                        <h3 class="uk-margin-remove">Rejected</h3>
+                        <div class="uk-grid uk-grid-match uk-child-width-1-2">
+                          @for (providerBundle of myRejectedProviders; track providerBundle) {
+                            <div class="uk-grid-margin">
 
-                        <div class="uk-card uk-card-default provider-card">
-                          <div class="uk-card-media-top rejected">
-                            <div class="uk-card-badge uk-label">Rejected</div>
-                          </div>
-                          <div class="provider-logo">
-                            <span class="provider-logo-helper"></span>
-                            <img src="{{ providerBundle.organisation.logo ? providerBundle.organisation.logo : '/assets/images/broken_image-black-48dp.svg' }}">
-                          </div>
-                          <div class="uk-card-body">
-                            <div class="providerName">
-                              <span class="uk-margin-auto-vertical" data-uk-tooltip title="Go to the {{serviceORresource | lowercase}} provider monitoring dashboard">
-                                <a [routerLink]="['/dashboard', providerBundle.catalogueId, pidHandler.customEncodeURIComponent(providerBundle.id)]">
+                              <div class="uk-card uk-card-default provider-card">
+                                <div class="uk-card-media-top rejected">
+                                  <div class="uk-card-badge uk-label">Rejected</div>
+                                </div>
+                                <div class="provider-logo">
+                                  <span class="provider-logo-helper"></span>
+                                  <img
+                                    src="{{ providerBundle.organisation.logo ? providerBundle.organisation.logo : '/assets/images/broken_image-black-48dp.svg' }}">
+                                </div>
+                                <div class="uk-card-body">
+                                  <div class="providerName">
+                              <span class="uk-margin-auto-vertical" data-uk-tooltip
+                                    title="Go to the {{serviceORresource | lowercase}} provider monitoring dashboard">
+                                <a
+                                  [routerLink]="['/dashboard', pidHandler.customEncodeURIComponent(providerBundle.id)]">
                                     {{ providerBundle.organisation.name }}
                                 </a>
                               </span>
+                                  </div>
+                                  <div class="uk-margin-small-top">
+                                    <span class="statusLabel">Provider Status: </span>Rejected
+                                    <br>
+                                    <span
+                                      class="statusLabel">First Resource Status: </span>{{ templateLabels[templateStatuses.indexOf(providerBundle.templateStatus)] }}
+                                  </div>
+                                  @if (providerBundle.catalogueId == null) {
+                                    <div class="uk-margin-top cardActionButtons">
+                                      <button class="uk-button uk-button-action"
+                                              routerLink="/provider/update/{{pidHandler.customEncodeURIComponent(providerBundle.id)}}">
+                                        <i class="fa fa-lg fa-edit uk-margin-small-right"></i>Update Provider
+                                      </button>
+                                      @if (providerBundle.templateStatus === 'rejected template') {
+                                        <button class="uk-button uk-button-action"
+                                                routerLink="{{ getLinkToFirstService(providerBundle.id) }}">
+                                          <i class="fa fa-lg fa-edit"></i> Update First {{serviceORresource}}
+                                        </button>
+                                      }
+                                    </div>
+                                  }
+                                </div>
+                              </div>
                             </div>
-                            <div class="uk-margin-small-top">
-                              <span class="statusLabel">Provider Status: </span>Rejected
-                              <br>
-                              <span class="statusLabel">First Resource Status: </span>{{templateLabels[templateStatuses.indexOf(providerBundle.templateStatus)]}}
+                          }
+                        </div>
+                      </div>
+                    }
+                    @if (isIncompleteChecked && (myIncompleteProviders.length > 0)) {
+                      <div class="uk-margin-medium-top">
+                        <h3 class="uk-margin-remove">Incomplete</h3>
+                        <div class="uk-grid uk-grid-match uk-child-width-1-2">
+                          @for (providerBundle of myIncompleteProviders; track providerBundle) {
+                            <div class="uk-grid-margin">
+                              <div class="uk-card uk-card-default provider-card">
+                                <div class="uk-card-media-top incomplete">
+                                  <div class="uk-card-badge uk-label">Incomplete</div>
+                                </div>
+                                <div class="provider-logo">
+                                  <span class="provider-logo-helper"></span>
+                                  <img
+                                    src="{{ providerBundle.organisation.logo ? providerBundle.organisation.logo : '/assets/images/broken_image-black-48dp.svg' }}">
+                                </div>
+                                <div class="uk-card-body">
+                                  <div class="providerName">
+                                    <span class="uk-margin-auto-vertical" data-uk-tooltip
+                                          title="Your {{serviceORresource | lowercase}} provider is incomplete, therefore you cannot access its monitoring dashboard">
+                                      <h5>{{ providerBundle.organisation.name }}</h5>
+                                    </span>
+                                  </div>
+                                  <div class="uk-margin-small-top">
+                                    <span class="statusLabel">Provider Status: </span> Not available
+                                    <br>
+                                    <span class="statusLabel">First Resource Status: </span> Not available
+                                  </div>
+                                  @if (providerBundle.catalogueId == null) {
+                                    <div class="uk-margin-top cardActionButtons">
+                                      <button class="uk-button uk-button-action"
+                                              routerLink="/provider/add/{{pidHandler.customEncodeURIComponent(providerBundle.id)}}">
+                                        <i class="fa fa-lg fa-edit uk-margin-small-right"></i>Update Provider
+                                      </button>
+                                    </div>
+                                  }
+                                </div>
+                              </div>
                             </div>
-                            <div class="uk-margin-top cardActionButtons">
-                              <button class="uk-button uk-button-action" routerLink="/provider/update/{{pidHandler.customEncodeURIComponent(providerBundle.id)}}">
-                                <i class="fa fa-lg fa-edit uk-margin-small-right"></i>Update Provider</button>
-                              @if (providerBundle.templateStatus === 'rejected template') {
-<button class="uk-button uk-button-action"
-                                      routerLink="{{ getLinkToFirstService(providerBundle.id) }}">
-                        <i class="fa fa-lg fa-edit"></i>
-                        Update First Resource
-                      </button>
+                          }
+                        </div>
+                      </div>
                     }
                   </div>
-                </div>
+                }
+
               </div>
-            </div>
-          }
-        </div>
-      </div>
-    }
-    @if (isIncompleteChecked && (myIncompleteProviders.length > 0)) {
-      <div class="uk-margin-medium-top">
-        <h3 class="uk-margin-remove">Incomplete</h3>
-        <div class="uk-grid uk-grid-match uk-child-width-1-2">
-          @for (providerBundle of myIncompleteProviders; track providerBundle) {
-            <div class="uk-grid-margin">
-              <div class="uk-card uk-card-default provider-card">
-                <div class="uk-card-media-top incomplete">
-                  <div class="uk-card-badge uk-label">Incomplete</div>
-                </div>
-                <div class="provider-logo">
-                  <span class="provider-logo-helper"></span>
-                  <img src="{{ providerBundle.organisation.logo ? providerBundle.organisation.logo : '/assets/images/broken_image-black-48dp.svg' }}">
-                </div>
-                <div class="uk-card-body">
-                  <div class="providerName">
-                    <span class="uk-margin-auto-vertical" data-uk-tooltip
-                      title="Your {{serviceORresource | lowercase}} provider is incomplete, therefore you cannot access its monitoring dashboard">
-                      <h5>{{ providerBundle.organisation.name }}</h5>
-                    </span>
-                  </div>
-                  <div class="uk-margin-small-top">
-                    <span class="statusLabel">Provider Status: </span> Not available
-                    <br>
-                      <span class="statusLabel">First Resource Status: </span> Not available
-                    </div>
-                    <div class="uk-margin-top cardActionButtons">
-                      <button class="uk-button uk-button-action" routerLink="/provider/add/{{pidHandler.customEncodeURIComponent(providerBundle.id)}}">
-                        <i class="fa fa-lg fa-edit uk-margin-small-right"></i>Update Provider</button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              }
+
             </div>
           </div>
-        }
+
+        </div>
       </div>
-    }
-
+    </div>
   </div>
-
-</div>
-</div>
-
-</div>
-</div>
-</div>
-</div>
 </div>

@@ -36,7 +36,6 @@ export class AdaptersComponent implements OnInit {
   // toggleLoading = false;
   urlParams: URLParameter[] = [];
   providerId: string;
-  catalogueConfigId: string = this.config.getProperty('catalogueId');
   catalogueId: string;
   providerBundle: ProviderBundle;
   adapters: Paging<AdapterBundle>;
@@ -91,7 +90,7 @@ export class AdaptersComponent implements OnInit {
   }
 
   getProvider() {
-    this.providerService.getServiceProviderBundleById(this.providerId, this.catalogueId).subscribe(
+    this.providerService.getServiceProviderBundleById(this.providerId).subscribe(
       providerBundle => {
         this.providerBundle = providerBundle;
       }, error => {
@@ -129,7 +128,7 @@ export class AdaptersComponent implements OnInit {
         UIkit.modal('#spinnerModal').hide();
         this.errorMessage = (err?.status >= 500 && err?.status < 600)
             ? `Something went wrong. If the issue persists, please contact support and provide the following error code: ${err?.error?.traceId}`
-            : `Something went bad, server responded: ${err?.error?.message}`;
+            : `Something went bad, server responded: ${err?.error?.detail}`;
         this.getAdapters();
       },
       () => {
@@ -157,7 +156,7 @@ export class AdaptersComponent implements OnInit {
       }
     }
 
-    this.router.navigate([`/dashboard`, this.catalogueId, this.providerId, `adapters`], {queryParams: map});
+    this.router.navigate([`/dashboard`, this.providerId, `adapters`], {queryParams: map});
   }
 
   paginationInit() {

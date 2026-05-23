@@ -10,7 +10,6 @@ import {DatasourceService} from "../../../../services/datasource.service";
 @Component({
     selector: 'app-datasource-history',
     templateUrl: './datasource-history.component.html',
-    styleUrls: ['../resource-dashboard/service-stats.component.css'],
     standalone: false
 })
 
@@ -53,7 +52,7 @@ export class DatasourceHistoryComponent implements OnInit, OnDestroy {
   }
 
   getDataForDatasource() {
-    this.datasourceService.getDatasourceLoggingInfoHistory(this.datasource.id, this.catalogueId).subscribe(
+    this.datasourceService.getDatasourceLoggingInfoHistory(this.datasource.id).subscribe(
       res => this.datasourceHistory = res,
       err => {
         this.errorMessage = 'An error occurred while retrieving the history of this datasource. ' + err.error;

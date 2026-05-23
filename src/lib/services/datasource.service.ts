@@ -9,11 +9,8 @@ import {ConfigService} from "./config.service";
 @Injectable()
 export class DatasourceService {
 
-  private catalogueConfigId: string;
+  constructor(public http: HttpClient, public authenticationService: AuthenticationService, private configService: ConfigService) {}
 
-  constructor(public http: HttpClient, public authenticationService: AuthenticationService, private configService: ConfigService) {
-    this.catalogueConfigId = this.configService.getProperty('catalogueId');
-  }
   base = environment.API_ENDPOINT;
   private options = {withCredentials: true};
 
@@ -21,7 +18,7 @@ export class DatasourceService {
     id = decodeURIComponent(id);
     // if version becomes optional this should be reconsidered
     // return this.http.get<Service>(this.base + `/service/${version === undefined ? id : [id, version].join('/')}`, this.options);
-    if (!catalogueId) catalogueId = this.catalogueConfigId;
+    if (!catalogueId) catalogueId = null; // todo: check
     return this.http.get<Datasource>(this.base + `/datasource/${id}?catalogue_id=${catalogueId}`, this.options);
   }
 
@@ -30,18 +27,29 @@ export class DatasourceService {
     return this.http.delete(this.base + '/datasource/' + id, this.options);
   }
 
-  getDatasourceBundles(from: string, quantity: string, sort: string, order: string, query: string,
-                       status: string, catalogue_id: string[], service_id: string[]) {
+  getDatasourceBundles(from: string, quantity: string, sort: string, order: string, query: string, active: string, suspended: string,
+                       status: string, catalogue_id: string[], service_id: string[], auditState: string[]) {
     let params = new HttpParams();
     params = params.append('from', from);
     params = params.append('quantity', quantity);
     params = params.append('sort', sort);
     params = params.append('order', order);
+    if (active && active !== '') {
+      params = params.append('active', active);
+    }
+    if (suspended && suspended !== '') {
+      params = params.append('suspended', suspended);
+    }
     if (status && status !== '') {
       params = params.append('status', status);
     }
     if (query && query !== '') {
       params = params.append('keyword', query);
+    }
+    if (auditState && auditState.length > 0) {
+      for (const auditValue of auditState) {
+        params = params.append('audit_state', auditValue);
+      }
     }
     if (catalogue_id && catalogue_id.length > 0) {
       for (const catalogueValue of catalogue_id) {
@@ -57,9 +65,9 @@ export class DatasourceService {
     return this.http.get(this.base + `/datasource/adminPage/all`, {params});
   }
 
-  getDatasourceBundleById(id: string, catalogueId: string) {
+  getDatasourceBundleById(id: string) {
     id = decodeURIComponent(id);
-    return this.http.get<DatasourceBundle>(this.base + `/datasource/bundle/${id}?catalogue_id=${catalogueId}`, this.options);
+    return this.http.get<DatasourceBundle>(this.base + `/datasource/bundle/${id}`, this.options);
   }
 
   getOpenAIREDatasources(from: string, quantity: string, sort: string, order: string, query: string) {
@@ -81,14 +89,20 @@ export class DatasourceService {
     return this.http.get<boolean>(this.base + `/datasource/openaire/isRegistered/${datasourceId}`);
   }
 
-  submitDatasource(datasource: Datasource, shouldPut: boolean) {
+  submitDatasource(datasource: Datasource, shouldPut: boolean, openaireId: string | null = null) {
     // console.log(JSON.stringify(datasource));
     // console.log(`knocking on: ${this.base}/datasource`);
     // return this.http[shouldPut ? 'put' : 'post']<Datasource>(this.base + '/datasource', datasource, this.options);
+    let params = new HttpParams();
+    if (openaireId !== null) {
+      params = params.set('openaireId', openaireId);
+    }
+    const optionsWithParams = { ...this.options, params };
+
     if (shouldPut) {
-      return this.http.put<Datasource>(this.base + '/datasource', datasource, this.options); //comment param can be used on update
+      return this.http.put<Datasource>(this.base + '/datasource', datasource, optionsWithParams); //comment param can be used on update
     } else {
-      return this.http.post<Datasource>(this.base + '/datasource', datasource, this.options);
+      return this.http.post<Datasource>(this.base + '/datasource', datasource, optionsWithParams);
     }
   }
 
@@ -102,16 +116,11 @@ export class DatasourceService {
     return this.http.patch(this.base + `/datasource/setActive/${id}?active=${active}`, this.options);
   }
 
-  auditDatasource(id: string, action: string, comment: string) {
-    id = decodeURIComponent(id);
-    return this.http.patch(this.base + `/datasource/audit/${id}?actionType=${action}&comment=${comment}`, this.options);
-  }
-
 /*  getDatasourceByServiceId(serviceId: string, catalogueId?:string){
     serviceId = decodeURIComponent(serviceId);
 
     if(!catalogueId) catalogueId = this.catalogueConfigId;
-    if (catalogueId === this.catalogueConfigId)
+    if (catalogueId == null)
 
       return this.http.get<Datasource>(this.base + `/datasource/byService/${serviceId}?catalogue_id=${catalogueId}`, this.options);
     else
@@ -123,21 +132,25 @@ export class DatasourceService {
     return this.http.get<OpenAIREMetrics>(this.base + `/datasource/isMetricsValid/${datasourceId}`);
   }
 
-  getDatasourceLoggingInfoHistory(datasourceId: string, catalogue_id: string) {
+  getDatasourceLoggingInfoHistory(datasourceId: string) {
     datasourceId = decodeURIComponent(datasourceId);
-    if (catalogue_id === this.catalogueConfigId)
-      return this.http.get<LoggingInfo[]>(this.base + `/datasource/loggingInfoHistory/${datasourceId}?catalogue_id=${catalogue_id}`);
-    else
-      return this.http.get<LoggingInfo[]>(this.base + `/catalogue/${catalogue_id}/datasource/loggingInfoHistory/${datasourceId}`);
+    return this.http.get<LoggingInfo[]>(this.base + `/datasource/loggingInfoHistory/${datasourceId}`);
   }
 
   /** Draft Datasources -->**/
-  temporarySaveDatasource(datasource: Datasource) {
+  temporarySaveDatasource(datasource: Datasource, openaireId: string | null = null) {
     const datasourceExists = !!datasource.id;
-    if (datasourceExists) {
-      return this.http.put<Datasource>(this.base + '/datasource/draft', datasource, this.options);
+
+    let params = new HttpParams();
+    if (openaireId !== null) {
+      params = params.set('openaireId', openaireId);
     }
-    return this.http.post<Datasource>(this.base + '/datasource/draft', datasource, this.options);
+    const optionsWithParams = { ...this.options, params };
+
+    if (datasourceExists) {
+      return this.http.put<Datasource>(this.base + '/datasource/draft', datasource, optionsWithParams);
+    }
+    return this.http.post<Datasource>(this.base + '/datasource/draft', datasource, optionsWithParams);
   }
 
   submitDraftDatasource(datasource: Datasource) {
@@ -160,5 +173,21 @@ export class DatasourceService {
     return this.http.delete(this.base + '/datasource/draft/' + id, this.options);
   }
   /** <-- Draft Datasources **/
+
+  auditDatasource(id: string, action: string, catalogueId: string, comment: string) {
+    id = decodeURIComponent(id);
+    if (catalogueId == null)
+      return this.http.patch(this.base + `/datasource/audit/${id}?actionType=${action}&comment=${comment}`, this.options);
+    else
+      return this.http.patch(this.base + `/catalogue/audit/${id}?actionType=${action}&comment=${comment}`, this.options);
+  }
+
+  suspendDatasource(datasourceId: string, catalogueId: string, suspend: boolean) {
+    datasourceId = decodeURIComponent(datasourceId);
+    if (catalogueId == null)
+      return this.http.put<DatasourceBundle>(this.base + `/datasource/suspend?id=${datasourceId}&suspend=${suspend}`, this.options);
+    else
+      return this.http.put<DatasourceBundle>(this.base + `/catalogue/${catalogueId}/datasource/suspend/${datasourceId}?suspend=${suspend}`, this.options);
+  }
 
 }

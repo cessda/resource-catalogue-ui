@@ -18,7 +18,6 @@ import {GuidelinesService} from "../../../../services/guidelines.service";
     standalone: false
 })
 export class DatasourceDashboardComponent implements OnInit {
-  catalogueConfigId: string | null = null;
   protected readonly environment = environment;
   _marketplaceTrainingResourcesURL = environment.marketplaceTrainingResourcesURL;
 
@@ -45,13 +44,16 @@ export class DatasourceDashboardComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.catalogueConfigId = this.config.getProperty('catalogueId');
-    this.catalogueId = this.route.snapshot.paramMap.get('catalogueId');
     this.providerId = this.route.snapshot.paramMap.get('providerId');
     this.datasourceId = this.route.snapshot.paramMap.get('datasourceId');
-    this.datasourceService.getDatasourceBundleById(this.datasourceId, this.catalogueId).subscribe(
-      res => { if (res!=null) this.datasourceBundle = res },
-      error => {},
+    this.datasourceService.getDatasourceBundleById(this.datasourceId).subscribe(
+      res => {
+        if (res != null) {
+          this.datasourceBundle = res;
+          this.catalogueId = this.datasourceBundle.catalogueId;
+          console.log('catalogueId:', this.catalogueId);
+        }
+      },      error => {},
       () => {
         // this.serviceExtensionsService.getMonitoringByServiceId(this.datasourceId).subscribe(
         //   res => { if (res!=null) this.monitoringId = res.id }

@@ -21,13 +21,15 @@
               <p class="uk-margin-bottom" [innerHTML]="model.notice"></p>
             </div>
           }
-          <div class="form-action-bar titleAndActionsBar uk-flex uk-flex-right justify-content-end" style="min-height: 40px">
-            <div>
-              <button class="uk-button uk-button-secondary uk-margin-left" (click)="child.parentSubmit()">
-                Submit
-              </button>
+          @if (!viewOnlyMode) {
+            <div class="form-action-bar titleAndActionsBar uk-flex uk-flex-right justify-content-end" style="min-height: 40px">
+              <div>
+                <button class="uk-button uk-button-secondary uk-margin-left" (click)="child.parentSubmit()">
+                  Submit
+                </button>
+              </div>
             </div>
-          </div>
+          }
         </app-survey>
       }
     </div>

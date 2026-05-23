@@ -41,7 +41,7 @@ export class MonitoringInfoComponent implements OnInit {
 
   ngOnInit() {
     this.sub = this.route.parent.params.subscribe(params => {
-      this.resourceService.getService(params['resourceId'], params['catalogueId']).subscribe(
+      this.resourceService.getService(params['resourceId']).subscribe(
         suc => { this.service = suc },
         err => { this.errorMessage = 'An error occurred while retrieving data for this service. ' + err.error; },
         () => {

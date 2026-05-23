@@ -19,6 +19,7 @@ import {ProviderAccountingStatsComponent} from "./providerAccountingStats/provid
 import {AdaptersComponent} from "./adapters/adapters.component";
 import {DatasourcesComponent} from "./datasources/datasources.component";
 import {DraftDatasourcesComponent} from "./draftDatasources/draft-datasources.component";
+import {CataloguesComponent} from "./catalogues/catalogues.component";
 
 const providerDashboardRoutes: Routes = [
   {
@@ -98,6 +99,13 @@ const providerDashboardRoutes: Routes = [
       {
         path: 'draft-datasources',
         component: DraftDatasourcesComponent,
+        data: {
+          isResource: false
+        }
+      },
+      {
+        path: 'catalogues',
+        component: CataloguesComponent,
         data: {
           isResource: false
         }

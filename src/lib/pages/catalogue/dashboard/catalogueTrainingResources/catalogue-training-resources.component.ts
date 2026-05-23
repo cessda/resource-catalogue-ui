@@ -8,6 +8,7 @@ import {CatalogueService} from "../../../../services/catalogue.service";
 import {TrainingResourceService} from "../../../../services/training-resource.service";
 import {ConfigService} from "../../../../services/config.service";
 import {environment} from "../../../../../environments/environment";
+import {ResourceService} from "../../../../services/resource.service";
 
 declare var UIkit: any;
 
@@ -18,8 +19,6 @@ declare var UIkit: any;
 })
 
 export class CatalogueTrainingResourcesComponent implements OnInit {
-
-  catalogueConfigId: string | null = null;
 
   formPrepare = {
     from: '0',
@@ -54,12 +53,12 @@ export class CatalogueTrainingResourcesComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private catalogueService: CatalogueService,
+    private resourceService: ResourceService,
     private trainingResourceService: TrainingResourceService,
     private config: ConfigService
   ) {}
 
   ngOnInit(): void {
-    this.catalogueConfigId = this.config.getProperty('catalogueId');
     this.catalogueId = this.route.parent.snapshot.paramMap.get('catalogue');
 
     this.getCatalogue();
@@ -114,7 +113,7 @@ export class CatalogueTrainingResourcesComponent implements OnInit {
       err => {
         this.errorMessage = (err?.status >= 500 && err?.status < 600)
             ? `Something went wrong. If the issue persists, please contact support and provide the following error code: ${err?.error?.traceId}`
-            : `Something went bad, server responded: ${err?.error?.message}`;
+            : `Something went bad, server responded: ${err?.error?.detail}`;
         this.getResources();
         this.toggleLoading = false;
         // console.log(error);
@@ -128,10 +127,9 @@ export class CatalogueTrainingResourcesComponent implements OnInit {
 
   getResources() {
     this.toggleLoading = true;
-    this.catalogueService.getTrainingsOfCatalogue(this.dataForm.get('catalogue_id').value,
-      this.dataForm.get('from').value, this.dataForm.get('quantity').value,
-      this.dataForm.get('order').value, this.dataForm.get('sort').value,
-      this.dataForm.get('status').value, this.dataForm.get('query').value).subscribe(
+    this.trainingResourceService.getResourceBundles(this.dataForm.get('from').value, this.dataForm.get('quantity').value,
+      this.dataForm.get('sort').value, this.dataForm.get('order').value, this.dataForm.get('query').value,
+      null, null, this.dataForm.get('status').value, [], [], this.catalogueId ? [this.catalogueId] : []).subscribe(
       res => {
           this.toggleLoading = false;
           this.trainingResourceBundles = res['results'];
@@ -158,7 +156,7 @@ export class CatalogueTrainingResourcesComponent implements OnInit {
         // UIkit.modal('#spinnerModal').hide();
         this.errorMessage = (err?.status >= 500 && err?.status < 600)
             ? `Something went wrong. If the issue persists, please contact support and provide the following error code: ${err?.error?.traceId}`
-            : `Something went bad, server responded: ${err?.error?.message}`;
+            : `Something went bad, server responded: ${err?.error?.detail}`;
         this.getResources();
       },
       () => {

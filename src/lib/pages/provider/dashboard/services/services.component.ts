@@ -20,7 +20,6 @@ declare var UIkit: any;
 })
 
 export class ServicesComponent implements OnInit {
-  catalogueConfigId: string = this.config.getProperty('catalogueId');
   protected readonly environment = environment;
   serviceORresource = environment.serviceORresource;
 
@@ -102,7 +101,7 @@ export class ServicesComponent implements OnInit {
   }
 
   getProvider() {
-    this.providerService.getServiceProviderBundleById(this.providerId, this.catalogueId).subscribe(
+    this.providerService.getServiceProviderBundleById(this.providerId).subscribe(
       providerBundle => {
         this.providerBundle = providerBundle;
       }, error => {
@@ -122,7 +121,7 @@ export class ServicesComponent implements OnInit {
       res => {},
       error => {
         UIkit.modal('#spinnerModal').hide();
-        this.errorMessage = 'Something went bad. ' + error.error.message ;
+        this.errorMessage = 'Something went bad. ' + error.error.detail ;
       },
       () => {
         UIkit.modal('#spinnerModal').hide();
@@ -172,7 +171,7 @@ export class ServicesComponent implements OnInit {
         UIkit.modal('#spinnerModal').hide();
         this.errorMessage = (err?.status >= 500 && err?.status < 600)
             ? `Something went wrong. If the issue persists, please contact support and provide the following error code: ${err?.error?.traceId}`
-            : `Something went bad, server responded: ${err?.error?.message}`;
+            : `Something went bad, server responded: ${err?.error?.detail}`;
         this.getServices();
       },
       () => {
@@ -200,7 +199,7 @@ export class ServicesComponent implements OnInit {
       }
     }
 
-    this.router.navigate([`/dashboard`, this.catalogueId, this.providerId, `resources`], {queryParams: map});
+    this.router.navigate([`/dashboard`, this.providerId, `resources`], {queryParams: map});
   }
 
   paginationInit() {

@@ -41,9 +41,6 @@ export class UpdateServiceProviderComponent extends ServiceProviderFormComponent
     this.editMode = true;
     const path = this.route.snapshot.routeConfig.path;
     this.providerId = this.route.snapshot.paramMap.get('providerId');
-    if (path.includes(':catalogueId')) {
-      this.catalogueId = this.route.snapshot.paramMap.get('catalogueId');
-    }
     if (path === 'view/:catalogueId/:providerId') {
       this.disable = true;
     }
@@ -54,7 +51,7 @@ export class UpdateServiceProviderComponent extends ServiceProviderFormComponent
   getProvider() {
     this.errorMessage = '';
     const path = this.route.snapshot.routeConfig.path;
-    this.serviceProviderService[(path === 'add/:providerId' ? 'getPendingProviderById' : 'getServiceProviderById')](this.providerId, this.catalogueId)
+    this.serviceProviderService[(path === 'add/:providerId' ? 'getPendingProviderById' : 'getServiceProviderById')](this.providerId)
       .subscribe(
         provider => {
           this.provider = provider;

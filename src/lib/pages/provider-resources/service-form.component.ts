@@ -5,7 +5,7 @@ import {NavigationService} from '../../services/navigation.service';
 import {ResourceService} from '../../services/resource.service';
 import {Provider, Service, Type, Vocabulary} from '../../domain/eic-model';
 import {Paging} from '../../domain/paging';
-import {Observable, of, zip} from 'rxjs';
+import {config, Observable, of, zip} from 'rxjs';
 import {PremiumSortPipe} from '../../shared/pipes/premium-sort.pipe';
 import {ConfigService} from '../../services/config.service';
 import {environment} from '../../../environments/environment';
@@ -35,8 +35,6 @@ export class ServiceFormComponent implements OnInit {
   formDataToSubmit: any = null;
 
   protected readonly isDevMode = isDevMode;
-  catalogueConfigId: string = this.config.getProperty('catalogueId');
-  catalogueName: string | null = null;
   protected readonly environment = environment;
   protected _marketplaceServicesURL = environment.marketplaceServicesURL;
   serviceORresource = environment.serviceORresource;
@@ -48,7 +46,7 @@ export class ServiceFormComponent implements OnInit {
   catalogueId: string;
   providerId: string;
   displayedProviderName: string;
-  displayedCatalogueName: string;
+  viewOnlyMode = false;
   submitMode: 'draft' | 'submit' = 'submit';
   editMode = false;
   hasChanges = false;
@@ -190,7 +188,7 @@ export class ServiceFormComponent implements OnInit {
         err => {
           this.showLoader = false;
           window.scrollTo(0, 0);
-          this.errorMessage = 'Something went bad, server responded: ' + err?.error?.message;
+          this.errorMessage = 'Something went bad, server responded: ' + err?.error?.detail;
         }
       );
     } else {
@@ -204,14 +202,17 @@ export class ServiceFormComponent implements OnInit {
         err => {
           this.showLoader = false;
           window.scrollTo(0, 0);
-          this.errorMessage = 'Something went bad, server responded: ' + err?.error?.message;
+          this.errorMessage = 'Something went bad, server responded: ' + err?.error?.detail;
         }
       );
     }
   }
 
   ngOnInit() {
-    this.catalogueName = this.config.getProperty('catalogueName');
+    const path = this.route.snapshot.routeConfig.path;
+    if (path.includes('view/:resourceId')) {
+      this.viewOnlyMode = true;
+    }
     this.showLoader = true;
     if ( !this.router.url.includes('/update/') || this.router.url.includes('/draft-resource/update/')) {
       this.saveAsDraftAvailable = true;
@@ -239,7 +240,7 @@ export class ServiceFormComponent implements OnInit {
                 this.errorMessage =
           (err?.status >= 500 && err?.status < 600)
             ? `Something went wrong. If the issue persists, please contact support and provide the following error code: ${err?.error?.traceId}`
-            : `Something went bad while getting the data for page initialization: ${err?.error?.message}`;
+            : `Something went bad while getting the data for page initialization: ${err?.error?.detail}`;
       },
       () => {
         this.premiumSort.transform(this.geographicalVocabulary, ['Europe', 'Worldwide']);
@@ -256,14 +257,16 @@ export class ServiceFormComponent implements OnInit {
         // }
 
         this.showProviderName(decodeURIComponent(this.providerId));
-        if(this.catalogueId == this.catalogueConfigId) this.displayedCatalogueName = `| Catalogue: ${this.config.getProperty('catalogueName')}`;
-        else if(this.catalogueId) this.showCatalogueName(this.catalogueId);
+        // if(this.catalogueId == this.catalogueConfigId) this.displayedCatalogueName = `| Catalogue: ${this.config.getProperty('catalogueName')}`;
+        // else if(this.catalogueId) this.showCatalogueName(this.catalogueId);
 
         if(!this.editMode){ //prefill field(s)
           this.payloadAnswer = {'answer': { service:
-                { 'resourceOwner': decodeURIComponent(this.providerId),
+                {
+                  'resourceOwner': decodeURIComponent(this.providerId),
                   'type': "Service",
-                  'catalogueId': this.catalogueConfigId}
+                  'nodePID': (this.config.getProperty('nodePidFixed')) ? this.config.getProperty('nodePid') : null
+                }
           }};
         }
         this.showLoader = false;
@@ -341,7 +344,7 @@ export class ServiceFormComponent implements OnInit {
         },
         error => {
           console.log(error);
-          this.vocabularyEntryForm.get('errorMessage').setValue(error.error.message);
+          this.vocabularyEntryForm.get('errorMessage').setValue(error.error.detail);
         },
         () => {
           this.vocabularyEntryForm.reset();
@@ -366,13 +369,6 @@ export class ServiceFormComponent implements OnInit {
     this.displayedProviderName = (provider.name ? `| Provider: ${provider.name} ` : '');
   }
 
-  showCatalogueName(catalogueId: string) {
-    if (catalogueId!='undefined' && catalogueId!=undefined){
-    this.catalogueService.getCatalogueById(catalogueId).subscribe(
-      catalogue => this.displayedCatalogueName = `| Catalogue: ${catalogue.name}`,
-      error => console.log(error)
-    );}
-  }
   /** <--Display Provider and Catalogue Names **/
 
 }

@@ -51,7 +51,7 @@
           </div>
 
           <div class="uk-inline">
-            <label class="" for="sort">Order by </label>
+            <label class="" for="sort">Sort by </label>
             <div class="uk-inline">
               <select class="uk-input uk-select" id="sort" (change)="handleChangeAndResetPage()" formControlName="sort">
                 <option value="name" selected>Name</option>
@@ -168,7 +168,7 @@
               </div>
               <div class="uk-width-2-3">
                 <h4 class="uk-margin-remove">
-                  <a [routerLink]="['/dashboard', providerBundle.catalogueId, providerBundle.id]" data-uk-tooltip title="Go to the provider dashboard">
+                  <a [routerLink]="['/dashboard', providerBundle.id]" data-uk-tooltip title="Go to the provider dashboard">
                     {{ providerBundle.organisation.name }}
                   </a>
                   <!--                    <a (click)="navigate(providerBundle.organisation.id)">{{providerBundle.organisation.name}}</a>-->
@@ -185,28 +185,28 @@
                   <span class="">Last Update: </span>{{ providerBundle.metadata.modifiedAt | date }}
                 </div>
               </div>
-              @if (catalogueId === catalogueConfigId) {
+              @if (catalogueId == null) {
                 <div class="uk-width-1-6">
                   <div class="action-buttons">
                     <!--                    <button class="uk-button uk-button-action uk-display-block uk-margin-small-top" (click)="toggleService(providerService)">-->
-                    <!--                      <ng-container *ngIf="providerService.active"><i class="fa fa-close fa-lg" aria-hidden="true"></i> Deactivate</ng-container>-->
+                    <!--                      <ng-container *ngIf="providerService.active"><span class="material-symbols-outlined uk-margin-small-right" style="vertical-align: middle;">close</span>Deactivate</ng-container>-->
                     <!--                      <ng-container *ngIf="!providerService.active">-->
                     <!--                        &lt;!&ndash;                        <div *ngIf="providerService.status === 'pending resource' || providerService.status === 'rejected resource'"&ndash;&gt;-->
                   <!--                        &lt;!&ndash;                             uk-tooltip="title:Cannot activate a pending/rejected resource."></div>&ndash;&gt;-->
-                  <!--                        <i class="fa fa-check fa-lg" aria-hidden="true"></i> Activate-->
+                  <!--                        <span class="material-symbols-outlined uk-margin-small-right" style="vertical-align: middle;">check</span>Activate-->
                 <!--                      </ng-container>-->
               <!--                    </button>-->
               <!--<button class="uk-button uk-button-action uk-display-block" (click)="navigate(providerService.service.id)">-->
-              <!--<i class="fa fa-pencil fa-lg"></i> Edit {{serviceORresource | lowercase}}-->
+              <!--<span class="material-symbols-outlined uk-margin-small-right" style="vertical-align: middle;">edit_square</span>Edit-->
             <!--</button>-->
             <button class="uk-button uk-button-action uk-display-block uk-margin-small-top" (click)="setSelectedProvider(providerBundle)">
-              <i class="fa fa-trash fa-lg" aria-hidden="true"></i> Delete provider
+              <span class="material-symbols-outlined uk-margin-small-right" style="vertical-align: middle;">delete</span>Delete
             </button>
           </div>
         </div>
       }
     </div>
-    @if (providerBundle.catalogueId !== catalogueConfigId) {
+    @if (providerBundle.catalogueId != null) {
       <hr class="uk-margin-top">
       <div class="uk-align-right">
         <button [routerLink]="['/provider/view/', providerBundle.catalogueId, providerBundle.id]" class="uk-button uk-button-link">

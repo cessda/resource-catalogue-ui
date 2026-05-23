@@ -31,7 +31,6 @@ export class TrainingResourceForm implements OnInit {
   payloadAnswer: object = null;
   formDataToSubmit: any = null;
 
-  catalogueConfigId: string = this.config.getProperty('catalogueId');
   protected _marketplaceServicesURL = environment.marketplaceServicesURL;
   serviceName = '';
   firstServiceForm = false;
@@ -39,6 +38,7 @@ export class TrainingResourceForm implements OnInit {
   pendingResource = false;
   catalogueId: string;
   providerId: string;
+  viewOnlyMode = false;
   editMode = false;
   hasChanges = false;
   serviceForm: UntypedFormGroup;
@@ -50,7 +50,6 @@ export class TrainingResourceForm implements OnInit {
   weights: string[] = [];
   tabs: boolean[] = [false, false, false, false, false, false, false, false, false, false, false, false];
   fb: UntypedFormBuilder = this.injector.get(UntypedFormBuilder);
-  disable = false;
   isPortalAdmin = false;
 
   requiredOnTab0 = 4;
@@ -196,7 +195,7 @@ export class TrainingResourceForm implements OnInit {
           this.errorMessage =
           (err?.status >= 500 && err?.status < 600)
             ? `Something went wrong. If the issue persists, please contact support and provide the following error code: ${err?.error?.traceId}`
-            : `Something went bad, server responded: ${err?.error?.message}`;
+            : `Something went bad, server responded: ${err?.error?.detail}`;
         }
       );
     } else {
@@ -218,7 +217,7 @@ export class TrainingResourceForm implements OnInit {
           this.errorMessage =
           (err?.status >= 500 && err?.status < 600)
             ? `Something went wrong. If the issue persists, please contact support and provide the following error code: ${err?.error?.traceId}`
-            : `Something went bad, server responded: ${err?.error?.message}`;
+            : `Something went bad, server responded: ${err?.error?.detail}`;
         }
       );
     }
@@ -259,7 +258,7 @@ export class TrainingResourceForm implements OnInit {
           this.errorMessage =
           (err?.status >= 500 && err?.status < 600)
             ? `Something went wrong. If the issue persists, please contact support and provide the following error code: ${err?.error?.traceId}`
-            : `Something went bad, server responded: ${err?.error?.message}`;
+            : `Something went bad, server responded: ${err?.error?.detail}`;
         }
       );
     } else if (this.serviceForm.valid) {
@@ -282,7 +281,7 @@ export class TrainingResourceForm implements OnInit {
           this.errorMessage =
           (err?.status >= 500 && err?.status < 600)
             ? `Something went wrong. If the issue persists, please contact support and provide the following error code: ${err?.error?.traceId}`
-            : `Something went bad, server responded: ${err?.error?.message}`;
+            : `Something went bad, server responded: ${err?.error?.detail}`;
         }
       );
     } else {
@@ -306,6 +305,10 @@ export class TrainingResourceForm implements OnInit {
 
   ngOnInit() {
     this.showLoader = true;
+    const path = this.route.snapshot.routeConfig.path;
+    if (path.includes('view/:trainingResourceId')) {
+      this.viewOnlyMode = true;
+    }
     zip(
       this.trainingResourceService.getProvidersNames('approved'),
       this.serviceProviderService.getFormModelById('m-b-training')
@@ -317,7 +320,7 @@ export class TrainingResourceForm implements OnInit {
                 this.errorMessage =
           (err?.status >= 500 && err?.status < 600)
             ? `Something went wrong. If the issue persists, please contact support and provide the following error code: ${err?.error?.traceId}`
-            : `Something went bad while getting the data for page initialization: ${err?.error?.message}`;
+            : `Something went bad while getting the data for page initialization: ${err?.error?.detail}`;
       },
       () => {
         this.providerId = this.route.snapshot.paramMap.get('providerId');
@@ -329,7 +332,8 @@ export class TrainingResourceForm implements OnInit {
                 {
                   'resourceOwner': decodeURIComponent(this.providerId),
                   'type': "TrainingMaterial",
-                  'catalogueId': this.catalogueConfigId
+                  'catalogueId': null,
+                  'nodePID': (this.config.getProperty('nodePidFixed')) ? this.config.getProperty('nodePid') : null
                 }
             }
           };
@@ -837,7 +841,7 @@ export class TrainingResourceForm implements OnInit {
         },
         error => {
           console.log(error);
-          this.vocabularyEntryForm.get('errorMessage').setValue(error.error.message);
+          this.vocabularyEntryForm.get('errorMessage').setValue(error.error.detail);
         },
         () => {
           this.vocabularyEntryForm.reset();

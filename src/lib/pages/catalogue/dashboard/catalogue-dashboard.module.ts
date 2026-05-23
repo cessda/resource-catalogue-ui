@@ -3,11 +3,7 @@ import {NgModule} from '@angular/core';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {SharedModule} from '../../../shared/shared.module';
 import {ReusableComponentsModule} from '../../../shared/reusablecomponents/reusable-components.module';
-// import {ProviderStatsComponent} from './providerStats/provider-stats.component';
-// import {ServiceStatsComponent} from './resource-dashboard/service-stats.component';
 // import {MarkdownModule} from 'ngx-markdown';
-// import {ProviderHistoryComponent} from './providerHistory/provider-history.component';
-// import {ProviderFullHistoryComponent} from './providerHistory/provider-full-history.component';
 import {HighchartsChartModule} from "highcharts-angular";
 import {CatalogueDashboardComponent} from "./catalogue-dashboard.component";
 import {CatalogueDashboardRouting} from "./catalogue-dashboard.routing";
@@ -16,6 +12,9 @@ import {CatalogueServicesComponent} from "./catalogueServices/catalogue-services
 import {CatalogueTrainingResourcesComponent} from "./catalogueTrainingResources/catalogue-training-resources.component";
 import {CatalogueDeployableServicesComponent} from "./catalogueDeployableServices/catalogue-deployable-services.component";
 import {CatalogueInfoComponent} from "./catalogueInfo/catalogue-info.component";
+import {CatalogueHistoryComponent} from "./catalogueHistory/catalogue-history.component";
+import {CatalogueFullHistoryComponent} from "./catalogueHistory/catalogue-full-history.component";
+import {CatalogueDatasourcesComponent} from "./catalogueDatasources/catalogue-datasources.component";
 
 @NgModule({
   imports: [
@@ -33,12 +32,13 @@ import {CatalogueInfoComponent} from "./catalogueInfo/catalogue-info.component";
   declarations: [
     CatalogueDashboardComponent,
     // ProviderStatsComponent,
-    // ProviderHistoryComponent,
-    // ProviderFullHistoryComponent,
     CatalogueProvidersComponent,
     CatalogueServicesComponent,
+    CatalogueDatasourcesComponent,
     CatalogueTrainingResourcesComponent,
-    CatalogueDeployableServicesComponent
+    CatalogueDeployableServicesComponent,
+    CatalogueHistoryComponent,
+    CatalogueFullHistoryComponent
     // ServiceStatsComponent
   ]
 })

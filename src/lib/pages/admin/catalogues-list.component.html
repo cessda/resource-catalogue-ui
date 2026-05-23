@@ -13,13 +13,6 @@
                 <div class="uk-alert uk-alert-danger">{{errorMessage}}</div>
               }
 
-              <div class="uk-flex uk-flex-right">
-                <form [formGroup]="dataForm" (ngSubmit)="handleChangeAndResetPage()" class="uk-search uk-search-default" style="width: 250px;">
-                  <span uk-search-icon></span>
-                  <input class="uk-search-input" type="search" placeholder="Locate catalogue (id, name)" formControlName="query">
-                </form>
-              </div>
-
               <div class="uk-grid uk-margin-top">
 
                 <div class="uk-width-1-4">
@@ -95,7 +88,7 @@
                       </div>
 
                       <div class="uk-inline">
-                        <label class="" for="sort">Order by </label>
+                        <label class="" for="sort">Sort by </label>
                         <div class="uk-inline">
                           <select class="uk-input uk-select" id="sort" (change)="handleChangeAndResetPage()" formControlName="sort">
                             <option value="name" selected>Name</option>
@@ -118,6 +111,13 @@
                           <option value="false">No</option>
                         </select>
                       </div>
+                    </div>
+
+                    <div class="uk-flex uk-flex-right">
+                      <form [formGroup]="dataForm" (ngSubmit)="handleChangeAndResetPage()" class="uk-search uk-search-default" style="width: 250px;">
+                        <span uk-search-icon></span>
+                        <input class="uk-search-input" type="search" placeholder="Search" formControlName="query">
+                      </form>
                     </div>
 
                   </form>
@@ -216,15 +216,6 @@
                                     </span>
                                   </div>
                                   <div class="uk-margin-small-top">
-                                    <span class="statusLabel">Abbreviation: </span>
-                                    @if (catalogueBundle.catalogue.abbreviation && (catalogueBundle.catalogue.abbreviation!==null)) {
-                                      {{ catalogueBundle.catalogue.abbreviation }}
-                                    }
-                                    @if (!catalogueBundle.catalogue.abbreviation || (catalogueBundle.catalogue.abbreviation===null)) {
-                                      not available
-                                    }
-                                  </div>
-                                  <div class="uk-margin-small-top">
                                     <span class="statusLabel">Catalogue Status: </span>{{ labels[statuses.indexOf(catalogueBundle.status)] | titlecase }}
                                   </div>
                                   <!--                              <div class="uk-margin-small-top">-->
@@ -267,17 +258,17 @@
                             <!--                            <button (click)="showDeletionModal(catalogueBundle)"-->
                             <!--                                    class="uk-button uk-button-link uk-margin-medium-left"-->
                             <!--                                    style="padding-right: 40px; border-right: 1px solid #ccc">-->
-                            <!--                              <i class="fa fa-trash fa-lg uk-margin-small-right" aria-hidden="true"></i> Delete Catalogue-->
+                            <!--<span class="material-symbols-outlined uk-margin-small-right" style="vertical-align: middle;">delete</span>Delete-->
                           <!--                            </button>-->
                           <button class="uk-button uk-button-link uk-margin-medium-left">
-                            <i class="fa fa-ellipsis-v fa-lg uk-margin-small-right"></i>More Options
+                            <span class="material-symbols-outlined" style="vertical-align: middle;">more_vert</span> More Options
                           </button>
                           <div uk-dropdown="mode: click">
                             <ul class="uk-nav uk-dropdown-nav uk-dropdown-close">
                               <!--                                <ng-container *ngIf="catalogueBundle.status === 'approved catalogue'">-->
                               <!--                                  <li class="uk-margin-small-bottom"-->
                               <!--                                      (click)="showAuditForm('main', catalogueBundle)">-->
-                              <!--                                    <a><i class="fa fa-check-circle-o fa-lg uk-margin-small-right"></i>Audit</a>-->
+                              <!--                                    <a><span class="material-symbols-outlined uk-margin-small-right" style="vertical-align: middle;">check_circle</span>Audit</a>-->
                             <!--                                  </li>-->
                             <!--                                  <li class="uk-nav-divider"></li>-->
                           <!--                                </ng-container>-->
@@ -285,19 +276,19 @@
                           @if ((catalogueBundle.status === 'pending') || (catalogueBundle.status === 'rejected')) {
                             <li
                               (click)="showActionModal(catalogueBundle, 'approved')" class="uk-margin-small-top">
-                              <a><i aria-hidden="true" class="fa fa-thumbs-up uk-margin-small-right"></i>Approve</a>
+                              <a><span class="material-symbols-outlined uk-margin-small-right" style="vertical-align: middle;">thumb_up</span>Approve</a>
                             </li>
                           }
                           @if ((catalogueBundle.status === 'pending')) {
                             <li
                               (click)="showActionModal(catalogueBundle, 'rejected')" class="uk-margin-small-top">
-                              <a><i aria-hidden="true" class="fa fa-thumbs-down uk-margin-small-right"></i>Reject</a>
+                              <a><span class="material-symbols-outlined uk-margin-small-right" style="vertical-align: middle;">thumb_down</span>Reject</a>
                             </li>
                           }
                           @if (catalogueBundle.status === 'approved') {
                             <li class="uk-margin-small-bottom"
                               (click)="showAuditForm(catalogueBundle)">
-                              <a><i class="fa fa-check-circle-o fa-lg uk-margin-small-right"></i>Audit</a>
+                              <a><span class="material-symbols-outlined uk-margin-small-right" style="vertical-align: middle;">check_circle</span>Audit</a>
                             </li>
                           }
                           <li class="uk-nav-divider"></li>
@@ -305,14 +296,14 @@
                             <li
                               (click)="showSuspensionModal(catalogueBundle)"
                               class="uk-margin-small-top">
-                              <a><i aria-hidden="true" class="fa fa-dot-circle-o uk-margin-small-right"></i>Suspend</a>
+                              <a><span class="material-symbols-outlined uk-margin-small-right" style="vertical-align: middle;">adjust</span>Suspend</a>
                             </li>
                           }
                           @if ((catalogueBundle.suspended==true)) {
                             <li
                               (click)="showSuspensionModal(catalogueBundle)"
                               class="uk-margin-small-top">
-                              <a><i aria-hidden="true" class="fa fa-dot-circle-o uk-margin-small-right"></i>Unsuspend</a>
+                              <a><span class="material-symbols-outlined uk-margin-small-right" style="vertical-align: middle;">adjust</span>Unsuspend</a>
                             </li>
                           }
                         </ul>

@@ -40,7 +40,7 @@ export class AddFirstDatasourceComponent extends DatasourceFormComponent impleme
     this.datasourceId = this.route.snapshot.paramMap.get('datasourceId');
     if (this.datasourceId) {
       this.editMode = true;
-      this.datasourceService.getDatasourceBundleById(this.datasourceId, this.catalogueConfigId).subscribe(
+      this.datasourceService.getDatasourceBundleById(this.datasourceId).subscribe(
         dsBundle => {
 
         },
