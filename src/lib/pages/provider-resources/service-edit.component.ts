@@ -18,12 +18,10 @@ import {ConfigService} from "../../services/config.service";
 @Component({
     selector: 'app-service-edit',
     templateUrl: './service-form.component.html',
-    styleUrls: ['../provider/service-provider-form.component.css'],
     standalone: false
 })
 export class ServiceEditComponent extends ServiceFormComponent implements OnInit {
 
-  catalogueConfigId: string = this.config.getProperty('catalogueId');
   private sub: Subscription;
   // private serviceID: string;
 
@@ -45,9 +43,7 @@ export class ServiceEditComponent extends ServiceFormComponent implements OnInit
 
   ngOnInit() {
     const path = this.route.snapshot.routeConfig.path;
-    if (path.includes(':catalogueId')) { this.catalogueId = this.route.snapshot.paramMap.get('catalogueId') }
-    else { this.catalogueId = this.catalogueConfigId }
-    if (path === ':catalogueId/:providerId/resource/view/:resourceId') this.disable = true; // view-only mode
+    if (path === ':providerId/resource/view/:resourceId') this.disable = true; // view-only mode
     super.ngOnInit();
     if (sessionStorage.getItem('service')) {
       sessionStorage.removeItem('service');
@@ -60,28 +56,7 @@ export class ServiceEditComponent extends ServiceFormComponent implements OnInit
         if (this.pendingService) {
           this.resourceService.getPendingService(this.serviceId)
             .subscribe(service => {
-                this.payloadAnswer = {'answer': {Service: service}};
-                //clear below
-                if (service.mainContact === null) //in case of unauthorized access backend will not show sensitive info
-                  this.navigator.go('/forbidden')
-                ResourceService.removeNulls(service);
-                //remove catalogueId. prefix for same catalogue entries
-                if (service.requiredResources) {
-                  service.requiredResources = service.requiredResources.map(value => value.startsWith(this.catalogueId) ? value.substring(this.catalogueId.length + 1) : value);
-                }
-                if (service.relatedResources) {
-                  service.relatedResources = service.relatedResources.map(value => value.startsWith(this.catalogueId) ? value.substring(this.catalogueId.length + 1) : value);
-                }
-                this.serviceForm.patchValue(service);
-                for (const i in this.serviceForm.controls) {
-                  if (this.serviceForm.controls[i].value === null) {
-                    this.serviceForm.controls[i].setValue('');
-                  }
-                }
-                if (this.serviceForm.get('lastUpdate').value) {
-                  const lastUpdate = new Date(this.serviceForm.get('lastUpdate').value);
-                  this.serviceForm.get('lastUpdate').setValue(this.datePipe.transform(lastUpdate, 'yyyy-MM-dd'));
-                }
+                this.payloadAnswer = {'answer': {service: service}};
               },
               err => this.errorMessage = 'Could not get the data for the requested service. ' + err.error,
               () => {
@@ -101,36 +76,14 @@ export class ServiceEditComponent extends ServiceFormComponent implements OnInit
         }
       });
       if (!this.pendingService) {
-        this.resourceService.getServiceBundleById(this.serviceId, this.catalogueId)
+        this.resourceService.getServiceBundleById(this.serviceId)
           .subscribe(serviceBundle => {
               this.service = serviceBundle.service;
               const parsedService = {
                 ...this.service,
                 horizontalService: typeof this.service.horizontalService === 'boolean' ? this.service.horizontalService.toString() : this.service.horizontalService
               };
-              this.payloadAnswer = {'answer': {Service: parsedService}};
-              //clear below
-
-/*              if (serviceBundle.service.mainContact === null) //in case of unauthorized access backend will not show sensitive info
-                this.navigator.go('/forbidden')
-              ResourceService.removeNulls(serviceBundle.service);
-              //remove catalogueId. prefix for same catalogue entries
-              if (serviceBundle.service.requiredResources) {
-                serviceBundle.service.requiredResources = serviceBundle.service.requiredResources.map(value => value.startsWith(this.catalogueId) ? value.substring(this.catalogueId.length + 1) : value);
-              }
-              if (serviceBundle.service.relatedResources) {
-                serviceBundle.service.relatedResources = serviceBundle.service.relatedResources.map(value => value.startsWith(this.catalogueId) ? value.substring(this.catalogueId.length + 1) : value);
-              }*/
-              this.serviceForm.patchValue(serviceBundle.service);
-              for (const i in this.serviceForm.controls) {
-                if (this.serviceForm.controls[i].value === null) {
-                  this.serviceForm.controls[i].setValue('');
-                }
-              }
-              if (this.serviceForm.get('lastUpdate').value) {
-                const lastUpdate = new Date(this.serviceForm.get('lastUpdate').value);
-                this.serviceForm.get('lastUpdate').setValue(this.datePipe.transform(lastUpdate, 'yyyy-MM-dd'));
-              }
+              this.payloadAnswer = {'answer': {service: parsedService}};
             },
             err => this.errorMessage = 'Could not get the data for the requested service. ' + err.error,
             () => {

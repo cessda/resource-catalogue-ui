@@ -20,12 +20,10 @@ const mapWorld = require('@highcharts/map-collection/custom/world.geo.json')
 @Component({
     selector: 'app-service-stats',
     templateUrl: './service-stats.component.html',
-    styleUrls: ['./service-stats.component.css'],
     standalone: false
 })
 export class ServiceStatsComponent implements OnInit, OnDestroy {
 
-  catalogueConfigId: string = this.config.getProperty('catalogueId');
   catalogueName: string | null = null;
   marketplaceServicesURL = environment.marketplaceServicesURL;
   serviceORresource = environment.serviceORresource;
@@ -71,7 +69,7 @@ export class ServiceStatsComponent implements OnInit, OnDestroy {
       zip(
         this.resourceService.getEU(),
         this.resourceService.getWW(),
-        this.resourceService.getService(params['resourceId'], params['catalogueId'])
+        this.resourceService.getService(params['resourceId'])
       ).subscribe(suc => {
           this.EU = <string[]>suc[0];
           this.WW = <string[]>suc[1];
@@ -93,38 +91,40 @@ export class ServiceStatsComponent implements OnInit, OnDestroy {
 
     // this.setCountriesForService(this.service.geographicalAvailabilities);
 
-    this.resourceService.getVisitsForService(this.service.id, period).pipe(
-      map(data => {
-        // THESE 3 weird lines should be deleted when pgl makes everything ok :)
-        return Object.entries(data).map((d) => {
-          return [new Date(d[0]).getTime(), d[1]];
-        }).sort((l, r) => l[0] - r[0]);
-      })).subscribe(
-      data => this.setVisitsForService(data),
-      err => {
-        this.errorMessage = 'An error occurred while retrieving visits for this service. ' + err.error;
-      }
-    );
+    //TODO: enable when back transitions its API calls
 
-    if (this.catalogueName === 'EOSC') {
-      this.resourceService.getAddToProjectForService(this.service.id, period).pipe(
-        map(data => {
-          // THESE 3 weird lines should be deleted when pgl makes everything ok :)
-          return Object.entries(data).map((d) => {
-            return [new Date(d[0]).getTime(), d[1]];
-          }).sort((l, r) => l[0] - r[0]);
-        })).subscribe(
-        data => this.setAddsToProjectForService(data),
-        err => {
-          this.errorMessage = 'An error occurred while retrieving adds to project for this service. ' + err.error;
-        }
-      );
-    }
+    // this.resourceService.getVisitsForService(this.service.id, period).pipe(
+    //   map(data => {
+    //     // THESE 3 weird lines should be deleted when pgl makes everything ok :)
+    //     return Object.entries(data).map((d) => {
+    //       return [new Date(d[0]).getTime(), d[1]];
+    //     }).sort((l, r) => l[0] - r[0]);
+    //   })).subscribe(
+    //   data => this.setVisitsForService(data),
+    //   err => {
+    //     this.errorMessage = 'An error occurred while retrieving visits for this service. ' + err.error;
+    //   }
+    // );
+    //
+    // if (this.catalogueName === 'EOSC') {
+    //   this.resourceService.getAddToProjectForService(this.service.id, period).pipe(
+    //     map(data => {
+    //       // THESE 3 weird lines should be deleted when pgl makes everything ok :)
+    //       return Object.entries(data).map((d) => {
+    //         return [new Date(d[0]).getTime(), d[1]];
+    //       }).sort((l, r) => l[0] - r[0]);
+    //     })).subscribe(
+    //     data => this.setAddsToProjectForService(data),
+    //     err => {
+    //       this.errorMessage = 'An error occurred while retrieving adds to project for this service. ' + err.error;
+    //     }
+    //   );
+    // }
 
     if (dontGetServices) {
 
     } else {
-      this.resourceService.getServiceBundleById(this.service.id, this.catalogueId).subscribe(
+      this.resourceService.getServiceBundleById(this.service.id).subscribe(
         res => { if (res!=null) this.resourceBundle = res },
         err => {
           this.errorMessage = 'An error occurred while retrieving the history of this service. ' + err.error;
@@ -147,13 +147,13 @@ export class ServiceStatsComponent implements OnInit, OnDestroy {
 
   onRecommendationsTabClick() {
     if (!this.recommendationsOverTimeForService) {
-      this.recommendationsService.getRecommendationsOverTime(this.catalogueId.concat('.',this.service.resourceOrganisation), this.catalogueId.concat('.',this.service.id)).subscribe(
+      this.recommendationsService.getRecommendationsOverTime(this.catalogueId.concat('.',this.service.resourceOwner), this.catalogueId.concat('.',this.service.id)).subscribe(
         data => this.setRecommendationsOverTimeForService(data),
         err => this.errorMessage = 'An error occurred while retrieving visits for this service. ' + err.error
       );
     }
     if (this.enrichedRecommendationsOfCompetitorsServices.length == 0) {
-      this.recommendationsService.getCompetitorsServices(this.catalogueId.concat('.',this.service.resourceOrganisation), this.catalogueId.concat('.',this.service.id)).subscribe(
+      this.recommendationsService.getCompetitorsServices(this.catalogueId.concat('.',this.service.resourceOwner), this.catalogueId.concat('.',this.service.id)).subscribe(
         (data: any[]) => {
           if (data && data.length === 0) {
             this.emptyResponseOnGetCompetitorsServices = true;
@@ -366,8 +366,7 @@ export class ServiceStatsComponent implements OnInit, OnDestroy {
       for (const competitor of item.competitors) {
         // if (competitor.service_id !== 'tnp.lumi_etais__regular_access') {
           // competitorPublicIds.push(competitor.service_id);
-          const isPublicId = /\..*\./.test(competitor.service_id); // if it has two dot occurrences its a publicId
-          this.resourceService.getService(competitor.service_id, isPublicId ? competitor.service_id.split(".")[0] : this.catalogueConfigId).subscribe(
+          this.resourceService.getService(competitor.service_id).subscribe(
             res => {
               const competitorWithDetails = {
                 service_id: competitor.service_id,
@@ -394,8 +393,7 @@ export class ServiceStatsComponent implements OnInit, OnDestroy {
     }
 
     for (const item of this.enrichedRecommendationsOfCompetitorsServices) {
-      const isPublicId = /\..*\./.test(item.service_id); // if it has two dot occurrences its a publicId
-      this.resourceService.getService(item.service_id, isPublicId ? item.service_id.split(".")[0] : this.catalogueConfigId).subscribe(
+      this.resourceService.getService(item.service_id).subscribe(
         res => {
           item.logo = res.logo;
           item.name = res.name;

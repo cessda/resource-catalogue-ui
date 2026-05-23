@@ -10,7 +10,6 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {UntypedFormArray, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup} from '@angular/forms';
 import {URLParameter} from '../../domain/url-parameter';
 import {Paging} from '../../domain/paging';
-import {getLocaleDateFormat} from '@angular/common';
 import {zip} from 'rxjs';
 import {TrainingResourceService} from "../../services/training-resource.service";
 import {pidHandler} from "../../shared/pid-handler/pid-handler.service";
@@ -24,7 +23,6 @@ declare var UIkit: any;
     standalone: false
 })
 export class ServiceProvidersListComponent implements OnInit {
-  catalogueConfigId: string | null = null;
   catalogueName: string | null = null;
   url = environment.API_ENDPOINT;
   serviceORresource = environment.serviceORresource;
@@ -109,7 +107,7 @@ export class ServiceProvidersListComponent implements OnInit {
   public auditLabels: Array<string> = ['Valid', 'Not audited', 'Invalid and updated', 'Invalid and not updated'];
   @ViewChildren("auditCheckboxes") auditCheckboxes: QueryList<ElementRef>;
 
-  public statuses: Array<string> = ['approved provider', 'pending provider', 'rejected provider'];
+  public statuses: Array<string> = ['approved', 'pending', 'rejected'];
   public labels: Array<string> = ['Approved', 'Pending', 'Rejected'];
   @ViewChildren("checkboxes") checkboxes: QueryList<ElementRef>;
 
@@ -130,7 +128,6 @@ export class ServiceProvidersListComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.catalogueConfigId = this.config.getProperty('catalogueId');
     this.catalogueName = this.config.getProperty('catalogueName');
     if (!this.authenticationService.isAdmin()) {
       this.router.navigateByUrl('/home');
@@ -247,8 +244,11 @@ export class ServiceProvidersListComponent implements OnInit {
         this.geographicalVocabulary = this.vocabularies[Type.COUNTRY];
         this.languagesVocabulary = this.vocabularies[Type.LANGUAGE];
       },
-      error => {
-        this.errorMessage = 'Something went bad while getting the data for page initialization. ' + JSON.stringify(error.error.message);
+      err => {
+                this.errorMessage =
+          (err?.status >= 500 && err?.status < 600)
+            ? `Something went wrong. If the issue persists, please contact support and provide the following error code: ${err?.error?.traceId}`
+            : `Something went bad while getting the data for page initialization: ${err?.error?.detail}`;
       },
       () => {}
     );
@@ -499,10 +499,10 @@ export class ServiceProvidersListComponent implements OnInit {
   }
 
   updateSelectedProvider() {
-    if (this.selectedProvider && (this.selectedProvider.status !== 'approved provider')) {
+    if (this.selectedProvider && (this.selectedProvider.status !== 'approved')) {
       const i = this.statusList.indexOf(this.selectedProvider.status);
       let active = false;
-      if (this.statusList[i + 1] === 'approved provider') {
+      if (this.statusList[i + 1] === 'approved') {
         active = true;
       }
       const updatedFields = Object.assign({
@@ -565,7 +565,7 @@ export class ServiceProvidersListComponent implements OnInit {
 
   suspendProvider() {
     UIkit.modal('#spinnerModal').show();
-    this.serviceProviderService.suspendProvider(this.selectedProvider.id, this.selectedProvider.provider.catalogueId, !this.selectedProvider.suspended)
+    this.serviceProviderService.suspendProvider(this.selectedProvider.id, this.selectedProvider.catalogueId, !this.selectedProvider.suspended)
       .subscribe(
         res => {
           UIkit.modal('#suspensionModal').hide();
@@ -576,7 +576,10 @@ export class ServiceProvidersListComponent implements OnInit {
           UIkit.modal('#suspensionModal').hide();
           UIkit.modal('#spinnerModal').hide();
           this.loadingMessage = '';
-          this.errorMessage = err.error.error;
+          this.errorMessage =
+          (err?.status >= 500 && err?.status < 600)
+            ? `Something went wrong. If the issue persists, please contact support and provide the following error code: ${err?.error?.traceId}`
+            : `Something went bad, server responded: ${err?.error?.detail}`;
           window.scroll(0,0);
         },
         () => {
@@ -598,7 +601,7 @@ export class ServiceProvidersListComponent implements OnInit {
 
   statusChangeAction() {
     this.loadingMessage = '';
-    const active = this.pushedApprove && (this.newStatus === 'approved provider');
+    const active = this.pushedApprove && (this.newStatus === 'approved');
     if(this.verify){ //use verify method
       this.serviceProviderService.verifyProvider(this.selectedProvider.id, active, this.adminActionsMap[this.newStatus].statusId)
         .subscribe(
@@ -617,8 +620,8 @@ export class ServiceProvidersListComponent implements OnInit {
             this.loadingMessage = '';
           }
         );
-    } else { //use publish method
-      this.serviceProviderService.publishProvider(this.selectedProvider.id, active)
+    } else { //use setActive method
+      this.serviceProviderService.activateProvider(this.selectedProvider.id, active)
         .subscribe(
           res => {
             /*this.providers = [];
@@ -681,7 +684,7 @@ export class ServiceProvidersListComponent implements OnInit {
   }
 
   auditProviderAction(action: string) {
-    this.serviceProviderService.auditProvider(this.selectedProvider.id, action, this.selectedProvider.provider.catalogueId, this.commentControl.value)
+    this.serviceProviderService.auditProvider(this.selectedProvider.id, action, this.selectedProvider.catalogueId, this.commentControl.value)
       .subscribe(
         res => {
           if (!this.showSideAuditForm) {
@@ -707,7 +710,7 @@ export class ServiceProvidersListComponent implements OnInit {
   showHLE(bundle: ProviderBundle) {
     this.loadingMessage = 'Loading HLE...'
     this.selectedProvider = bundle;
-    this.serviceProviderService.getAllResourcesUnderHLE(this.selectedProvider.provider.name).subscribe(
+    this.serviceProviderService.getAllResourcesUnderHLE(this.selectedProvider.organisation.name).subscribe(
       res => {
         this.resourcesUnderHLE = res;
       },
@@ -856,7 +859,7 @@ export class ServiceProvidersListComponent implements OnInit {
         }
       );
     }
-    //TODO: could add training
+    //could add training
 /*    if (resourceType === 'trainingResource' && this.hasCreatedFirstDatasource(providerBundleId)) {
       const resourceId = this.serviceTemplatePerProvider.filter(x => x.providerId === providerBundleId)[0].serviceId;
       this.trainingResourceService.getService(resourceId).subscribe(

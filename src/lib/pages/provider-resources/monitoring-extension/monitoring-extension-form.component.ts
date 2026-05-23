@@ -19,7 +19,6 @@ import {ConfigService} from "../../../services/config.service";
 @Component({
     selector: 'app-resource-monitoring-extension-form',
     templateUrl: './monitoring-extension-form.component.html',
-    styleUrls: ['../../provider/service-provider-form.component.css'],
     providers: [FormControlService],
     standalone: false
 })
@@ -30,7 +29,6 @@ export class MonitoringExtensionFormComponent implements OnInit {
   // vocabulariesMap: { [name: string]: { id: string, name: string }[]; } = {}
   payloadAnswer: object = null;
 
-  catalogueConfigId: string = this.config.getProperty('catalogueId');
   serviceORresource = environment.serviceORresource;
   serviceName = '';
   firstServiceForm = false;
@@ -78,7 +76,7 @@ export class MonitoringExtensionFormComponent implements OnInit {
   submitForm(value) {
     window.scrollTo(0, 0);
     if (!value[0].value.Monitoring.serviceId) value[0].value.Monitoring.serviceId = decodeURIComponent(this.serviceId);
-    this.serviceExtensionsService.uploadMonitoringService(value[0].value.Monitoring, this.editMode, this.catalogueConfigId, this.resourceType).subscribe(
+    this.serviceExtensionsService.uploadMonitoringService(value[0].value.Monitoring, this.editMode, null, this.resourceType).subscribe(
       _service => {
         this.showLoader = false;
         if (this.resourceType==='service') return this.navigator.resourceDashboard(this.providerId, this.serviceId); // navigate to resource-dashboard

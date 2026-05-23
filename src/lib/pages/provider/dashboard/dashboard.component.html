@@ -14,15 +14,15 @@
 
         <ul>
 
-          @if (providerStatus === 'approved provider') {
+          @if (providerStatus === 'approved') {
             <li [routerLinkActive]="['current_section']" #stats="routerLinkActive">
-              <a [routerLink]="['/dashboard', catalogueId, providerId, 'stats']">
+              <a [routerLink]="['/dashboard', providerId, 'stats']">
                 <img src="{{stats.isActive ? 'assets/images/new-icons/stats-active.svg' : 'assets/images/new-icons/stats.svg'}}" class="uk-margin-small-right">
                 Statistics
               </a>
             </li>
           }
-          @if (providerStatus !== 'approved provider') {
+          @if (providerStatus !== 'approved') {
             <li [routerLinkActive]="['current_section']" #stats="routerLinkActive" title="Statistics are disabled until your Provider completes the onboarding process.">
               <a>
                 <img src="{{stats.isActive ? 'assets/images/new-icons/stats-active.svg' : 'assets/images/new-icons/stats.svg'}}" class="uk-margin-small-right">
@@ -31,83 +31,134 @@
             </li>
           }
           <li [routerLinkActive]="['current_section']" #accountingStats="routerLinkActive">
-            <a [routerLink]="['/dashboard', catalogueId, providerId, 'accountingStats']">
+            <a [routerLink]="['/dashboard', providerId, 'accountingStats']">
               <img src="{{accountingStats.isActive ? 'assets/images/new-icons/stats-active.svg' : 'assets/images/new-icons/stats.svg'}}" class="uk-margin-small-right">
               Accounting Statistics
             </a>
           </li>
           <li [routerLinkActive]="['current_section']" #history="routerLinkActive">
-            <a [routerLink]="['/dashboard', catalogueId, providerId, 'history']">
+            <a [routerLink]="['/dashboard', providerId, 'history']">
               <img src="{{history.isActive ? 'assets/images/new-icons/history-active.svg' : 'assets/images/new-icons/history.svg'}}" class="uk-margin-small-right">
               Update History
             </a>
           </li>
           <li [routerLinkActive]="['current_section']" #info="routerLinkActive">
-            <a [routerLink]="['/dashboard', catalogueId, providerId, 'info']">
+            <a [routerLink]="['/dashboard', providerId, 'info']">
               <img src="{{info.isActive ? 'assets/images/new-icons/info.svg' : 'assets/images/new-icons/info.svg'}}" class="uk-margin-small-right">
               Info
             </a>
           </li>
-          @if (catalogueId !== catalogueConfigId) {
+          @if (catalogueId != null) { <!-- TODO check -->
             <li [routerLinkActive]="['current_section']" #services="routerLinkActive">
-              <a [routerLink]="['/dashboard', catalogueId, providerId, 'resources']">
+              <a [routerLink]="['/dashboard', providerId, 'resources']">
                 <img src="{{services.isActive ? 'assets/images/new-icons/services-active.svg' : 'assets/images/new-icons/services.svg'}}" class="uk-margin-small-right">
                 {{serviceORresource}}s
               </a>
             </li>
+            <li [routerLinkActive]="['current_section']" #catalogues="routerLinkActive">
+              <a [routerLink]="['/dashboard', providerId, 'catalogues']">
+                <img src="{{catalogues.isActive ? 'assets/images/new-icons/services-active.svg' : 'assets/images/new-icons/services.svg'}}" class="uk-margin-small-right">
+                Catalogues
+              </a>
+            </li>
+<!--            <li [routerLinkActive]="['current_section']" #catalogues="routerLinkActive">-->
+<!--              <a [routerLink]="['/dashboard', providerId, 'catalogues']">-->
+<!--                <img src="{{catalogues.isActive ? 'assets/images/new-icons/services-active.svg' : 'assets/images/new-icons/services.svg'}}" class="uk-margin-small-right">-->
+<!--                Catalogues-->
+<!--              </a>-->
+<!--            </li>-->
+            <li [routerLinkActive]="['current_section']" #datasources="routerLinkActive">
+              <a [routerLink]="['/dashboard', providerId, 'datasources']">
+                <img src="{{datasources.isActive ? 'assets/images/new-icons/services-active.svg' : 'assets/images/new-icons/services.svg'}}" class="uk-margin-small-right">
+                Datasources
+              </a>
+            </li>
             <li [routerLinkActive]="['current_section']" #trainingResources="routerLinkActive">
-              <a [routerLink]="['/dashboard', catalogueId, providerId, 'training-resources']">
+              <a [routerLink]="['/dashboard', providerId, 'training-resources']">
                 <img src="{{trainingResources.isActive ? 'assets/images/new-icons/services-active.svg' : 'assets/images/new-icons/services.svg'}}" class="uk-margin-small-right">
                 Training Resources
               </a>
             </li>
             <li [routerLinkActive]="['current_section']" #deployableServices="routerLinkActive">
-              <a [routerLink]="['/dashboard', catalogueId, providerId, 'deployable-services']">
+              <a [routerLink]="['/dashboard', providerId, 'deployable-services']">
                 <img src="{{deployableServices.isActive ? 'assets/images/new-icons/services-active.svg' : 'assets/images/new-icons/services.svg'}}" class="uk-margin-small-right">
-                Deployable Services
+                Deployable Application
               </a>
             </li>
           }
-          @if (catalogueId === catalogueConfigId) {
-            <li [routerLinkActive]="['current_section']" #services="routerLinkActive">
-              <a [routerLink]="['/dashboard', catalogueId, providerId, 'resources']">
-                <img src="{{services.isActive ? 'assets/images/new-icons/services-active.svg' : 'assets/images/new-icons/services.svg'}}" class="uk-margin-small-right">
-                {{serviceORresource}}s
+          @if (catalogueId == null) {
+            <li class="sidebar-hover-parent" [class.submenu-open]="showResourcesSubmenu" (click)="showResourcesSubmenu = !showResourcesSubmenu">
+              <a class="uk-nav-link">
+                <img src="assets/images/new-icons/services.svg" class="uk-margin-small-right">
+                Resources
+                <span uk-icon="icon: chevron-right; ratio: 0.8" class="submenu-arrow"></span>
               </a>
-            </li>
-            <li [routerLinkActive]="['current_section']" #sharedServices="routerLinkActive">
-              <a [routerLink]="['/dashboard', catalogueId, providerId, 'shared-resources']">
-                <img src="{{sharedServices.isActive ? 'assets/images/new-icons/services-active.svg' : 'assets/images/new-icons/services.svg'}}" class="uk-margin-small-right">
-                Shared {{serviceORresource}}s
-              </a>
-            </li>
-            <li [routerLinkActive]="['current_section']" #draftServices="routerLinkActive">
-              <a [routerLink]="['/dashboard', catalogueId, providerId, 'draft-resources']">
-                <img src="{{draftServices.isActive ? 'assets/images/new-icons/draft-services-active.svg' : 'assets/images/new-icons/draft-services.svg'}}" class="uk-margin-small-right">
-                Draft {{serviceORresource}}s
-              </a>
-            </li>
-            <li [routerLinkActive]="['current_section']" #trainingResources="routerLinkActive">
-              <a [routerLink]="['/dashboard', catalogueId, providerId, 'training-resources']">
-                <img src="{{trainingResources.isActive ? 'assets/images/new-icons/services-active.svg' : 'assets/images/new-icons/services.svg'}}" class="uk-margin-small-right">
-                Training Resources
-              </a>
-            </li>
-            <li [routerLinkActive]="['current_section']" #deployableServices="routerLinkActive">
-              <a [routerLink]="['/dashboard', catalogueId, providerId, 'deployable-services']">
-                <img src="{{deployableServices.isActive ? 'assets/images/new-icons/services-active.svg' : 'assets/images/new-icons/services.svg'}}" class="uk-margin-small-right">
-                Deployable Services
-              </a>
-            </li>
-            <li [routerLinkActive]="['current_section']" #guidelines="routerLinkActive">
-              <a [routerLink]="['/dashboard', catalogueId, providerId, 'guidelines']">
-                <img src="{{guidelines.isActive ? 'assets/images/new-icons/services-active.svg' : 'assets/images/new-icons/services.svg'}}" class="uk-margin-small-right">
-                Guidelines
-              </a>
+              <ul class="sidebar-submenu" (click)="$event.stopPropagation()">
+                <li [routerLinkActive]="['current_section']" #services="routerLinkActive">
+                  <a [routerLink]="['/dashboard', providerId, 'resources']">
+                    <img src="{{services.isActive ? 'assets/images/new-icons/services-active.svg' : 'assets/images/new-icons/services.svg'}}" class="uk-margin-small-right">
+                    {{serviceORresource}}s
+                  </a>
+                </li>
+                <li [routerLinkActive]="['current_section']" #sharedServices="routerLinkActive">
+                  <a [routerLink]="['/dashboard', providerId, 'shared-resources']">
+                    <img src="{{sharedServices.isActive ? 'assets/images/new-icons/services-active.svg' : 'assets/images/new-icons/services.svg'}}" class="uk-margin-small-right">
+                    Shared {{serviceORresource}}s
+                  </a>
+                </li>
+                <li [routerLinkActive]="['current_section']" #draftServices="routerLinkActive">
+                  <a [routerLink]="['/dashboard', providerId, 'draft-resources']">
+                    <img src="{{draftServices.isActive ? 'assets/images/new-icons/draft-services-active.svg' : 'assets/images/new-icons/draft-services.svg'}}" class="uk-margin-small-right">
+                    Draft {{serviceORresource}}s
+                  </a>
+                </li>
+                <li [routerLinkActive]="['current_section']" #catalogues="routerLinkActive">
+                  <a [routerLink]="['/dashboard', providerId, 'catalogues']">
+                    <img src="{{catalogues.isActive ? 'assets/images/new-icons/services-active.svg' : 'assets/images/new-icons/services.svg'}}" class="uk-margin-small-right">
+                    Catalogues
+                  </a>
+                </li>
+                <li [routerLinkActive]="['current_section']" #datasources="routerLinkActive">
+                  <a [routerLink]="['/dashboard', providerId, 'datasources']">
+                    <img src="{{datasources.isActive ? 'assets/images/new-icons/services-active.svg' : 'assets/images/new-icons/services.svg'}}" class="uk-margin-small-right">
+                    Datasources
+                  </a>
+                </li>
+                <li [routerLinkActive]="['current_section']" #draftDatasources="routerLinkActive">
+                  <a [routerLink]="['/dashboard', providerId, 'draft-datasources']">
+                    <img src="{{draftDatasources.isActive ? 'assets/images/new-icons/draft-services-active.svg' : 'assets/images/new-icons/draft-services.svg'}}" class="uk-margin-small-right">
+                    Draft Datasources
+                  </a>
+                </li>
+                <li [routerLinkActive]="['current_section']" #trainingResources="routerLinkActive">
+                  <a [routerLink]="['/dashboard', providerId, 'training-resources']">
+                    <img src="{{trainingResources.isActive ? 'assets/images/new-icons/services-active.svg' : 'assets/images/new-icons/services.svg'}}" class="uk-margin-small-right">
+                    Training Resources
+                  </a>
+                </li>
+                <li [routerLinkActive]="['current_section']" #deployableServices="routerLinkActive">
+                  <a [routerLink]="['/dashboard', providerId, 'deployable-services']">
+                    <img src="{{deployableServices.isActive ? 'assets/images/new-icons/services-active.svg' : 'assets/images/new-icons/services.svg'}}" class="uk-margin-small-right">
+                    Deployable Application
+                  </a>
+                </li>
+                <li [routerLinkActive]="['current_section']" #adapters="routerLinkActive">
+                  <a [routerLink]="['/dashboard', providerId, 'adapters']">
+                    <img src="{{adapters.isActive ? 'assets/images/new-icons/services-active.svg' : 'assets/images/new-icons/services.svg'}}" class="uk-margin-small-right">
+                    Adapters
+                  </a>
+                </li>
+                <li [routerLinkActive]="['current_section']" #guidelines="routerLinkActive">
+                  <a [routerLink]="['/dashboard', providerId, 'guidelines']">
+                    <img src="{{guidelines.isActive ? 'assets/images/new-icons/services-active.svg' : 'assets/images/new-icons/services.svg'}}" class="uk-margin-small-right">
+                    Guidelines
+                  </a>
+                </li>
+              </ul>
             </li>
           }
           <!--<li [routerLinkActive]="['current_section']" #messages="routerLinkActive">
-          <a [routerLink]="['/dashboard', catalogueId, providerId, 'messages']" routerLinkActive="">
+          <a [routerLink]="['/dashboard', providerId, 'messages']" routerLinkActive="">
             <img src="{{messages.isActive ? 'assets/images/new-icons/envelope-active.svg' : 'assets/images/new-icons/envelope.svg'}}" class="uk-margin-small-right">
             Messages
           </a>
@@ -121,38 +172,83 @@
 
       <ul>
 
-        @if (catalogueId === catalogueConfigId) {
-          @if (providerBundle?.templateStatus === 'rejected template' || (providerBundle?.status === 'approved provider' && providerBundle?.templateStatus === 'no template status')) {
-            <li>
-              <a [routerLink]="['/provider/' + pidHandler.customEncodeURIComponent(providerId) + '/add-first-service/']">
+        @if (catalogueId == null) {
+
+          @if (providerBundle?.status === 'pending') {
+            <li class="sidebar-hover-parent" (click)="showPendingNotification()">
+              <a class="uk-nav-link" title="Disabled until provider gets approved.">
                 <img src="../../../../assets/images/new-icons/add-service.svg" class="uk-margin-small-right">
-                Add first {{serviceORresource}}
-              </a>
-            </li>
-            <li>
-              <a [routerLink]="['/provider/' + pidHandler.customEncodeURIComponent(providerId) + '/add-first-training-resource/']">
-                <img src="../../../../assets/images/new-icons/add-service.svg" class="uk-margin-small-right">
-                Add first Training Resource
-              </a>
-            </li>
-            <li>
-              <a [routerLink]="['/provider/' + pidHandler.customEncodeURIComponent(providerId) + '/add-first-deployable-service/']">
-                <img src="../../../../assets/images/new-icons/add-service.svg" class="uk-margin-small-right">
-                Add first Deployable Service
+                Add first Resource
+                <span uk-icon="icon: chevron-right; ratio: 0.8" class="submenu-arrow"></span>
               </a>
             </li>
           }
-          @if (providerBundle?.status === 'pending provider') {
-            <li uk-tooltip="Disabled until provider gets approved.">
-              <a><img src="../../../../assets/images/new-icons/add-service.svg" class="uk-margin-small-right"> Add first {{serviceORresource}}</a>
-            </li>
-            <li uk-tooltip="Disabled until provider gets approved.">
-              <a><img src="../../../../assets/images/new-icons/add-service.svg" class="uk-margin-small-right"> Add first Training Resource</a>
-            </li>
-            <li uk-tooltip="Disabled until provider gets approved.">
-              <a><img src="../../../../assets/images/new-icons/add-service.svg" class="uk-margin-small-right"> Add first Deployable Service</a>
+
+          @if (providerBundle?.templateStatus === 'rejected template' || (providerBundle?.status === 'approved' && providerBundle?.templateStatus === 'no template status')) {
+            <li class="sidebar-hover-parent" [class.submenu-open]="showAddFirstSubmenu" (click)="showAddFirstSubmenu = !showAddFirstSubmenu">
+              <a class="uk-nav-link">
+                <img src="../../../../assets/images/new-icons/add-service.svg" class="uk-margin-small-right">
+                Add first Resource
+                <span uk-icon="icon: chevron-right; ratio: 0.8" class="submenu-arrow"></span>
+              </a>
+              <ul class="sidebar-submenu" (click)="$event.stopPropagation()">
+                <li>
+                  <a [routerLink]="['/provider/' + pidHandler.customEncodeURIComponent(providerId) + '/add-first-service/']">
+                    Add first {{serviceORresource}}
+                  </a>
+                </li>
+                <li>
+                  <a [routerLink]="['/provider/' + pidHandler.customEncodeURIComponent(providerId) + '/datasource/select-first/']">
+                    Add first Datasource
+                  </a>
+                </li>
+                <li>
+                  <a [routerLink]="['/provider/' + pidHandler.customEncodeURIComponent(providerId) + '/add-first-training-resource/']">
+                    Add first Training Resource
+                  </a>
+                </li>
+                <li>
+                  <a [routerLink]="['/provider/' + pidHandler.customEncodeURIComponent(providerId) + '/add-first-deployable-service/']">
+                    Add first Deployable Application
+                  </a>
+                </li>
+              </ul>
             </li>
           }
+          <!--@if (providerBundle?.status === 'pending') {
+            <ul class="uk-nav uk-nav-default">
+              <li class="uk-parent sidebar-hover-parent">
+                <a href="#" class="uk-nav-link">
+                  <img src="../../../../assets/images/new-icons/add-service.svg" class="uk-margin-small-right">
+                  Add first Resource
+                  <span uk-icon="icon: chevron-right; ratio: 0.8" class="uk-margin-auto-left submenu-arrow"></span>
+                </a>
+
+                <ul class="uk-nav-sub sidebar-submenu">
+                  <li>
+                    <a href="#" uk-tooltip="Disabled until provider gets approved.">
+                      Add first {{serviceORresource}}
+                    </a>
+                  </li>
+                  <li>
+                    <a href="#" uk-tooltip="Disabled until provider gets approved.">
+                      Add first Datasource
+                    </a>
+                  </li>
+                  <li>
+                    <a href="#" uk-tooltip="Disabled until provider gets approved.">
+                      Add first Training Resource
+                    </a>
+                  </li>
+                  <li>
+                    <a href="#" uk-tooltip="Disabled until provider gets approved.">
+                      Add first Deployable Application
+                    </a>
+                  </li>
+                </ul>
+              </li>
+            </ul>
+          }-->
           <!--            this can be omitted unless told otherwise
           <ng-container *ngIf="providerBundle?.status === 'pending provider' || providerBundle?.status === 'rejected provider'">
             <li title="This action is disabled until your Provider proceeds on the onboarding process.">
@@ -162,24 +258,54 @@
               </a>
             </li>
           </ng-container>-->
-          @if (providerBundle?.templateStatus === 'approved template') {
-            <li>
-              <a [routerLink]="['/provider/' + providerId + '/resource/add/']">
+          @if (providerBundle?.templateStatus === 'approved template' || providerBundle?.status === 'approved') {
+            <li class="sidebar-hover-parent" [class.submenu-open]="showAddNewSubmenu" (click)="showAddNewSubmenu = !showAddNewSubmenu">
+              <a class="uk-nav-link">
                 <img src="../../../../assets/images/new-icons/add-service.svg" class="uk-margin-small-right">
-                Add new {{serviceORresource}}
+                Add new Resource
+                <span uk-icon="icon: chevron-right; ratio: 0.8" class="submenu-arrow"></span>
               </a>
-            </li>
-            <li>
-              <a [routerLink]="['/provider/' + providerId + '/training-resource/add/']">
-                <img src="../../../../assets/images/new-icons/add-service.svg" class="uk-margin-small-right">
-                Add new Training Resource
-              </a>
-            </li>
-            <li>
-              <a [routerLink]="['/provider/' + providerId + '/deployable-service/add/']">
-                <img src="../../../../assets/images/new-icons/add-service.svg" class="uk-margin-small-right">
-                Add new Deployable Service
-              </a>
+              <ul class="sidebar-submenu" (click)="$event.stopPropagation()">
+                @if (providerBundle?.templateStatus === 'approved template') {
+                  <li>
+                    <a [routerLink]="['/provider/' + providerId + '/resource/add/']">
+                      Add new {{serviceORresource}}
+                    </a>
+                  </li>
+                  <li>
+                    <a [routerLink]="['/provider/' + providerId + '/datasource/select/']">
+                      Add new Datasource
+                    </a>
+                  </li>
+                  <li>
+                    <a [routerLink]="['/provider/' + providerId + '/training-resource/add/']">
+                      Add new Training Resource
+                    </a>
+                  </li>
+                  <li>
+                    <a [routerLink]="['/provider/' + providerId + '/deployable-service/add/']">
+                      Add new Deployable Application
+                    </a>
+                  </li>
+                }
+                @if (providerBundle?.status === 'approved') {
+                  <li>
+                    <a [routerLink]="['/catalogue/' + providerId + '/add/']">
+                      Add new Catalogue
+                    </a>
+                  </li>
+                  <li>
+                    <a [routerLink]="['/provider/' + providerId + '/adapter/add/']">
+                      Add new Adapter
+                    </a>
+                  </li>
+                  <li>
+                    <a [routerLink]="['/guidelines/' + providerId + '/add/']">
+                      Add new Guideline
+                    </a>
+                  </li>
+                }
+              </ul>
             </li>
           }
           <!--            <ng-container *ngIf="providerBundle?.templateStatus !== 'approved template'">
@@ -190,19 +316,25 @@
             <a><img src="assets/images/new-icons/add-service.svg" class="uk-margin-small-right"> Add new Training Resource</a>
           </li>
         </ng-container>-->
-        @if (providerBundle?.status === 'approved provider') {
+<!--        @if (providerBundle?.status === 'approved') {
+          <li>
+            <a [routerLink]="['/provider/' + providerId + '/adapter/add/']">
+              <img src="../../../../assets/images/new-icons/add-service.svg" class="uk-margin-small-right">
+              Add new Adapter
+            </a>
+          </li>
           <li>
             <a [routerLink]="['/guidelines/' + providerId + '/add/']">
               <img src="../../../../assets/images/new-icons/add-service.svg" class="uk-margin-small-right">
               Add new Guideline
             </a>
           </li>
-        }
-        @if (providerBundle?.status !== 'approved provider') {
+        }-->
+<!--        @if (providerBundle?.status !== 'approved') {
           <li uk-tooltip="Disabled until provider gets approved.">
             <a><img src="../../../../assets/images/new-icons/add-service.svg" class="uk-margin-small-right"> Add new Guideline</a>
           </li>
-        }
+        }-->
         <li>
           <a [routerLink]="['/provider/update/' + pidHandler.customEncodeURIComponent(providerId)]">
             <img src="../../../../assets/images/new-icons/update-provider.svg" class="uk-margin-small-right">Update Provider
@@ -215,9 +347,9 @@
         </li>
       }
 
-      @if (catalogueId !== catalogueConfigId && providerBundle) {
+      @if (providerBundle.catalogueId != null) {
         <li>
-          <a href="/provider/view/{{providerBundle?.provider.catalogueId}}/{{pidHandler.customEncodeURIComponent(providerBundle?.id)}}">
+          <a href="/provider/view/{{pidHandler.customEncodeURIComponent(providerBundle.catalogueId)}}/{{pidHandler.customEncodeURIComponent(providerBundle?.id)}}">
             <i class="fa fa-eye fa-lg uk-margin-small-right" aria-hidden="true" style="color: #26c0e2"></i> View Provider
           </a>
         </li>

@@ -11,7 +11,6 @@ import {pidHandler} from "../../../../shared/pid-handler/pid-handler.service";
 @Component({
     selector: 'app-service-history',
     templateUrl: './service-history.component.html',
-    styleUrls: ['./service-stats.component.css'],
     standalone: false
 })
 export class ServiceHistoryComponent implements OnInit, OnDestroy {
@@ -24,17 +23,16 @@ export class ServiceHistoryComponent implements OnInit, OnDestroy {
   private sub: Subscription;
   public pidHandler: pidHandler;
 
-  serviceHistory: Paging<LoggingInfo>;
+  serviceHistory: LoggingInfo[];
 
   constructor(private route: ActivatedRoute, private navigator: NavigationService, private resourceService: ResourceService) {
   }
 
   ngOnInit() {
-    this.catalogueId = window.location.href.split('dashboard/')[1].split('/')[0];
     // this.sub = this.route.params.subscribe(params => {
     this.sub = this.route.parent.params.subscribe(params => {
       zip(
-        this.resourceService.getService(params['resourceId'], params['catalogueId'])
+        this.resourceService.getService(params['resourceId'])
       ).subscribe(suc => {
           this.service = <Service>suc[0];
           this.getDataForService();
@@ -51,7 +49,7 @@ export class ServiceHistoryComponent implements OnInit, OnDestroy {
   }
 
   getDataForService() {
-    this.resourceService.getServiceLoggingInfoHistory(this.service.id, this.catalogueId).subscribe(
+    this.resourceService.getServiceLoggingInfoHistory(this.service.id).subscribe(
       res => this.serviceHistory = res,
       err => {
         this.errorMessage = 'An error occurred while retrieving the history of this service. ' + err.error;

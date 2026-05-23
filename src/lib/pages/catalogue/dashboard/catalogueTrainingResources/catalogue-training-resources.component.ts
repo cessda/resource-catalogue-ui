@@ -8,25 +8,23 @@ import {CatalogueService} from "../../../../services/catalogue.service";
 import {TrainingResourceService} from "../../../../services/training-resource.service";
 import {ConfigService} from "../../../../services/config.service";
 import {environment} from "../../../../../environments/environment";
+import {ResourceService} from "../../../../services/resource.service";
 
 declare var UIkit: any;
 
 @Component({
     selector: 'app-catalogue-training-resources',
     templateUrl: './catalogue-training-resources.component.html',
-    styleUrls: ['../../../provider/dashboard/services/service.component.css'],
     standalone: false
 })
 
 export class CatalogueTrainingResourcesComponent implements OnInit {
 
-  catalogueConfigId: string | null = null;
-
   formPrepare = {
     from: '0',
     quantity: '10',
     order: 'ASC',
-    sort: 'title',
+    sort: 'name',
     query: '',
     active: '',
     status: '',
@@ -55,12 +53,12 @@ export class CatalogueTrainingResourcesComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private catalogueService: CatalogueService,
+    private resourceService: ResourceService,
     private trainingResourceService: TrainingResourceService,
     private config: ConfigService
   ) {}
 
   ngOnInit(): void {
-    this.catalogueConfigId = this.config.getProperty('catalogueId');
     this.catalogueId = this.route.parent.snapshot.paramMap.get('catalogue');
 
     this.getCatalogue();
@@ -104,16 +102,18 @@ export class CatalogueTrainingResourcesComponent implements OnInit {
   }
 
   toggleTrainingResource(bundle: TrainingResourceBundle) {
-    if (bundle.status === 'pending resource' || bundle.status === 'rejected resource') {
+    if (bundle.status === 'pending' || bundle.status === 'rejected') {
       this.errorMessage = `You cannot activate a ${bundle.status}.`;
       window.scrollTo(0, 0);
       return;
     }
     this.toggleLoading = true;
-    this.trainingResourceService.publishTrainingResource(bundle.id, !bundle.active).subscribe(
+    this.trainingResourceService.activateTrainingResource(bundle.id, !bundle.active).subscribe(
       res => {},
-      error => {
-        this.errorMessage = 'Something went bad. ' + error.error ;
+      err => {
+        this.errorMessage = (err?.status >= 500 && err?.status < 600)
+            ? `Something went wrong. If the issue persists, please contact support and provide the following error code: ${err?.error?.traceId}`
+            : `Something went bad, server responded: ${err?.error?.detail}`;
         this.getResources();
         this.toggleLoading = false;
         // console.log(error);
@@ -127,10 +127,9 @@ export class CatalogueTrainingResourcesComponent implements OnInit {
 
   getResources() {
     this.toggleLoading = true;
-    this.catalogueService.getTrainingsOfCatalogue(this.dataForm.get('catalogue_id').value,
-      this.dataForm.get('from').value, this.dataForm.get('quantity').value,
-      this.dataForm.get('order').value, this.dataForm.get('sort').value,
-      this.dataForm.get('status').value, this.dataForm.get('query').value).subscribe(
+    this.trainingResourceService.getResourceBundles(this.dataForm.get('from').value, this.dataForm.get('quantity').value,
+      this.dataForm.get('sort').value, this.dataForm.get('order').value, this.dataForm.get('query').value,
+      null, null, this.dataForm.get('status').value, [], [], this.catalogueId ? [this.catalogueId] : []).subscribe(
       res => {
           this.toggleLoading = false;
           this.trainingResourceBundles = res['results'];
@@ -153,10 +152,11 @@ export class CatalogueTrainingResourcesComponent implements OnInit {
     // UIkit.modal('#spinnerModal').show();
     this.trainingResourceService.deleteTrainingResource(id).subscribe(
       res => {},
-      error => {
-        // console.log(error);
+      err => {
         // UIkit.modal('#spinnerModal').hide();
-        this.errorMessage = 'Something went bad. ' + error.error ;
+        this.errorMessage = (err?.status >= 500 && err?.status < 600)
+            ? `Something went wrong. If the issue persists, please contact support and provide the following error code: ${err?.error?.traceId}`
+            : `Something went bad, server responded: ${err?.error?.detail}`;
         this.getResources();
       },
       () => {

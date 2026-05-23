@@ -9,7 +9,7 @@
           </div>
           <div class="uk-margin-medium-left">
             <h3 class="uk-margin-remove">{{catalogueBundle.catalogue.name}}</h3>
-            <div><span class="status-label">Catalogue Status: </span>{{ catalogueBundle.status.substr(0,catalogueBundle.status.indexOf(' ')) | titlecase }}</div>
+            <div><span class="status-label">Catalogue Status: </span>{{ catalogueBundle.status | titlecase }}</div>
           </div>
         </div>
       }
@@ -51,7 +51,7 @@
           </div>
 
           <div class="uk-inline">
-            <label class="" for="sort">Order by </label>
+            <label class="" for="sort">Sort by </label>
             <div class="uk-inline">
               <select class="uk-input uk-select" id="sort" (change)="handleChangeAndResetPage()" formControlName="sort">
                 <option value="name" selected>Name</option>
@@ -69,9 +69,9 @@
             <div class="uk-inline">
               <select class="uk-input uk-select" id="status" (change)="handleChangeAndResetPage()" formControlName="status">
                 <option value="" selected>All</option>
-                <option value="approved resource">Approved Resource</option>
-                <option value="pending resource">Pending Resource</option>
-                <option value="rejected resource">Rejected Resource</option>
+                <option value="approved">Approved Resource</option>
+                <option value="pending">Pending Resource</option>
+                <option value="rejected">Rejected Resource</option>
               </select>
             </div>
           </div>
@@ -127,17 +127,17 @@
       @for (providerBundle of catalogueProviders.results; track providerBundle) {
         <div class="uk-card uk-card-small uk-card-default uk-margin-bottom service-card">
           <div class="uk-card-body">
-            @if (providerBundle.status === 'approved resource') {
+            @if (providerBundle.status === 'approved') {
               <div class="approved">
                 <div class="uk-card-badge uk-label">Approved</div>
               </div>
             }
-            @if (providerBundle.status === 'pending resource') {
+            @if (providerBundle.status === 'pending') {
               <div class="pending">
                 <div class="uk-card-badge uk-label">Pending</div>
               </div>
             }
-            @if ((providerBundle.status === 'rejected resource')) {
+            @if ((providerBundle.status === 'rejected')) {
               <div class="rejected">
                 <div class="uk-card-badge uk-label">Rejected</div>
               </div>
@@ -164,18 +164,18 @@
             </div>
             <div class="uk-grid uk-flex-middle uk-margin-remove-top">
               <div class="uk-width-1-6">
-                <img src="{{providerBundle.provider.logo ? providerBundle.provider.logo : '/assets/images/broken_image-black-48dp.svg'}}">
+                <img src="{{providerBundle.organisation.logo ? providerBundle.organisation.logo : '/assets/images/broken_image-black-48dp.svg'}}">
               </div>
               <div class="uk-width-2-3">
                 <h4 class="uk-margin-remove">
-                  <a [routerLink]="['/dashboard', providerBundle.provider.catalogueId, providerBundle.id]" data-uk-tooltip title="Go to the provider dashboard">
-                    {{ providerBundle.provider.name }}
+                  <a [routerLink]="['/dashboard', providerBundle.id]" data-uk-tooltip title="Go to the provider dashboard">
+                    {{ providerBundle.organisation.name }}
                   </a>
-                  <!--                    <a (click)="navigate(providerBundle.provider.id)">{{providerBundle.provider.name}}</a>-->
+                  <!--                    <a (click)="navigate(providerBundle.organisation.id)">{{providerBundle.organisation.name}}</a>-->
                 </h4>
                 <div class="uk-margin-small-top">
-                  @if (providerBundle.provider.description) {
-                    <span class="uk-margin-small-top"><markdown [data]="providerBundle.provider.description"></markdown></span>
+                  @if (providerBundle.organisation.description) {
+                    <span class="uk-margin-small-top"><markdown [data]="providerBundle.organisation.description"></markdown></span>
                   }
                 </div>
                 <div class="uk-margin-small-top">
@@ -185,31 +185,31 @@
                   <span class="">Last Update: </span>{{ providerBundle.metadata.modifiedAt | date }}
                 </div>
               </div>
-              @if (catalogueId === catalogueConfigId) {
+              @if (catalogueId == null) {
                 <div class="uk-width-1-6">
                   <div class="action-buttons">
                     <!--                    <button class="uk-button uk-button-action uk-display-block uk-margin-small-top" (click)="toggleService(providerService)">-->
-                    <!--                      <ng-container *ngIf="providerService.active"><i class="fa fa-close fa-lg" aria-hidden="true"></i> Deactivate</ng-container>-->
+                    <!--                      <ng-container *ngIf="providerService.active"><span class="material-symbols-outlined uk-margin-small-right" style="vertical-align: middle;">close</span>Deactivate</ng-container>-->
                     <!--                      <ng-container *ngIf="!providerService.active">-->
                     <!--                        &lt;!&ndash;                        <div *ngIf="providerService.status === 'pending resource' || providerService.status === 'rejected resource'"&ndash;&gt;-->
                   <!--                        &lt;!&ndash;                             uk-tooltip="title:Cannot activate a pending/rejected resource."></div>&ndash;&gt;-->
-                  <!--                        <i class="fa fa-check fa-lg" aria-hidden="true"></i> Activate-->
+                  <!--                        <span class="material-symbols-outlined uk-margin-small-right" style="vertical-align: middle;">check</span>Activate-->
                 <!--                      </ng-container>-->
               <!--                    </button>-->
               <!--<button class="uk-button uk-button-action uk-display-block" (click)="navigate(providerService.service.id)">-->
-              <!--<i class="fa fa-pencil fa-lg"></i> Edit {{serviceORresource | lowercase}}-->
+              <!--<span class="material-symbols-outlined uk-margin-small-right" style="vertical-align: middle;">edit_square</span>Edit-->
             <!--</button>-->
             <button class="uk-button uk-button-action uk-display-block uk-margin-small-top" (click)="setSelectedProvider(providerBundle)">
-              <i class="fa fa-trash fa-lg" aria-hidden="true"></i> Delete provider
+              <span class="material-symbols-outlined uk-margin-small-right" style="vertical-align: middle;">delete</span>Delete
             </button>
           </div>
         </div>
       }
     </div>
-    @if (providerBundle.provider.catalogueId !== catalogueConfigId) {
+    @if (providerBundle.catalogueId != null) {
       <hr class="uk-margin-top">
       <div class="uk-align-right">
-        <button [routerLink]="['/provider/view/', providerBundle.provider.catalogueId, providerBundle.id]" class="uk-button uk-button-link">
+        <button [routerLink]="['/provider/view/', providerBundle.catalogueId, providerBundle.id]" class="uk-button uk-button-link">
           <i class="fa fa-eye fa-lg uk-margin-small-right" aria-hidden="true"></i> View Provider
         </button>
       </div>
@@ -289,7 +289,7 @@
 <div id="actionModal" uk-modal>
   <div class="uk-modal-dialog uk-modal-body uk-margin-auto-vertical">
     @if (selectedProvider) {
-      <h6>Are you sure you want to delete the provider '{{selectedProvider.provider.name}}'</h6>
+      <h6>Are you sure you want to delete the provider '{{selectedProvider.organisation.name}}'</h6>
     }
     <div class="uk-text-right">
       <button class="uk-button uk-button-default uk-modal-close uk-margin-small-right" type="button">Cancel</button>

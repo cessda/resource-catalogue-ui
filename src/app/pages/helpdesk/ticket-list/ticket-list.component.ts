@@ -71,15 +71,18 @@ export class TicketListComponent implements OnInit {
 
     this.helpdeskService.getUserTickets().subscribe({
       next: (tickets) => {
-        this.tickets = tickets;
+        this.tickets = tickets ?? [];
+        this.currentPage = 1;
         this.updatePagination();
-        this.loading = false;
       },
       error: (err) => {
         this.error = "Failed to load tickets. Please try again.";
         this.loading = false;
         console.error("Error loading tickets:", err);
       },
+      complete: () => {
+        this.loading = false;
+      }
     });
   }
 
@@ -92,11 +95,12 @@ export class TicketListComponent implements OnInit {
       return this._cachedFilteredTickets;
     }
 
+    const tickets = this.tickets ?? [];
     let filtered: HelpdeskTicketResponse[];
     if (this.selectedStatus === "all") {
-      filtered = this.tickets;
+      filtered = tickets;
     } else {
-      filtered = this.tickets.filter(
+      filtered = tickets.filter(
         (ticket) => this.getTicketState(ticket) === this.selectedStatus
       );
     }
@@ -355,9 +359,9 @@ export class TicketListComponent implements OnInit {
 
   getTicketCount(status: string): number {
     if (status === "all") {
-      return this.tickets.length;
+      return this.tickets?.length ?? 0;
     }
-    return this.tickets.filter(
+    return (this.tickets ?? []).filter(
       (ticket) => this.getTicketState(ticket) === status
     ).length;
   }

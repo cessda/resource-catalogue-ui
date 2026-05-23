@@ -1,5 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
+import {pidHandler} from "../pid-handler/pid-handler.service";
 
 @Component({
     selector: 'app-dashboard-breadcrumbs',
@@ -14,7 +15,7 @@ export class DashboardBreadcrumbsComponent implements OnInit {
   pathToDashboard: string;
   isSharedDashboard = -1;
 
-  constructor(private activatedRoute: ActivatedRoute) {}
+  constructor(private activatedRoute: ActivatedRoute, public pidHandler: pidHandler) {}
 
   ngOnInit() {
 
@@ -24,7 +25,7 @@ export class DashboardBreadcrumbsComponent implements OnInit {
 
     this.isSharedDashboard = window.location.href.indexOf("shared-resource-dashboard");
 
-    this.pathToDashboard = `/dashboard/${this.catalogueId}/${this.providerId}/stats`;
+    this.pathToDashboard = '/dashboard/' + this.pidHandler.customEncodeURIComponent(this.catalogueId) + '/' + this.pidHandler.customEncodeURIComponent(this.providerId);
   }
 
 }

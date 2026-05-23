@@ -17,7 +17,6 @@ import {FeedbackComponent} from '../lib/shared/feedback/feedback.component';
 import {ServiceProviderFormComponent} from '../lib/pages/provider/service-provider-form.component';
 import {MyServiceProvidersComponent} from '../lib/pages/provider/my-service-providers.component';
 import {AddFirstServiceComponent} from '../lib/pages/provider-resources/add-first-service.component';
-import {ServiceProviderInfoComponent} from '../lib/pages/provider/service-provider-info.component';
 import {UpdateServiceProviderComponent} from '../lib/pages/provider/update-service-provider.component';
 import {ReusableComponentsModule} from '../lib/shared/reusablecomponents/reusable-components.module';
 import {ServiceProviderService} from '../lib/services/service-provider.service';
@@ -43,7 +42,6 @@ import {HomeComponent} from './pages/home/home.component';
 import { RouterModule } from '@angular/router';
 import {CatalogueService} from "../lib/services/catalogue.service";
 import {ServiceExtensionsService} from "../lib/services/service-extensions.service";
-import {ResourceExtrasService} from "../lib/services/resource-extras.service";
 import {DatasourceService} from "../lib/services/datasource.service";
 import {TrainingResourceService} from "../lib/services/training-resource.service";
 import {RecommendationsService} from "../lib/services/recommendations.service";
@@ -147,7 +145,6 @@ export function highchartsFactory() {
         DeployableServiceService,
         ServiceProviderService,
         ServiceExtensionsService,
-        ResourceExtrasService,
         GuidelinesService,
         CatalogueService,
         EmailService,

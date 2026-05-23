@@ -1,4 +1,4 @@
-import {UntypedFormArray, UntypedFormBuilder, FormControl, UntypedFormGroup, Validators} from '@angular/forms';
+import {UntypedFormBuilder, UntypedFormGroup, FormGroup} from '@angular/forms';
 import {Component, Injector, OnInit, ViewChild, isDevMode} from '@angular/core';
 import {AuthenticationService} from '../../services/authentication.service';
 import {NavigationService} from '../../services/navigation.service';
@@ -13,24 +13,26 @@ import {FormControlService} from "../../../dynamic-catalogue/services/form-contr
 import {SurveyComponent} from "../../../dynamic-catalogue/pages/dynamic-form/survey.component";
 import {zip} from "rxjs";
 import {AdaptersService} from "../../services/adapters.service";
+import {pidHandler} from "../../shared/pid-handler/pid-handler.service";
+
+declare var UIkit: any;
 
 @Component({
     selector: 'app-resource-adapters-form',
     templateUrl: './adapters-form.component.html',
-    styleUrls: ['../provider/service-provider-form.component.css'],
     providers: [FormControlService],
     standalone: false
 })
 export class AdaptersFormComponent implements OnInit {
   @ViewChild(SurveyComponent) child: SurveyComponent
   model: Model = null;
-  vocabulariesMap: Map<string, object[]> = null;
-  subVocabulariesMap: Map<string, object[]> = null;
   payloadAnswer: object = null;
 
-  catalogueConfigId: string | null = null;
+  catalogueName: string | null = null;
   serviceORresource = environment.serviceORresource;
   serviceName = '';
+  providerId: string;
+  catalogueId: string;
   firstServiceForm = false;
   showLoader = false;
   pendingService = false;
@@ -66,7 +68,8 @@ export class AdaptersFormComponent implements OnInit {
               protected adaptersService: AdaptersService,
               protected route: ActivatedRoute,
               protected router: Router,
-              protected config: ConfigService
+              protected config: ConfigService,
+              public pidHandler: pidHandler
   ) {
     this.resourceService = this.injector.get(ResourceService);
     this.fb = this.injector.get(UntypedFormBuilder);
@@ -74,28 +77,33 @@ export class AdaptersFormComponent implements OnInit {
     this.weights[0] = this.authenticationService.getUserEmail().split('@')[0];
   }
 
-  submitForm(formData) {
+  submitForm(formData: FormGroup) {
     window.scrollTo(0, 0);
-    if (!formData.value.Adapter.serviceId) formData.value.Adapter.serviceId = decodeURIComponent(this.adapterId);
-    this.adaptersService.uploadAdapter(formData.value.Adapter, this.editMode).subscribe(
+    this.showLoader = true;
+    let adapterValue = formData.value.adapter;
+    adapterValue = FormControlService.cleanObjectInPlace(adapterValue); // clean form before submission
+    this.adaptersService.uploadAdapter(adapterValue, this.editMode).subscribe(
       _service => {
         this.showLoader = false;
-        this.router.navigate(['/adapters/my']);
+        this.router.navigate(['/dashboard/' + this.pidHandler.customEncodeURIComponent(this.providerId) +'/adapters/']);
       },
       err => {
         this.showLoader = false;
         window.scrollTo(0, 0);
         console.log(err);
-        this.errorMessage = 'Something went bad, server responded: ' + JSON.stringify(err.error.message);
+        this.errorMessage =
+          (err?.status >= 500 && err?.status < 600)
+            ? `Something went wrong. If the issue persists, please contact support and provide the following error code: ${err?.error?.traceId}`
+            : `Something went bad, server responded: ${err?.error?.detail}`;
       }
     );
   }
 
   ngOnInit() {
-    this.catalogueConfigId = this.config.getProperty('catalogueId');
-    this.showLoader = true;
+    this.providerId = this.route.snapshot.paramMap.get('providerId');
+    this.catalogueName = this.config.getProperty('catalogueName');
+    // this.showLoader = true;
     this.getIdsFromCurrentPath();
-    this.getVocs();
 
     this.adaptersService.getFormModelById('m-b-adapter').subscribe(
       res => this.model = res,
@@ -105,15 +113,11 @@ export class AdaptersFormComponent implements OnInit {
           const currentUser = this.getCurrentUserInfo();
           this.payloadAnswer = {
             'answer': {
-              Adapter: {
-                'catalogueId': this.catalogueConfigId,
-                'admins': [
-                  {
-                    name: currentUser.firstname,
-                    surname: currentUser.lastname,
-                    email: currentUser.email
-                  }
-                ]
+              adapter: {
+                'resourceOwner': decodeURIComponent(this.providerId),
+                'type': "Adapter",
+                'catalogueId': null,
+                'nodePID': (this.config.getProperty('nodePidFixed')) ? this.config.getProperty('nodePid') : null
               }
             }
           };
@@ -126,65 +130,19 @@ export class AdaptersFormComponent implements OnInit {
         res => { if(res!=null) {
           this.adapter = res;
           this.editMode = true;
-          this.payloadAnswer = {'answer': {Adapter: res}};
+          this.payloadAnswer = {'answer': {adapter: res}};
         }
         },
         err => { console.log(err); }
       );
     }
+
   }
 
   getIdsFromCurrentPath(){
     if (this.route.snapshot.paramMap.get('adapterId')) {
       this.adapterId = this.route.snapshot.paramMap.get('adapterId');
     }
-  }
-
-  getVocs(){
-    this.resourceService.getAllVocabulariesByType().subscribe(
-      res => this.vocabulariesMap = res,
-      err => console.log(err),
-      () => {
-          zip(//get vocs for linkedResource
-            this.adaptersService.getLinkedGuidelinesForAdapter(),
-            this.adaptersService.getLinkedServicesForAdapter()
-          ).subscribe(data => {
-              const unifiedResponse = {
-                LINKED_RESOURCE_VOCS_UNIFIED: [
-                  ...data[0].GUIDELINES_VOC,
-                  ...data[1].SERVICES_VOC
-                ]
-              };
-              let subVocs: Vocabulary[] = unifiedResponse.LINKED_RESOURCE_VOCS_UNIFIED.map(item => ({
-                id: item.id,
-                name: item.name,
-                description: null,
-                parentId: item.parentId,
-                type: null,
-                extras: {}
-              }));
-              this.subVocabulariesMap = this.groupByKey(subVocs, 'parentId');
-              const vocMap = <{ [key: string]: object[] }>(<unknown>this.vocabulariesMap);
-              vocMap['LINKED_RESOURCE_VOCS_UNIFIED'] = subVocs;
-              this.vocabulariesMap = <Map<string, object[]>>(<unknown>vocMap);
-            },
-            error => {
-              this.errorMessage = 'Error during vocabularies loading.';
-              this.showLoader = false;
-            },
-            () => this.showLoader = false
-          );
-      }
-    )
-  }
-
-  groupByKey(array, key) {
-    return array.reduce((hash, obj) => {
-      if (obj[key] === undefined) {
-        return hash;
-      }
-      return Object.assign(hash, {[obj[key]]: (hash[obj[key]] || []).concat(obj)});
-    }, {});
   }
 
   getCurrentUserInfo(): { firstname: string; lastname: string; email: string } {

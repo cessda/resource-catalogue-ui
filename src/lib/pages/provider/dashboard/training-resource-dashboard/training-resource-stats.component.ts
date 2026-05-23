@@ -19,7 +19,6 @@ const mapWorld = require('@highcharts/map-collection/custom/world.geo.json')
 @Component({
     selector: 'app-training-resource-stats',
     templateUrl: './training-resource-stats.component.html',
-    styleUrls: ['../resource-dashboard/service-stats.component.css'],
     standalone: false
 })
 export class TrainingResourceStatsComponent implements OnInit, OnDestroy {
@@ -40,7 +39,7 @@ export class TrainingResourceStatsComponent implements OnInit, OnDestroy {
   resourceAddsToProjectOptions: any = null;
   resourceMapOptions: any = null;
 
-  resourceHistory: Paging<LoggingInfo>;
+  resourceHistory: LoggingInfo[];
 
   statisticPeriod: string;
 
@@ -60,7 +59,7 @@ export class TrainingResourceStatsComponent implements OnInit, OnDestroy {
       zip(
         this.resourceService.getEU(),
         this.resourceService.getWW(),
-        this.trainingResourceService.getService(params['trainingResourceId'], params['catalogueId'])
+        this.trainingResourceService.getTrainingResource(params['trainingResourceId'])
       ).subscribe(suc => {
           this.EU = <string[]>suc[0];
           this.WW = <string[]>suc[1];
@@ -112,7 +111,7 @@ export class TrainingResourceStatsComponent implements OnInit, OnDestroy {
 
     if (dontGetResources) {
     } else {
-      this.trainingResourceService.getServiceLoggingInfoHistory(this.trainingResource.id, this.catalogueId).subscribe(
+      this.trainingResourceService.getTrainingResourceLoggingInfoHistory(this.trainingResource.id).subscribe(
         res => this.resourceHistory = res,
         err => {
           this.errorMessage = 'An error occurred while retrieving the history of this training resource. ' + err.error;
@@ -236,7 +235,7 @@ export class TrainingResourceStatsComponent implements OnInit, OnDestroy {
         // borderWidth: 1
       },
       title: {
-        text: 'Countries serviced by ' + this.trainingResource.title
+        text: 'Countries serviced by ' + this.trainingResource.name
       },
       // subtitle: {
       //     text: 'Demo of drawing all areas in the map, only highlighting partial data'

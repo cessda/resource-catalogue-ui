@@ -16,7 +16,6 @@ export class SharedResourceDashboardComponent implements OnInit {
   _marketplaceServicesURL = environment.marketplaceServicesURL;
   serviceORresource = environment.serviceORresource;
 
-  catalogueConfigId: string = this.config.getProperty('catalogueId');
   providerId: string;
   resourceId: string;
 

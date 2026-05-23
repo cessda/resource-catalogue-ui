@@ -5,8 +5,7 @@ import {NavigationService} from '../../services/navigation.service';
 import {ResourceService} from '../../services/resource.service';
 import {Provider, Service, Type, Vocabulary} from '../../domain/eic-model';
 import {Paging} from '../../domain/paging';
-import {URLValidator} from '../../shared/validators/generic.validator';
-import {Observable, of, zip} from 'rxjs';
+import {config, Observable, of, zip} from 'rxjs';
 import {PremiumSortPipe} from '../../shared/pipes/premium-sort.pipe';
 import {ConfigService} from '../../services/config.service';
 import {environment} from '../../../environments/environment';
@@ -24,7 +23,6 @@ declare var UIkit: any;
 @Component({
     selector: 'app-service-form',
     templateUrl: './service-form.component.html',
-    styleUrls: ['../provider/service-provider-form.component.css'],
     providers: [FormControlService],
     standalone: false
 })
@@ -37,8 +35,6 @@ export class ServiceFormComponent implements OnInit {
   formDataToSubmit: any = null;
 
   protected readonly isDevMode = isDevMode;
-  catalogueConfigId: string = this.config.getProperty('catalogueId');
-  catalogueName: string | null = null;
   protected readonly environment = environment;
   protected _marketplaceServicesURL = environment.marketplaceServicesURL;
   serviceORresource = environment.serviceORresource;
@@ -50,7 +46,7 @@ export class ServiceFormComponent implements OnInit {
   catalogueId: string;
   providerId: string;
   displayedProviderName: string;
-  displayedCatalogueName: string;
+  viewOnlyMode = false;
   submitMode: 'draft' | 'submit' = 'submit';
   editMode = false;
   hasChanges = false;
@@ -156,7 +152,7 @@ export class ServiceFormComponent implements OnInit {
   }
 
   submitForm(formData: any) {
-    let serviceValue = formData.value.Service;
+    let serviceValue = formData.value.service;
     window.scrollTo(0, 0);
 
     if (!this.authenticationService.isLoggedIn()) {
@@ -167,11 +163,7 @@ export class ServiceFormComponent implements OnInit {
     this.errorMessage = '';
     this.showLoader = true;
 
-    this.cleanArrayProperty(serviceValue, 'multimedia');
-    this.cleanArrayProperty(serviceValue, 'useCases');
-    this.cleanArrayProperty(serviceValue, 'alternativeIdentifiers');
-    this.cleanArrayProperty(serviceValue, 'scientificDomains');
-    this.cleanArrayProperty(serviceValue, 'categories');
+    serviceValue = FormControlService.cleanObjectInPlace(serviceValue);
 
     if (this.submitMode === 'draft') {
       this.resourceService.temporarySaveService(serviceValue).subscribe(
@@ -179,7 +171,7 @@ export class ServiceFormComponent implements OnInit {
           // console.log(_service);
           this.showLoader = false;
           // return this.navigator.dashboardDraftResources(this.providerId); // navigate to draft list
-          return this.navigator.go('/provider/' + this.pidHandler.customEncodeURIComponent(_service.resourceOrganisation) + '/draft-resource/update/' + this.pidHandler.customEncodeURIComponent(_service.id)); // remain on form
+          return this.navigator.go('/provider/' + this.pidHandler.customEncodeURIComponent(_service.resourceOwner) + '/draft-resource/update/' + this.pidHandler.customEncodeURIComponent(_service.id)); // remain on form
         },
         err => {
           this.showLoader = false;
@@ -191,36 +183,36 @@ export class ServiceFormComponent implements OnInit {
       this.resourceService.submitPendingService(serviceValue).subscribe(
         _service => {
           this.showLoader = false;
-          if (!this.firstServiceForm || !this.editMode) return this.navigator.selectSubprofile(this.providerId, _service.id);  // navigate to select-subprofile
-          if (this.editMode || this.firstServiceForm) return this.navigator.resourceDashboard(this.providerId, _service.id);  // navigate to resource-dashboard
+          return this.navigator.resourceDashboard(this.providerId, _service.id);  // navigate to resource-dashboard
         },
         err => {
           this.showLoader = false;
           window.scrollTo(0, 0);
-          this.errorMessage = 'Something went bad, server responded: ' + err?.error?.message;
+          this.errorMessage = 'Something went bad, server responded: ' + err?.error?.detail;
         }
       );
     } else {
       this.resourceService.submitService(serviceValue, this.editMode, this.commentControl.value).subscribe(
         _service => {
           this.showLoader = false;
-          if (this.pendingService && !this.firstServiceForm) return this.navigator.selectSubprofile(this.providerId, _service.id);  // navigate to select-subprofile
-          if (this.editMode || this.firstServiceForm) return this.navigator.resourceDashboard(this.providerId, _service.id);  // navigate to resource-dashboard
-          if (!this.editMode) return this.navigator.selectSubprofile(this.providerId, _service.id);  // navigate to select-subprofile
+          return this.navigator.resourceDashboard(this.providerId, _service.id);  // navigate to resource-dashboard
           // return this.router.dashboardResources(this.providerId);                  // navigate to provider dashboard -> resource list
           // return window.location.href = this._marketplaceServicesURL + _service.id; // navigate to marketplace
         },
         err => {
           this.showLoader = false;
           window.scrollTo(0, 0);
-          this.errorMessage = 'Something went bad, server responded: ' + err?.error?.message;
+          this.errorMessage = 'Something went bad, server responded: ' + err?.error?.detail;
         }
       );
     }
   }
 
   ngOnInit() {
-    this.catalogueName = this.config.getProperty('catalogueName');
+    const path = this.route.snapshot.routeConfig.path;
+    if (path.includes('view/:resourceId')) {
+      this.viewOnlyMode = true;
+    }
     this.showLoader = true;
     if ( !this.router.url.includes('/update/') || this.router.url.includes('/draft-resource/update/')) {
       this.saveAsDraftAvailable = true;
@@ -228,35 +220,27 @@ export class ServiceFormComponent implements OnInit {
     zip(
       this.resourceService.getProvidersNames('approved'),
       this.resourceService.getAllVocabulariesByType(),
-      this.resourceService.getProvidersAsVocs(this.catalogueId ? this.catalogueId : this.catalogueConfigId),
-      this.resourceService.getResourcesAsVocs(this.catalogueId ? this.catalogueId : this.catalogueConfigId),
+      // this.resourceService.getResourcesAsVocs(this.catalogueId ? this.catalogueId : this.catalogueConfigId, "provider"),
+      // this.resourceService.getResourcesAsVocs(this.catalogueId ? this.catalogueId : this.catalogueConfigId, "service"),
+      //TODO see if we need those and fix
+      // this.resourceService.getResourcesAsVocs(this.catalogueId ? this.catalogueId : this.catalogueConfigId, "datasource"),
+      // this.resourceService.getResourcesAsVocs(this.catalogueId ? this.catalogueId : this.catalogueConfigId, "training_resource"),
       this.resourceService.getTerritories(),
       this.serviceProviderService.getFormModelById('m-b-service')
     ).subscribe(suc => {
         this.providersPage = <Paging<Provider>>suc[0];
         this.vocabularies = <Map<string, Vocabulary[]>>suc[1];
         this.vocabulariesMap = suc[1];
-        this.providersAsVocs = suc[2];
-        this.resourcesAsVocs = suc[3];
-        this.territoriesVoc = suc[4]; //combined COUNTRY and REGION vocs
-        this.model = suc[5];
-        // this.getLocations();
-
-        let subVocs: Vocabulary[] = this.vocabulariesMap['SCIENTIFIC_SUBDOMAIN'].concat(this.vocabulariesMap['SUBCATEGORY']);
-        this.subVocabulariesMap = this.groupByKey(subVocs, 'parentId');
-
-        [this.providersAsVocs, this.resourcesAsVocs, this.territoriesVoc].forEach(vocSet => {
-          Object.entries(vocSet).forEach(([key, newItems]) => {
-            // Type assertion to ensure newItems is an array
-            const additionalItems = newItems as Vocabulary[];
-            const existingItems = this.vocabulariesMap[key] || [];
-            this.vocabulariesMap[key] = [...existingItems, ...additionalItems];
-          });
-        });
-
+        // this.providersAsVocs = suc[2];
+        // this.resourcesAsVocs = suc[3];
+        this.territoriesVoc = suc[2]; //combined COUNTRY and REGION vocs
+        this.model = suc[3];
       },
-      error => {
-        this.errorMessage = 'Something went bad while getting the data for page initialization. ' + JSON.stringify(error.error.message);
+      err => {
+                this.errorMessage =
+          (err?.status >= 500 && err?.status < 600)
+            ? `Something went wrong. If the issue persists, please contact support and provide the following error code: ${err?.error?.traceId}`
+            : `Something went bad while getting the data for page initialization: ${err?.error?.detail}`;
       },
       () => {
         this.premiumSort.transform(this.geographicalVocabulary, ['Europe', 'Worldwide']);
@@ -273,13 +257,16 @@ export class ServiceFormComponent implements OnInit {
         // }
 
         this.showProviderName(decodeURIComponent(this.providerId));
-        if(this.catalogueId == this.catalogueConfigId) this.displayedCatalogueName = `| Catalogue: ${this.config.getProperty('catalogueName')}`;
-        else if(this.catalogueId) this.showCatalogueName(this.catalogueId);
+        // if(this.catalogueId == this.catalogueConfigId) this.displayedCatalogueName = `| Catalogue: ${this.config.getProperty('catalogueName')}`;
+        // else if(this.catalogueId) this.showCatalogueName(this.catalogueId);
 
         if(!this.editMode){ //prefill field(s)
-          this.payloadAnswer = {'answer': { Service:
-                { 'resourceOrganisation': decodeURIComponent(this.providerId),
-                  'catalogueId': this.catalogueConfigId}
+          this.payloadAnswer = {'answer': { service:
+                {
+                  'resourceOwner': decodeURIComponent(this.providerId),
+                  'type': "Service",
+                  'nodePID': (this.config.getProperty('nodePidFixed')) ? this.config.getProperty('nodePid') : null
+                }
           }};
         }
         this.showLoader = false;
@@ -357,7 +344,7 @@ export class ServiceFormComponent implements OnInit {
         },
         error => {
           console.log(error);
-          this.vocabularyEntryForm.get('errorMessage').setValue(error.error.message);
+          this.vocabularyEntryForm.get('errorMessage').setValue(error.error.detail);
         },
         () => {
           this.vocabularyEntryForm.reset();
@@ -382,29 +369,6 @@ export class ServiceFormComponent implements OnInit {
     this.displayedProviderName = (provider.name ? `| Provider: ${provider.name} ` : '');
   }
 
-  showCatalogueName(catalogueId: string) {
-    if (catalogueId!='undefined' && catalogueId!=undefined){
-    this.catalogueService.getCatalogueById(catalogueId).subscribe(
-      catalogue => this.displayedCatalogueName = `| Catalogue: ${catalogue.name}`,
-      error => console.log(error)
-    );}
-  }
   /** <--Display Provider and Catalogue Names **/
-
-  cleanArrayProperty(obj: any, property: string): void {
-    if (obj && Array.isArray(obj[property])) {
-      // Filter out elements that are entirely empty:
-      const cleaned = obj[property].filter((element: any) => {
-        if (element && typeof element === 'object') {
-          // Keep the element if at least one property has a non-empty value.
-          return Object.keys(element).some(key => element[key] !== null && element[key] !== '');
-        }
-        // For non-objects, keep the element if it's not null or ''.
-        return element !== null && element !== '';
-      });
-      // If the cleaned array is empty, set the property to null. Otherwise, update it.
-      obj[property] = cleaned.length ? cleaned : null;
-    }
-  }
 
 }

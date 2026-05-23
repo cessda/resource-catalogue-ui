@@ -9,7 +9,7 @@
           </div>
           <div class="uk-margin-medium-left">
             <h3 class="uk-margin-remove">{{catalogueBundle.catalogue.name}}</h3>
-            <div><span class="status-label">Catalogue Status: </span>{{ catalogueBundle.status.substr(0,catalogueBundle.status.indexOf(' ')) | titlecase }}</div>
+            <div><span class="status-label">Catalogue Status: </span>{{ catalogueBundle.status | titlecase }}</div>
           </div>
         </div>
       }
@@ -51,7 +51,7 @@
           </div>
 
           <div class="uk-inline">
-            <label class="" for="sort">Order by </label>
+            <label class="" for="sort">Sort by </label>
             <div class="uk-inline">
               <select class="uk-input uk-select" id="sort" (change)="handleChangeAndResetPage()" formControlName="sort">
                 <option value="name" selected>Name</option>
@@ -102,7 +102,7 @@
 
 @if (deployableServiceBundles && deployableServiceBundles.length === 0) {
   <div>
-    <p>No Deployable Services found</p>
+    <p>No Deployable Application found</p>
   </div>
 }
 
@@ -110,7 +110,7 @@
   <div>
     <div class="uk-flex uk-flex-middle uk-flex-between">
       <div class="resultsInfo">
-        <span class="number">{{total}}</span> DEPLOYABLE SERVICES, PAGE <span class="number">{{currentPage}}</span> OF <span class="number">{{pageTotal}}</span>
+        <span class="number">{{total}}</span> Deployable Application, PAGE <span class="number">{{currentPage}}</span> OF <span class="number">{{pageTotal}}</span>
       </div>
       <ul class="uk-pagination" uk-margin>
         <li><a (click)="previousPage()"><span uk-pagination-previous></span></a></li>
@@ -127,17 +127,17 @@
       @for (bundle of deployableServiceBundles; track bundle) {
         <div class="uk-card uk-card-small uk-card-default uk-margin-bottom service-card">
           <div class="uk-card-body">
-            @if (bundle.status === 'approved resource') {
+            @if (bundle.status === 'approved') {
               <div class="approved">
                 <div class="uk-card-badge uk-label">Approved</div>
               </div>
             }
-            @if (bundle.status === 'pending resource') {
+            @if (bundle.status === 'pending') {
               <div class="pending">
                 <div class="uk-card-badge uk-label">Pending</div>
               </div>
             }
-            @if ((bundle.status === 'rejected resource')) {
+            @if ((bundle.status === 'rejected')) {
               <div class="rejected">
                 <div class="uk-card-badge uk-label">Rejected</div>
               </div>
@@ -164,18 +164,18 @@
             </div>
             <div class="uk-grid uk-flex-middle uk-margin-remove-top">
               <div class="uk-width-1-6">
-                <!--                  <img src="{{bundle.deployableService.logo ? bundle.deployableService.logo : '/assets/images/broken_image-black-48dp.svg'}}">-->
+                <!--                  <img src="{{bundle.deployableApplication.logo ? bundle.deployableApplication.logo : '/assets/images/broken_image-black-48dp.svg'}}">-->
               </div>
               <div class="uk-width-2-3">
                 <h4 class="uk-margin-remove">
-                  <a [routerLink]="['/dashboard', bundle.deployableService.catalogueId, bundle.deployableService.resourceOrganisation, 'deployable-service-dashboard', bundle.id]" data-uk-tooltip title="Go to the Deployable Service dashboard">
-                    {{ bundle.deployableService.name }}
+                  <a [routerLink]="['/dashboard', bundle.deployableApplication.resourceOwner, 'deployable-service-dashboard', bundle.id]" data-uk-tooltip title="Go to the Deployable Application dashboard">
+                    {{ bundle.deployableApplication.name }}
                   </a>
-                  <!--                    <a (click)="navigate(bundle.id)">{{bundle.deployableService.name}}</a>-->
+                  <!--                    <a (click)="navigate(bundle.id)">{{bundle.deployableApplication.name}}</a>-->
                 </h4>
                 <div class="uk-margin-small-top">
-                  @if (bundle.deployableService.description) {
-                    <span class="uk-margin-small-top"><markdown [data]="bundle.deployableService.description"></markdown></span>
+                  @if (bundle.deployableApplication.description) {
+                    <span class="uk-margin-small-top"><markdown [data]="bundle.deployableApplication.description"></markdown></span>
                   }
                 </div>
                 <div class="uk-margin-small-top">
@@ -185,36 +185,36 @@
                   <span class="">Last Update: </span>{{ bundle.metadata.modifiedAt | date }}
                 </div>
               </div>
-              @if (catalogueId === catalogueConfigId) {
+              @if (catalogueId == null) {
                 <div class="uk-width-1-6">
                   <div class="action-buttons">
                     <button class="uk-button uk-button-action uk-display-block uk-margin-small-top" (click)="toggleDeployableService(bundle)">
                       @if (bundle.active) {
-                        <i class="fa fa-close fa-lg" aria-hidden="true"></i> Deactivate
+                        <span class="material-symbols-outlined uk-margin-small-right" style="vertical-align: middle;">close</span>Deactivate
                       }
                       @if (!bundle.active) {
                         <!--                        <div *ngIf="providerService.status === 'pending resource' || providerService.status === 'rejected resource'"-->
                       <!--                             uk-tooltip="title:Cannot activate a pending/rejected resource."></div>-->
-                      <i class="fa fa-check fa-lg" aria-hidden="true"></i> Activate
+                      <span class="material-symbols-outlined uk-margin-small-right" style="vertical-align: middle;">check</span>Activate
                     }
                   </button>
-                  <!--<i class="fa fa-pencil fa-lg"></i> Edit Deployable Service-->
+                  <!--<span class="material-symbols-outlined uk-margin-small-right" style="vertical-align: middle;">edit_square</span>Edit-->
                 <!--</button>-->
                 <button class="uk-button uk-button-action uk-display-block uk-margin-small-top" (click)="setSelectedDeployableService(bundle)">
-                  <i class="fa fa-trash fa-lg" aria-hidden="true"></i> Delete
+                  <span class="material-symbols-outlined uk-margin-small-right" style="vertical-align: middle;">delete</span>Delete
                 </button>
               </div>
             </div>
           }
         </div>
-        @if (bundle.deployableService.catalogueId !== catalogueConfigId) {
+        @if (bundle.deployableApplication.catalogueId != null) {
           <hr class="uk-margin-top">
           <div class="uk-align-right">
             <button
-              routerLink="/provider/{{bundle.deployableService.catalogueId}}/{{bundle.deployableService.resourceOrganisation}}/deployable-service/view/{{bundle.id}}"
+              routerLink="/provider/{{bundle.deployableApplication.catalogueId}}/{{bundle.deployableApplication.resourceOwner}}/deployable-service/view/{{bundle.id}}"
               class="uk-button uk-button-link" style="">
               <i class="fa fa-eye fa-lg uk-margin-small-right" aria-hidden="true"></i>
-              View Deployable Service
+              View Deployable Application
             </button>
           </div>
         }
@@ -250,7 +250,7 @@
 <div id="actionModal" uk-modal>
   <div class="uk-modal-dialog uk-modal-body uk-margin-auto-vertical">
     @if (selectedDeployableService) {
-      <h6 class="uk-margin-bottom">Are you sure you want to delete the Deployable Service '{{selectedDeployableService.deployableService.name}}'?</h6>
+      <h6 class="uk-margin-bottom">Are you sure you want to delete the Deployable Application '{{selectedDeployableService.deployableApplication.name}}'?</h6>
     }
     <div class="uk-text-right">
       <button class="uk-button uk-button-default uk-modal-close uk-margin-small-right" type="button">Cancel</button>

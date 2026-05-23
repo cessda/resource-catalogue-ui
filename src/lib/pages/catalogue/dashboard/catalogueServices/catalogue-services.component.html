@@ -9,7 +9,7 @@
           </div>
           <div class="uk-margin-medium-left">
             <h3 class="uk-margin-remove">{{catalogueBundle.catalogue.name}}</h3>
-            <div><span class="status-label">Catalogue Status: </span>{{ catalogueBundle.status.substr(0,catalogueBundle.status.indexOf(' ')) | titlecase }}</div>
+            <div><span class="status-label">Catalogue Status: </span>{{ catalogueBundle.status | titlecase }}</div>
           </div>
         </div>
       }
@@ -51,7 +51,7 @@
           </div>
 
           <div class="uk-inline">
-            <label class="" for="sort">Order by </label>
+            <label class="" for="sort">Sort by </label>
             <div class="uk-inline">
               <select class="uk-input uk-select" id="sort" (change)="handleChangeAndResetPage()" formControlName="sort">
                 <option value="name" selected>Name</option>
@@ -128,17 +128,17 @@
       @for (serviceBundle of services; track serviceBundle) {
         <div class="uk-card uk-card-small uk-card-default uk-margin-bottom service-card">
           <div class="uk-card-body">
-            @if (serviceBundle.status === 'approved resource') {
+            @if (serviceBundle.status === 'approved') {
               <div class="approved">
                 <div class="uk-card-badge uk-label">Approved</div>
               </div>
             }
-            @if (serviceBundle.status === 'pending resource') {
+            @if (serviceBundle.status === 'pending') {
               <div class="pending">
                 <div class="uk-card-badge uk-label">Pending</div>
               </div>
             }
-            @if ((serviceBundle.status === 'rejected resource')) {
+            @if ((serviceBundle.status === 'rejected')) {
               <div class="rejected">
                 <div class="uk-card-badge uk-label">Rejected</div>
               </div>
@@ -169,7 +169,7 @@
               </div>
               <div class="uk-width-2-3">
                 <h4 class="uk-margin-remove">
-                  <a [routerLink]="['/dashboard', serviceBundle.service.catalogueId, serviceBundle.service.resourceOrganisation, 'resource-dashboard', serviceBundle.id]" data-uk-tooltip title="Go to the service dashboard">
+                  <a [routerLink]="['/dashboard', serviceBundle.service.resourceOwner, 'resource-dashboard', serviceBundle.id]" data-uk-tooltip title="Go to the service dashboard">
                     {{ serviceBundle.service.name }}
                   </a>
                 </h4>
@@ -185,34 +185,34 @@
                   <span class="">Last Update: </span>{{ serviceBundle.metadata.modifiedAt | date }}
                 </div>
               </div>
-              @if (catalogueId === catalogueConfigId) {
+              @if (catalogueId == null) {
                 <div class="uk-width-1-6">
                   <div class="action-buttons">
                     <button class="uk-button uk-button-action uk-display-block uk-margin-small-top" (click)="toggleService(serviceBundle)">
                       @if (serviceBundle.active) {
-                        <i class="fa fa-close fa-lg" aria-hidden="true"></i> Deactivate
+                        <span class="material-symbols-outlined uk-margin-small-right" style="vertical-align: middle;">close</span>Deactivate
                       }
                       @if (!serviceBundle.active) {
                         <!--                        <div *ngIf="providerService.status === 'pending resource' || providerService.status === 'rejected resource'"-->
                       <!--                             uk-tooltip="title:Cannot activate a pending/rejected resource."></div>-->
-                      <i class="fa fa-check fa-lg" aria-hidden="true"></i> Activate
+                      <span class="material-symbols-outlined uk-margin-small-right" style="vertical-align: middle;">check</span>Activate
                     }
                   </button>
                   <!--<button class="uk-button uk-button-action uk-display-block" (click)="navigate(providerService.service.id)">-->
-                  <!--<i class="fa fa-pencil fa-lg"></i> Edit {{serviceORresource | lowercase}}-->
+                  <!--<span class="material-symbols-outlined uk-margin-small-right" style="vertical-align: middle;">edit_square</span>Edit-->
                 <!--</button>-->
                 <button class="uk-button uk-button-action uk-display-block uk-margin-small-top" (click)="setSelectedService(serviceBundle)">
-                  <i class="fa fa-trash fa-lg" aria-hidden="true"></i> Delete {{serviceORresource | lowercase}}
+                  <span class="material-symbols-outlined uk-margin-small-right" style="vertical-align: middle;">delete</span>Delete
                 </button>
               </div>
             </div>
           }
         </div>
-        @if (serviceBundle.service.catalogueId !== catalogueConfigId) {
+        @if (serviceBundle.catalogueId != null) {
           <hr class="uk-margin-top">
           <div class="uk-align-right">
             <button
-              routerLink="/provider/{{serviceBundle.service.catalogueId}}/{{serviceBundle.service.resourceOrganisation}}/resource/view/{{serviceBundle.id}}"
+              routerLink="/provider/{{serviceBundle.service.resourceOwner}}/resource/view/{{serviceBundle.id}}"
               class="uk-button uk-button-link" style="">
               <i class="fa fa-eye fa-lg uk-margin-small-right" aria-hidden="true"></i>
               View {{serviceORresource}}

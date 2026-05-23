@@ -86,7 +86,7 @@ export class RejectedDeployableServicesComponent implements OnInit {
   }
 
   getProvider() {
-    this.providerService.getServiceProviderBundleById(this.providerId, this.catalogueId).subscribe(
+    this.providerService.getServiceProviderBundleById(this.providerId).subscribe(
       providerBundle => {
         this.providerBundle = providerBundle;
       }, error => {
@@ -97,14 +97,14 @@ export class RejectedDeployableServicesComponent implements OnInit {
 
   getRejectedResources() {
     this.providerService.getRejectedResourcesOfProvider(this.providerId, this.dataForm.get('from').value,
-      this.itemsPerPage + '', 'ASC', 'name', 'deployable_service')
+      this.itemsPerPage + '', 'ASC', 'name', 'deployable_application')
       .subscribe(res => {
           this.deployableServiceBundle = res;
           this.total = res['total'];
           this.paginationInit();
         },
         err => {
-          this.errorMessage = 'An error occurred while retrieving the deployable services of this provider. ' + err.error;
+          this.errorMessage = 'An error occurred while retrieving the Deployable Application of this provider. ' + err.error;
         },
         () => {}
       );
@@ -119,10 +119,12 @@ export class RejectedDeployableServicesComponent implements OnInit {
     // UIkit.modal('#spinnerModal').show();
     this.deployableServiceService.deleteDeployableService(id).subscribe(
       res => {},
-      error => {
+      err => {
         // console.log(error);
         // UIkit.modal('#spinnerModal').hide();
-        this.errorMessage = 'Something went bad. ' + error.error ;
+        this.errorMessage = (err?.status >= 500 && err?.status < 600)
+            ? `Something went wrong. If the issue persists, please contact support and provide the following error code: ${err?.error?.traceId}`
+            : `Something went bad, server responded: ${err?.error?.detail}`;
         this.getRejectedResources();
       },
       () => {

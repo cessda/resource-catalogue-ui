@@ -7,6 +7,7 @@ import {environment} from '../../../../environments/environment';
 import {ServiceProviderService} from '../../../services/service-provider.service';
 import {CatalogueBundle, ProviderBundle} from '../../../domain/eic-model';
 import {CatalogueService} from "../../../services/catalogue.service";
+import {pidHandler} from "../../../shared/pid-handler/pid-handler.service";
 
 
 @Component({
@@ -26,7 +27,8 @@ export class CatalogueDashboardComponent implements OnInit {
               public catalogueService: CatalogueService,
               public serviceProviderService: ServiceProviderService,
               public navigator: NavigationService,
-              private route: ActivatedRoute) {
+              private route: ActivatedRoute,
+              public pidHandler: pidHandler) {
   }
 
   ngOnInit() {

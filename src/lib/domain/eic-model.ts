@@ -4,6 +4,7 @@
 
 export class Bundle<T> implements Identifiable {
   id: string;
+  catalogueId: string; // new v6
   metadata: Metadata;
   active: boolean;
   status: string;
@@ -18,7 +19,7 @@ export class Bundle<T> implements Identifiable {
 
 export class Catalogue implements Identifiable {
   id: string;
-  abbreviation: string;
+  resourceOwner: string;
   name: string;
   website: URL;
   legalEntity: boolean;
@@ -70,13 +71,6 @@ export class EmailMessage {
   message: string;
 }
 
-export class EOSCIFGuidelines {
-  label: string;
-  pid: string;
-  semanticRelationship: string;
-  url: string;
-}
-
 export class Event implements Identifiable {
   id: string;
   instant: number;
@@ -126,7 +120,6 @@ export class AlternativeIdentifier {
 
 export class ServiceBundle extends Bundle<Service> {
   service: Service;
-  resourceExtras: ResourceExtras;
 }
 
 export class DatasourceBundle extends Bundle<Datasource> {
@@ -141,7 +134,7 @@ export class TrainingResourceBundle extends Bundle<TrainingResource> {
 export class DeployableServiceBundle extends Bundle<DeployableService> {
   status: string;
   auditState: string;
-  deployableService: DeployableService;
+  deployableApplication: DeployableService;
 }
 
 export class LoggingInfo {
@@ -277,7 +270,7 @@ export class Provider implements Identifiable {
 }
 
 export class ProviderBundle extends Bundle<Provider> {
-  provider: Provider;
+  organisation: Provider;
 }
 
 export class CatalogueBundle extends Bundle<Catalogue> {
@@ -357,8 +350,8 @@ export class ServiceCategory {
 /*export class Service implements Identifiable {
   id: string;
   name: string;
-  resourceOrganisation: string;
-  resourceProviders: string[];
+  resourceOwner: string;
+  serviceProviders: string[];
   webpage: URL;
   alternativeIdentifiers: AlternativeIdentifier[];
   description: string;
@@ -383,8 +376,8 @@ export class Service implements Identifiable {
   id: string;
   abbreviation: string;
   name: string;
-  resourceOrganisation: string;
-  resourceProviders: string[];
+  resourceOwner: string;
+  serviceProviders: string[];
   webpage: URL;
   alternativeIdentifiers: AlternativeIdentifier[];
   description: string;
@@ -442,7 +435,7 @@ export class DeployableService implements Identifiable {
   id: string;
   name: string;
   acronym: string;
-  resourceOrganisation: string;
+  resourceOwner: string;
   catalogueId: string;
   node: string;
   url: URL;
@@ -459,7 +452,10 @@ export class DeployableService implements Identifiable {
 
 export class Datasource implements Identifiable {
   id: string;
-  serviceId: string;
+  name: string;
+  description: string;
+  logo: URL;
+  resourceOwner: string;
   catalogueId: string;
   submissionPolicyURL: URL;
   preservationPolicyURL: URL;
@@ -474,6 +470,7 @@ export class Datasource implements Identifiable {
   researchProductMetadataLicensing: ResearchProductMetadataLicensing;
   researchProductMetadataAccessPolicies: string[];
   harvestable: boolean;
+  version: string;
 }
 
 export class PersistentIdentitySystem {
@@ -491,9 +488,9 @@ export class ResearchProductMetadataLicensing {
 
 export class TrainingResource implements Identifiable {
   id: string;
-  title: string;
-  resourceOrganisation: string; // like service
-  resourceProviders: string[]; // like service
+  name: string;
+  resourceOwner: string; // like service
+  serviceProviders: string[]; // like service
   authors: string[];
   url: URL;
   urlType: string; // new voc
@@ -518,11 +515,6 @@ export class TrainingResource implements Identifiable {
   catalogueId: string;
 }
 
-export class ResourceExtras {
-  eoscIFGuidelines: EOSCIFGuidelines[];
-  serviceType: string;
-}
-
 export class InteroperabilityRecordBundle extends Bundle<InteroperabilityRecord> {
   status: string;
   interoperabilityRecord: InteroperabilityRecord;
@@ -534,7 +526,7 @@ export class InteroperabilityRecord implements Identifiable {
   providerId: string;
   identifierInfo: IdentifierInfo; //like location
   creators: Creator[]; //like location
-  title: string;
+  name: string;
   publicationYear: number;
   resourceTypesInfo: ResourceTypeInfo[]; //title~scientific domain
   created: string;
@@ -874,6 +866,7 @@ export interface HelpdeskArticle {
   updated_at: string;
   from: string;
   to: string;
+  sender?: string; // "Agent" for EPOT messages, "Customer" for user messages
 }
 
 export interface CreateTicketRequest {

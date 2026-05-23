@@ -1,6 +1,5 @@
 import {Component, isDevMode, OnInit, ViewChild} from '@angular/core';
 import {UntypedFormBuilder, UntypedFormControl, UntypedFormGroup} from '@angular/forms';
-import * as dm from '../../shared/description.map';
 import {AuthenticationService} from '../../services/authentication.service';
 import {ServiceProviderService} from '../../services/service-provider.service';
 import {ActivatedRoute, Router} from '@angular/router';
@@ -14,40 +13,36 @@ import {NavigationService} from "../../services/navigation.service";
 import {Model} from "../../../dynamic-catalogue/domain/dynamic-form-model";
 import {FormControlService} from "../../../dynamic-catalogue/services/form-control.service";
 import {SurveyComponent} from "../../../dynamic-catalogue/pages/dynamic-form/survey.component";
-import {zip} from "rxjs";
 
 declare var UIkit: any;
 
 @Component({
-    selector: 'app-new-service-provider',
-    templateUrl: './service-provider-form.component.html',
-    styleUrls: ['./service-provider-form.component.css'],
-    providers: [FormControlService],
-    standalone: false
+  selector: 'app-new-service-provider',
+  templateUrl: './service-provider-form.component.html',
+  providers: [FormControlService],
+  standalone: false
 })
 export class ServiceProviderFormComponent implements OnInit {
   @ViewChild(SurveyComponent) child: SurveyComponent
   model: Model = null;
-  vocabulariesMap: Map<string, object[]> = null;
-  subVocabulariesMap: Map<string, object[]> = null;
   payloadAnswer: object = null;
   formDataToSubmit: any = null;
 
   protected readonly isDevMode = isDevMode;
-  catalogueConfigId: string = this.config.getProperty('catalogueId');
   catalogueName: string | null = null;
   protected readonly environment = environment;
   _hasUserConsent = environment.hasUserConsent;
   serviceORresource = environment.serviceORresource;
   privacyPolicyURL = environment.privacyPolicyURL;
-  catalogueId: string = this.catalogueConfigId;
+  catalogueId: string = null;
   providerId: string = null;
   displayedCatalogueName: string;
   providerName = '';
   errorMessage = '';
-  userInfo = {sub:'', family_name: '', given_name: '', email: ''};
+  userInfo = {sub: '', family_name: '', given_name: '', email: ''};
   vocabularies: Map<string, Vocabulary[]> = null;
   subVocabularies: Map<string, Vocabulary[]> = null;
+  viewOnlyMode = false;
   submitMode: 'draft' | 'submit' = 'submit';
   editMode = false;
   hasChanges = false;
@@ -84,22 +79,6 @@ export class ServiceProviderFormComponent implements OnInit {
 
   commentControl = new UntypedFormControl();
 
-  placesVocabulary: Vocabulary[] = null;
-  providerTypeVocabulary: Vocabulary[] = null;
-  providerLCSVocabulary: Vocabulary[] = null;
-  domainsVocabulary: Vocabulary[] = null;
-  categoriesVocabulary: Vocabulary[] = null;
-  merilDomainsVocabulary: Vocabulary[] = null;
-  merilCategoriesVocabulary: Vocabulary[] = null;
-  esfriDomainVocabulary: Vocabulary[] = null;
-  legalStatusVocabulary: Vocabulary[] = null;
-  esfriVocabulary: Vocabulary[] = null;
-  areasOfActivityVocabulary: Vocabulary[] = null;
-  networksVocabulary: Vocabulary[] = null;
-  societalGrandChallengesVocabulary: Vocabulary[] = null;
-  hostingLegalEntityVocabulary: Vocabulary[] = null;
-  nodeVocabulary: Vocabulary[] = null;
-
   constructor(public fb: UntypedFormBuilder,
               public authService: AuthenticationService,
               public serviceProviderService: ServiceProviderService,
@@ -118,16 +97,18 @@ export class ServiceProviderFormComponent implements OnInit {
 
     this.showLoader = true;
 
-    this.serviceProviderService.getFormModelById('m-b-provider').subscribe(
+    this.serviceProviderService.getFormModelById('m-b-organisation').subscribe(
       res => this.model = res,
       err => console.log(err),
       () => {
         if (!this.editMode) { //prefill field(s)
           const currentUser = this.getCurrentUserInfo();
+          console.log(currentUser);
           this.payloadAnswer = {
             'answer': {
-              Provider: {
-                'catalogueId': this.catalogueConfigId,
+              organisation: {
+                'catalogueId': this.catalogueId,
+                'nodePID': (this.config.getProperty('nodePidFixed')) ? this.config.getProperty('nodePid') : null,
                 'users': [
                   {
                     name: currentUser.firstname,
@@ -147,18 +128,19 @@ export class ServiceProviderFormComponent implements OnInit {
     if (path.includes('add/:providerId')) {
       this.pendingProvider = true;
     }
-    // if (path.includes('view/:providerId')) {
-    //   this.pendingProvider = true;
-    // }
-    if ( !this.router.url.includes('/update/') ) {
+    if (path.includes('view/:catalogueId/:providerId')) {
+      this.viewOnlyMode = true;
+    }
+    if (!this.router.url.includes('/update/')) {
       this.saveAsDraftAvailable = true;
     }
-    this.setVocabularies();
 
     if (this._hasUserConsent && path !== 'view/:catalogueId/:providerId') {
       if (this.editMode) {
-        this.serviceProviderService.hasAdminAcceptedTerms(this.providerId, this.pendingProvider).subscribe(
-          boolean => { this.agreedToTerms = boolean; },
+        this.serviceProviderService.hasAdminAcceptedTerms(this.providerId).subscribe(
+          boolean => {
+            this.agreedToTerms = boolean;
+          },
           error => console.log(error),
           () => {
             if (!this.agreedToTerms) {
@@ -175,14 +157,11 @@ export class ServiceProviderFormComponent implements OnInit {
 
     this.isPortalAdmin = this.authService.isAdmin();
 
-    if(this.catalogueId == this.catalogueConfigId) this.displayedCatalogueName = `| Catalogue: ${this.catalogueName}`
-    else if(this.catalogueId) this.showCatalogueName(this.catalogueId)
-
     this.vocabularyEntryForm = this.fb.group(this.suggestionsForm);
   }
 
-  submitForm(formData: any){
-    let providerValue = formData.value.Provider;
+  submitForm(formData: any) {
+    let providerValue = formData.value.organisation;
     window.scrollTo(0, 0);
 
     this.errorMessage = '';
@@ -190,15 +169,12 @@ export class ServiceProviderFormComponent implements OnInit {
     const path = this.route.snapshot.routeConfig.path;
     let method;
     if (path === 'add/:providerId') {
-      method = 'updateAndPublishPendingProvider';
+      method = 'updateAndActivatePendingProvider';
     } else {
       method = this.editMode ? 'updateServiceProvider' : 'createNewServiceProvider';
     }
 
-    this.cleanArrayProperty(providerValue, 'multimedia');
-    this.cleanArrayProperty(providerValue, 'scientificDomains');
-    this.cleanArrayProperty(providerValue, 'merilScientificDomains');
-    // console.log(providerValue);
+    providerValue = FormControlService.cleanObjectInPlace(providerValue);
 
     if (this.submitMode === 'draft') {
       this.showLoader = true;
@@ -210,7 +186,10 @@ export class ServiceProviderFormComponent implements OnInit {
           },
           err => {
             this.showLoader = false;
-            this.errorMessage = 'Something went wrong. ' + JSON.stringify(err.error.message);
+                    this.errorMessage =
+          (err?.status >= 500 && err?.status < 600)
+            ? `Something went wrong. If the issue persists, please contact support and provide the following error code: ${err?.error?.traceId}`
+            : `Something went bad, server responded: ${err?.error?.detail}`;
           },
           () => {
             this.showLoader = false;
@@ -223,7 +202,10 @@ export class ServiceProviderFormComponent implements OnInit {
         },
         err => {
           this.showLoader = false;
-          this.errorMessage = 'Something went wrong. ' + JSON.stringify(err.error.message);
+                  this.errorMessage =
+          (err?.status >= 500 && err?.status < 600)
+            ? `Something went wrong. If the issue persists, please contact support and provide the following error code: ${err?.error?.traceId}`
+            : `Something went bad, server responded: ${err?.error?.detail}`;
         },
         () => {
           this.showLoader = false;
@@ -231,45 +213,6 @@ export class ServiceProviderFormComponent implements OnInit {
         }
       );
     }
-  }
-
-  /** get and set vocabularies **/
-  setVocabularies() {
-    zip(
-      this.resourceService.getAllVocabulariesByType(),
-      this.resourceService.getProvidersAsVocs(this.catalogueId ? this.catalogueId : this.catalogueConfigId)
-    ).subscribe(data => {
-      this.vocabularies = <Map<string, Vocabulary[]>>data[0]; //old
-      this.vocabulariesMap = data[0];
-      let subVocs: Vocabulary[] = this.vocabulariesMap['SCIENTIFIC_SUBDOMAIN'].concat(this.vocabulariesMap['PROVIDER_MERIL_SCIENTIFIC_SUBDOMAIN']);
-      this.subVocabulariesMap = this.groupByKey(subVocs, 'parentId');
-      Object.keys(data[1]).forEach(key => {
-        const newItems = data[1][key];
-        const existingItems = this.vocabulariesMap[key] || [];
-        this.vocabulariesMap[key] = [...existingItems, ...newItems];
-      });
-    },
-      error => {
-        this.errorMessage = 'Error during vocabularies loading.';
-      },
-      () => this.showLoader = false
-    );
-  }
-
-  getSortedChildrenCategories(childrenCategory: Vocabulary[], parentId: string) {
-    return this.sortVocabulariesByName(childrenCategory.filter(entry => entry.parentId === parentId));
-  }
-
-  sortVocabulariesByName(vocabularies: Vocabulary[]): Vocabulary[] {
-    return vocabularies.sort((vocabulary1, vocabulary2) => {
-      if (vocabulary1.name > vocabulary2.name) {
-        return 1;
-      }
-      if (vocabulary1.name < vocabulary2.name) {
-        return -1;
-      }
-      return 0;
-    });
   }
 
   unsavedChangesPrompt() {
@@ -296,10 +239,14 @@ export class ServiceProviderFormComponent implements OnInit {
 
   acceptTerms() {
     if (this._hasUserConsent && this.editMode) {
-      this.serviceProviderService.adminAcceptedTerms(this.providerId, this.pendingProvider).subscribe(
-        res => {},
-        error => { console.log(error); },
-        () => {}
+      this.serviceProviderService.adminAcceptedTerms(this.providerId).subscribe(
+        res => {
+        },
+        error => {
+          console.log(error);
+        },
+        () => {
+        }
       );
     }
   }
@@ -325,7 +272,7 @@ export class ServiceProviderFormComponent implements OnInit {
         },
         error => {
           console.log(error);
-          this.vocabularyEntryForm.get('errorMessage').setValue(error.error.message);
+          this.vocabularyEntryForm.get('errorMessage').setValue(error.error.detail);
         },
         () => {
           this.vocabularyEntryForm.reset();
@@ -351,29 +298,6 @@ export class ServiceProviderFormComponent implements OnInit {
       }
       return Object.assign(hash, {[obj[key]]: (hash[obj[key]] || []).concat(obj)});
     }, {});
-  }
-
-  showCatalogueName(catalogueId: string) {
-    this.catalogueService.getCatalogueById(catalogueId).subscribe(
-      catalogue => this.displayedCatalogueName = `| Catalogue: ${catalogue.name}`,
-      error => console.log(error)
-    );
-  }
-
-  cleanArrayProperty(obj: any, property: string): void {
-    if (obj && Array.isArray(obj[property])) {
-      // Filter out elements that are entirely empty:
-      const cleaned = obj[property].filter((element: any) => {
-        if (element && typeof element === 'object') {
-          // Keep the element if at least one property has a non-empty value.
-          return Object.keys(element).some(key => element[key] !== null && element[key] !== '');
-        }
-        // For non-objects, keep the element if it's not null or ''.
-        return element !== null && element !== '';
-      });
-      // If the cleaned array is empty, set the property to null. Otherwise, update it.
-      obj[property] = cleaned.length ? cleaned : null;
-    }
   }
 
   getCurrentUserInfo(): { firstname: string; lastname: string; email: string } {

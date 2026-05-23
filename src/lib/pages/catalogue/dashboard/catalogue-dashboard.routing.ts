@@ -1,19 +1,18 @@
 import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
 import {CanActivateViaAuthGuard} from '../../../services/can-activate-auth-guard.service';
-import {CatalogueInfoComponent} from './catalogueInfo/catalogue-info.component';
+import {CatalogueInfoComponent} from "./catalogueInfo/catalogue-info.component";
 import {CatalogueDashboardComponent} from "./catalogue-dashboard.component";
 import {CatalogueServicesComponent} from "./catalogueServices/catalogue-services.component";
 import {CatalogueProvidersComponent} from "./catalogueProviders/catalogue-providers.component";
 import {CatalogueTrainingResourcesComponent} from "./catalogueTrainingResources/catalogue-training-resources.component";
-import {
-  CatalogueDeployableServicesComponent
-} from "./catalogueDeployableServices/catalogue-deployable-services.component";
+import {CatalogueDeployableServicesComponent} from "./catalogueDeployableServices/catalogue-deployable-services.component";
+import {CatalogueHistoryComponent} from "./catalogueHistory/catalogue-history.component";
+import {CatalogueFullHistoryComponent} from "./catalogueHistory/catalogue-full-history.component";
+import {CatalogueDatasourcesComponent} from "./catalogueDatasources/catalogue-datasources.component";
 // import {ProviderStatsComponent} from './providerStats/provider-stats.component';
 // import {ServiceStatsComponent} from './resource-dashboard/service-stats.component';
 // import {ResourceDashboardModule} from './resource-dashboard/resource-dashboard.module';
-// import {ProviderHistoryComponent} from './providerHistory/provider-history.component';
-// import {ProviderFullHistoryComponent} from './providerHistory/provider-full-history.component';
 
 const catalogueDashboardRoutes: Routes = [
   {
@@ -24,35 +23,35 @@ const catalogueDashboardRoutes: Routes = [
       breadcrumb: 'Catalogue dashboard'
     },
     children : [
-      // {
-      //   path: '',
-      //   redirectTo: 'history',
-      //   pathMatch: 'full',
-      //   data: {
-      //     isResource: false
-      //   }
-      // },
+      {
+        path: '',
+        redirectTo: 'history',
+        pathMatch: 'full',
+        data: {
+          isResource: false
+        }
+      },
       // {
       //   path: 'stats',
-      //   component: ProviderStatsComponent,
+      //   component: CatalogueStatsComponent,
       //   data: {
       //     isResource: false
       //   }
       // },
-      // {
-      //   path: 'history',
-      //   component: ProviderHistoryComponent,
-      //   data: {
-      //     isResource: false
-      //   }
-      // },
-      // {
-      //   path: 'fullHistory',
-      //   component: ProviderFullHistoryComponent,
-      //   data: {
-      //     isResource: false
-      //   }
-      // },
+      {
+        path: 'history',
+        component: CatalogueHistoryComponent,
+        data: {
+          isResource: false
+        }
+      },
+      {
+        path: 'fullHistory',
+        component: CatalogueFullHistoryComponent,
+        data: {
+          isResource: false
+        }
+      },
       {
         path: 'info',
         component: CatalogueInfoComponent,
@@ -70,6 +69,13 @@ const catalogueDashboardRoutes: Routes = [
       {
         path: 'services',
         component: CatalogueServicesComponent,
+        data: {
+          isResource: false
+        }
+      },
+      {
+        path: 'datasources',
+        component: CatalogueDatasourcesComponent,
         data: {
           isResource: false
         }

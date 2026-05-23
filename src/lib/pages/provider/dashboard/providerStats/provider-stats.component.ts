@@ -30,7 +30,6 @@ declare var UIkit: any;
 
 export class ProviderStatsComponent implements OnInit {
 
-  catalogueConfigId: string = this.config.getProperty('catalogueId');
   catalogueName: string | null = null;
   serviceORresource = environment.serviceORresource;
   marketplaceServicesURL = environment.marketplaceServicesURL;
@@ -95,7 +94,7 @@ export class ProviderStatsComponent implements OnInit {
       zip(
         this.resourceService.getEU(),
         this.resourceService.getWW(),
-        this.providerService.getServiceProviderBundleById(this.providerId, this.catalogueId)
+        this.providerService.getServiceProviderBundleById(this.providerId)
         /*this.resourceService.getProvidersNames()*/
       ).subscribe(suc => {
         this.EU = <string[]>suc[0];
@@ -104,13 +103,13 @@ export class ProviderStatsComponent implements OnInit {
         this.getDataForProvider(this.statisticPeriod);
       });
     } else {
-      this.providerService.getMyServiceProviders().subscribe(
+      this.providerService.getMyProviders().subscribe(
         res => {
           this.providerId = res[0].id;
           zip(
             this.resourceService.getEU(),
             this.resourceService.getWW(),
-            this.providerService.getServiceProviderBundleById(this.providerId, this.catalogueId)
+            this.providerService.getServiceProviderBundleById(this.providerId)
             /*this.resourceService.getProvidersNames()*/
           ).subscribe(suc => {
             this.EU = <string[]>suc[0];
@@ -145,42 +144,31 @@ export class ProviderStatsComponent implements OnInit {
         );
     }
 
-    this.resourceService.getVisitsForProvider(this.providerId, period).pipe(
-      map(data => {
-        // THESE 3 weird lines should be deleted when pgl makes everything ok :)
-        return Object.entries(data).map((d) => {
-          return [new Date(d[0]).getTime(), d[1]];
-        }).sort((l, r) => l[0] - r[0]);
-      })).subscribe(
-      data => this.setVisitsForProvider(data),
-      err => {
-        this.errorMessage = 'An error occurred while retrieving visits for this provider. ' + err.error;
-      }
-    );
+    //TODO: enable when back transitions its API calls
+
+    // this.resourceService.getVisitsForProvider(this.providerId, period).pipe(
+    //   map(data => {
+    //     // THESE 3 weird lines should be deleted when pgl makes everything ok :)
+    //     return Object.entries(data).map((d) => {
+    //       return [new Date(d[0]).getTime(), d[1]];
+    //     }).sort((l, r) => l[0] - r[0]);
+    //   })).subscribe(
+    //   data => this.setVisitsForProvider(data),
+    //   err => {
+    //     this.errorMessage = 'An error occurred while retrieving visits for this provider. ' + err.error;
+    //   }
+    // );
 
     if (this.catalogueName === 'EOSC') {
 
-      this.resourceService.getAddsToProjectForProvider(this.providerId, period).pipe(
-        map(data => {
-          // THESE 3 weird lines should be deleted when pgl makes everything ok :)
-          return Object.entries(data).map((d) => {
-            return [new Date(d[0]).getTime(), d[1]];
-          }).sort((l, r) => l[0] - r[0]);
-        })).subscribe(
-        data => this.setAddsToProjectOptions(data),
-        err => {
-          this.errorMessage = 'An error occurred while retrieving favourites for this provider. ' + err.error;
-        }
-      );
-
-      // this.resourceService.getOrdersForProvider(this.providerId, period).pipe(
+      // this.resourceService.getAddsToProjectForProvider(this.providerId, period).pipe(
       //   map(data => {
       //     // THESE 3 weird lines should be deleted when pgl makes everything ok :)
       //     return Object.entries(data).map((d) => {
       //       return [new Date(d[0]).getTime(), d[1]];
       //     }).sort((l, r) => l[0] - r[0]);
       //   })).subscribe(
-      //   data => this.setOrdersOptions(data),
+      //   data => this.setAddsToProjectOptions(data),
       //   err => {
       //     this.errorMessage = 'An error occurred while retrieving favourites for this provider. ' + err.error;
       //   }
@@ -223,57 +211,6 @@ export class ProviderStatsComponent implements OnInit {
       }
     );
 
-    this.resourceService.getTargetUsersPerServiceForProvider(this.providerId).subscribe(
-      data => {
-        const barChartCategories: string[] = [];
-        const barChartData: number[] = [];
-        for (let i = 0; i < Object.keys(data).length; i++) {
-          const str = (Object.values(data[i])[0]).toString();
-          const key = str.substring(str.lastIndexOf('-') + 1).replace(/_/g, ' ').replace(/^\w/, c => c.toUpperCase());
-          barChartCategories.push(key);
-          barChartData.push(Object.keys(Object.values(data[i])[1]).length);
-        }
-        this.setTargetUsersPerServiceForProvider(barChartCategories, barChartData);
-      },
-      err => {
-        this.errorMessage = 'An error occurred while retrieving target users for this provider. ' + err.error;
-      }
-    );
-
-    this.resourceService.getAccessModesPerServiceForProvider(this.providerId).subscribe(
-      data => {
-        const barChartCategories: string[] = [];
-        const barChartData: number[] = [];
-        for (let i = 0; i < Object.keys(data).length; i++) {
-          const str = (Object.values(data[i])[0]).toString();
-          const key = str.substring(str.lastIndexOf('-') + 1).replace(/_/g, ' ').replace(/^\w/, c => c.toUpperCase());
-          barChartCategories.push(key);
-          barChartData.push(Object.keys(Object.values(data[i])[1]).length);
-        }
-        this.setAccessModesPerServiceForProvider(barChartCategories, barChartData);
-      },
-      err => {
-        this.errorMessage = 'An error occurred while retrieving access modes for this provider. ' + err.error;
-      }
-    );
-
-    this.resourceService.getAccessTypesPerServiceForProvider(this.providerId).subscribe(
-      data => {
-        const barChartCategories: string[] = [];
-        const barChartData: number[] = [];
-        for (let i = 0; i < Object.keys(data).length; i++) {
-          const str = (Object.values(data[i])[0]).toString();
-          const key = str.substring(str.lastIndexOf('-') + 1).replace(/_/g, ' ').replace(/^\w/, c => c.toUpperCase());
-          barChartCategories.push(key);
-          barChartData.push(Object.keys(Object.values(data[i])[1]).length);
-        }
-        this.setAccessTypesPerServiceForProvider(barChartCategories, barChartData);
-      },
-      err => {
-        this.errorMessage = 'An error occurred while retrieving access types for this provider. ' + err.error;
-      }
-    );
-
     this.resourceService.getOrderTypesPerServiceForProvider(this.providerId).subscribe(
       data => {
         const barChartCategories: string[] = [];
@@ -308,20 +245,6 @@ export class ProviderStatsComponent implements OnInit {
         }
       );
     }
-
-    this.resourceService.getMapDistributionOfServices(this.providerId).subscribe(
-      data => {
-        this.geographicalDistributionMap = new Map();
-
-        for (const [key, value] of Object.entries(data)) {
-          this.geographicalDistributionMap.set(value.key.toLowerCase(), value.values);
-        }
-        this.setMapDistributionOfServices(data);
-      },
-      err => {
-        this.errorMessage = 'An error occurred while retrieving geographical distribution of services for this provider. ' + err.error;
-      }
-    );
 
     /** Recommendations -> **/
     // this.recommendationsService.getRecommendationsOverTime(this.catalogueId.concat('.',this.providerId)).subscribe(
@@ -585,7 +508,7 @@ export class ProviderStatsComponent implements OnInit {
         // borderWidth: 1
       },
       title: {
-        text: 'Countries serviced by ' + this.providerBundle.provider.name
+        text: 'Countries serviced by ' + this.providerBundle.organisation.name
       },
       // subtitle: {
       //     text: 'Demo of drawing all areas in the map, only highlighting partial data'
@@ -638,7 +561,7 @@ export class ProviderStatsComponent implements OnInit {
           height: (3 / 4 * 100) + '%', // 3:4 ratio
         },
         title: {
-          // text: 'Countries serviced by ' + this.providerBundle.provider.name
+          // text: 'Countries serviced by ' + this.providerBundle.organisation.name
           text: ''
         },
         colorAxis: {
@@ -1022,7 +945,7 @@ export class ProviderStatsComponent implements OnInit {
 
   enrichMostRecommendedServices(data: any) {
     const observables = data.map(item =>
-      this.resourceService.getService(item.service_id, /\..*\./.test(item.service_id) ? item.service_id.split(".")[0] : this.catalogueConfigId)
+      this.resourceService.getService(item.service_id)
     );
 
     combineLatest(observables).subscribe(
@@ -1094,8 +1017,7 @@ export class ProviderStatsComponent implements OnInit {
       for (const competitor of item.competitors) {
         if (competitor.service_id !== 'tnp.lumi_etais__regular_access') {
           // competitorPublicIds.push(competitor.service_id);
-          const isPublicId = /\..*\./.test(competitor.service_id); // if it has two dot occurrences its a publicId
-          this.resourceService.getService(competitor.service_id, isPublicId ? competitor.service_id.split(".")[0] : this.catalogueConfigId).subscribe(
+          this.resourceService.getService(competitor.service_id).subscribe(
             res => {
               const competitorWithDetails = {
                 service_id: competitor.service_id,
@@ -1124,8 +1046,7 @@ export class ProviderStatsComponent implements OnInit {
     // let outerServicesPublicIds = [];
     for (const item of this.enrichedRecommendationsOfCompetitorsServices) {
       // outerServicesPublicIds.push(item.service_id);
-      const isPublicId = /\..*\./.test(item.service_id); // if it has two dot occurrences its a publicId
-      this.resourceService.getService(item.service_id, isPublicId ? item.service_id.split(".")[0] : this.catalogueConfigId).subscribe(
+      this.resourceService.getService(item.service_id).subscribe(
         res => {
           item.logo = res.logo;
           item.name = res.name;

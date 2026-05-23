@@ -105,7 +105,7 @@ export class CataloguesListComponent implements OnInit {
   @ViewChildren("auditCheckboxes") auditCheckboxes: QueryList<ElementRef>;
 
   // public statuses: Array<string> = ['approved provider', 'pending provider', 'rejected provider'];
-  public statuses: Array<string> = ['approved catalogue', 'pending catalogue', 'rejected catalogue'];
+  public statuses: Array<string> = ['approved', 'pending', 'rejected'];
   public labels: Array<string> = ['Approved', 'Pending', 'Rejected'];
   @ViewChildren("checkboxes") checkboxes: QueryList<ElementRef>;
 
@@ -232,8 +232,11 @@ export class CataloguesListComponent implements OnInit {
         this.geographicalVocabulary = this.vocabularies[Type.COUNTRY];
         this.languagesVocabulary = this.vocabularies[Type.LANGUAGE];
       },
-      error => {
-        this.errorMessage = 'Something went bad while getting the data for page initialization. ' + JSON.stringify(error.error.message);
+      err => {
+                this.errorMessage =
+          (err?.status >= 500 && err?.status < 600)
+            ? `Something went wrong. If the issue persists, please contact support and provide the following error code: ${err?.error?.traceId}`
+            : `Something went bad while getting the data for page initialization: ${err?.error?.detail}`;
       },
       () => {}
     );
@@ -401,7 +404,10 @@ export class CataloguesListComponent implements OnInit {
           UIkit.modal('#suspensionModal').hide();
           UIkit.modal('#spinnerModal').hide();
           this.loadingMessage = '';
-          this.errorMessage = err.error.error;
+          this.errorMessage =
+          (err?.status >= 500 && err?.status < 600)
+            ? `Something went wrong. If the issue persists, please contact support and provide the following error code: ${err?.error?.traceId}`
+            : `Something went bad, server responded: ${err?.error?.detail}`;
           window.scroll(0,0);
         },
         () => {
@@ -430,7 +436,7 @@ export class CataloguesListComponent implements OnInit {
   // }
 
   statusChangeActionCatalogue(){
-      const active = this.newStatus === 'approved catalogue';
+      const active = this.newStatus === 'approved';
       this.catalogueService.verifyCatalogue(this.selectedCatalogue.id, active, this.newStatus)
       .subscribe(
         res => {
@@ -541,7 +547,13 @@ export class CataloguesListComponent implements OnInit {
     this.catalogueService.auditCatalogue(this.selectedCatalogue.id, action, this.commentAuditControl.value)
       .subscribe(
         res => {this.getCatalogues();},
-        err => {console.log(err);},
+        err => {
+          this.errorMessage =
+            (err?.status >= 500 && err?.status < 600)
+              ? `Something went wrong. If the issue persists, please contact support and provide the following error code: ${err?.error?.traceId}`
+              : `Something went bad, server responded: ${err?.error?.detail}`;
+          window.scroll(0,0);
+        },
         () => {
           this.selectedCataloguesForAudit.forEach(
             s => {

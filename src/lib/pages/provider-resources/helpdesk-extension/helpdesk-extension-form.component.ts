@@ -4,7 +4,6 @@ import {AuthenticationService} from '../../../services/authentication.service';
 import {NavigationService} from '../../../services/navigation.service';
 import {ResourceService} from '../../../services/resource.service';
 import {ServiceExtensionsService} from '../../../services/service-extensions.service';
-import * as dm from '../../../shared/description.map';
 import {Provider, Service, Helpdesk} from '../../../domain/eic-model';
 import {Paging} from '../../../domain/paging';
 import {URLValidator} from '../../../shared/validators/generic.validator';
@@ -18,7 +17,6 @@ import {Model} from "../../../../dynamic-catalogue/domain/dynamic-form-model";
 @Component({
     selector: 'app-helpdesk-extension-form',
     templateUrl: './helpdesk-extension-form.component.html',
-    styleUrls: ['../../provider/service-provider-form.component.css'],
     standalone: false
 })
 export class HelpdeskExtensionFormComponent implements OnInit {
@@ -28,7 +26,6 @@ export class HelpdeskExtensionFormComponent implements OnInit {
   // vocabulariesMap: { [name: string]: { id: string, name: string }[]; } = {}
   // payloadAnswer: object = null;
 
-  catalogueConfigId: string = this.config.getProperty('catalogueId');
   serviceORresource = environment.serviceORresource;
   serviceName = '';
   firstServiceForm = false;
@@ -53,16 +50,6 @@ export class HelpdeskExtensionFormComponent implements OnInit {
   resourceType = '';
   resourceId: string = null;
   trainingResourceId: string = null;
-
-  readonly servicesDesc: dm.Description = dm.helpdeskDescMap.get('servicesDesc');
-  readonly supportGroupsDesc: dm.Description = dm.helpdeskDescMap.get('supportGroupsDesc');
-  readonly organisationDesc: dm.Description = dm.helpdeskDescMap.get('organisationDesc');
-  readonly emailsDesc: dm.Description = dm.helpdeskDescMap.get('emailsDesc');
-  readonly emailForTicketDesc: dm.Description = dm.helpdeskDescMap.get('emailForTicketDesc');
-  readonly agentsDesc: dm.Description = dm.helpdeskDescMap.get('agentsDesc');
-  readonly signaturesDesc: dm.Description = dm.helpdeskDescMap.get('signaturesDesc');
-  readonly webformDesc: dm.Description = dm.helpdeskDescMap.get('webformDesc');
-  readonly ticketPreservationDesc: dm.Description = dm.helpdeskDescMap.get('ticketPreservationDesc');
 
 
   formGroupMeta = {
@@ -140,7 +127,7 @@ export class HelpdeskExtensionFormComponent implements OnInit {
           this.getFieldAsFormArray('signatures').removeAt(0);
         }
       }
-      this.serviceExtensionsService.uploadHelpdeskService(this.serviceForm.value, this.editMode, this.catalogueConfigId, this.resourceType).subscribe(
+      this.serviceExtensionsService.uploadHelpdeskService(this.serviceForm.value, this.editMode, null, this.resourceType).subscribe(
         _service => {
           this.showLoader = false;
           if (this.resourceType==='service') return this.navigator.resourceDashboard(this.providerId, this.serviceId); // navigate to resource-dashboard

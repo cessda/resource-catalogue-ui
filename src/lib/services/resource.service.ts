@@ -9,31 +9,22 @@ import {
   RichService,
   Service,
   Vocabulary,
-  Type, ProviderBundle, ServiceBundle, LoggingInfo, Bundle, Datasource, DatasourceBundle
+  Type, ServiceBundle, LoggingInfo, Bundle, TrainingResourceBundle
 } from '../domain/eic-model';
 import {BrowseResults} from '../domain/browse-results';
 import {Paging} from '../domain/paging';
-import {URLParameter} from '../domain/url-parameter';
 import {Observable, throwError} from 'rxjs';
 import {catchError, map} from 'rxjs/operators';
-import {Info} from '../domain/info';
 import {Model} from "../../dynamic-catalogue/domain/dynamic-form-model";
-import {ConfigService} from "./config.service";
 
 declare var UIkit: any;
 
 @Injectable()
 export class ResourceService {
 
-  private catalogueConfigId: string;
-
-  constructor(public http: HttpClient, public authenticationService: AuthenticationService, private configService: ConfigService) {
-    this.catalogueConfigId = this.configService.getProperty('catalogueId');
-  }
+  constructor(public http: HttpClient, public authenticationService: AuthenticationService) {}
   base = environment.API_ENDPOINT;
   private options = {withCredentials: true};
-  ACCESS_TYPES;
-  ORDER_TYPE;
 
   static removeNulls(obj) {
     const isArray = obj instanceof Array;
@@ -126,28 +117,18 @@ export class ResourceService {
     return this.http.get<BrowseResults>(this.base + '/service/by/category/');
   }
 
-  getProvidersAsVocs(catalogueId: string){
-    return this.http.get(this.base + `/provider/providerIdToNameMap?catalogueId=${catalogueId}`);
-  }
+  // getResourcesAsVocs(catalogueId: string, resourceType?: string){
+  //   return this.http.get(this.base + `/reference/idToNameMap?catalogueId=${catalogueId}&resourceType=${resourceType}`);
+  // }
 
-  getResourcesAsVocs(catalogueId: string){ // Gets services and trainings as VOCs
-    return this.http.get(this.base + `/service/resourceIdToNameMap?catalogueId=${catalogueId}`);
-  }
-
-  getService(serviceId: string, catalogueId?: string) { // can handle public ids too
+  getService(serviceId: string) { // can handle public ids too
     serviceId = decodeURIComponent(serviceId);
-    // if version becomes optional this should be reconsidered
-    // return this.http.get<Service>(this.base + `/service/${version === undefined ? serviceId : [serviceId, version].join('/')}`, this.options);
-    if (!catalogueId) catalogueId = this.catalogueConfigId;
-    if (catalogueId === this.catalogueConfigId)
-      return this.http.get<Service>(this.base + `/service/${serviceId}?catalogue_id=${catalogueId}`, this.options);
-    else
-      return this.http.get<Service>(this.base + `/catalogue/${catalogueId}/service/${serviceId}`, this.options);
+    return this.http.get<Service>(this.base + `/service/${serviceId}`, this.options);
   }
 
   getRichService(id: string, catalogueId?:string, version?: string) { //deprecated
-    if (!catalogueId) catalogueId = this.catalogueConfigId;
-    return this.http.get<RichService>(this.base + `/service/rich/${id}?catalogue_id=${catalogueId}`, this.options);
+    if (!catalogueId) catalogueId = null;
+    return this.http.get<RichService>(this.base + `/service/rich/${id}`, this.options);
     // return this.http.get<RichService>(this.base + `/service/rich/${version === undefined ? id : [id, version].join('/')}/`, this.options);
   }
 
@@ -179,113 +160,55 @@ export class ResourceService {
   }
 
   /** STATS **/
-  getVisitsForProvider(provider: string, period?: string) {
-    let params = new HttpParams();
-    if (period) {
-      params = params.append('by', period);
-      return this.http.get(this.base + `/stats/provider/visits/${provider}`, {params});
-    } else {
-      return this.http.get(this.base + `/stats/provider/visits/${provider}`);
-    }
-  }
+  //TODO: enable when back transitions its API calls
+
+  // getVisitsForProvider(provider: string, period?: string) {
+  //   let params = new HttpParams();
+  //   if (period) {
+  //     params = params.append('by', period);
+  //     return this.http.get(this.base + `/stats/provider/visits/${provider}`, {params});
+  //   } else {
+  //     return this.http.get(this.base + `/stats/provider/visits/${provider}`);
+  //   }
+  // }
+
+  // getAddsToProjectForProvider(provider: string, period?: string) {
+  //   let params = new HttpParams();
+  //   if (period) {
+  //     params = params.append('by', period);
+  //     return this.http.get(this.base + `/stats/provider/addToProject/${provider}`, {params});
+  //   } else {
+  //     return this.http.get(this.base + `/stats/provider/addToProject/${provider}`);
+  //   }
+  // }
 
   getCategoriesPerServiceForProvider(provider?: string) {
     let params = new HttpParams();
     if (provider) {
-      params = params.append('providerId', provider);
-      return this.http.get(this.base + `/stats/provider/mapServicesToVocabulary?vocabulary=SUBCATEGORY`, {params});
+      params = params.append('providerId', decodeURIComponent(provider));
+      return this.http.get(this.base + `/stats/provider/mapServicesToVocabulary?vocabulary=subcategories`, {params});
     } else {
-      return this.http.get(this.base + `/stats/provider/mapServicesToVocabulary?vocabulary=SUBCATEGORY`);
+      return this.http.get(this.base + `/stats/provider/mapServicesToVocabulary?vocabulary=subcategories`);
     }
   }
 
   getDomainsPerServiceForProvider(provider?: string) {
     let params = new HttpParams();
     if (provider) {
-      params = params.append('providerId', provider);
-      return this.http.get(this.base + `/stats/provider/mapServicesToVocabulary?vocabulary=SCIENTIFIC_SUBDOMAIN`, {params});
+      params = params.append('providerId', decodeURIComponent(provider));
+      return this.http.get(this.base + `/stats/provider/mapServicesToVocabulary?vocabulary=scientific_subdomains`, {params});
     } else {
-      return this.http.get(this.base + `/stats/provider/mapServicesToVocabulary?vocabulary=SCIENTIFIC_SUBDOMAIN`);
-    }
-  }
-
-  getTargetUsersPerServiceForProvider(provider?: string) {
-    let params = new HttpParams();
-    if (provider) {
-      params = params.append('providerId', provider);
-      return this.http.get(this.base + `/stats/provider/mapServicesToVocabulary?vocabulary=TARGET_USERS`, {params});
-    } else {
-      return this.http.get(this.base + `/stats/provider/mapServicesToVocabulary?vocabulary=TARGET_USERS`);
-    }
-  }
-
-  getAccessModesPerServiceForProvider(provider?: string) {
-    let params = new HttpParams();
-    if (provider) {
-      params = params.append('providerId', provider);
-      return this.http.get(this.base + `/stats/provider/mapServicesToVocabulary?vocabulary=ACCESS_MODES`, {params});
-    } else {
-      return this.http.get(this.base + `/stats/provider/mapServicesToVocabulary?vocabulary=ACCESS_MODES`);
-    }
-  }
-
-  getAccessTypesPerServiceForProvider(provider?: string) {
-    let params = new HttpParams();
-    if (provider) {
-      params = params.append('providerId', provider);
-      return this.http.get(this.base + `/stats/provider/mapServicesToVocabulary?vocabulary=ACCESS_TYPES`, {params});
-    } else {
-      return this.http.get(this.base + `/stats/provider/mapServicesToVocabulary?vocabulary=ACCESS_TYPES`);
+      return this.http.get(this.base + `/stats/provider/mapServicesToVocabulary?vocabulary=scientific_subdomains`);
     }
   }
 
   getOrderTypesPerServiceForProvider(provider?: string) {
     let params = new HttpParams();
     if (provider) {
-      params = params.append('providerId', provider);
-      return this.http.get(this.base + `/stats/provider/mapServicesToVocabulary?vocabulary=ORDER_TYPE`, {params});
+      params = params.append('providerId', decodeURIComponent(provider));
+      return this.http.get(this.base + `/stats/provider/mapServicesToVocabulary?vocabulary=order_type`, {params});
     } else {
-      return this.http.get(this.base + `/stats/provider/mapServicesToVocabulary?vocabulary=ORDER_TYPE`);
-    }
-  }
-
-  getMapDistributionOfServices(provider?: string) {
-    let params = new HttpParams();
-    if (provider) {
-      params = params.append('providerId', provider);
-      return this.http.get(this.base + `/stats/provider/mapServicesToGeographicalAvailability`, {params});
-    } else {
-      return this.http.get(this.base + `/stats/provider/mapServicesToGeographicalAvailability`);
-    }
-  }
-
-  getFavouritesForProvider(provider: string, period?: string) {
-    let params = new HttpParams();
-    if (period) {
-      params = params.append('by', period);
-      return this.http.get(this.base + `/stats/provider/favourites/${provider}`, {params});
-    } else {
-      return this.http.get(this.base + `/stats/provider/favourites/${provider}`);
-    }
-  }
-
-  getAddsToProjectForProvider(provider: string, period?: string) {
-    let params = new HttpParams();
-    if (period) {
-      params = params.append('by', period);
-      return this.http.get(this.base + `/stats/provider/addToProject/${provider}`, {params});
-    } else {
-      return this.http.get(this.base + `/stats/provider/addToProject/${provider}`);
-    }
-  }
-
-  getOrdersForProvider(provider: string, period?: string) {
-    let params = new HttpParams();
-    if (period) {
-      params = params.append('by', period);
-      return this.http.get(this.base + `/stats/provider/orders/${provider}`, {params});
-    } else {
-      return this.http.get(this.base + `/stats/provider/orders/${provider}`);
+      return this.http.get(this.base + `/stats/provider/mapServicesToVocabulary?vocabulary=order_type`);
     }
   }
 
@@ -297,23 +220,25 @@ export class ResourceService {
   //   return this.getServicesOfferedByProvider(provider);
   // }
 
-  getVisitsForService(service: string, period?: string) {
-    let params = new HttpParams();
-    if (period) {
-      params = params.append('by', period);
-      return this.http.get(this.base + `/stats/service/visits/${service}`, {params});
-    }
-    return this.http.get(this.base + `/stats/service/visits/${service}`);
-  }
+  //TODO: enable when back transitions its API calls
 
-  getAddToProjectForService(service: string, period?: string) {
-    let params = new HttpParams();
-    if (period) {
-      params = params.append('by', period);
-      return this.http.get(this.base + `/stats/service/addToProject/${service}`, {params});
-    }
-    return this.http.get(this.base + `/stats/service/addToProject/${service}`);
-  }
+  // getVisitsForService(service: string, period?: string) {
+  //   let params = new HttpParams();
+  //   if (period) {
+  //     params = params.append('by', period);
+  //     return this.http.get(this.base + `/stats/service/visits/${service}`, {params});
+  //   }
+  //   return this.http.get(this.base + `/stats/service/visits/${service}`);
+  // }
+
+  // getAddToProjectForService(service: string, period?: string) {
+  //   let params = new HttpParams();
+  //   if (period) {
+  //     params = params.append('by', period);
+  //     return this.http.get(this.base + `/stats/service/addToProject/${service}`, {params});
+  //   }
+  //   return this.http.get(this.base + `/stats/service/addToProject/${service}`);
+  // }
   /** STATS **/
 
   /** Indicators **/
@@ -342,8 +267,8 @@ export class ResourceService {
     let params = new HttpParams();
     params = params.append('from', '0');
     params = params.append('quantity', '10000');
-    if (status === 'approved provider') { //not matched hence never reached, do we need approved providers or all?
-      return this.http.get<Paging<Provider>>(this.base + `/provider/all?status=approved provider`, {params, withCredentials: true});
+    if (status === 'approved') { //not matched hence never reached, do we need approved providers or all?
+      return this.http.get<Paging<Provider>>(this.base + `/provider/all?status=approved`, {params, withCredentials: true});
     }
     return this.http.get<Paging<Provider>>(this.base + `/provider/all`, {params, withCredentials: true});
   }
@@ -400,7 +325,7 @@ export class ResourceService {
   }
 
   getResourceBundles(from: string, quantity: string, sort: string, order: string, query: string, active: string, suspended: string,
-                     resource_organisation: string[], status: string[], auditState: string[], catalogue_id: string[]) {
+                     resource_organisation: string[], status: string[], auditState: string[], catalogue_id?: string[]) {
     let params = new HttpParams();
     params = params.append('from', from);
     params = params.append('quantity', quantity);
@@ -442,21 +367,13 @@ export class ResourceService {
     return this.http.get<Bundle<Service>>(this.base + `/service/adminPage/all`, {params});
   }
 
-  getServiceBundleById(id: string, catalogueId?: string) {
+  getServiceBundleById(id: string) {
     id = decodeURIComponent(id);
-    if (!catalogueId) catalogueId = this.catalogueConfigId;
-    if (catalogueId === this.catalogueConfigId)
-      return this.http.get<ServiceBundle>(this.base + `/service/bundle/${id}?catalogue_id=${catalogueId}`, this.options);
-    else
-      return this.http.get<ServiceBundle>(this.base + `/catalogue/${catalogueId}/service/bundle/${id}`, this.options);
-  }
-
-  getMyServiceProviders() {
-    return this.http.get<Provider[]>(this.base + '/provider/getMyProviders');
+    return this.http.get<ServiceBundle>(this.base + `/service/bundle/${id}`, this.options);
   }
 
   getRandomResources(quantity: string) {
-    return this.http.get<ServiceBundle[]>(this.base + `/service/randomResources?quantity=${quantity}`, this.options);
+    return this.http.get<ServiceBundle[]>(this.base + `/service/random?quantity=${quantity}`, this.options);
   }
 
   getSharedServicesByProvider(id: string, from: string, quantity: string, order: string, sort: string) {
@@ -528,44 +445,24 @@ export class ResourceService {
   }
   /** <-- Draft(Pending) Services **/
 
-  getServiceLoggingInfoHistory(serviceId: string, catalogue_id: string) {
+  getServiceLoggingInfoHistory(serviceId: string) {
     serviceId = decodeURIComponent(serviceId);
-    // return this.http.get<Paging<LoggingInfo>>(this.base + `/service/loggingInfoHistory/${serviceId}/`);
-    if (catalogue_id === this.catalogueConfigId)
-      return this.http.get<Paging<LoggingInfo>>(this.base + `/service/loggingInfoHistory/${serviceId}?catalogue_id=${catalogue_id}`);
-    else
-      return this.http.get<Paging<LoggingInfo>>(this.base + `/catalogue/${catalogue_id}/service/loggingInfoHistory/${serviceId}`);
-  }
-
-  //TODO: rename to auditService
-  auditResource(id: string, action: string, catalogueId: string, comment: string) {
-    id = decodeURIComponent(id);
-    if(!catalogueId) catalogueId = this.catalogueConfigId;
-    if (catalogueId === this.catalogueConfigId)
-      return this.http.patch(this.base + `/service/auditResource/${id}?actionType=${action}&catalogueId=${catalogueId}&comment=${comment}`, this.options);
-    else
-      return this.http.patch(this.base + `/catalogue/${catalogueId}/service/auditService/${id}?actionType=${action}&comment=${comment}`, this.options);
-  }
-
-  //TODO: unsued - remove
-  auditDatasource(id: string, action: string, catalogueId: string, comment: string) {
-    id = decodeURIComponent(id);
-    return this.http.patch(this.base + `/datasource/auditResource/${id}?actionType=${action}&catalogueId=${catalogueId}&comment=${comment}`, this.options);
+    return this.http.get<LoggingInfo[]>(this.base + `/service/loggingInfoHistory/${serviceId}`);
   }
 
   verifyResource(id: string, active: boolean, status: string) { // for 1st service
     id = decodeURIComponent(id);
-    return this.http.patch(this.base + `/service/verifyResource/${id}?active=${active}&status=${status}`, {}, this.options);
+    return this.http.patch(this.base + `/service/verify/${id}?active=${active}&status=${status}`, {}, this.options);
   }
 
-  getServiceTemplate(id: string) {  // gets oldest(?) pending resource of the provider // replaced with /resourceTemplateBundles/templates?id=testprovidertemplate
+  getServiceTemplate(id: string) {  // gets oldest(?) pending resource of the provider // replaced with /resourceTemplate/templates?id=testprovidertemplate
     id = decodeURIComponent(id);
     return this.http.get<Service[]>(this.base + `/resource/getServiceTemplate/${id}`);
   }
 
   getResourceTemplateOfProvider(id: string) {  // returns the template, service or datasource
     id = decodeURIComponent(id);
-    return this.http.get<any[]>(this.base + `/resourceTemplateBundles/templates?id=${id}`);
+    return this.http.get<any[]>(this.base + `/resourceTemplate/templates?id=${id}`);
   }
 
   sendEmailForOutdatedResource(id: string) {
@@ -575,7 +472,7 @@ export class ResourceService {
 
   moveResourceToProvider(resourceId: string, providerId: string, comment: string) {
     resourceId = decodeURIComponent(resourceId);
-    return this.http.post(this.base + `/service/changeProvider?resourceId=${resourceId}&newProvider=${providerId}&comment=${comment}`, this.options);
+    return this.http.put(this.base + `/service/changeProvider?resourceId=${resourceId}&newProvider=${providerId}&comment=${comment}`, this.options);
   }
 
   public handleError(error: HttpErrorResponse) {
@@ -597,14 +494,20 @@ export class ResourceService {
     return throwError(error);
   }
 
-  suspendService(serviceId: string, catalogueId: string, suspend: boolean) {
-    serviceId = decodeURIComponent(serviceId);
-    return this.http.put<ServiceBundle>(this.base + `/service/suspend?serviceId=${serviceId}&catalogueId=${catalogueId}&suspend=${suspend}`, this.options);
+  auditService(id: string, action: string, catalogueId: string, comment: string) {
+    id = decodeURIComponent(id);
+    if (catalogueId == null)
+      return this.http.patch(this.base + `/service/audit/${id}?actionType=${action}&comment=${comment}`, this.options);
+    else
+      return this.http.patch(this.base + `/catalogue/${catalogueId}/service/audit/${id}?actionType=${action}&comment=${comment}`, this.options);
   }
 
-  suspendDatasource(datasourceId: string, catalogueId: string, suspend: boolean) {
-    datasourceId = decodeURIComponent(datasourceId);
-    return this.http.put<DatasourceBundle>(this.base + `/datasource/suspend?datasourceId=${datasourceId}&catalogueId=${catalogueId}&suspend=${suspend}`, this.options);
+  suspendService(serviceId: string, catalogueId: string, suspend: boolean): Observable<any> {
+    serviceId = decodeURIComponent(serviceId);
+    if (catalogueId == null)
+      return this.http.put<ServiceBundle>(this.base + `/service/suspend?id=${serviceId}&catalogueId=${catalogueId}&suspend=${suspend}`, this.options);
+    else
+      return this.http.put<TrainingResourceBundle>(this.base + `/catalogue/${catalogueId}/service/suspend/${serviceId}?suspend=${suspend}`, this.options);
   }
 
   getFormModelById(id: string) {

@@ -66,32 +66,32 @@ const appRoutes: Routes = [
     canActivate: [CanActivateViaAuthGuard]
   },
   {
-    path: 'datasource',
-    loadChildren: () => import('../lib/pages/datasource/datasource.module').then(m => m.DatasourceModule),
-    canActivate: [CanActivateViaAuthGuard]
-  },
-  {
-    path: 'dashboard/:catalogueId/:providerId/resource-dashboard',
+    path: 'dashboard/:providerId/resource-dashboard',
     loadChildren: () => import('../lib/pages/provider/dashboard/resource-dashboard/resource-dashboard.module').then(m => m.ResourceDashboardModule),
     canActivate: [CanActivateViaAuthGuard]
   },
   {
-    path: 'dashboard/:catalogueId/:providerId/shared-resource-dashboard',
+    path: 'dashboard/:providerId/shared-resource-dashboard',
     loadChildren: () => import('../lib/pages/provider/dashboard/resource-dashboard/shared-resource-dashboard.module').then(m => m.SharedResourceDashboardModule),
     canActivate: [CanActivateViaAuthGuard]
   },
   {
-    path: 'dashboard/:catalogueId/:providerId/training-resource-dashboard',
+    path: 'dashboard/:providerId/datasource-dashboard',
+    loadChildren: () => import('../lib/pages/provider/dashboard/datasource-dashboard/datasource-dashboard.module').then(m => m.DatasourceDashboardModule),
+    canActivate: [CanActivateViaAuthGuard]
+  },
+  {
+    path: 'dashboard/:providerId/training-resource-dashboard',
     loadChildren: () => import('../lib/pages/provider/dashboard/training-resource-dashboard/training-resource-dashboard.module').then(m => m.TrainingResourceDashboardModule),
     canActivate: [CanActivateViaAuthGuard]
   },
   {
-    path: 'dashboard/:catalogueId/:providerId/deployable-service-dashboard',
+    path: 'dashboard/:providerId/deployable-service-dashboard',
     loadChildren: () => import('../lib/pages/provider/dashboard/deployable-service-dashboard/deployable-service-dashboard.module').then(m => m.DeployableServiceDashboardModule),
     canActivate: [CanActivateViaAuthGuard]
   },
   {
-    path: 'dashboard/:catalogueId',
+    path: 'dashboard',
     loadChildren: () => import('../lib/pages/provider/dashboard/provider-dashboard.module').then(m => m.ProviderDashboardModule),
     canActivate: [CanActivateViaAuthGuard]
   },
@@ -103,11 +103,6 @@ const appRoutes: Routes = [
   {
     path: 'guidelines',
     loadChildren: () => import('../lib/pages/guidelines/guidelines.module').then(m => m.GuidelinesModule),
-    canActivate: [CanActivateViaAuthGuard]
-  },
-  {
-    path: 'adapters',
-    loadChildren: () => import('../lib/pages/adapters/adapters.module').then(m => m.AdaptersModule),
     canActivate: [CanActivateViaAuthGuard]
   },
   {
