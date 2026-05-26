@@ -60,8 +60,12 @@ export class CatalogueService {
     let params = new HttpParams();
     params = params.append('from', from);
     params = params.append('quantity', quantity);
-    params = params.append('sort', sort);
-    params = params.append('order', order);
+    if (sort) {
+      params = params.append('sort', sort);
+    }
+    if (order) {
+      params = params.append('order', order);
+    }
     if (query && query !== '') {
       params = params.append('keyword', query);
     }

@@ -166,48 +166,17 @@ export class TrainingResourceService {
     // return this.getAll("provider");
   }
 
-  getProviderBundles(from: string, quantity: string, sort: string, order: string, query: string,
-                     status: string[], templateStatus: string[], auditState: string[], catalogue_id: string[]) {
-    let params = new HttpParams();
-    params = params.append('from', from);
-    params = params.append('quantity', quantity);
-    params = params.append('sort', sort);
-    params = params.append('order', order);
-    if (query && query !== '') {
-      params = params.append('keyword', query);
-    }
-    if (status && status.length > 0) {
-      for (const statusValue of status) {
-        params = params.append('status', statusValue);
-      }
-    }
-    if (templateStatus && templateStatus.length > 0) {
-      for (const templateStatusValue of templateStatus) {
-        params = params.append('templateStatus', templateStatusValue);
-      }
-    }
-    if (auditState && auditState.length > 0) {
-      for (const auditValue of auditState) {
-        params = params.append('audit_state', auditValue);
-      }
-    }
-    if (catalogue_id && catalogue_id.length > 0) {
-      for (const catalogueValue of catalogue_id) {
-        params = params.append('catalogue_id', catalogueValue);
-      }
-    }
-    // } else params = params.append('catalogue_id', 'all');
-    return this.http.get(this.base + `/provider/bundle/all`, {params});
-    // return this.getAll("provider");
-  }
-
   getResourceBundles(from: string, quantity: string, sort: string, order: string, query: string, active: string, suspended: string,
                      resource_organisation: string[], status: string[], auditState: string[], catalogue_id: string[]) {
     let params = new HttpParams();
     params = params.append('from', from);
     params = params.append('quantity', quantity);
-    params = params.append('sort', sort);
-    params = params.append('order', order);
+    if (sort) {
+      params = params.append('sort', sort);
+    }
+    if (order) {
+      params = params.append('order', order);
+    }
     // params = params.append('active', active);
     if (query && query !== '') {
       params = params.append('keyword', query);

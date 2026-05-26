@@ -104,10 +104,11 @@
                   </div>
 
                   <div class="uk-inline uk-margin-right">
-                    <label class="" for="sort">Sort by </label>
+                    <label for="sort">Sort by </label>
                     <div class="uk-inline">
-                      <select class="uk-input uk-select" id="sort" (change)="handleChangeAndResetPage()" formControlName="sort">
-                        <option value="name" selected>Name</option>
+                      <select class="uk-input uk-select" id="sort" (change)="handleSortChange()" formControlName="sort">
+                        <option *ngIf="isSearchActive()" value="">Relevance</option>
+                        <option value="name">Name</option>
                         <option value="id">ID</option>
                       </select>
                     </div>

@@ -29,9 +29,12 @@ export class DeployableServicesListComponent implements OnInit {
   serviceORresource = environment.serviceORresource;
   protected readonly environment = environment;
 
+  sortUserSelected = false;
+  readonly DEFAULT_SORT = 'name';
+
   formPrepare = {
     query: '',
-    sort: 'name',
+    sort: this.DEFAULT_SORT,
     order: 'ASC',
     quantity: '10',
     from: '0',
@@ -106,6 +109,17 @@ export class DeployableServicesListComponent implements OnInit {
     } else {
       this.dataForm = this.fb.group(this.formPrepare);
       this.providersDropdownForm = this.fb.group(this.providersFormPrepare);
+
+      this.dataForm.get('query').valueChanges.subscribe(val => {
+        if (val && val !== '') {
+          if (!this.sortUserSelected) {
+            this.dataForm.get('sort').setValue('', { emitEvent: false }); // matches the Relevance option value
+          }
+        } else {
+          this.sortUserSelected = false; // back to default behavior
+          this.dataForm.get('sort').setValue(this.DEFAULT_SORT, { emitEvent: false }); // reset to default sort option
+        }
+      });
 
       this.urlParams = [];
       this.route.queryParams
@@ -314,11 +328,36 @@ export class DeployableServicesListComponent implements OnInit {
     );
   }
 
+  handleSortChange() {
+    const sortValue = this.dataForm.get('sort').value;
+    if (sortValue === '') {
+      // User explicitly picked "Relevance"
+      this.sortUserSelected = false;
+      this.dataForm.get('sort').setValue('', { emitEvent: false });
+    } else {
+      this.sortUserSelected = true;
+    }
+    this.handleChangeAndResetPage();
+  }
+
+  isSearchActive(): boolean {
+    const query = this.dataForm?.get('query')?.value;
+    return query && query !== '';
+  }
+
   getResources() {
     this.loadingMessage = 'Loading Deployable Application';
     this.deployableServiceBundles = [];
+
+    // Send sort only if: no query, OR user explicitly picked a sort
+    const query = this.dataForm.get('query').value;
+    const hasQuery = query && query !== '';
+    const shouldApplySort = !hasQuery || this.sortUserSelected;
+    const sort = shouldApplySort ? this.dataForm.get('sort').value : null;
+    const order = shouldApplySort ? this.dataForm.get('order').value : null;
+
     this.deployableServiceService.getResourceBundles(this.dataForm.get('from').value, this.dataForm.get('quantity').value,
-      this.dataForm.get('sort').value, this.dataForm.get('order').value, this.dataForm.get('query').value,
+      sort, order, query,
       this.dataForm.get('active').value, this.dataForm.get('suspended').value, this.dataForm.get('resource_organisation').value,
       this.dataForm.get('status').value, this.dataForm.get('auditState').value, this.dataForm.get('catalogue_id').value).subscribe(
       res => {

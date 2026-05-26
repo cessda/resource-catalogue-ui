@@ -32,8 +32,12 @@ export class DatasourceService {
     let params = new HttpParams();
     params = params.append('from', from);
     params = params.append('quantity', quantity);
-    params = params.append('sort', sort);
-    params = params.append('order', order);
+    if (sort) {
+      params = params.append('sort', sort);
+    }
+    if (order) {
+      params = params.append('order', order);
+    }
     if (active && active !== '') {
       params = params.append('active', active);
     }
@@ -74,8 +78,12 @@ export class DatasourceService {
     let params = new HttpParams();
     params = params.append('from', from);
     params = params.append('quantity', quantity);
-    params = params.append('sort', sort);
-    params = params.append('order', order);
+    if (sort) {
+      params = params.append('sort', sort);
+    }
+    if (order) {
+      params = params.append('order', order);
+    }
     params = params.append('keyword', query);
     return this.http.get<Paging<Datasource>>(this.base + '/datasource/openaire/all', {params});
   }
