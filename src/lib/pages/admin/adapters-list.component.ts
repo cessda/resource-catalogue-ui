@@ -174,7 +174,7 @@ export class AdaptersListComponent implements OnInit {
       map[urlParameter.key] = concatValue;
     }
     // console.log('map', map);
-    this.router.navigate([`/adapters/all`], {queryParams: map});
+    this.router.navigate([`/provider/adapter/all`], {queryParams: map});
   }
 
   handleChangeAndResetPage() {
