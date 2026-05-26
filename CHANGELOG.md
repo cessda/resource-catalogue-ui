@@ -49,6 +49,89 @@
 
 
 
+## [6.0.0](https://github.com/madgeek-arc/resource-catalogue-ui/compare/v5.4.0...v6.0.0) (2026-05-26)
+
+
+### Features
+
+* add active and suspend filters to datasources-list ([a3dd5c4](https://github.com/madgeek-arc/resource-catalogue-ui/commit/a3dd5c43cd8dd3e9bd9a25e4fde4168174b9ad4c))
+* add adapters on provider dashboard ([48c7741](https://github.com/madgeek-arc/resource-catalogue-ui/commit/48c774183d1700039bf568fa46c87937a07043d5))
+* add audit feature and audit state filter to datasources-list ([93cab8a](https://github.com/madgeek-arc/resource-catalogue-ui/commit/93cab8ae6e29fe9183078a4a417b1c34662e4ad0))
+* add catalogueDatasources component and routing ([d71ba65](https://github.com/madgeek-arc/resource-catalogue-ui/commit/d71ba65c5b750bf1fec535cb384e8b32a4713783))
+* add code of conduct and contributing guidelines ([ce03dcf](https://github.com/madgeek-arc/resource-catalogue-ui/commit/ce03dcf56f026cee04c202e4e5acbc664492d456))
+* add datasource dashboard ([a2208ff](https://github.com/madgeek-arc/resource-catalogue-ui/commit/a2208ff7c08cd795b0e4db6c3bbc879abe3e8972))
+* add draft datasources ([78d1511](https://github.com/madgeek-arc/resource-catalogue-ui/commit/78d1511ba919fb8c90504ab355c2559a4bababe2))
+* add error handling for audit actions ([1f518e3](https://github.com/madgeek-arc/resource-catalogue-ui/commit/1f518e36ce37bb2dfd53bcaca4cee526d30af879))
+* add first datasource as template ([aa30a36](https://github.com/madgeek-arc/resource-catalogue-ui/commit/aa30a36fd06436765ba64c3c45a0be1969184873))
+* add history on catalogue dashboard ([8528840](https://github.com/madgeek-arc/resource-catalogue-ui/commit/8528840d1d9b9f08fe92f5c7e5686417548496f9))
+* add rejected datasources and deployable services logic ([8375adc](https://github.com/madgeek-arc/resource-catalogue-ui/commit/8375adc66afe0c9e93072c33d0abd43aa79bbab9))
+* add search bar to datasources-list ([2a4ba15](https://github.com/madgeek-arc/resource-catalogue-ui/commit/2a4ba1574eaecd272bfa82365e61ba8caca399fb))
+* add suspension and activation options to datasources-list ([7127610](https://github.com/madgeek-arc/resource-catalogue-ui/commit/71276104ff6a0fb64ad99409530953afbf0e6d7d))
+* add view-only mode for external catalogues ([b6ff2a6](https://github.com/madgeek-arc/resource-catalogue-ui/commit/b6ff2a6742763bdfff807a6dda32161d896be28b))
+* assign guidelines and configuration template instances to datasources ([22e2001](https://github.com/madgeek-arc/resource-catalogue-ui/commit/22e200113daef1e9204ed2379866e870674c6b4a))
+* dynamic initialization of vocabularies and urlParams feature ([a9a5b4c](https://github.com/madgeek-arc/resource-catalogue-ui/commit/a9a5b4c3d27047a1d2aa09de8608084a5845723c))
+* prefill nodePID when it is not of vocabulary type ([915fedd](https://github.com/madgeek-arc/resource-catalogue-ui/commit/915fedda9514750ae7cf103d8a64c0bd37a9eed2))
+* show catalogue list for EPOTs ([6ec83b7](https://github.com/madgeek-arc/resource-catalogue-ui/commit/6ec83b71c69678ae80531048630f02da2f3275a3))
+* show select-first datasource page for templates ([8d84e98](https://github.com/madgeek-arc/resource-catalogue-ui/commit/8d84e98c38516e1c9ec7033a3ed4b3a7d369a266))
+* submit new Catalogue under Provider ([82a7b47](https://github.com/madgeek-arc/resource-catalogue-ui/commit/82a7b47bc5580ec4142b7e480506768323b9b725))
+* update dynamic-catalogue ([24de921](https://github.com/madgeek-arc/resource-catalogue-ui/commit/24de921b7a42fc4bdbc4e4dbc8c5460920cad2b5))
+* update my-providers action buttons for external providers ([25c3d57](https://github.com/madgeek-arc/resource-catalogue-ui/commit/25c3d57d3f67bdeb4fce794495194cdca50bb400))
+
+
+### Bug Fixes
+
+* adapter form submission ([db20525](https://github.com/madgeek-arc/resource-catalogue-ui/commit/db20525c054658e20df5d18067fb940adacd0b93))
+* Add missing material symbols ([3308f7b](https://github.com/madgeek-arc/resource-catalogue-ui/commit/3308f7b61b4e389005f31ab4ae9c64e5669d8463))
+* add openaireId param on datasource methods and handle it as an alternative PID in datasource form ([37bbec0](https://github.com/madgeek-arc/resource-catalogue-ui/commit/37bbec05cf0221d48c2f514efcb69ded4d418d40))
+* autofill users on adapters form ([966a43b](https://github.com/madgeek-arc/resource-catalogue-ui/commit/966a43bdd8407803d98b494e957866e2e81a70a1))
+* blank page on provider update ([3b32e3c](https://github.com/madgeek-arc/resource-catalogue-ui/commit/3b32e3ccbb3c8f8e12488a93cad26fa8bb2facd5))
+* breadcrumbs pids encoding ([a9bb08e](https://github.com/madgeek-arc/resource-catalogue-ui/commit/a9bb08ed17512fd72bbf5520000389ba5e809fe8))
+* catalogue facet on resources list component ([22af30b](https://github.com/madgeek-arc/resource-catalogue-ui/commit/22af30b2557a1cd2e2e1803c72bcc96ac8c13ab7))
+* catalogue-dashboard history link update ([f6c9bd5](https://github.com/madgeek-arc/resource-catalogue-ui/commit/f6c9bd58821bbba3875e6caf5b8972a42abc18b1))
+* datasource logo display ([4714bf9](https://github.com/madgeek-arc/resource-catalogue-ui/commit/4714bf97760587624bbb7fa09a10be5882c8ec23))
+* datasource select page navigation ([d2dea92](https://github.com/madgeek-arc/resource-catalogue-ui/commit/d2dea92ae7e8a132a2d781feebd4ec0751ca363e))
+* deployable form submission ([77c8ae7](https://github.com/madgeek-arc/resource-catalogue-ui/commit/77c8ae7a8d87d8fef7a5c84d9285ac57cc0d62b3))
+* display arrays of objects on provider-info page ([34fda4b](https://github.com/madgeek-arc/resource-catalogue-ui/commit/34fda4bd25a96c80ae5207e34974b3a419a8ab3d))
+* error messages ([9a719e1](https://github.com/madgeek-arc/resource-catalogue-ui/commit/9a719e183624e2254859063300be66f16f12cbef))
+* fetch catalogueId to update each dashboard view accordingly ([90c9357](https://github.com/madgeek-arc/resource-catalogue-ui/commit/90c93579dd9ebaeb3f31e02c1a960a4b850054dc))
+* first datasource navigation ([f3a48ef](https://github.com/madgeek-arc/resource-catalogue-ui/commit/f3a48ef527e76cd2e8312ee4f4d0c29e5aff8e71))
+* first deployable application missing update button ([08f9736](https://github.com/madgeek-arc/resource-catalogue-ui/commit/08f97363daa3e79c06d1c3e320da359781efaf64))
+* forms submission errors ([fdddaa4](https://github.com/madgeek-arc/resource-catalogue-ui/commit/fdddaa474106a82aa6a17c9530a2976d98222da6))
+* handleError method to use message ([6f3b736](https://github.com/madgeek-arc/resource-catalogue-ui/commit/6f3b73676dd56983eaf89eb275921ae812bc36dc))
+* lowercase adapter on answer ([3c70771](https://github.com/madgeek-arc/resource-catalogue-ui/commit/3c7077123d63f453725e7c2805f01a96b62b66e3))
+* make non-navigable breadcrumbs non-clickable ([067d1ff](https://github.com/madgeek-arc/resource-catalogue-ui/commit/067d1ffbb090dccdd82ab19bdd6614adb074a774))
+* minor fix ([5844a3e](https://github.com/madgeek-arc/resource-catalogue-ui/commit/5844a3e800cd15e8c5648b084a85a56d59be0092))
+* minor fix on guidelines form ([3041029](https://github.com/madgeek-arc/resource-catalogue-ui/commit/3041029236c0ac12478107a4cba493b307e04834))
+* navigation fixes ([32863d1](https://github.com/madgeek-arc/resource-catalogue-ui/commit/32863d13594802d99518084b098c4d37aacb2ca9))
+* navigation issues ([5c431ce](https://github.com/madgeek-arc/resource-catalogue-ui/commit/5c431ce2c444161767c3cf34dd8d9466f4fef687))
+* NG04003 minor issue and MyTickets returning ([5113019](https://github.com/madgeek-arc/resource-catalogue-ui/commit/51130199155f0b25ddb0d650051849d58ba0cf05))
+* pass payloadAnswer to service form ([152c84b](https://github.com/madgeek-arc/resource-catalogue-ui/commit/152c84b559d0b3506a66435904f9020d45013d86))
+* path for provider view ([af08f9a](https://github.com/madgeek-arc/resource-catalogue-ui/commit/af08f9a6b045be093dda7bb76d1fd00f9e2562b7))
+* quickfix for fetching resources without catalogueId ([d0d0197](https://github.com/madgeek-arc/resource-catalogue-ui/commit/d0d0197895b4d57cdc32d4022cdec46a6247d8bd))
+* refresh ticket after reply to show updated conversation ([c51bce5](https://github.com/madgeek-arc/resource-catalogue-ui/commit/c51bce5e82aa2fcbf8f7b417cfcd4f734a7d5d69))
+* remove catalogue_id from getResourceBundles mandatory params ([32a587e](https://github.com/madgeek-arc/resource-catalogue-ui/commit/32a587e6654bb3790fbad32c9f7d05c12e003dee))
+* remove default sorting when search query is active on EPOT pages, and use relevance instead ([ea13037](https://github.com/madgeek-arc/resource-catalogue-ui/commit/ea13037b7b6e46abef37a80c0294e8918c14e0e4))
+* remove incompatible dependencies ([22391e0](https://github.com/madgeek-arc/resource-catalogue-ui/commit/22391e0737bc7999eed7739ee55a647d3867536a))
+* remove minimum character length restriction from update form ([29869b8](https://github.com/madgeek-arc/resource-catalogue-ui/commit/29869b8309641951a9408c53d23de758b19fe3cf))
+* remove unnecessary methods ([7733c1e](https://github.com/madgeek-arc/resource-catalogue-ui/commit/7733c1e4fcd6f5f3f27b11f8d8b6694cb9deacf8))
+* resolve invalid serviceBundle.service.catalogueId references ([c93791e](https://github.com/madgeek-arc/resource-catalogue-ui/commit/c93791ea1f32fbb76210e5e659d37a3a0d667377))
+* routing error on handleChange on adapters-list page ([f5c3861](https://github.com/madgeek-arc/resource-catalogue-ui/commit/f5c3861cd618951d207ef9dd04ad56f999cd5844))
+* set vocabulary ([73a5feb](https://github.com/madgeek-arc/resource-catalogue-ui/commit/73a5feb177d10c5140d31457f748bde18e81d416))
+* Sets active flag to 'false' when rejecting a resource ([390f90e](https://github.com/madgeek-arc/resource-catalogue-ui/commit/390f90ed1d974f82582b95d0b02fa514c7c4f918))
+* suspend functionality ([cc23a57](https://github.com/madgeek-arc/resource-catalogue-ui/commit/cc23a575fc68b13831ee10221023bae7f079c739))
+* suspend provider method ([03c777f](https://github.com/madgeek-arc/resource-catalogue-ui/commit/03c777f75db64cc420ef75d449e1410cae61702a))
+* terms of use api calls ([f510263](https://github.com/madgeek-arc/resource-catalogue-ui/commit/f5102636ff0cdcd96f27b20ccfc10ccc82e115cf))
+* Ticket list infinite loading ([c0a8202](https://github.com/madgeek-arc/resource-catalogue-ui/commit/c0a820267d1c8c91eeccd87b60ec878b64c602df))
+* undefined catalogueId ([8bd08d5](https://github.com/madgeek-arc/resource-catalogue-ui/commit/8bd08d5ee863a4ae59ffd605a86b7f095b3e9558))
+* undefined catalogueId and update api calls ([5137a72](https://github.com/madgeek-arc/resource-catalogue-ui/commit/5137a72f6bc6a74a2cd4f93324f860fb1dbcc340))
+* update catalogue resources GET methods, fix paths, and fix catalogue-datasources component ([b8c69a7](https://github.com/madgeek-arc/resource-catalogue-ui/commit/b8c69a73733550b14dbd1f0c0b825e5e4802447d))
+* update error handling ([1eb0e0e](https://github.com/madgeek-arc/resource-catalogue-ui/commit/1eb0e0ef714e6831f60eb20e6ef8f960e3cc8747))
+
+
+### Miscellaneous Chores
+
+* **release:** release 6.0.0 ([f3d5a1f](https://github.com/madgeek-arc/resource-catalogue-ui/commit/f3d5a1f78526741928e00d83a6279fa6bf11f891))
+
 ## [5.4.0](https://github.com/madgeek-arc/resource-catalogue-ui/compare/v5.3.0...v5.4.0) (2025-12-23)
 
 
