@@ -1,5 +1,6 @@
 def DOCKER_IMAGE = null
 def DOCKER_TAG = ''
+def DOCKER_IMAGE_SHA = ''
 
 pipeline {
   agent any
@@ -47,6 +48,7 @@ pipeline {
       steps{
         script {
           DOCKER_IMAGE = docker.build("${REGISTRY}/${IMAGE_NAME}:${DOCKER_TAG}", "--build-arg configuration=${BUILD_CONFIGURATION} .")
+          DOCKER_IMAGE_SHA = sh(script: "docker inspect --format='{{.Id}}' ${DOCKER_IMAGE.id}", returnStdout: true).trim()
         }
       }
     }
@@ -61,7 +63,7 @@ pipeline {
         script {
           withCredentials([usernamePassword(credentialsId: "${REGISTRY_CRED}", usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
             sh """
-              echo "Pushing image: ${DOCKER_IMAGE.id}"
+              echo "Pushing image: ${DOCKER_IMAGE_SHA}"
               echo "\$DOCKER_PASS" | docker login ${REGISTRY} -u "\$DOCKER_USER" --password-stdin
             """
             if (env.TAG_NAME) {
@@ -116,8 +118,8 @@ pipeline {
   post {
     always {
       script {
-        if (DOCKER_IMAGE) {
-          sh "docker rmi -f \$(docker inspect --format='{{.Id}}' ${DOCKER_IMAGE.id})"
+        if (DOCKER_IMAGE_SHA) {
+          sh "docker rmi -f ${DOCKER_IMAGE_SHA} || true"
         }
       }
     }
