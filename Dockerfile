@@ -6,7 +6,10 @@ WORKDIR /usr/src/app
 COPY package.json ./
 
 RUN npm install
-COPY . .
+
+COPY angular.json tsconfig.json tslint.json .browserslistrc ./
+COPY src ./src
+
 ARG configuration=prod
 RUN npm run build:$configuration
 
