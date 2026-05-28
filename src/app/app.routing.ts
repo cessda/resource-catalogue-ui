@@ -12,9 +12,8 @@ import {BecomeAProviderComponent} from './pages/serviceprovider/become-a-provide
 import {VocabularyRequestsComponent} from '../lib/pages/admin/vocabulary-requests.component';
 import {HomeComponent} from './pages/home/home.component';
 import {ComingSoonPageComponent} from "../lib/shared/coming-soon-page/coming-soon-page.component";
-import {
-  DeployableServiceDashboardModule
-} from "../lib/pages/provider/dashboard/deployable-service-dashboard/deployable-service-dashboard.module";
+import {FormBuilderComponent} from "../dynamic-catalogue/pages/form-builder/form-builder.component";
+import {FormsListComponent} from "../dynamic-catalogue/pages/forms-list/forms-list.component";
 
 const appRoutes: Routes = [
   {
@@ -54,6 +53,18 @@ const appRoutes: Routes = [
     data: {
       breadcrumb: 'Resources Statistics'
     }
+  },
+  {
+    path: 'fb',
+    component: FormsListComponent,
+  },
+  {
+    path: 'fb/new-form',
+    component: FormBuilderComponent,
+  },
+  {
+    path: 'fb/:id/edit',
+    component: FormBuilderComponent,
   },
   {
     path: 'provider',

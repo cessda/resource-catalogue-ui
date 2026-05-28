@@ -53,6 +53,7 @@ import {HelpdeskService} from "./services/helpdesk.service";
 import {DeployableServiceService} from "../lib/services/deployable-service.service";
 import {ConfigService} from '../lib/services/config.service';
 import {AccountingStatsService} from "../lib/services/accounting-stats.service";
+import {APP_ENV} from "../dynamic-catalogue/config/app-env.token";
 
 declare var require: any;
 
@@ -126,6 +127,7 @@ export function highchartsFactory() {
         CookieLawModule,
         // MarkdownModule.forRoot(),
         AppRoutingModule], providers: [
+        { provide: APP_ENV, useValue: environment },
         {
             provide: HTTP_INTERCEPTORS,
             useClass: AuthenticationInterceptor,
