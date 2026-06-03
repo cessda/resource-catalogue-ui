@@ -24,7 +24,7 @@ pipeline {
     stage('Determine Docker Tag') {
       steps {
         script {
-          DOCKER_TAG = sh(script: """grep '"version"' package.json | head -1 | sed 's/.*"version"[[:space:]]*:[[:space:]]*"//;s/".*//'""", returnStdout: true).trim()
+          DOCKER_TAG = sh(script: 'awk -F\'"\' \'/"version"/{print $4; exit}\' package.json', returnStdout: true).trim()
           echo "Docker tag: ${DOCKER_TAG}"
           currentBuild.displayName = "${currentBuild.displayName}-${DOCKER_TAG}"
         }
