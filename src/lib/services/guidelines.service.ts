@@ -130,7 +130,7 @@ export class GuidelinesService {
 
   saveConfigurationTemplateInstance(payload: any) {
     console.log(payload);
-    const shouldPut = !!payload.id; // PUT if id exists, else POST
+    const shouldPut = !!payload?.id; // PUT if id exists, else POST
     return this.http[shouldPut ? 'put' : 'post'](this.base + `/configurationTemplateInstance`, payload, this.options);
   }
 

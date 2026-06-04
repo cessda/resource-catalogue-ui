@@ -11,7 +11,6 @@ import {ConfigService} from '../../services/config.service';
 import {environment} from '../../../environments/environment';
 import {ActivatedRoute, Router} from '@angular/router';
 import {ServiceProviderService} from '../../services/service-provider.service';
-import {RecommendationsService} from "../../services/recommendations.service";
 import {CatalogueService} from "../../services/catalogue.service";
 import {pidHandler} from "../../shared/pid-handler/pid-handler.service";
 import {FormControlService} from "../../../dynamic-catalogue/services/form-control.service";
@@ -138,7 +137,6 @@ export class ServiceFormComponent implements OnInit {
   constructor(protected injector: Injector,
               protected authenticationService: AuthenticationService,
               protected serviceProviderService: ServiceProviderService,
-              protected recommendationsService: RecommendationsService,
               protected catalogueService: CatalogueService,
               protected route: ActivatedRoute,
               public pidHandler: pidHandler,

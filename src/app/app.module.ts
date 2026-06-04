@@ -44,7 +44,6 @@ import {CatalogueService} from "../lib/services/catalogue.service";
 import {ServiceExtensionsService} from "../lib/services/service-extensions.service";
 import {DatasourceService} from "../lib/services/datasource.service";
 import {TrainingResourceService} from "../lib/services/training-resource.service";
-import {RecommendationsService} from "../lib/services/recommendations.service";
 import {GuidelinesService} from "../lib/services/guidelines.service";
 import {pidHandler} from "../lib/shared/pid-handler/pid-handler.service";
 import {FormControlService} from "../dynamic-catalogue/services/form-control.service";
@@ -151,7 +150,6 @@ export function highchartsFactory() {
         CatalogueService,
         EmailService,
         DatePipe,
-        RecommendationsService,
         pidHandler,
         FormControlService,
         AdaptersService,

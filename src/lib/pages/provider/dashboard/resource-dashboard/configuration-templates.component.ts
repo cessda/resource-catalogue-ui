@@ -154,7 +154,7 @@ export class ConfigurationTemplatesComponent implements OnInit {
   }
 
   transformToModelId(templateId: string): string {
-      return 'm-b-' + templateId.replace('/', '-');
+      return 'm-b-' + templateId.replace('/', '-'); //todo: could simplify ids and remove this
     }
 
   resetVariables() {
@@ -175,7 +175,7 @@ export class ConfigurationTemplatesComponent implements OnInit {
   saveForm(submittedEvent: any, templateId: string): void {
     let myFormGroup: FormGroup = submittedEvent;
     const ctiValue = submittedEvent.value.configurationTemplateInstance;
-    const isUpdate = !!ctiValue.id;
+    const isUpdate = !!ctiValue?.id;
     this.guidelinesService.saveConfigurationTemplateInstance(ctiValue).subscribe({
       next: (savedInstance) => {
         myFormGroup.patchValue({configurationTemplateInstance: savedInstance}); // fill the form with the response because the id in now generated
