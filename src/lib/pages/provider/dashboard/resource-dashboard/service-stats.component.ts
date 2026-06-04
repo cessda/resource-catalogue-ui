@@ -37,7 +37,6 @@ export class ServiceStatsComponent implements OnInit, OnDestroy {
   Highcharts: typeof Highcharts = Highcharts;
   chartConstructor = 'mapChart';
   serviceVisitsOptions: any = null;
-  serviceRatingsOptions: any = null;
   serviceAddsToProjectOptions: any = null;
   serviceMapOptions: any = null;
 
@@ -195,40 +194,6 @@ export class ServiceStatsComponent implements OnInit, OnDestroy {
           enabled: false
         }
       };
-    }
-  }
-
-  setRatingsForService(data: any) {
-    if (data) {
-      this.serviceRatingsOptions = {
-        title: {
-          text: 'Number of ratings over time'
-        },
-        xAxis: {
-          type: 'datetime',
-          dateTimeLabelFormats: { // don't display the dummy year
-            month: '%e. %b',
-            year: '%b'
-          },
-          title: {
-            text: 'Date'
-          }
-        },
-        yAxis: {
-          title: {
-            text: 'Average rating'
-          }
-        },
-        series: [{
-          name: 'Average rating over time',
-          color: '#6B0035',
-          data: data
-        }],
-        credits: {
-          enabled: false
-        }
-      };
-
     }
   }
 

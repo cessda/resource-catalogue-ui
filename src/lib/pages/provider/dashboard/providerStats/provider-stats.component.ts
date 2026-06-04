@@ -48,7 +48,6 @@ export class ProviderStatsComponent implements OnInit {
   public WW: string[];
 
   providerVisitsOptions: any = null;
-  providerRatingsOptions: any = null;
   providerFavouritesOptions: any = null;
   providerAddsToProjectOptions: any = null;
   providerOrdersOptions: any = null;
@@ -362,42 +361,6 @@ export class ProviderStatsComponent implements OnInit {
         series: [{
           name: 'Favourites orders time',
           color: '#C72B28',
-          data: data
-        }],
-        credits: {
-          enabled: false
-        }
-      };
-    }
-  }
-
-  setRatingsForProvider(data: any) {
-    if (data) {
-      this.providerRatingsOptions = {
-        chart: {
-          height: (3 / 4 * 100) + '%', // 3:4 ratio
-        },
-        title: {
-          text: 'Number of Ratings over time'
-        },
-        xAxis: {
-          type: 'datetime',
-          dateTimeLabelFormats: { // don't display the dummy year
-            month: '%e. %b',
-            year: '%b'
-          },
-          title: {
-            text: 'Date'
-          }
-        },
-        yAxis: {
-          title: {
-            text: 'Average rating'
-          }
-        },
-        series: [{
-          name: 'Average ratings over time',
-          color: '#013203',
           data: data
         }],
         credits: {
