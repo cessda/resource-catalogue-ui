@@ -11,6 +11,7 @@
       </a>
       <a [routerLink]="['/helpdesk/tickets']" routerLinkActive="active" class="nav-link">
         My Tickets
+        <span *ngIf="totalUnread > 0" class="uk-badge uk-margin-small-left" style="background-color:#f0506e">{{ totalUnread }}</span>
       </a>
     </nav>
   </div>
