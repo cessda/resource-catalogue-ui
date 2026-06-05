@@ -49,6 +49,13 @@
 
 
 
+## [6.1.0](https://github.com/madgeek-arc/resource-catalogue-ui/compare/v6.0.0...v6.1.0) (2026-06-05)
+
+
+### Features
+
+* add unread notification badges to helpdesk tickets ([3a8806d](https://github.com/madgeek-arc/resource-catalogue-ui/commit/3a8806d66b68b002a614b567a44144fbb5d77394))
+
 ## [6.0.0](https://github.com/madgeek-arc/resource-catalogue-ui/compare/v5.4.0...v6.0.0) (2026-05-26)
 
 
