@@ -148,6 +148,6 @@ their invaluable support and resources.
 [coc-badge]: https://img.shields.io/badge/Contributor%20Covenant-2.1-4baaaa.svg
 [coc-link]: CODE_OF_CONDUCT.md
 [sqaaas-badge]: https://img.shields.io/badge/sqaaas%20software-bronze-e6ae77
-[sqaaas-link]: https://api.eu.badgr.io/public/assertions/odpAhWUqTNCyZpOYupboVg
+[sqaaas-link]: https://api.eu.badgr.io/public/assertions/Xgz4hAJ9SP6fRuq72lLcIQ
 [contrib]: https://github.com/madgeek-arc/resource-catalogue-ui-eosc/graphs/contributors
 [backend-repo]: https://github.com/madgeek-arc/resource-catalogue
