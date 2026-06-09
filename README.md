@@ -81,6 +81,8 @@ Build for the beta environment:
 npm run build:beta
 ```
 
+> **Note:** Beta builds enable additional debugging information and display a **Beta** label in the top-left corner of the application.
+
 The compiled output is placed in the `dist/` directory.
 
 ---
