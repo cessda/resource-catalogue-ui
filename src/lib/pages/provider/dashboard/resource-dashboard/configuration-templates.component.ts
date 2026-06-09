@@ -12,6 +12,7 @@ import {FormGroup} from "@angular/forms";
 import { forkJoin, of } from 'rxjs';
 import {catchError, switchMap, map, finalize} from 'rxjs/operators';
 import {ServiceExtensionsService} from "../../../../services/service-extensions.service";
+import {pidHandler} from "../../../../shared/pid-handler/pid-handler.service";
 
 @Component({
     selector: 'app-monitoring-info',
@@ -50,7 +51,8 @@ export class ConfigurationTemplatesComponent implements OnInit {
               protected guidelinesService: GuidelinesService,
               protected serviceExtensionsService: ServiceExtensionsService,
               protected route: ActivatedRoute,
-              protected config: ConfigService
+              protected config: ConfigService,
+              public pidHandler: pidHandler
   ) {}
 
   ngOnInit() {

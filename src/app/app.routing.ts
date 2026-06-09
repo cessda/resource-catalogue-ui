@@ -55,15 +55,11 @@ const appRoutes: Routes = [
     }
   },
   {
-    path: 'fb',
-    component: FormsListComponent,
-  },
-  {
-    path: 'fb/new-form',
+    path: 'fb/guideline/:guidelineId', //GET the conf models that you have access to
     component: FormBuilderComponent,
   },
   {
-    path: 'fb/:id/edit',
+    path: 'fb/guideline/:guidelineId/model/:id/edit', //GET model with id to edit OR GET base template model and POST instead of PUT
     component: FormBuilderComponent,
   },
   {

@@ -2,8 +2,15 @@
   <div class="uk-container uk-container-expand uk-margin-left uk-margin-right">
 
     @if (currentResourceGuideline) {
-      <div class="uk-margin-large-top">
-        <h3>{{currentResourceGuideline.name}}</h3>
+      <div class="uk-margin-large-top uk-flex uk-flex-middle uk-flex-between">
+        <h3 class="uk-margin-remove">
+          {{ currentResourceGuideline.name }}
+        </h3>
+
+        <button type="button" class="uk-button uk-button-primary"
+                [routerLink]="['/fb/guideline/' + pidHandler.customEncodeURIComponent(currentResourceGuideline.id)]">
+          Create template
+        </button>
       </div>
     }
 
