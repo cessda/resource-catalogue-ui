@@ -1,0 +1,67 @@
+<div class="uk-container uk-margin-large-top">
+
+  <div class="uk-flex uk-flex-between uk-flex-middle uk-margin-medium-bottom">
+    <h2 class="uk-margin-remove">
+      Configuration Templates Management
+    </h2>
+
+    <button
+      type="button"
+      class="uk-button uk-button-primary"
+      (click)="createNew()">
+
+      <span
+        class="material-symbols-outlined uk-margin-small-right"
+        style="vertical-align: middle;">
+        add
+      </span>
+
+      Create new
+    </button>
+  </div>
+
+  @if (loading) {
+    <div class="uk-text-muted">
+      Loading templates...
+    </div>
+  }
+  @else if (error) {
+    <div class="uk-alert-danger" uk-alert>
+      {{ error }}
+    </div>
+  }
+  @else if (templates.length === 0) {
+    <div class="uk-alert-primary" uk-alert>
+      No configuration templates found.
+    </div>
+  }
+  @else {
+    <div class="uk-list uk-list-divider">
+
+      @for (template of templates; track template.id) {
+        <div class="uk-flex uk-flex-between uk-flex-middle uk-padding-small">
+
+          <div>
+            <div class="uk-text-bold">
+              {{ template.configurationTemplate.name }}
+            </div>
+
+            @if (template.configurationTemplate.description) {
+              <div class="uk-text-meta">
+                {{ template.configurationTemplate.description }}
+              </div>
+            }
+          </div>
+
+          <button type="button" class="uk-button uk-button-secondary uk-border-pill uk-transition-toggle" (click)="edit(template)">
+            <span class="material-symbols-outlined uk-margin-small-right" style="vertical-align: middle;">edit_square</span>
+            Edit
+          </button>
+
+        </div>
+      }
+
+    </div>
+  }
+
+</div>

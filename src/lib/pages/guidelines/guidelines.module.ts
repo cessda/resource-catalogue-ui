@@ -11,21 +11,23 @@ import {GuidelinesFormComponent} from "./guidelines-form.component";
 import {GuidelinesListComponent} from "../admin/guidelines-list.component";
 import {UpdateGuidelinesFormComponent} from "./update-guidelines-form.component";
 import {DynamicFormModule} from "../../../dynamic-catalogue/pages/dynamic-form/dynamic-form.module";
+import {ConfigurationTemplatesManagementComponent} from "../provider/dashboard/configurationTemplates/configuration-templates-management.component";
 
 
 @NgModule({
-    imports: [
-        SharedModule,
-        CommonModule,
-        FormsModule,
-        // LMarkdownEditorModule,
-        ReactiveFormsModule,
-        GuidelinesRouting,
-        HighchartsChartModule,
-        NgSelectModule,
-        // MarkdownModule,
-        DynamicFormModule
-    ],
+  imports: [
+    SharedModule,
+    CommonModule,
+    FormsModule,
+    // LMarkdownEditorModule,
+    ReactiveFormsModule,
+    GuidelinesRouting,
+    HighchartsChartModule,
+    NgSelectModule,
+    // MarkdownModule,
+    DynamicFormModule,
+    ConfigurationTemplatesManagementComponent
+  ],
   declarations: [
     GuidelinesFormComponent,
     UpdateGuidelinesFormComponent,

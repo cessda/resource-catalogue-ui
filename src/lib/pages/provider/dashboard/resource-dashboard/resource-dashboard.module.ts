@@ -12,7 +12,7 @@ import {ResourceDashboardComponent} from './resource-dashboard.component';
 import {MonitoringInfoComponent} from "./monitoring-info.component";
 import {ResourceGuidelinesFormComponent} from "../../../provider-resources/resource-guidelines/resource-guidelines-form.component";
 import {NgSelectModule} from "@ng-select/ng-select";
-import {ConfigurationTemplatesComponent} from "./configuration-templates.component";
+import {ConfigurationTemplatesComponent} from "../configurationTemplates/configuration-templates.component";
 import {DynamicFormModule} from "../../../../../dynamic-catalogue/pages/dynamic-form/dynamic-form.module";
 import {ServiceAccountingStatsComponent} from "./service-accounting-stats.component";
 

@@ -124,6 +124,11 @@ export class GuidelinesService {
     return this.http.get<any>(this.base + `/configurationTemplate/getAllByInteroperabilityRecordId/${guidelineId}`, this.options);
   }
 
+  getTemplatesForGuidelineWithAuth(guidelineId: string) {
+    guidelineId = decodeURIComponent(guidelineId);
+    return this.http.get<any>(this.base + `/configurationTemplate/bundle/getAllByInteroperabilityRecordId/${guidelineId}`, this.options);
+  }
+
   getTemplatesForGuidelinesMapping() {
     return this.http.get<any>(this.base + `/configurationTemplate/interoperabilityRecordIdToConfigurationTemplateListMap`, this.options);
   }

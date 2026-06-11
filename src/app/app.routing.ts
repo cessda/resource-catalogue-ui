@@ -12,8 +12,6 @@ import {BecomeAProviderComponent} from './pages/serviceprovider/become-a-provide
 import {VocabularyRequestsComponent} from '../lib/pages/admin/vocabulary-requests.component';
 import {HomeComponent} from './pages/home/home.component';
 import {ComingSoonPageComponent} from "../lib/shared/coming-soon-page/coming-soon-page.component";
-import {FormBuilderComponent} from "../dynamic-catalogue/pages/form-builder/form-builder.component";
-import {FormsListComponent} from "../dynamic-catalogue/pages/forms-list/forms-list.component";
 
 const appRoutes: Routes = [
   {
@@ -53,14 +51,6 @@ const appRoutes: Routes = [
     data: {
       breadcrumb: 'Resources Statistics'
     }
-  },
-  {
-    path: 'fb/guideline/:guidelineId', //GET the conf models that you have access to
-    component: FormBuilderComponent,
-  },
-  {
-    path: 'fb/guideline/:guidelineId/model/:id/edit', //GET model with id to edit OR GET base template model and POST instead of PUT
-    component: FormBuilderComponent,
   },
   {
     path: 'provider',

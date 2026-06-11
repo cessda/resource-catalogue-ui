@@ -7,7 +7,7 @@ import {DatasourceDashboardComponent} from './datasource-dashboard.component';
 import {
   ResourceGuidelinesFormComponent
 } from "../../../provider-resources/resource-guidelines/resource-guidelines-form.component";
-import {ConfigurationTemplatesComponent} from "../resource-dashboard/configuration-templates.component";
+import {ConfigurationTemplatesComponent} from "../configurationTemplates/configuration-templates.component";
 
 const datasourceDashboardRoutes: Routes = [
   {
