@@ -1,15 +1,16 @@
-<div class="uk-offcanvas-content">
-
+<div class="uk-offcanvas-content" style="min-height:100vh; display:flex; flex-direction:column;">
   <div>
     <app-external-header uk-sticky style="z-index: 9999"></app-external-header>
     <app-top-menu-eosc style="z-index: -1"></app-top-menu-eosc>
   </div>
 
   <div style="margin-top: 159px;"></div>
-  @if (router.url != '/becomeAProvider' && router.url != '/home' && router.url != '/' && !isDashboardRoute()) {
-    <app-breadcrumbs ></app-breadcrumbs>
-  }
-  <router-outlet></router-outlet>
+  <div style="flex:1;">
+    @if (router.url != '/becomeAProvider' && router.url != '/home' && router.url != '/' && !isDashboardRoute()) {
+      <app-breadcrumbs ></app-breadcrumbs>
+    }
+    <router-outlet></router-outlet>
+  </div>
 
   <div class="helpdesk-overlay uk-animation-scale-up">
     <button class="uk-button helpdesk-overlay-button" [routerLink]="['/helpdesk/create']" type="button">
