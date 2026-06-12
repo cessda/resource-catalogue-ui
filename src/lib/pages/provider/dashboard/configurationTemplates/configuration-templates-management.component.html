@@ -44,6 +44,9 @@
           <div>
             <div class="uk-text-bold">
               {{ template.configurationTemplate.name }}
+              @if (isDevMode()) {
+                <span class="uk-text-muted">({{ template.id }})</span>
+              }
             </div>
 
             @if (template.configurationTemplate.description) {

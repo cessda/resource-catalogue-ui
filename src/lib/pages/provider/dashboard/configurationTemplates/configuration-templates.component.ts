@@ -156,8 +156,8 @@ export class ConfigurationTemplatesComponent implements OnInit {
   }
 
   transformToModelId(templateId: string): string {
-      return 'm-b-' + templateId.replace('/', '-'); //todo: could simplify ids and remove this
-    }
+    return 'm-b-' + templateId.replace('/', '-'); //todo: could simplify ids and remove this
+  }
 
   resetVariables() {
     this.ready = false;

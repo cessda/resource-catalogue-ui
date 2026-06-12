@@ -12,6 +12,7 @@ import {GuidelinesListComponent} from "../admin/guidelines-list.component";
 import {UpdateGuidelinesFormComponent} from "./update-guidelines-form.component";
 import {DynamicFormModule} from "../../../dynamic-catalogue/pages/dynamic-form/dynamic-form.module";
 import {ConfigurationTemplatesManagementComponent} from "../provider/dashboard/configurationTemplates/configuration-templates-management.component";
+import {ConfigurationTemplateFormBuilderComponent} from "../provider/dashboard/configurationTemplates/configuration-template-form-builder.component";
 
 
 @NgModule({
@@ -26,7 +27,8 @@ import {ConfigurationTemplatesManagementComponent} from "../provider/dashboard/c
     NgSelectModule,
     // MarkdownModule,
     DynamicFormModule,
-    ConfigurationTemplatesManagementComponent
+    ConfigurationTemplatesManagementComponent,
+    ConfigurationTemplateFormBuilderComponent
   ],
   declarations: [
     GuidelinesFormComponent,

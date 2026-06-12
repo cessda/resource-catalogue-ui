@@ -6,6 +6,7 @@ import {GuidelinesListComponent} from "../admin/guidelines-list.component";
 import {UpdateGuidelinesFormComponent} from "./update-guidelines-form.component";
 import {FormBuilderComponent} from "../../../dynamic-catalogue/pages/form-builder/form-builder.component";
 import {ConfigurationTemplatesManagementComponent} from "../provider/dashboard/configurationTemplates/configuration-templates-management.component";
+import {ConfigurationTemplateFormBuilderComponent} from "../provider/dashboard/configurationTemplates/configuration-template-form-builder.component";
 
 const guidelinesRoutes: Routes = [
 
@@ -41,8 +42,13 @@ const guidelinesRoutes: Routes = [
     }
   },
   {
+    path: ':guidelineId/model/new', //will not use it probably
+    // component: FormBuilderComponent,
+    component: ConfigurationTemplateFormBuilderComponent,
+  },
+  {
     path: ':guidelineId/model/:id/edit', //GET model with id to edit OR GET base template model and POST instead of PUT
-    component: FormBuilderComponent,
+    component: ConfigurationTemplateFormBuilderComponent,
   }
 ];
 

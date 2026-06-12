@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import {Component, OnInit, inject, isDevMode} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -10,6 +10,7 @@ import { MatListModule } from '@angular/material/list';
 import { GuidelinesService } from '../../../../services/guidelines.service';
 
 import {pidHandler} from "../../../../shared/pid-handler/pid-handler.service";
+import {FormBuilderService} from "../../../../../dynamic-catalogue/services/form-builder.service";
 
 export interface ConfigurationTemplate {
   id: string;
@@ -37,6 +38,7 @@ export class ConfigurationTemplatesManagementComponent implements OnInit {
   private router = inject(Router);
   private guidelinesService = inject(GuidelinesService);
   private readonly pidHandler = inject(pidHandler);
+  private readonly formBuilderService = inject(FormBuilderService);
 
   guidelineId!: string;
 
@@ -66,18 +68,23 @@ export class ConfigurationTemplatesManagementComponent implements OnInit {
   }
 
   createNew(): void {
+    // this.formBuilderService.clear();
     this.router.navigate([
-      `/fb/guideline/${this.guidelineId}/model/new`,
+      `/guidelines/${this.guidelineId}/model/m-b-con-baseTemplate/edit`,
     ]);
   }
 
-  edit(template: ConfigurationTemplate): void {
+  edit(template): void {
+    // console.log(`/guidelines/${this.guidelineId}/model/${this.pidHandler.customEncodeURIComponent(ct.id)}/edit`);
+    this.formBuilderService.setModel(template);
     this.router.navigate([
-      `/guideline/${this.guidelineId}/model/${this.pidHandler.customEncodeURIComponent(template.id)}/edit`,
+      'guidelines', this.guidelineId, 'model', this.transformToModelId(template.id), 'edit'
     ]);
   }
 
-  trackById(_: number, t: ConfigurationTemplate): string {
-    return t.id;
+  transformToModelId(templateId: string): string {
+    return 'm-b-' + templateId.replace('/', '-'); //todo: could simplify ids and remove this
   }
+
+  protected readonly isDevMode = isDevMode;
 }
