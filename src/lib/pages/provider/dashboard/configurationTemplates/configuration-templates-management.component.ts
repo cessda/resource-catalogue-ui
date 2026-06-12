@@ -74,11 +74,11 @@ export class ConfigurationTemplatesManagementComponent implements OnInit {
     ]);
   }
 
-  edit(template): void {
+  edit(id): void {
     // console.log(`/guidelines/${this.guidelineId}/model/${this.pidHandler.customEncodeURIComponent(ct.id)}/edit`);
-    this.formBuilderService.setModel(template);
+    // this.formBuilderService.setModel(template);
     this.router.navigate([
-      'guidelines', this.guidelineId, 'model', this.transformToModelId(template.id), 'edit'
+      'guidelines', this.guidelineId, 'model', this.transformToModelId(id), 'edit'
     ]);
   }
 

@@ -8,6 +8,7 @@ import {
 } from '../domain/eic-model';
 import {Paging} from "../domain/paging";
 import {ConfigService} from "./config.service";
+import {Model} from "../../dynamic-catalogue/domain/dynamic-form-model";
 
 @Injectable()
 export class GuidelinesService {
@@ -149,5 +150,13 @@ export class GuidelinesService {
     return this.http.get<any>(this.base + `/configurationTemplateInstance/resources/${resId}/templates/${ctId}`, this.options);
   }
 
+  saveModel(model: Model | null, editMode: boolean) {
+    if (editMode) {
+      return this.http.put(this.base + `/forms/models/${model?.id}`, model);
+    } else {
+      //todo
+      return this.http.post(this.base + '/forms/models', model);
+    }
+  }
   /** <-- Configuration Templates **/
 }
