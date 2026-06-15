@@ -154,7 +154,6 @@ export class GuidelinesService {
     if (editMode) {
       return this.http.put(this.base + `/forms/models/${model?.id}`, model);
     } else {
-      //todo
       return this.http.post(this.base + '/forms/models', model);
     }
   }
