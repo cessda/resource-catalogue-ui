@@ -68,7 +68,7 @@ export class ConfigurationTemplatesManagementComponent implements OnInit {
   }
 
   createNew(): void {
-    // this.formBuilderService.clear();
+    this.formBuilderService.clear();
     this.router.navigate([
       `/guidelines/${this.guidelineId}/model/m-b-con-baseTemplate/edit`,
     ]);
@@ -77,6 +77,7 @@ export class ConfigurationTemplatesManagementComponent implements OnInit {
   edit(id): void {
     // console.log(`/guidelines/${this.guidelineId}/model/${this.pidHandler.customEncodeURIComponent(ct.id)}/edit`);
     // this.formBuilderService.setModel(template);
+    this.formBuilderService.clear();
     this.router.navigate([
       'guidelines', this.guidelineId, 'model', this.transformToModelId(id), 'edit'
     ]);

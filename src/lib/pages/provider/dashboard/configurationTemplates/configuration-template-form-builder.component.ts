@@ -26,8 +26,8 @@ export class ConfigurationTemplateFormBuilderComponent implements OnInit {
   }
 
   saveMethod(data: any) {
-    const isEdit = !!data.id && data.id !== 'm-b-con-baseTemplate';
-    this.guidelinesService.saveModel(data, isEdit).subscribe({
+    const isEdit = !!data.id && !this.router.url.includes('m-b-con-baseTemplate');
+    this.guidelinesService.saveModel(data, isEdit, this.guidelineId).subscribe({
       next: () => {
         this.router.navigate(['/home']);
       },
