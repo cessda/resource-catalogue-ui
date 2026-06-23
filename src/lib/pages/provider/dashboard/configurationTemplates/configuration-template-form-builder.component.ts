@@ -3,6 +3,7 @@ import {ActivatedRoute, Router} from '@angular/router';
 import { FormBuilderComponent } from '../../../../../dynamic-catalogue/pages/form-builder/form-builder.component';
 import { DynamicCatalogueService } from '../../../../../dynamic-catalogue/services/dynamic-catalogue.service';
 import {GuidelinesService} from "../../../../services/guidelines.service";
+import {FormBuilderService} from "../../../../../dynamic-catalogue/services/form-builder.service";
 
 @Component({
   standalone: true,
@@ -16,6 +17,7 @@ export class ConfigurationTemplateFormBuilderComponent implements OnInit {
   private guidelinesService = inject(GuidelinesService);
   private route = inject(ActivatedRoute);
   private router = inject(Router);
+  private readonly formBuilderService = inject(FormBuilderService);
 
   guidelineId!: string;
   backDestination!: string;
@@ -23,10 +25,26 @@ export class ConfigurationTemplateFormBuilderComponent implements OnInit {
   ngOnInit() {
     this.guidelineId = this.route.snapshot.paramMap.get('guidelineId')!;
     this.backDestination = '/guidelines/'+this.guidelineId+'/configuration-templates-management';
+
+    const id = this.route.snapshot.paramMap.get('id');
+    if (!id) {
+      this.loadBaseTemplate();
+    }
+  }
+
+  loadBaseTemplate(): void {
+    this.guidelinesService.getBaseTemplate().subscribe({
+      next: (template) => {
+        this.formBuilderService.setModel(template);
+      },
+      error: (err) => {
+        console.error('Failed to load base template', err.error.detail);
+      }
+    });
   }
 
   saveMethod(data: any) {
-    const isEdit = !!data.id && !this.router.url.includes('m-b-con-baseTemplate');
+    const isEdit = !!data.id;
     this.guidelinesService.saveModel(data, isEdit, this.guidelineId).subscribe({
       next: () => {
         this.router.navigate(['/home']);

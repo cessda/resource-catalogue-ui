@@ -42,7 +42,7 @@ const guidelinesRoutes: Routes = [
     }
   },
   {
-    path: ':guidelineId/model/new', //will not use it probably
+    path: ':guidelineId/model/new',
     // component: FormBuilderComponent,
     component: ConfigurationTemplateFormBuilderComponent,
   },

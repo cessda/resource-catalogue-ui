@@ -6,11 +6,6 @@
         <h3 class="uk-margin-remove">
           {{ currentResourceGuideline.name }}
         </h3>
-
-        <button type="button" class="uk-button uk-button-primary"
-                [routerLink]="['/guidelines/' + pidHandler.customEncodeURIComponent(currentResourceGuideline.id) + '/configuration-templates-management']">
-          Manage templates
-        </button>
       </div>
     }
 
@@ -66,7 +61,10 @@
                   </div>
                   <div class="form-action-bar titleAndActionsBar uk-flex uk-flex-right justify-content-end">
                     <button class="uk-button uk-button-secondary uk-margin-left"
-                    (click)="children.toArray()[i].parentSubmit()">Save</button>
+                            type="button"
+                            (click)="survey.parentSubmit()">
+                      Save
+                    </button>
                   </div>
                 </app-survey>
 <!--                    <pre *ngIf="this.isDevMode()">{{getAnswerForTemplate(template.id)|json}}</pre>-->

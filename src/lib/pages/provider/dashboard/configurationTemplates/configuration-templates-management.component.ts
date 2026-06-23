@@ -70,22 +70,22 @@ export class ConfigurationTemplatesManagementComponent implements OnInit {
   createNew(): void {
     this.formBuilderService.clear();
     this.router.navigate([
-      `/guidelines/${this.guidelineId}/model/m-b-con-baseTemplate/edit`,
+      `/guidelines/${this.guidelineId}/model/new`,
     ]);
   }
 
-  edit(id): void {
+  edit(configurationTemplateid): void {
     // console.log(`/guidelines/${this.guidelineId}/model/${this.pidHandler.customEncodeURIComponent(ct.id)}/edit`);
     // this.formBuilderService.setModel(template);
     this.formBuilderService.clear();
     this.router.navigate([
-      'guidelines', this.guidelineId, 'model', this.transformToModelId(id), 'edit'
+      'guidelines', this.guidelineId, 'model', configurationTemplateid, 'edit'
     ]);
   }
 
-  transformToModelId(templateId: string): string {
-    return 'm-b-' + templateId.replace('/', '-'); //todo: could simplify ids and remove this
-  }
+  // transformToModelId(templateId: string): string {
+  //   return 'm-b-' + templateId.replace('/', '-'); //todo: could simplify ids and remove this
+  // }
 
   protected readonly isDevMode = isDevMode;
 }

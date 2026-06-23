@@ -150,6 +150,10 @@ export class GuidelinesService {
     return this.http.get<any>(this.base + `/configurationTemplateInstance/resources/${resId}/templates/${ctId}`, this.options);
   }
 
+  getBaseTemplate() {
+    return this.http.get<Model>(this.base + `/configurationTemplateInstance/baseModel`);
+  }
+
   saveModel(model: Model | null, editMode: boolean, guidelineId: string) {
     if (editMode) {
       return this.http.put(this.base + `/forms/models/${model?.id}`, model);

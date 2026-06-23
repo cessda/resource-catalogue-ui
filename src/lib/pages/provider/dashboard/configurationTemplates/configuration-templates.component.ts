@@ -85,54 +85,60 @@ export class ConfigurationTemplatesComponent implements OnInit {
         this.displayMessage = '';
 
         const templateIds = this.templates.map(t => t.id);
-        const modelIds = templateIds.map(id => this.transformToModelId(id));
+        // const modelIds = templateIds.map(id => this.transformToModelId(id));
 
-        const allTemplateCalls = modelIds.map((modelId, index) => {
-          const templateId = templateIds[index];
+        const allTemplateCalls = templateIds.map((templateId) => {
 
           // 1. Fetch the form model
-          return this.serviceProviderService.getFormModelById(modelId).pipe(
-            catchError(err => {
-              console.error(`Model fetch error for ${modelId}`, err);
-              this.formModels[templateId] = null;
-              return of(null); // Continue chain with null
-            }),
-            switchMap(model => {
-              this.formModels[templateId] = model;
+          return this.serviceProviderService.getFormModelByConfigurationTemplateId(templateId).pipe(
+              catchError(err => {
+                console.error(`Model fetch error for ${templateId}`, err);
+                this.formModels[templateId] = null;
+                return of(null);
+              }),
 
-              if (!model) {
-                return of(null); // Skip instance fetch if model failed
-              }
+              switchMap(model => {
+                this.formModels[templateId] = model;
 
-              // 2. Fetch the instance
-              return this.guidelinesService.getInstanceOfTemplate(this.resourceId, templateId).pipe(
-                catchError(err => {
-                  console.error(`Instance fetch error for ${templateId}`, err);
-                  return of(null);
-                }),
-                map(instance => {
-                  if (instance?.id) {
-                    this.answersByTemplateId[templateId] = this.getAnswerForTemplate(instance);
-                    this.payloadAnswer = { answer: { configurationTemplateInstance: instance } };
-                  } else {
-                    // create empty payload if no instance returned
-                    this.answersByTemplateId[templateId] = {
-                      'answer': {
-                        configurationTemplateInstance: {
-                          resourceId: decodeURIComponent(this.resourceId),
-                          configurationTemplateId: modelId.split("-").slice(2).join("/"),
-                          catalogueId: null,
-                          nodePID: (this.config.getProperty('nodePidFixed')) ? this.config.getProperty('nodePid') : null
-                        }
+                if (!model) {
+                  return of(null); // Skip instance fetch if model failed
+                }
+                // 2. Fetch the instance
+                return this.guidelinesService.getInstanceOfTemplate(this.resourceId, templateId).pipe(
+                    catchError(err => {
+                      console.error(`Instance fetch error for ${templateId}`, err);
+                      return of(null);
+                    }),
+
+                    map(instance => {
+                      if (instance?.id) {
+                        this.answersByTemplateId[templateId] =
+                          this.getAnswerForTemplate(instance);
+
+                        this.payloadAnswer = {
+                          answer: {
+                            configurationTemplateInstance: instance
+                          }
+                        };
+                      } else {
+                        // create empty payload if no instance returned
+                        this.answersByTemplateId[templateId] = {
+                          answer: {
+                            configurationTemplateInstance: {
+                              resourceId: decodeURIComponent(this.resourceId),
+                              configurationTemplateId: templateId,
+                              catalogueId: null,
+                              nodePID: this.config.getProperty('nodePidFixed') ? this.config.getProperty('nodePid') : null
+                            }
+                          }
+                        };
                       }
-                    };
-                  }
 
-                  return true; // Success marker
-                })
-              );
-            })
-          );
+                      return true;
+                    })
+                  );
+              })
+            );
         });
 
         // Wait for all model + instance pairs to complete
@@ -155,9 +161,9 @@ export class ConfigurationTemplatesComponent implements OnInit {
     });
   }
 
-  transformToModelId(templateId: string): string {
-    return 'm-b-' + templateId.replace('/', '-'); //todo: could simplify ids and remove this
-  }
+  // transformToModelId(templateId: string): string {
+  //   return 'm-b-' + templateId.replace('/', '-'); //todo: could simplify ids and remove this
+  // }
 
   resetVariables() {
     this.ready = false;
@@ -178,6 +184,20 @@ export class ConfigurationTemplatesComponent implements OnInit {
     let myFormGroup: FormGroup = submittedEvent;
     const ctiValue = submittedEvent.value.configurationTemplateInstance;
     const isUpdate = !!ctiValue?.id;
+    // console.log(submittedEvent.value);
+    // const formValue = submittedEvent?.value;
+    //
+    // console.log('DEBUG formValue:', formValue);
+    //
+    // const ctiValue =
+    //   formValue?.configurationTemplateInstance
+    //   ?? formValue?.[this.formModels[templateId]?.name]?.configurationTemplateInstance;
+    //
+    // if (!ctiValue) {
+    //   console.error('CTI VALUE IS MISSING', formValue);
+    //   return;
+    // }
+
     this.guidelinesService.saveConfigurationTemplateInstance(ctiValue).subscribe({
       next: (savedInstance) => {
         myFormGroup.patchValue({configurationTemplateInstance: savedInstance}); // fill the form with the response because the id in now generated
