@@ -1,5 +1,7 @@
-import {Component, OnInit} from '@angular/core';
-import {NavigationEnd, Router} from '@angular/router';
+import {Component, inject, OnInit} from '@angular/core';
+import {ActivationEnd, NavigationEnd, Router} from '@angular/router';
+import {toSignal} from "@angular/core/rxjs-interop";
+import {filter, map, startWith} from "rxjs/operators";
 
 @Component({
     selector: 'app-root',
@@ -10,8 +12,19 @@ export class AppComponent implements OnInit {
 
   breadcrumbs: string[] = [];
 
-  constructor(public router: Router) {
-  }
+  protected router = inject(Router);
+
+  hideHeaderSignal = toSignal(
+    this.router.events.pipe(
+      filter((event): event is ActivationEnd => event instanceof ActivationEnd),
+      filter(event => event.snapshot.firstChild === null),
+      map(event => event.snapshot.data['hideHeader'] ?? false),
+      startWith(false)
+    ),
+    { initialValue: false }
+  );
+
+  hideHeader = this.hideHeaderSignal;
 
   ngOnInit() {
     this.router.events.subscribe((evt: any) => {

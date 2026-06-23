@@ -45,10 +45,12 @@ const guidelinesRoutes: Routes = [
     path: ':guidelineId/model/new',
     // component: FormBuilderComponent,
     component: ConfigurationTemplateFormBuilderComponent,
+    data: { hideHeader: true }
   },
   {
     path: ':guidelineId/model/:id/edit', //GET model with id to edit OR GET base template model and POST instead of PUT
     component: ConfigurationTemplateFormBuilderComponent,
+    data: { hideHeader: true }
   }
 ];
 

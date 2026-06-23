@@ -10,7 +10,7 @@ import {FormBuilderService} from "../../../../../dynamic-catalogue/services/form
   imports: [FormBuilderComponent],
   template:
     '<h1 style="margin-left: 12px;">Configuration Template Form Builder</h1>' +
-    '<app-form-builder [customActions]="true" (saveAction)="saveMethod($event)" [backDestination]="backDestination"></app-form-builder>',
+    '<app-form-builder [customActions]="true" (saveAction)="saveMethod($event)" [backDestination]="backDestination"></app-form-builder>'
 })
 export class ConfigurationTemplateFormBuilderComponent implements OnInit {
   private dynamicCatalogueService = inject(DynamicCatalogueService);
