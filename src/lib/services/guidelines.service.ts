@@ -9,6 +9,7 @@ import {
 import {Paging} from "../domain/paging";
 import {ConfigService} from "./config.service";
 import {Model} from "../../dynamic-catalogue/domain/dynamic-form-model";
+import {switchMap} from "rxjs/operators";
 
 @Injectable()
 export class GuidelinesService {
@@ -158,7 +159,16 @@ export class GuidelinesService {
     if (editMode) {
       return this.http.put(this.base + `/forms/models/${model?.id}`, model);
     } else {
-      return this.http.post(this.base + '/forms/models', model);
+      return this.http.post<{ id: string }>(this.base + '/forms/models', model).pipe(
+        switchMap((response) =>
+          this.http.post(this.base + '/api/configurationTemplate', {
+            interoperabilityRecordId: guidelineId,
+            name: model?.name,
+            description: model?.description,
+            modelId: response.id
+          })
+        )
+      );
     }
   }
   /** <-- Configuration Templates **/
