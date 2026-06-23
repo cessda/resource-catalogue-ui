@@ -161,7 +161,7 @@ export class GuidelinesService {
     } else {
       return this.http.post<{ id: string }>(this.base + '/forms/models', model).pipe(
         switchMap((response) =>
-          this.http.post(this.base + '/api/configurationTemplate', {
+          this.http.post(this.base + '/configurationTemplate', {
             interoperabilityRecordId: guidelineId,
             name: model?.name,
             description: model?.description,
