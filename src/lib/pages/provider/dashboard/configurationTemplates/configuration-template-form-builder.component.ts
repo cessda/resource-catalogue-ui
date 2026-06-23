@@ -9,7 +9,7 @@ import {FormBuilderService} from "../../../../../dynamic-catalogue/services/form
   standalone: true,
   imports: [FormBuilderComponent],
   template:
-    '<h1>Configuration Template Form Builder</h1>' +
+    '<h1 style="margin-left: 12px;">Configuration Template Form Builder</h1>' +
     '<app-form-builder [customActions]="true" (saveAction)="saveMethod($event)" [backDestination]="backDestination"></app-form-builder>',
 })
 export class ConfigurationTemplateFormBuilderComponent implements OnInit {
@@ -27,9 +27,22 @@ export class ConfigurationTemplateFormBuilderComponent implements OnInit {
     this.backDestination = '/guidelines/'+this.guidelineId+'/configuration-templates-management';
 
     const id = this.route.snapshot.paramMap.get('id');
-    if (!id) {
+    if (id) { // on edit
+      this.loadExistingTemplate(id);
+    } else { // on create new
       this.loadBaseTemplate();
     }
+  }
+
+  loadExistingTemplate(id :string): void {
+    this.guidelinesService.getExistingTemplate(id).subscribe({
+      next: (template) => {
+        this.formBuilderService.setModel(template);
+      },
+      error: (err) => {
+        console.error('Failed to load template', err.error.detail);
+      }
+    });
   }
 
   loadBaseTemplate(): void {

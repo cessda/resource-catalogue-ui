@@ -43,17 +43,15 @@
 
           <div>
             <div class="uk-text-bold">
-              {{ template.configurationTemplate.name }}
-              @if (isDevMode()) {
+              {{ template.configurationTemplate?.name || 'Unnamed template' }}
+              @if (isDevMode() || !template.configurationTemplate.name) {
                 <span class="uk-text-muted">({{ template.id }})</span>
               }
             </div>
 
-            @if (template.configurationTemplate.description) {
-              <div class="uk-text-meta">
-                {{ template.configurationTemplate.description }}
-              </div>
-            }
+            <div class="uk-text-meta">
+              {{ template.configurationTemplate?.description || 'No description available' }}
+            </div>
           </div>
 
           <button type="button" class="uk-button uk-button-secondary uk-border-pill uk-transition-toggle" (click)="edit(template.id)">
