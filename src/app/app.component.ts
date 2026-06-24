@@ -14,17 +14,17 @@ export class AppComponent implements OnInit {
 
   protected router = inject(Router);
 
-  hideHeaderSignal = toSignal(
+  hideAppShellSignal = toSignal(
     this.router.events.pipe(
       filter((event): event is ActivationEnd => event instanceof ActivationEnd),
       filter(event => event.snapshot.firstChild === null),
-      map(event => event.snapshot.data['hideHeader'] ?? false),
+      map(event => event.snapshot.data['hideAppShell'] ?? false),
       startWith(false)
     ),
     { initialValue: false }
   );
 
-  hideHeader = this.hideHeaderSignal;
+  hideAppShell = this.hideAppShellSignal;
 
   ngOnInit() {
     this.router.events.subscribe((evt: any) => {
