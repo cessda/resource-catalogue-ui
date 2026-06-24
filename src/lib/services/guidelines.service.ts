@@ -151,6 +151,10 @@ export class GuidelinesService {
     return this.http.get<any>(this.base + `/configurationTemplateInstance/resources/${resId}/templates/${ctId}`, this.options);
   }
 
+  getInstancesByConfigurationTemplateId(ctId: string) {
+    return this.http.get<any>(this.base + `/configurationTemplateInstance/getAllByConfigurationTemplateId/${ctId}`, this.options);
+  }
+
   getExistingTemplate(id: string) {
     return this.http.get<Model>(this.base + `/configurationTemplate/${id}/model`);
   }

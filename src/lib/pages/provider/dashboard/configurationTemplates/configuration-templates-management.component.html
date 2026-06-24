@@ -9,13 +9,11 @@
       type="button"
       class="uk-button uk-button-primary"
       (click)="createNew()">
-
       <span
         class="material-symbols-outlined uk-margin-small-right"
         style="vertical-align: middle;">
         add
       </span>
-
       Create new
     </button>
   </div>
@@ -36,33 +34,93 @@
     </div>
   }
   @else {
-    <div class="uk-list uk-list-divider">
 
-      @for (template of templates; track template.id) {
-        <div class="uk-flex uk-flex-between uk-flex-middle uk-padding-small">
+    <table class="uk-table uk-table-divider uk-table-hover uk-table-middle">
 
-          <div>
-            <div class="uk-text-bold">
-              {{ template.configurationTemplate?.name || 'Unnamed template' }}
-              @if (isDevMode() || !template.configurationTemplate.name) {
-                <span class="uk-text-muted">({{ template.id }})</span>
-              }
-            </div>
+      <thead>
+      <tr>
+        <th>Template</th>
+        <th class="uk-text-center" style="width: 120px;">
+          Instances
+        </th>
+        <th class="uk-text-center" style="width: 240px;">
+          Actions
+        </th>
+      </tr>
+      </thead>
 
-            <div class="uk-text-meta">
-              {{ template.configurationTemplate?.description || 'No description available' }}
-            </div>
-          </div>
+      <tbody>
+        @for (template of templates; track template.id) {
+          <tr>
 
-          <button type="button" class="uk-button uk-button-secondary uk-border-pill uk-transition-toggle" (click)="edit(template.id)">
-            <span class="material-symbols-outlined uk-margin-small-right" style="vertical-align: middle;">edit_square</span>
-            Edit
-          </button>
+            <td class="uk-width-expand">
 
-        </div>
-      }
+              <div class="uk-text-bold">
+                {{ template.configurationTemplate?.name || 'Unnamed template' }}
 
-    </div>
+                @if (isDevMode() || !template.configurationTemplate?.name) {
+                  <span class="uk-text-muted">
+                    ({{ template.id }})
+                  </span>
+                }
+              </div>
+
+              <div class="uk-text-meta">
+                {{ template.configurationTemplate?.description || 'No description available' }}
+              </div>
+
+            </td>
+
+            <td class="uk-text-center">
+              {{ instanceCounts[template.id] ?? 0 }}
+            </td>
+
+            <td class="uk-text-center">
+
+              <div class="uk-flex uk-flex-center uk-flex-middle">
+
+                <span
+                  [attr.uk-tooltip]="(instanceCounts[template.id] ?? 0) > 0
+                  ? 'title: Cannot edit: active instances exist for this template'
+                  : null">
+
+                  <button
+                    type="button"
+                    class="uk-button uk-button-secondary uk-margin-small-right"
+                    [disabled]="(instanceCounts[template.id] ?? 0) > 0"
+                    [class.uk-disabled]="(instanceCounts[template.id] ?? 0) > 0"
+                    (click)="edit(template.id)">
+
+                    <span class="uk-flex uk-flex-middle">
+                      <span class="material-symbols-outlined uk-margin-small-right">
+                        edit_square
+                      </span>
+                      <span>Edit</span>
+                    </span>
+
+                  </button>
+
+                </span>
+
+                <button
+                  type="button"
+                  class="uk-button uk-button-danger"
+                  disabled>
+                  <span class="uk-flex uk-flex-middle">
+                    <span class="material-symbols-outlined uk-margin-small-right">delete</span>Delete
+                  </span>
+                </button>
+
+              </div>
+
+            </td>
+
+          </tr>
+        }
+      </tbody>
+
+    </table>
+
   }
 
 </div>

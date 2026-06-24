@@ -43,6 +43,7 @@ export class ConfigurationTemplatesManagementComponent implements OnInit {
   guidelineId!: string;
 
   templates: ConfigurationTemplate[] = [];
+  instanceCounts: Record<string, number> = {};
   loading = false;
   error: string | null = null;
 
@@ -58,6 +59,21 @@ export class ConfigurationTemplatesManagementComponent implements OnInit {
     this.guidelinesService.getTemplatesForGuidelineWithAuth(this.guidelineId).subscribe({
         next: (res) => {
           this.templates = res ?? [];
+
+          // count instances for each configuration template
+          this.templates.forEach(template => {
+            this.guidelinesService
+              .getInstancesByConfigurationTemplateId(template.id)
+              .subscribe({
+                next: (instances: any[]) => {
+                  this.instanceCounts[template.id] = instances?.length ?? 0;
+                },
+                error: () => {
+                  this.instanceCounts[template.id] = 0;
+                }
+              });
+          });
+
           this.loading = false;
         },
         error: () => {
