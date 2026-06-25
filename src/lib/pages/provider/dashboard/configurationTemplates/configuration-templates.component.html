@@ -37,7 +37,7 @@
       @if (ready) {
         <div class="uk-grid-small uk-margin-top" uk-grid>
           @for (template of templates; track template; let i = $index) {
-            <div [ngClass]="{'uk-width-1-2@m': templates.length <= 2, 'uk-width-1-3@m': templates.length > 2}">
+            <div [ngClass]="{'uk-width-1-1': templates.length === 1, 'uk-width-1-2@m': templates.length > 1}">
                 <pre *ngIf="this.isDevMode()">{{ formModels[template.id]?.id | json }}</pre>
                 @if (formModels[template.id]) {
                   @if (saveMessageMap[template.id]) {
