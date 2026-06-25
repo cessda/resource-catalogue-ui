@@ -1,7 +1,7 @@
 <div class="uk-offcanvas-content" style="min-height:100vh; display:flex; flex-direction:column;">
+  <app-external-header uk-sticky [style.z-index]="hideAppShell() ? -1 : 9999"></app-external-header>
   @if (!hideAppShell()) {
     <div>
-      <app-external-header uk-sticky style="z-index: 9999"></app-external-header>
       <app-top-menu-eosc style="z-index: -1"></app-top-menu-eosc>
     </div>
     <div style="margin-top: 159px;"></div>
