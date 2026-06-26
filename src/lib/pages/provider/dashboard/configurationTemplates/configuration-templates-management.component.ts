@@ -43,6 +43,7 @@ export class ConfigurationTemplatesManagementComponent implements OnInit {
   guidelineId!: string;
 
   templates: ConfigurationTemplate[] = [];
+  instanceCounts: Record<string, number> = {};
   loading = false;
   error: string | null = null;
 
@@ -58,6 +59,21 @@ export class ConfigurationTemplatesManagementComponent implements OnInit {
     this.guidelinesService.getTemplatesForGuidelineWithAuth(this.guidelineId).subscribe({
         next: (res) => {
           this.templates = res ?? [];
+
+          // count instances for each configuration template
+          this.templates.forEach(template => {
+            this.guidelinesService
+              .getInstancesByConfigurationTemplateId(template.id)
+              .subscribe({
+                next: (instances: any[]) => {
+                  this.instanceCounts[template.id] = instances?.length ?? 0;
+                },
+                error: () => {
+                  this.instanceCounts[template.id] = 0;
+                }
+              });
+          });
+
           this.loading = false;
         },
         error: () => {
@@ -70,22 +86,22 @@ export class ConfigurationTemplatesManagementComponent implements OnInit {
   createNew(): void {
     this.formBuilderService.clear();
     this.router.navigate([
-      `/guidelines/${this.guidelineId}/model/m-b-con-baseTemplate/edit`,
+      `/guidelines/${this.guidelineId}/model/new`,
     ]);
   }
 
-  edit(id): void {
+  edit(configurationTemplateid): void {
     // console.log(`/guidelines/${this.guidelineId}/model/${this.pidHandler.customEncodeURIComponent(ct.id)}/edit`);
     // this.formBuilderService.setModel(template);
     this.formBuilderService.clear();
     this.router.navigate([
-      'guidelines', this.guidelineId, 'model', this.transformToModelId(id), 'edit'
+      'guidelines', this.guidelineId, 'model', configurationTemplateid, 'edit'
     ]);
   }
 
-  transformToModelId(templateId: string): string {
-    return 'm-b-' + templateId.replace('/', '-'); //todo: could simplify ids and remove this
-  }
+  // transformToModelId(templateId: string): string {
+  //   return 'm-b-' + templateId.replace('/', '-'); //todo: could simplify ids and remove this
+  // }
 
   protected readonly isDevMode = isDevMode;
 }

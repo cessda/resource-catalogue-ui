@@ -6,11 +6,6 @@
         <h3 class="uk-margin-remove">
           {{ currentResourceGuideline.name }}
         </h3>
-
-        <button type="button" class="uk-button uk-button-primary"
-                [routerLink]="['/guidelines/' + pidHandler.customEncodeURIComponent(currentResourceGuideline.id) + '/configuration-templates-management']">
-          Manage templates
-        </button>
       </div>
     }
 
@@ -42,7 +37,7 @@
       @if (ready) {
         <div class="uk-grid-small uk-margin-top" uk-grid>
           @for (template of templates; track template; let i = $index) {
-            <div [ngClass]="{'uk-width-1-2@m': templates.length <= 2, 'uk-width-1-3@m': templates.length > 2}">
+            <div [ngClass]="{'uk-width-1-1': templates.length === 1, 'uk-width-1-2@m': templates.length > 1}">
                 <pre *ngIf="this.isDevMode()">{{ formModels[template.id]?.id | json }}</pre>
                 @if (formModels[template.id]) {
                   @if (saveMessageMap[template.id]) {
@@ -66,7 +61,10 @@
                   </div>
                   <div class="form-action-bar titleAndActionsBar uk-flex uk-flex-right justify-content-end">
                     <button class="uk-button uk-button-secondary uk-margin-left"
-                    (click)="children.toArray()[i].parentSubmit()">Save</button>
+                            type="button"
+                            (click)="survey.parentSubmit()">
+                      Save
+                    </button>
                   </div>
                 </app-survey>
 <!--                    <pre *ngIf="this.isDevMode()">{{getAnswerForTemplate(template.id)|json}}</pre>-->
