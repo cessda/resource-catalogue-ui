@@ -65,8 +65,8 @@
                 }
               </div>
 
-              <div class="uk-text-meta">
-                {{ template.configurationTemplate?.description || 'No description available' }}
+              <div class="uk-text-meta"
+                [innerHTML]="template.configurationTemplate?.description || 'No description available'">
               </div>
 
             </td>
