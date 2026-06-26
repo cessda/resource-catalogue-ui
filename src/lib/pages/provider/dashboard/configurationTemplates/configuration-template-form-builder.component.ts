@@ -60,7 +60,7 @@ export class ConfigurationTemplateFormBuilderComponent implements OnInit {
     const isEdit = !!data.id;
     this.guidelinesService.saveModel(data, isEdit, this.guidelineId).subscribe({
       next: () => {
-        this.router.navigate(['/home']);
+        this.router.navigate([`/guidelines/${this.guidelineId}/configuration-templates-management`]);
       },
       error: (err) => {
         console.log('Failed:', err.error.detail);
