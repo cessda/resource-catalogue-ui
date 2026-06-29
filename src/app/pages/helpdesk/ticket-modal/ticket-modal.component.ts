@@ -14,6 +14,7 @@ import {
   HelpdeskArticle,
 } from "../../../../lib/domain/eic-model";
 import { HelpdeskService } from "../../../services/helpdesk.service";
+import { HelpdeskNotificationService } from "../../../services/helpdesk-notification.service";
 
 @Component({
   selector: "app-ticket-modal",
@@ -26,6 +27,7 @@ export class TicketModalComponent implements OnInit, OnChanges {
   @Input() ticket: HelpdeskTicketResponse | null = null;
   @Input() isOpen: boolean = false;
   @Output() closeModal = new EventEmitter<void>();
+  @Output() ticketUpdated = new EventEmitter<HelpdeskTicketResponse>();
 
   replyForm: FormGroup;
   submittingReply: boolean = false;
@@ -33,7 +35,8 @@ export class TicketModalComponent implements OnInit, OnChanges {
 
   constructor(
     private formBuilder: FormBuilder,
-    private helpdeskService: HelpdeskService
+    private helpdeskService: HelpdeskService,
+    private notificationService: HelpdeskNotificationService
   ) {
     this.replyForm = this.formBuilder.group({
       body: ["", [Validators.required]],
@@ -45,9 +48,7 @@ export class TicketModalComponent implements OnInit, OnChanges {
   ngOnChanges(changes: SimpleChanges): void {
     if (changes["isOpen"]) {
       console.log("🔄 Modal isOpen changed:", changes["isOpen"].currentValue);
-      // Reset form when modal opens/closes
       if (!changes["isOpen"].currentValue) {
-        // Modal is closing - reset form
         this.replyForm.reset();
         this.replyError = "";
       }
@@ -55,11 +56,8 @@ export class TicketModalComponent implements OnInit, OnChanges {
     if (changes["ticket"]) {
       const ticket = changes["ticket"].currentValue;
       console.log("🎫 Modal ticket changed:", ticket);
-      
-      // Reset form when ticket changes to ensure each ticket has its own form state
       this.replyForm.reset();
       this.replyError = "";
-      
       if (ticket) {
         console.log("📅 Ticket timestamps:", {
           created_at: ticket.created_at,
@@ -72,7 +70,6 @@ export class TicketModalComponent implements OnInit, OnChanges {
 
   onClose(): void {
     console.log("❌ Modal close requested");
-    // Reset form when closing modal
     this.replyForm.reset();
     this.replyError = "";
     this.submittingReply = false;
@@ -88,60 +85,32 @@ export class TicketModalComponent implements OnInit, OnChanges {
   getStatusClass(status: string | undefined): string {
     const statusLower = status?.toLowerCase() || "";
     switch (statusLower) {
-      case "new":
-        return "status-new";
-      case "open":
-        return "status-open";
-      case "pending close":
-        return "status-pending-close";
-      case "pending reminder":
-        return "status-pending-reminder";
-      case "closed":
-        return "status-closed";
-      default:
-        return "status-default";
+      case "new": return "status-new";
+      case "open": return "status-open";
+      case "pending close": return "status-pending-close";
+      case "pending reminder": return "status-pending-reminder";
+      case "closed": return "status-closed";
+      default: return "status-default";
     }
   }
 
   getStatusIcon(status: string | undefined): string {
     const statusLower = status?.toLowerCase() || "";
     switch (statusLower) {
-      case "new":
-        return "fa fa-plus-circle";
-      case "open":
-        return "fa fa-exclamation-circle";
-      case "pending close":
-        return "fa fa-clock";
-      case "pending reminder":
-        return "fa fa-bell";
-      case "closed":
-        return "fa fa-check-circle";
-      default:
-        return "fa fa-question-circle";
+      case "new": return "fa fa-plus-circle";
+      case "open": return "fa fa-exclamation-circle";
+      case "pending close": return "fa fa-clock";
+      case "pending reminder": return "fa fa-bell";
+      case "closed": return "fa fa-check-circle";
+      default: return "fa fa-question-circle";
     }
   }
 
   formatDate(dateString: string | undefined): string {
-    if (!dateString) {
-      return "";
-    }
+    if (!dateString) return "";
     const date = new Date(dateString);
-    // Use UTC methods to get the time as it appears in the ISO string (UTC timezone)
     const day = date.getUTCDate();
-    const monthNames = [
-      "January",
-      "February",
-      "March",
-      "April",
-      "May",
-      "June",
-      "July",
-      "August",
-      "September",
-      "October",
-      "November",
-      "December",
-    ];
+    const monthNames = ["January","February","March","April","May","June","July","August","September","October","November","December"];
     const month = monthNames[date.getUTCMonth()];
     const year = date.getUTCFullYear();
     const hours = date.getUTCHours();
@@ -150,11 +119,8 @@ export class TicketModalComponent implements OnInit, OnChanges {
   }
 
   formatTime(dateString: string | undefined): string {
-    if (!dateString) {
-      return "";
-    }
+    if (!dateString) return "";
     const date = new Date(dateString);
-    // Use UTC methods to get the time as it appears in the ISO string (UTC timezone)
     const hours = date.getUTCHours();
     const minutes = date.getUTCMinutes().toString().padStart(2, "0");
     return `${hours}:${minutes}`;
@@ -162,89 +128,45 @@ export class TicketModalComponent implements OnInit, OnChanges {
 
   /**
    * Converts state_id to state name
-   * state_id: 1 --> "new"
-   * state_id: 2 --> "open"
-   * state_id: 3 --> "pending reminder"
-   * state_id: 4 --> "closed"
-   * state_id: 7 --> "pending close"
+   * state_id: 1 --> "new", 2 --> "open", 3 --> "pending reminder",
+   * state_id: 4 --> "closed", 7 --> "pending close"
    */
   getStateFromId(stateId: number | undefined): string {
-    if (!stateId) {
-      return "";
-    }
+    if (!stateId) return "";
     switch (stateId) {
-      case 1:
-        return "new";
-      case 2:
-        return "open";
-      case 3:
-        return "pending reminder";
-      case 4:
-        return "closed";
-      case 7:
-        return "pending close";
-      default:
-        return "";
+      case 1: return "new";
+      case 2: return "open";
+      case 3: return "pending reminder";
+      case 4: return "closed";
+      case 7: return "pending close";
+      default: return "";
     }
   }
 
-  /**
-   * Gets the state name from a ticket, checking state_id first, then state
-   */
   getTicketState(ticket: HelpdeskTicketResponse | null): string {
-    if (!ticket) {
-      return "";
-    }
-    if (ticket.state_id !== undefined) {
-      return this.getStateFromId(ticket.state_id);
-    }
+    if (!ticket) return "";
+    if (ticket.state_id !== undefined) return this.getStateFromId(ticket.state_id);
     return ticket.state || "";
   }
 
-  /**
-   * Strips leading <br> tags from HTML content
-   */
   cleanBodyHtml(html: string | undefined): string {
-    if (!html) {
-      return "";
-    }
-    // Remove leading <br> or <br/> tags (case insensitive, with optional attributes)
+    if (!html) return "";
     return html.replace(/^(<br\s*\/?>)+/i, "");
   }
 
-  /**
-   * Determines if an article is from EPOT (Agent) or User (Customer)
-   * @param article The article to check
-   * @returns true if the article is from EPOT (Agent), false if from User (Customer)
-   */
   isEpotMessage(article: HelpdeskArticle): boolean {
     return article.sender === "Agent";
   }
 
-  /**
-   * Gets the message originator label
-   * @param article The article to check
-   * @returns "EPOT" if from Agent, "USER" if from Customer
-   */
   getMessageOriginator(article: HelpdeskArticle): string {
     return this.isEpotMessage(article) ? "EPOT" : "USER";
   }
 
-  /**
-   * Checks if the ticket is closed
-   * @returns true if ticket state is "closed"
-   */
   isTicketClosed(): boolean {
-    if (!this.ticket) {
-      return false;
-    }
-    const state = this.getTicketState(this.ticket);
-    return state.toLowerCase() === "closed";
+    if (!this.ticket) return false;
+    return this.getTicketState(this.ticket).toLowerCase() === "closed";
   }
 
-  /**
-   * Handles reply form submission
-   */
   onSubmitReply(): void {
     if (this.replyForm.valid && this.ticket && this.ticket.id) {
       this.submittingReply = true;
@@ -257,34 +179,26 @@ export class TicketModalComponent implements OnInit, OnChanges {
         next: () => {
           console.log("✅ Reply submitted successfully");
           this.replyForm.reset();
-          
-          // Re-fetch the full ticket to get updated articles/conversation
+
           this.helpdeskService.getTicket(ticketId).subscribe({
             next: (fullTicket) => {
-              // Handle case where API returns an array instead of a single object
               const ticketData = Array.isArray(fullTicket) ? fullTicket[0] : fullTicket;
               this.ticket = ticketData;
               this.submittingReply = false;
+              // Mark as read immediately so the user's own reply does not
+              // trigger a false notification badge on the next list load.
+              this.notificationService.markAsRead(ticketData);
+              this.ticketUpdated.emit(ticketData);
               console.log("✅ Ticket refreshed with updated conversation");
             },
             error: (fetchErr) => {
               console.error("⚠️ Reply sent but failed to refresh ticket:", fetchErr);
-              // Reply was sent successfully, just couldn't refresh
               this.submittingReply = false;
             }
           });
         },
         error: (err) => {
           console.error("❌ Error submitting reply:", err);
-          console.error("❌ Error details:", {
-            status: err.status,
-            statusText: err.statusText,
-            message: err.message,
-            error: err.error,
-            url: err.url
-          });
-          
-          // Provide more specific error message
           if (err.status === 500) {
             this.replyError = "Server error. Please contact support if the issue persists.";
           } else if (err.status === 404) {
@@ -300,14 +214,9 @@ export class TicketModalComponent implements OnInit, OnChanges {
     }
   }
 
-  /**
-   * Gets error message for form validation
-   */
   getErrorMessage(field: string): string {
     const control = this.replyForm.get(field);
-    if (control?.hasError("required")) {
-      return `${field} is required`;
-    }
+    if (control?.hasError("required")) return `${field} is required`;
     return "";
   }
 }
