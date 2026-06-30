@@ -148,6 +148,7 @@
     [ticket]="selectedTicket"
     [isOpen]="isModalOpen"
     (closeModal)="closeModal()"
+    (ticketUpdated)="onTicketUpdated($event)"
   >
   </app-ticket-modal>
 </div>
