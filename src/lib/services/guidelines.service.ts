@@ -9,7 +9,6 @@ import {
 import {Paging} from "../domain/paging";
 import {ConfigService} from "./config.service";
 import {Model} from "../../dynamic-catalogue/domain/dynamic-form-model";
-import {switchMap} from "rxjs/operators";
 
 @Injectable()
 export class GuidelinesService {
@@ -164,20 +163,29 @@ export class GuidelinesService {
   }
 
   saveModel(model: Model | null, editMode: boolean, guidelineId: string) {
+    const id = decodeURIComponent(guidelineId);
     if (editMode) {
-      return this.http.put(this.base + `/forms/models/${model?.id}`, model);
+      return this.http.put(this.base + `/configurationTemplate/${id}/withModel`, model, this.options);
     } else {
-      return this.http.post<{ id: string }>(this.base + '/forms/models', model).pipe(
-        switchMap((response) =>
-          this.http.post(this.base + '/configurationTemplate', {
-            interoperabilityRecordId: decodeURIComponent(guidelineId),
-            name: model?.name,
-            description: model?.description,
-            modelId: response.id
-          })
-        )
-      );
+      return this.http.post(this.base + `/configurationTemplate/${id}/withModel`, model, this.options);
     }
   }
+
+  // saveModel(model: Model | null, editMode: boolean, guidelineId: string) {
+  //   if (editMode) {
+  //     return this.http.put(this.base + `/forms/models/${model?.id}`, model);
+  //   } else {
+  //     return this.http.post<{ id: string }>(this.base + '/forms/models', model).pipe(
+  //       switchMap((response) =>
+  //         this.http.post(this.base + '/configurationTemplate', {
+  //           interoperabilityRecordId: decodeURIComponent(guidelineId),
+  //           name: model?.name,
+  //           description: model?.description,
+  //           modelId: response.id
+  //         })
+  //       )
+  //     );
+  //   }
+  // }
   /** <-- Configuration Templates **/
 }
