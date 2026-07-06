@@ -8,7 +8,6 @@ import {Service, ServiceBundle} from '../../domain/eic-model';
 import {ResourceService} from '../../services/resource.service';
 import {ServiceProviderService} from '../../services/service-provider.service';
 import {NavigationService} from "../../services/navigation.service";
-import {RecommendationsService} from "../../services/recommendations.service";
 import {CatalogueService} from "../../services/catalogue.service";
 import {pidHandler} from "../../shared/pid-handler/pid-handler.service";
 import {FormControlService} from "../../../dynamic-catalogue/services/form-control.service";
@@ -28,7 +27,6 @@ export class ServiceEditComponent extends ServiceFormComponent implements OnInit
   constructor(public route: ActivatedRoute,
               public authenticationService: AuthenticationService,
               protected serviceProviderService: ServiceProviderService,
-              protected recommendationsService: RecommendationsService,
               protected catalogueService: CatalogueService,
               protected injector: Injector,
               public datePipe: DatePipe,
@@ -37,7 +35,7 @@ export class ServiceEditComponent extends ServiceFormComponent implements OnInit
               public dynamicFormService: FormControlService,
               public router: Router,
               public config: ConfigService) {
-    super(injector, authenticationService, serviceProviderService, recommendationsService, catalogueService, route, pidHandler, dynamicFormService, router, config);
+    super(injector, authenticationService, serviceProviderService, catalogueService, route, pidHandler, dynamicFormService, router, config);
     this.editMode = true;
   }
 

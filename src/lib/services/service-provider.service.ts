@@ -13,6 +13,7 @@ import {environment} from '../../environments/environment';
 import {Observable} from 'rxjs';
 import {Paging} from '../domain/paging';
 import {Model} from "../../dynamic-catalogue/domain/dynamic-form-model";
+import {pidHandler} from "../shared/pid-handler/pid-handler.service";
 
 @Injectable()
 export class ServiceProviderService {
@@ -313,5 +314,9 @@ export class ServiceProviderService {
 
   getFormModelById(id: string) {
     return this.http.get<Model>(this.base + `/forms/models/${id}`);
+  }
+
+  getFormModelByConfigurationTemplateId(id: string) {
+    return this.http.get<Model>(this.base + `/configurationTemplate/${id}/model`);
   }
 }
