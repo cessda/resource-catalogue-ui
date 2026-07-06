@@ -3,7 +3,6 @@ import {isNullOrUndefined} from '../../../../shared/tools';
 import {combineLatest, zip} from 'rxjs';
 import {AuthenticationService} from '../../../../services/authentication.service';
 import {ResourceService} from '../../../../services/resource.service';
-import {RecommendationsService} from '../../../../services/recommendations.service';
 import {NavigationService} from '../../../../services/navigation.service';
 import {ActivatedRoute} from '@angular/router';
 import {ServiceProviderService} from '../../../../services/service-provider.service';
@@ -16,10 +15,10 @@ import * as Highcharts from 'highcharts';
 import MapModule from 'highcharts/modules/map';
 MapModule(Highcharts);
 
-declare var require: any;
+declare let require: any;
 // const mapWorld = require('@highcharts/map-collection/custom/world.geo.json');
 const mapWorld = require('@highcharts/map-collection/custom/world.geo.json')
-declare var UIkit: any;
+declare let UIkit: any;
 
 
 @Component({
@@ -49,7 +48,6 @@ export class ProviderStatsComponent implements OnInit {
   public WW: string[];
 
   providerVisitsOptions: any = null;
-  providerRatingsOptions: any = null;
   providerFavouritesOptions: any = null;
   providerAddsToProjectOptions: any = null;
   providerOrdersOptions: any = null;
@@ -62,11 +60,6 @@ export class ProviderStatsComponent implements OnInit {
   accessModesPerServiceForProvider: any = null;
   accessTypesPerServiceForProvider: any = null;
   orderTypesPerServiceForProvider: any = null;
-  recommendationsOverTimeForProvider: any = null;
-  recommendationsOfTopServices: any = null;
-  recommendationsOfCompetitorsServices: any[] = [];
-  emptyResponseOnGetCompetitorsServices = false;
-  enrichedRecommendationsOfCompetitorsServices: any[] = [];
 
   selectedCountryName: string = null;
   selectedCountryServices: any = null;
@@ -77,7 +70,6 @@ export class ProviderStatsComponent implements OnInit {
   constructor(
     public authenticationService: AuthenticationService,
     public resourceService: ResourceService,
-    public recommendationsService: RecommendationsService,
     public navigator: NavigationService,
     private route: ActivatedRoute,
     private providerService: ServiceProviderService,
@@ -246,52 +238,7 @@ export class ProviderStatsComponent implements OnInit {
       );
     }
 
-    /** Recommendations -> **/
-    // this.recommendationsService.getRecommendationsOverTime(this.catalogueId.concat('.',this.providerId)).subscribe(
-    //     data => this.setRecommendationsOverTimeForProvider(data),
-    //     err => this.errorMessage = 'An error occurred while retrieving visits for this provider. ' + err.error
-    //   );
-    //
-    // this.recommendationsService.getMostRecommendedServices(this.catalogueId.concat('.',this.providerId)).subscribe(
-    //   data => this.enrichMostRecommendedServices(data),
-    //   err => this.errorMessage = 'An error occurred while retrieving most recommended services for this provider. ' + err.error
-    // );
-    //
-    // this.recommendationsService.getCompetitorsServices(this.catalogueId.concat('.',this.providerId)).subscribe(
-    //   data => this.setCompetitorsServices(data),
-    //   err => this.errorMessage = 'An error occurred while retrieving recommended services for this provider. ' + err.error
-    // );
-    /** <- Recommendations **/
   }
-
-  onRecommendationsTabClick() {
-    if (!this.recommendationsOverTimeForProvider) {
-      this.recommendationsService.getRecommendationsOverTime(this.catalogueId.concat('.', this.providerId)).subscribe(
-        data => this.setRecommendationsOverTimeForProvider(data),
-        err => this.errorMessage = 'An error occurred while retrieving visits for this provider. ' + err.error
-      );
-    }
-    if (!this.recommendationsOfTopServices) {
-      this.recommendationsService.getMostRecommendedServices(this.catalogueId.concat('.', this.providerId)).subscribe(
-        data => this.enrichMostRecommendedServices(data),
-        err => this.errorMessage = 'An error occurred while retrieving most recommended services for this provider. ' + err.error
-      );
-    }
-    if (this.enrichedRecommendationsOfCompetitorsServices.length == 0) {
-      this.recommendationsService.getCompetitorsServices(this.catalogueId.concat('.', this.providerId)).subscribe(
-        (data: any[]) => {
-          if (data && data.length === 0) {
-            this.emptyResponseOnGetCompetitorsServices = true;
-          } else {
-            this.setCompetitorsServices(data);
-            this.emptyResponseOnGetCompetitorsServices = false;
-          }
-        },
-        err => this.errorMessage = 'An error occurred while retrieving recommended services for this provider. ' + err.error
-      );
-    }
-  }
-
 
   onPeriodChange(event) {
     this.statisticPeriod = event.target.value;
@@ -414,42 +361,6 @@ export class ProviderStatsComponent implements OnInit {
         series: [{
           name: 'Favourites orders time',
           color: '#C72B28',
-          data: data
-        }],
-        credits: {
-          enabled: false
-        }
-      };
-    }
-  }
-
-  setRatingsForProvider(data: any) {
-    if (data) {
-      this.providerRatingsOptions = {
-        chart: {
-          height: (3 / 4 * 100) + '%', // 3:4 ratio
-        },
-        title: {
-          text: 'Number of Ratings over time'
-        },
-        xAxis: {
-          type: 'datetime',
-          dateTimeLabelFormats: { // don't display the dummy year
-            month: '%e. %b',
-            year: '%b'
-          },
-          title: {
-            text: 'Date'
-          }
-        },
-        yAxis: {
-          title: {
-            text: 'Average rating'
-          }
-        },
-        series: [{
-          name: 'Average ratings over time',
-          color: '#013203',
           data: data
         }],
         credits: {
@@ -900,166 +811,6 @@ export class ProviderStatsComponent implements OnInit {
         enabled: false
       }
     };
-  }
-
-  setRecommendationsOverTimeForProvider(data: any) {
-    const chartData = [];
-    data.forEach((value) => {
-      chartData.push([Date.parse(value.date), value.recommendations]);
-    });
-
-    if (data) {
-      this.recommendationsOverTimeForProvider = {
-        chart: {
-          height: (3 / 4 * 100) + '%', // 3:4 ratio
-        },
-        title: {
-          text: 'Recommendations over time'
-        },
-        xAxis: {
-          type: 'datetime',
-          // dateTimeLabelFormats: {
-          //   month: '%e. %b',
-          //   year: '%b'
-          // },
-          title: {
-            text: 'Date'
-          }
-        },
-        yAxis: {
-          title: {
-            text: 'Number of recommendations'
-          }
-        },
-        series: [{
-          name: 'Recommendations over time',
-          color: '#013203',
-          data: chartData
-        }],
-        credits: {
-          enabled: false
-        }
-      };
-    }
-  }
-
-  enrichMostRecommendedServices(data: any) {
-    const observables = data.map(item =>
-      this.resourceService.getService(item.service_id)
-    );
-
-    combineLatest(observables).subscribe(
-      results => {
-        results.forEach((res: any, index) => {
-          data[index].service_name = res.name;
-        });
-        this.setMostRecommendedServices(data);
-      },
-      error => {
-        this.errorMessage = error;
-      }
-    );
-  }
-
-  setMostRecommendedServices(data: any) {
-    this.recommendationsOfTopServices = {
-      chart: {
-        type: 'bar',
-        height: (3 / 4 * 100) + '%' // 3:4 ratio
-      },
-      title: {
-        text: 'Most recommended'
-      },
-      xAxis: {
-        type: 'category',
-        title: {
-          text: 'Service'
-        }
-      },
-      series: [{
-        name: 'Recommendations',
-        data: data.map(item => [item.service_name, item.recommendations])
-      }],
-      yAxis: {
-        min: 0,
-        title: {
-          text: 'Number of recommendations'
-        },
-        labels: {
-          overflow: 'justify',
-          display: 'none'
-        }
-      },
-      // tooltip: {
-      //   valueSuffix: ' services'
-      // },
-      plotOptions: {
-        bar: {
-          dataLabels: {
-            enabled: true
-          }
-        }
-      },
-      credits: {
-        enabled: false
-      }
-    };
-  }
-
-  setCompetitorsServices(data: any) {
-    this.recommendationsOfCompetitorsServices = data;
-    this.enrichedRecommendationsOfCompetitorsServices = [];
-
-    for (const item of data) {
-      const competitorsWithDetails = [];
-
-      // let competitorPublicIds = [];
-      for (const competitor of item.competitors) {
-        if (competitor.service_id !== 'tnp.lumi_etais__regular_access') {
-          // competitorPublicIds.push(competitor.service_id);
-          this.resourceService.getService(competitor.service_id).subscribe(
-            res => {
-              const competitorWithDetails = {
-                service_id: competitor.service_id,
-                recommendations: competitor.recommendations,
-                logo: res.logo,
-                name: res.name,
-                description: res.description
-              };
-              competitorsWithDetails.push(competitorWithDetails);
-            },
-            error => {
-            },
-            () => {
-            }
-          );
-        }
-      }
-      const itemWithDetails = {
-        service_id: item.service_id,
-        total_competitor_recommendations: item.total_competitor_recommendations,
-        competitors: competitorsWithDetails
-      };
-      this.enrichedRecommendationsOfCompetitorsServices.push(itemWithDetails);
-    }
-
-    // let outerServicesPublicIds = [];
-    for (const item of this.enrichedRecommendationsOfCompetitorsServices) {
-      // outerServicesPublicIds.push(item.service_id);
-      this.resourceService.getService(item.service_id).subscribe(
-        res => {
-          item.logo = res.logo;
-          item.name = res.name;
-          item.description = res.description;
-        },
-        error => { },
-        () => { }
-      );
-    }
-
-    // console.log(this.enrichedRecommendationsOfCompetitorsServices);
-    // console.log(competitorsPublicIds);
-    // console.log(outerServicesPublicIds);
   }
 
 }

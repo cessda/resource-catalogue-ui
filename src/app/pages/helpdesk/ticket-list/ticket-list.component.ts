@@ -3,15 +3,15 @@ import { Router } from "@angular/router";
 import { HelpdeskService } from "../../../services/helpdesk.service";
 import { HelpdeskNotificationService } from "../../../services/helpdesk-notification.service";
 import { HelpdeskTicketResponse } from "../../../../lib/domain/eic-model";
-import { TicketModalComponent } from '../ticket-modal/ticket-modal.component';
-import { CommonModule } from '@angular/common';
+import { TicketModalComponent } from "../ticket-modal/ticket-modal.component";
+import { CommonModule } from "@angular/common";
 
 @Component({
   selector: "app-ticket-list",
   templateUrl: "./ticket-list.component.html",
   styleUrls: ["./ticket-list.component.css"],
   standalone: true,
-  imports: [TicketModalComponent, CommonModule]
+  imports: [TicketModalComponent, CommonModule],
 })
 export class TicketListComponent implements OnInit {
   tickets: HelpdeskTicketResponse[] = [];
@@ -36,7 +36,7 @@ export class TicketListComponent implements OnInit {
     private helpdeskService: HelpdeskService,
     private notificationService: HelpdeskNotificationService,
     private router: Router,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
   ) {}
 
   ngOnInit(): void {
@@ -52,7 +52,7 @@ export class TicketListComponent implements OnInit {
     this.helpdeskService.getUserTickets().subscribe({
       next: (tickets) => {
         this.tickets = tickets ?? [];
-        this.tickets.forEach(t => this.notificationService.initIfUnseen(t));
+        this.tickets.forEach((t) => this.notificationService.initIfUnseen(t));
         this.notificationService.updateTotals(this.tickets);
         this.currentPage = 1;
         this.updatePagination();
@@ -64,7 +64,7 @@ export class TicketListComponent implements OnInit {
       },
       complete: () => {
         this.loading = false;
-      }
+      },
     });
   }
 
@@ -86,7 +86,7 @@ export class TicketListComponent implements OnInit {
       filtered = tickets;
     } else {
       filtered = tickets.filter(
-        (ticket) => this.getTicketState(ticket) === this.selectedStatus
+        (ticket) => this.getTicketState(ticket) === this.selectedStatus,
       );
     }
 
@@ -95,7 +95,7 @@ export class TicketListComponent implements OnInit {
 
     console.debug(
       `Filtered tickets for status "${this.selectedStatus}":`,
-      filtered.length
+      filtered.length,
     );
     return filtered;
   }
@@ -103,7 +103,7 @@ export class TicketListComponent implements OnInit {
   get sortedTickets(): HelpdeskTicketResponse[] {
     return [...this.getFilteredTickets()].sort(
       (a, b) =>
-        new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+        new Date(b.created_at).getTime() - new Date(a.created_at).getTime(),
     );
   }
 
@@ -133,7 +133,7 @@ export class TicketListComponent implements OnInit {
       "Changing status filter from",
       this.selectedStatus,
       "to",
-      status
+      status,
     );
     this.selectedStatus = status;
     this.onStatusChange();
@@ -143,7 +143,7 @@ export class TicketListComponent implements OnInit {
         number: t.number,
         state_id: t.state_id,
         state: this.getTicketState(t),
-      }))
+      })),
     );
   }
 
@@ -160,9 +160,9 @@ export class TicketListComponent implements OnInit {
     const maxVisiblePages = 5;
     let startPage = Math.max(
       1,
-      this.currentPage - Math.floor(maxVisiblePages / 2)
+      this.currentPage - Math.floor(maxVisiblePages / 2),
     );
-    let endPage = Math.min(this.totalPages, startPage + maxVisiblePages - 1);
+    const endPage = Math.min(this.totalPages, startPage + maxVisiblePages - 1);
 
     if (endPage - startPage + 1 < maxVisiblePages) {
       startPage = Math.max(1, endPage - maxVisiblePages + 1);
@@ -252,8 +252,18 @@ export class TicketListComponent implements OnInit {
     const date = new Date(dateString);
     const day = date.getUTCDate();
     const monthNames = [
-      "Jan", "Feb", "Mar", "Apr", "May", "Jun",
-      "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec",
     ];
     const month = monthNames[date.getUTCMonth()];
     const year = date.getUTCFullYear();
@@ -266,7 +276,7 @@ export class TicketListComponent implements OnInit {
     console.log("Viewing ticket with number:", ticketNumber);
 
     let ticketFromList = this.paginatedTickets.find(
-      (t) => t.number === ticketNumber
+      (t) => t.number === ticketNumber,
     );
 
     if (!ticketFromList) {
@@ -320,6 +330,15 @@ export class TicketListComponent implements OnInit {
     this.cdr.detectChanges();
   }
 
+  onTicketUpdated(ticket: HelpdeskTicketResponse): void {
+    const idx = this.tickets.findIndex((t) => t.id === ticket.id);
+    if (idx !== -1) {
+      this.tickets[idx] = ticket;
+    }
+    this.notificationService.updateTotals(this.tickets);
+    this.cdr.detectChanges();
+  }
+
   createNewTicket(): void {
     this.router.navigate(["/helpdesk/create"]);
   }
@@ -329,7 +348,7 @@ export class TicketListComponent implements OnInit {
       return this.tickets?.length ?? 0;
     }
     return (this.tickets ?? []).filter(
-      (ticket) => this.getTicketState(ticket) === status
+      (ticket) => this.getTicketState(ticket) === status,
     ).length;
   }
 

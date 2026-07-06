@@ -162,17 +162,17 @@
                     @for (curation of vocabularyCurations; track curation) {
                       <div class="uk-card provider-card uk-margin-medium-top">
                         <div class="uk-card-body" style="padding-bottom: 20px;">
-                          @if (curation.status == 'Pending') {
+                          @if (curation.status === 'Pending') {
                             <div class="pending">
                               <div class="uk-card-badge uk-label">Pending</div>
                             </div>
                           }
-                          @if (curation.status == 'Approved') {
+                          @if (curation.status === 'Approved') {
                             <div class="approved">
                               <div class="uk-card-badge uk-label">Approved</div>
                             </div>
                           }
-                          @if (curation.status == 'Rejected') {
+                          @if (curation.status === 'Rejected') {
                             <div class="rejected">
                               <div class="uk-card-badge uk-label">Rejected</div>
                             </div>

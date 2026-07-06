@@ -9,7 +9,7 @@ import {URLParameter} from '../../../../domain/url-parameter';
 import {environment} from '../../../../../environments/environment';
 import {NavigationService} from "../../../../services/navigation.service";
 
-declare var UIkit: any;
+declare let UIkit: any;
 
 @Component({
     selector: 'app-rejected-services',

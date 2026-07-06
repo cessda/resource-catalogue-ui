@@ -9,7 +9,7 @@ import {environment} from '../../../../../environments/environment';
 import {NavigationService} from "../../../../services/navigation.service";
 import {DeployableServiceService} from "../../../../services/deployable-service.service";
 
-declare var UIkit: any;
+declare let UIkit: any;
 
 @Component({
     selector: 'app-rejected-deployable-services',

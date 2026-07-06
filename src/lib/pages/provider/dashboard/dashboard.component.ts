@@ -9,7 +9,7 @@ import {ServiceProviderService} from '../../../services/service-provider.service
 import {ProviderBundle} from '../../../domain/eic-model';
 import {pidHandler} from '../../../shared/pid-handler/pid-handler.service';
 
-declare var UIkit: any;
+declare let UIkit: any;
 
 @Component({
     selector: 'app-dashboard',

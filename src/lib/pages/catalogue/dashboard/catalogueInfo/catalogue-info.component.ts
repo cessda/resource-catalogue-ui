@@ -1,4 +1,4 @@
-import {Component} from "@angular/core";
+import {Component, OnInit} from "@angular/core";
 import {Catalogue, CatalogueBundle} from "../../../../domain/eic-model";
 import {ActivatedRoute} from "@angular/router";
 import {CatalogueService} from "../../../../services/catalogue.service";
@@ -54,7 +54,7 @@ import {ResourceService} from "../../../../services/resource.service";
     </div>
   `
 })
-export class CatalogueInfoComponent {
+export class CatalogueInfoComponent implements OnInit {
 
   catalogueId: string;
   catalogue: Catalogue;

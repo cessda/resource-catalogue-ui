@@ -10,7 +10,7 @@ import {NavigationService} from '../../services/navigation.service';
 import {GuidelinesService} from "../../services/guidelines.service";
 import {pidHandler} from "../../shared/pid-handler/pid-handler.service";
 
-declare var UIkit: any;
+declare let UIkit: any;
 
 @Component({
     selector: 'app-guidelines-list',

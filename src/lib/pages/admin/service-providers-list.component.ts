@@ -15,7 +15,7 @@ import {TrainingResourceService} from "../../services/training-resource.service"
 import {pidHandler} from "../../shared/pid-handler/pid-handler.service";
 import {ConfigService} from '../../services/config.service';
 
-declare var UIkit: any;
+declare let UIkit: any;
 
 @Component({
     selector: 'app-service-providers-list',

@@ -39,10 +39,10 @@ export class EOSCTopMenuComponent implements OnInit, OnDestroy {
   onSubmit(searchValue: string) {
     searchValue = searchValue.replace(/[;=]/g, '');
     let url = window.location.href;
-    let params: String[] = url.split(';');
+    let params: string[] = url.split(';');
     // console.log(params);
     if (params.length > 1) {
-      const query: String[] = params[1].split('=');
+      const query: string[] = params[1].split('=');
       // console.log(query);
       if (query[0] === 'query') {
         query[1] = searchValue;

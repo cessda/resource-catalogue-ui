@@ -77,12 +77,12 @@ export class AuthenticationService {
   }
 
   isProvider() {
-    let roles: string[] = this.getUserRoles();
+    const roles: string[] = this.getUserRoles();
     return roles !== undefined ? roles?.some(x => x === 'ROLE_PROVIDER') : false;
   }
 
   isAdmin() {
-    let roles: string[] = this.getUserRoles();
+    const roles: string[] = this.getUserRoles();
     return roles != undefined && roles.length > 0 ? roles.some(x => x === 'ROLE_ADMIN' || x === 'ROLE_EPOT') : false;
   }
 
@@ -108,7 +108,7 @@ export class AuthenticationService {
               ${this.currentUserSubject.value.roles}`
             )
             if (sessionStorage.getItem('state.location')) {
-              let state = sessionStorage.getItem('state.location');
+              const state = sessionStorage.getItem('state.location');
               sessionStorage.removeItem('state.location');
               console.debug(`returning to state: ${state}`);
               this.router.navigate([state]);

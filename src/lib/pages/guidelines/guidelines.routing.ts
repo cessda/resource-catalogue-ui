@@ -4,7 +4,9 @@ import {CanActivateViaAuthGuard} from '../../services/can-activate-auth-guard.se
 import {GuidelinesFormComponent} from "./guidelines-form.component";
 import {GuidelinesListComponent} from "../admin/guidelines-list.component";
 import {UpdateGuidelinesFormComponent} from "./update-guidelines-form.component";
-
+import {FormBuilderComponent} from "../../../dynamic-catalogue/pages/form-builder/form-builder.component";
+import {ConfigurationTemplatesManagementComponent} from "../provider/dashboard/configurationTemplates/configuration-templates-management.component";
+import {ConfigurationTemplateFormBuilderComponent} from "../provider/dashboard/configurationTemplates/configuration-template-form-builder.component";
 
 const guidelinesRoutes: Routes = [
 
@@ -31,8 +33,25 @@ const guidelinesRoutes: Routes = [
     data: {
       breadcrumb: 'Guidelines List'
     }
+  },
+  {
+    path: ':guidelineId/configuration-templates-management', //GET the conf models that you have access to
+    component: ConfigurationTemplatesManagementComponent,
+    data: {
+      breadcrumb: 'Configuration Templates Management'
+    }
+  },
+  {
+    path: ':guidelineId/model/new',
+    // component: FormBuilderComponent,
+    component: ConfigurationTemplateFormBuilderComponent,
+    data: { hideAppShell: true }
+  },
+  {
+    path: ':guidelineId/model/:id/edit', //GET model with id to edit OR GET base template model and POST instead of PUT
+    component: ConfigurationTemplateFormBuilderComponent,
+    data: { hideAppShell: true }
   }
-
 ];
 
 @NgModule({

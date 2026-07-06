@@ -16,7 +16,7 @@ import {throwError} from 'rxjs';
 import {Model} from "../../dynamic-catalogue/domain/dynamic-form-model";
 import {ConfigService} from "./config.service";
 
-declare var UIkit: any;
+declare let UIkit: any;
 
 @Injectable()
 export class DeployableServiceService {

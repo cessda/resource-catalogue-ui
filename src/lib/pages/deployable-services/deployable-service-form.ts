@@ -16,7 +16,7 @@ import {Model} from "../../../dynamic-catalogue/domain/dynamic-form-model";
 import {FormControlService} from "../../../dynamic-catalogue/services/form-control.service";
 import {DeployableServiceService} from "../../services/deployable-service.service";
 
-declare var UIkit: any;
+declare let UIkit: any;
 
 @Component({
     selector: 'app-deployable-service-form',

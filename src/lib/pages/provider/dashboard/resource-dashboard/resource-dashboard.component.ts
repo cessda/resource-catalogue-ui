@@ -11,7 +11,7 @@ import {DatasourceService} from "../../../../services/datasource.service";
 import {pidHandler} from '../../../../shared/pid-handler/pid-handler.service';
 import {GuidelinesService} from "../../../../services/guidelines.service";
 
-declare var UIkit: any;
+declare let UIkit: any;
 
 @Component({
     selector: 'app-resource-dashboard',

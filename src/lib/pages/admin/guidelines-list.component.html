@@ -322,7 +322,7 @@
                     </button>
                     <div uk-dropdown="mode: click">
                       <ul class="uk-nav uk-dropdown-nav uk-dropdown-close">
-                        @if (guidelineBundle.active && guidelineBundle.status=='approved') {
+                        @if (guidelineBundle.active && guidelineBundle.status==='approved') {
                           <li class="uk-margin-small-bottom"
                             (click)="showAuditForm(guidelineBundle)">
                             <a><span class="material-symbols-outlined uk-margin-small-right" style="vertical-align: middle;">check_circle</span>Audit</a>

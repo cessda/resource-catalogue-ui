@@ -17,7 +17,7 @@ import {DeployableServiceService} from "../../services/deployable-service.servic
 import {environment} from '../../../environments/environment';
 import {ConfigService} from "../../services/config.service";
 
-declare var UIkit: any;
+declare let UIkit: any;
 
 @Component({
     selector: 'app-deployable-services-list',

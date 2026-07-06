@@ -15,7 +15,7 @@ import {zip} from "rxjs";
 import {AdaptersService} from "../../services/adapters.service";
 import {pidHandler} from "../../shared/pid-handler/pid-handler.service";
 
-declare var UIkit: any;
+declare let UIkit: any;
 
 @Component({
     selector: 'app-resource-adapters-form',

@@ -17,7 +17,7 @@ import {Observable, throwError} from 'rxjs';
 import {catchError, map} from 'rxjs/operators';
 import {Model} from "../../dynamic-catalogue/domain/dynamic-form-model";
 
-declare var UIkit: any;
+declare let UIkit: any;
 
 @Injectable()
 export class ResourceService {

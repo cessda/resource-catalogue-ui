@@ -10,7 +10,7 @@ import {NavigationService} from '../../services/navigation.service';
 import {pidHandler} from "../../shared/pid-handler/pid-handler.service";
 import {AdaptersService} from "../../services/adapters.service";
 
-declare var UIkit: any;
+declare let UIkit: any;
 
 @Component({
     selector: 'app-adapters-list',

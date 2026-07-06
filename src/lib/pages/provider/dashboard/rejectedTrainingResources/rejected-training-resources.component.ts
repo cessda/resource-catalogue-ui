@@ -10,7 +10,7 @@ import {environment} from '../../../../../environments/environment';
 import {TrainingResourceService} from "../../../../services/training-resource.service";
 import {NavigationService} from "../../../../services/navigation.service";
 
-declare var UIkit: any;
+declare let UIkit: any;
 
 @Component({
     selector: 'app-rejected-training-resources',

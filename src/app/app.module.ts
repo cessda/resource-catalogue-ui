@@ -44,7 +44,6 @@ import {CatalogueService} from "../lib/services/catalogue.service";
 import {ServiceExtensionsService} from "../lib/services/service-extensions.service";
 import {DatasourceService} from "../lib/services/datasource.service";
 import {TrainingResourceService} from "../lib/services/training-resource.service";
-import {RecommendationsService} from "../lib/services/recommendations.service";
 import {GuidelinesService} from "../lib/services/guidelines.service";
 import {pidHandler} from "../lib/shared/pid-handler/pid-handler.service";
 import {FormControlService} from "../dynamic-catalogue/services/form-control.service";
@@ -53,8 +52,9 @@ import {HelpdeskService} from "./services/helpdesk.service";
 import {DeployableServiceService} from "../lib/services/deployable-service.service";
 import {ConfigService} from '../lib/services/config.service';
 import {AccountingStatsService} from "../lib/services/accounting-stats.service";
+import {APP_ENV} from "../dynamic-catalogue/config/app-env.token";
 
-declare var require: any;
+declare let require: any;
 
 export function initConfig(configService: ConfigService) {
   return () => configService.loadConfig();
@@ -126,6 +126,7 @@ export function highchartsFactory() {
         CookieLawModule,
         // MarkdownModule.forRoot(),
         AppRoutingModule], providers: [
+        { provide: APP_ENV, useValue: environment },
         {
             provide: HTTP_INTERCEPTORS,
             useClass: AuthenticationInterceptor,
@@ -149,7 +150,6 @@ export function highchartsFactory() {
         CatalogueService,
         EmailService,
         DatePipe,
-        RecommendationsService,
         pidHandler,
         FormControlService,
         AdaptersService,

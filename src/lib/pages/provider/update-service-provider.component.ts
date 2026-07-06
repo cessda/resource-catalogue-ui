@@ -12,7 +12,7 @@ import {pidHandler} from "../../shared/pid-handler/pid-handler.service";
 import {FormControlService} from "../../../dynamic-catalogue/services/form-control.service";
 import {ConfigService} from "../../services/config.service";
 
-declare var UIkit: any;
+declare let UIkit: any;
 
 @Component({
     selector: 'app-update-service-provider',

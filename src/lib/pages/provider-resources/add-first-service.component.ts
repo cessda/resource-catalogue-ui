@@ -6,7 +6,6 @@ import {AuthenticationService} from '../../services/authentication.service';
 import {ResourceService} from '../../services/resource.service';
 import {Service} from '../../domain/eic-model';
 import {ServiceProviderService} from '../../services/service-provider.service';
-import {RecommendationsService} from "../../services/recommendations.service";
 import {CatalogueService} from "../../services/catalogue.service";
 import {pidHandler} from "../../shared/pid-handler/pid-handler.service";
 import {FormControlService} from "../../../dynamic-catalogue/services/form-control.service";
@@ -26,7 +25,6 @@ export class AddFirstServiceComponent extends ServiceFormComponent implements On
   constructor(protected injector: Injector,
               protected authenticationService: AuthenticationService,
               protected serviceProviderService: ServiceProviderService,
-              protected recommendationsService: RecommendationsService,
               protected catalogueService: CatalogueService,
               protected route: ActivatedRoute,
               private datePipe: DatePipe,
@@ -34,7 +32,7 @@ export class AddFirstServiceComponent extends ServiceFormComponent implements On
               public dynamicFormService: FormControlService,
               public router: Router,
               public config: ConfigService) {
-    super(injector, authenticationService, serviceProviderService, recommendationsService, catalogueService, route, pidHandler, dynamicFormService, router, config);
+    super(injector, authenticationService, serviceProviderService, catalogueService, route, pidHandler, dynamicFormService, router, config);
     this.editMode = false;
   }
 

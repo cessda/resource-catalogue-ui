@@ -10,7 +10,7 @@ import {environment} from '../../../../../environments/environment';
 import {pidHandler} from "../../../../shared/pid-handler/pid-handler.service";
 import {DeployableServiceService} from "../../../../services/deployable-service.service";
 
-declare var UIkit: any;
+declare let UIkit: any;
 
 @Component({
     selector: 'app-deployable-services',

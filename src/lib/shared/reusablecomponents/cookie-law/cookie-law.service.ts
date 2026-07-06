@@ -29,9 +29,9 @@ export class CookieLawService {
    */
   private cookieExists(name: string): boolean {
     if (typeof document !== 'undefined') {
-      let ca: Array<string> = document.cookie.split(';');
-      let caLen: number = ca.length;
-      let cookieName = name + '=';
+      const ca: Array<string> = document.cookie.split(';');
+      const caLen: number = ca.length;
+      const cookieName = name + '=';
       let c: string;
 
       for (let i: number = 0; i < caLen; i += 1) {
@@ -51,9 +51,9 @@ export class CookieLawService {
    */
   private setCookie(name: string): void {
     if (typeof document !== 'undefined') {
-      let d:Date = new Date();
+      const d:Date = new Date();
       d.setTime(d.getTime() + 3*30 * 24 * 60 * 60 * 1000); // in 3 months
-      let expires:string = `expires=${d.toUTCString()}`;
+      const expires:string = `expires=${d.toUTCString()}`;
 
       document.cookie = encodeURIComponent(name) + '=true; path=/;  expires='+expires+';';
     }

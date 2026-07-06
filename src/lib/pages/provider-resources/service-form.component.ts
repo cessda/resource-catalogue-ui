@@ -11,14 +11,13 @@ import {ConfigService} from '../../services/config.service';
 import {environment} from '../../../environments/environment';
 import {ActivatedRoute, Router} from '@angular/router';
 import {ServiceProviderService} from '../../services/service-provider.service';
-import {RecommendationsService} from "../../services/recommendations.service";
 import {CatalogueService} from "../../services/catalogue.service";
 import {pidHandler} from "../../shared/pid-handler/pid-handler.service";
 import {FormControlService} from "../../../dynamic-catalogue/services/form-control.service";
 import {SurveyComponent} from "../../../dynamic-catalogue/pages/dynamic-form/survey.component";
 import {Model} from "../../../dynamic-catalogue/domain/dynamic-form-model";
 
-declare var UIkit: any;
+declare let UIkit: any;
 
 @Component({
     selector: 'app-service-form',
@@ -138,7 +137,6 @@ export class ServiceFormComponent implements OnInit {
   constructor(protected injector: Injector,
               protected authenticationService: AuthenticationService,
               protected serviceProviderService: ServiceProviderService,
-              protected recommendationsService: RecommendationsService,
               protected catalogueService: CatalogueService,
               protected route: ActivatedRoute,
               public pidHandler: pidHandler,
@@ -248,7 +246,7 @@ export class ServiceFormComponent implements OnInit {
         this.premiumSort.transform(this.serviceCategoryVocabulary, ['Compute', 'Data Source', 'Storage']);
         this.providersPage.results.sort((a, b) => 0 - (a.name > b.name ? -1 : 1));
 
-        let voc: Vocabulary[] = this.vocabularies[Type.SUBCATEGORY].concat(this.vocabularies[Type.SCIENTIFIC_SUBDOMAIN]);
+        const voc: Vocabulary[] = this.vocabularies[Type.SUBCATEGORY].concat(this.vocabularies[Type.SCIENTIFIC_SUBDOMAIN]);
         this.subVocabularies = this.groupByKey(voc, 'parentId');
 
         this.providerId = this.route.snapshot.paramMap.get('providerId');

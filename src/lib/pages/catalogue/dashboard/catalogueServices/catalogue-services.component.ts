@@ -10,7 +10,7 @@ import {ConfigService} from "../../../../services/config.service";
 import {environment} from '../../../../../environments/environment';
 import {CatalogueService} from "../../../../services/catalogue.service";
 
-declare var UIkit: any;
+declare let UIkit: any;
 
 @Component({
     selector: 'app-catalogue-services',

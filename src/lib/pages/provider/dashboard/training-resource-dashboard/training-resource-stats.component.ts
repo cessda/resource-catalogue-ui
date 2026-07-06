@@ -13,7 +13,7 @@ import MapModule from 'highcharts/modules/map';
 MapModule(Highcharts);
 import {ConfigService} from '../../../../services/config.service';
 
-declare var require: any;
+declare let require: any;
 const mapWorld = require('@highcharts/map-collection/custom/world.geo.json')
 
 @Component({
@@ -35,7 +35,6 @@ export class TrainingResourceStatsComponent implements OnInit, OnDestroy {
   Highcharts: typeof Highcharts = Highcharts;
   chartConstructor = 'mapChart';
   resourceVisitsOptions: any = null;
-  resourceRatingsOptions: any = null;
   resourceAddsToProjectOptions: any = null;
   resourceMapOptions: any = null;
 
@@ -188,40 +187,6 @@ export class TrainingResourceStatsComponent implements OnInit, OnDestroy {
           enabled: false
         }
       };
-    }
-  }
-
-  setRatingsForResource(data: any) {
-    if (data) {
-      this.resourceRatingsOptions = {
-        title: {
-          text: 'Number of ratings over time'
-        },
-        xAxis: {
-          type: 'datetime',
-          dateTimeLabelFormats: { // don't display the dummy year
-            month: '%e. %b',
-            year: '%b'
-          },
-          title: {
-            text: 'Date'
-          }
-        },
-        yAxis: {
-          title: {
-            text: 'Average rating'
-          }
-        },
-        series: [{
-          name: 'Average rating over time',
-          color: '#6B0035',
-          data: data
-        }],
-        credits: {
-          enabled: false
-        }
-      };
-
     }
   }
 

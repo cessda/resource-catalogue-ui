@@ -12,7 +12,7 @@ import {FormControlService} from "../../../dynamic-catalogue/services/form-contr
 import {SurveyComponent} from "../../../dynamic-catalogue/pages/dynamic-form/survey.component";
 import {pidHandler} from "../../shared/pid-handler/pid-handler.service";
 
-declare var UIkit: any;
+declare let UIkit: any;
 
 @Component({
     selector: 'app-catalogue-form',

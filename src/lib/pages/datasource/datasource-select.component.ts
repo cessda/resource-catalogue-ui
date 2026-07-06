@@ -10,7 +10,7 @@ import {environment} from '../../../environments/environment';
 import {DatasourceService} from "../../services/datasource.service";
 import {NavigationService} from "../../services/navigation.service";
 
-declare var UIkit: any;
+declare let UIkit: any;
 
 @Component({
     selector: 'app-datasource-select',

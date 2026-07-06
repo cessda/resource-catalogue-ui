@@ -8,6 +8,7 @@ import {
 } from '../domain/eic-model';
 import {Paging} from "../domain/paging";
 import {ConfigService} from "./config.service";
+import {Model} from "../../dynamic-catalogue/domain/dynamic-form-model";
 
 @Injectable()
 export class GuidelinesService {
@@ -124,13 +125,18 @@ export class GuidelinesService {
     return this.http.get<any>(this.base + `/configurationTemplate/getAllByInteroperabilityRecordId/${guidelineId}`, this.options);
   }
 
+  getTemplatesForGuidelineWithAuth(guidelineId: string) {
+    guidelineId = decodeURIComponent(guidelineId);
+    return this.http.get<any>(this.base + `/configurationTemplate/bundle/getAllByInteroperabilityRecordId/${guidelineId}`, this.options);
+  }
+
   getTemplatesForGuidelinesMapping() {
     return this.http.get<any>(this.base + `/configurationTemplate/interoperabilityRecordIdToConfigurationTemplateListMap`, this.options);
   }
 
   saveConfigurationTemplateInstance(payload: any) {
     console.log(payload);
-    const shouldPut = !!payload.id; // PUT if id exists, else POST
+    const shouldPut = !!payload?.id; // PUT if id exists, else POST
     return this.http[shouldPut ? 'put' : 'post'](this.base + `/configurationTemplateInstance`, payload, this.options);
   }
 
@@ -144,5 +150,42 @@ export class GuidelinesService {
     return this.http.get<any>(this.base + `/configurationTemplateInstance/resources/${resId}/templates/${ctId}`, this.options);
   }
 
+  getInstancesByConfigurationTemplateId(ctId: string) {
+    return this.http.get<any>(this.base + `/configurationTemplateInstance/getAllByConfigurationTemplateId/${ctId}`, this.options);
+  }
+
+  getExistingTemplate(id: string) {
+    return this.http.get<Model>(this.base + `/configurationTemplate/${id}/model`);
+  }
+
+  getBaseTemplate() {
+    return this.http.get<Model>(this.base + `/configurationTemplateInstance/baseModel`);
+  }
+
+  saveModel(model: Model | null, editMode: boolean, guidelineId: string) {
+    const id = decodeURIComponent(guidelineId);
+    if (editMode) {
+      return this.http.put(this.base + `/configurationTemplate/${id}/withModel`, model, this.options);
+    } else {
+      return this.http.post(this.base + `/configurationTemplate/${id}/withModel`, model, this.options);
+    }
+  }
+
+  // saveModel(model: Model | null, editMode: boolean, guidelineId: string) {
+  //   if (editMode) {
+  //     return this.http.put(this.base + `/forms/models/${model?.id}`, model);
+  //   } else {
+  //     return this.http.post<{ id: string }>(this.base + '/forms/models', model).pipe(
+  //       switchMap((response) =>
+  //         this.http.post(this.base + '/configurationTemplate', {
+  //           interoperabilityRecordId: decodeURIComponent(guidelineId),
+  //           name: model?.name,
+  //           description: model?.description,
+  //           modelId: response.id
+  //         })
+  //       )
+  //     );
+  //   }
+  // }
   /** <-- Configuration Templates **/
 }

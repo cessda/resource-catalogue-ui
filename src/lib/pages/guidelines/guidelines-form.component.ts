@@ -13,7 +13,7 @@ import {SurveyComponent} from "../../../dynamic-catalogue/pages/dynamic-form/sur
 import {Model} from "../../../dynamic-catalogue/domain/dynamic-form-model";
 import {FormControlService} from "../../../dynamic-catalogue/services/form-control.service";
 
-declare var UIkit: any;
+declare let UIkit: any;
 
 @Component({
     selector: 'app-guidelines-form',
@@ -89,7 +89,7 @@ export class GuidelinesFormComponent implements OnInit {
 
     guidelinesValue = FormControlService.cleanObjectInPlace(guidelinesValue);
 
-    let method = this.editMode ? 'updateInteroperabilityRecord' : 'addInteroperabilityRecord';
+    const method = this.editMode ? 'updateInteroperabilityRecord' : 'addInteroperabilityRecord';
     this.guidelinesService[method](guidelinesValue).subscribe(
       res => {},
       err => {
