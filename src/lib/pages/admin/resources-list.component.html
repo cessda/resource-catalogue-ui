@@ -376,7 +376,7 @@
                             </button>
                             <div uk-dropdown="mode: click">
                               <ul class="uk-nav uk-dropdown-nav uk-dropdown-close">
-                                <ng-container *ngIf="serviceBundle.active && serviceBundle.status=='approved'">
+                                <ng-container *ngIf="serviceBundle.active && serviceBundle.status==='approved'">
                                   <li class="uk-margin-small-bottom"
                                       (click)="showAuditForm('main', serviceBundle)">
                                     <a><span class="material-symbols-outlined uk-margin-small-right" style="vertical-align: middle;">check_circle</span>Audit</a>
@@ -419,7 +419,7 @@
                             <div uk-dropdown="mode: click">
                               <ul class="uk-nav uk-dropdown-nav uk-dropdown-close">
 
-                                <ng-container *ngIf="serviceBundle.status=='approved'">
+                                <ng-container *ngIf="serviceBundle.status==='approved'">
 
                                   <ng-container class="uk-margin-small-bottom" *ngIf="serviceBundle.active">
                                     <li (click)="showAuditForm('main', serviceBundle)">
@@ -464,7 +464,7 @@
 
                                 </ng-container>
 
-                                <ng-container *ngIf="serviceBundle.status=='pending'">
+                                <ng-container *ngIf="serviceBundle.status==='pending'">
                                   <li class="uk-active" (click)="templateAction(serviceBundle, true, 'approved')">
                                     <a><span class="material-symbols-outlined uk-margin-small-right" style="vertical-align: middle;">thumb_up</span>Approve First {{serviceORresource}}</a>
                                   </li>
@@ -899,8 +899,8 @@
                 <ng-container *ngIf="isProviderActive(serviceBundle.service.resourceOwner) ; else elseBlockList">
                   <li class="uk-button uk-button-link uk-margin-small-top"
                       (click)="toggleService(serviceBundle)">
-                    <ng-container *ngIf="serviceBundle.status=='approved' && serviceBundle.active"><span class="material-symbols-outlined" style="vertical-align: middle;">close</span>Deactivate {{serviceORresource}}</ng-container>
-                    <ng-container *ngIf="serviceBundle.status=='approved' && !serviceBundle.active"><span class="material-symbols-outlined" style="vertical-align: middle;">check</span>Activate {{serviceORresource}}</ng-container>
+                    <ng-container *ngIf="serviceBundle.status==='approved' && serviceBundle.active"><span class="material-symbols-outlined" style="vertical-align: middle;">close</span>Deactivate {{serviceORresource}}</ng-container>
+                    <ng-container *ngIf="serviceBundle.status==='approved' && !serviceBundle.active"><span class="material-symbols-outlined" style="vertical-align: middle;">check</span>Activate {{serviceORresource}}</ng-container>
                   </li>
                 </ng-container>
 
@@ -908,8 +908,8 @@
                   <div uk-tooltip="title:Cannot activate/deactivate resource of a non active provider.">
                     <li class="uk-button uk-button-link uk-disabled"
                         (click)="toggleService(serviceBundle)">
-                      <ng-container *ngIf="serviceBundle.status=='approved' && serviceBundle.active"><span class="material-symbols-outlined" style="vertical-align: middle;">close</span>Deactivate {{serviceORresource}}</ng-container>
-                      <ng-container *ngIf="serviceBundle.status=='approved' && !serviceBundle.active"><span class="material-symbols-outlined" style="vertical-align: middle;">check</span>Activate {{serviceORresource}}</ng-container>
+                      <ng-container *ngIf="serviceBundle.status==='approved' && serviceBundle.active"><span class="material-symbols-outlined" style="vertical-align: middle;">close</span>Deactivate {{serviceORresource}}</ng-container>
+                      <ng-container *ngIf="serviceBundle.status==='approved' && !serviceBundle.active"><span class="material-symbols-outlined" style="vertical-align: middle;">check</span>Activate {{serviceORresource}}</ng-container>
                     </li>
                   </div>
                 </ng-template>

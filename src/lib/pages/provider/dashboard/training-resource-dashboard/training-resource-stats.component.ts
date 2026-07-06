@@ -13,7 +13,7 @@ import MapModule from 'highcharts/modules/map';
 MapModule(Highcharts);
 import {ConfigService} from '../../../../services/config.service';
 
-declare var require: any;
+declare let require: any;
 const mapWorld = require('@highcharts/map-collection/custom/world.geo.json')
 
 @Component({

@@ -9,7 +9,7 @@ import {ServiceProviderService} from '../../../services/service-provider.service
 import {GuidelinesService} from "../../../services/guidelines.service";
 import {ConfigService} from '../../../services/config.service';
 
-declare var UIkit: any;
+declare let UIkit: any;
 
 @Component({
     selector: 'app-resource-guidelines-form',

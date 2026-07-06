@@ -9,7 +9,7 @@ import {UntypedFormArray, UntypedFormBuilder, UntypedFormControl, UntypedFormGro
 import {URLParameter} from '../../domain/url-parameter';
 import {NavigationService} from '../../services/navigation.service';
 
-declare var UIkit: any;
+declare let UIkit: any;
 
 @Component({
     selector: 'app-vocabulary-requests',

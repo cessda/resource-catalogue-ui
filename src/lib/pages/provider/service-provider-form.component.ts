@@ -14,7 +14,7 @@ import {Model} from "../../../dynamic-catalogue/domain/dynamic-form-model";
 import {FormControlService} from "../../../dynamic-catalogue/services/form-control.service";
 import {SurveyComponent} from "../../../dynamic-catalogue/pages/dynamic-form/survey.component";
 
-declare var UIkit: any;
+declare let UIkit: any;
 
 @Component({
   selector: 'app-new-service-provider',

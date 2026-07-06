@@ -15,10 +15,10 @@ import * as Highcharts from 'highcharts';
 import MapModule from 'highcharts/modules/map';
 MapModule(Highcharts);
 
-declare var require: any;
+declare let require: any;
 // const mapWorld = require('@highcharts/map-collection/custom/world.geo.json');
 const mapWorld = require('@highcharts/map-collection/custom/world.geo.json')
-declare var UIkit: any;
+declare let UIkit: any;
 
 
 @Component({

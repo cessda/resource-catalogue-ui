@@ -11,7 +11,7 @@ import {ServiceExtensionsService} from "../../../../services/service-extensions.
 import {pidHandler} from "../../../../shared/pid-handler/pid-handler.service";
 import {DatasourceService} from "../../../../services/datasource.service";
 
-declare var UIkit: any;
+declare let UIkit: any;
 
 @Component({
     selector: 'app-datasources',

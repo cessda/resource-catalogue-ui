@@ -22,7 +22,7 @@ import {Paging} from '../../domain/paging';
 import {getLocaleDateFormat} from '@angular/common';
 import {zip} from 'rxjs';
 
-declare var UIkit: any;
+declare let UIkit: any;
 
 @Component({
     selector: 'app-catalogues-list',

@@ -1,4 +1,4 @@
-import { Component } from "@angular/core";
+import { Component, OnInit } from "@angular/core";
 import { ProviderBundle, Vocabulary } from "../../../../domain/eic-model";
 import { ActivatedRoute } from "@angular/router";
 import { ServiceProviderService } from "../../../../services/service-provider.service";
@@ -54,7 +54,7 @@ import { ResourceService } from "../../../../services/resource.service";
     </div>
   `
 })
-export class ProviderInfoComponent {
+export class ProviderInfoComponent implements OnInit {
 
   providerId: string;
   provider: any;

@@ -11,7 +11,7 @@ import {FormControlService} from "../../../dynamic-catalogue/services/form-contr
 import {ConfigService} from "../../services/config.service";
 import {pidHandler} from "../../shared/pid-handler/pid-handler.service";
 
-declare var UIkit: any;
+declare let UIkit: any;
 
 @Component({
     selector: 'app-update-catalogue',

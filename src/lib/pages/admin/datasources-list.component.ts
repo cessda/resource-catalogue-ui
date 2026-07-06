@@ -20,7 +20,7 @@ import {DatasourceService} from "../../services/datasource.service";
 import {pidHandler} from "../../shared/pid-handler/pid-handler.service";
 import {Paging} from "../../domain/paging";
 
-declare var UIkit: any;
+declare let UIkit: any;
 
 @Component({
     selector: 'app-datasources-list',

@@ -21,7 +21,7 @@ import {Paging} from '../../domain/paging';
 import {ServiceExtensionsService} from '../../services/service-extensions.service';
 import {pidHandler} from "../../shared/pid-handler/pid-handler.service";
 
-declare var UIkit: any;
+declare let UIkit: any;
 
 @Component({
     selector: 'app-resources-list',
@@ -803,7 +803,7 @@ export class ResourcesListComponent implements OnInit {
   }
 
   getProviderNamesWithIds(idsArray: string[]) {
-    let namesArray = [];
+    const namesArray = [];
     if (idsArray) {
       for (let i=0; i<idsArray.length; i++) {
         namesArray.push(this.providersPage.results.find( x => x.id == idsArray[i] )?.name);

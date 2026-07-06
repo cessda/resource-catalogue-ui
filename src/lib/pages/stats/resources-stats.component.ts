@@ -11,8 +11,8 @@ MapModule(Highcharts);
 import {pidHandler} from "../../shared/pid-handler/pid-handler.service";
 
 const mapWorld = require('@highcharts/map-collection/custom/world.geo.json');
-declare var require: any;
-declare var UIkit: any;
+declare let require: any;
+declare let UIkit: any;
 
 
 @Component({

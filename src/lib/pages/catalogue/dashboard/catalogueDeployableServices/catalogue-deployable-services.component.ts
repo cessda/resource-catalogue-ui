@@ -8,7 +8,7 @@ import {DeployableServiceService} from "../../../../services/deployable-service.
 import {ConfigService} from "../../../../services/config.service";
 import {environment} from '../../../../../environments/environment';
 
-declare var UIkit: any;
+declare let UIkit: any;
 
 @Component({
     selector: 'app-catalogue-deployable-services',

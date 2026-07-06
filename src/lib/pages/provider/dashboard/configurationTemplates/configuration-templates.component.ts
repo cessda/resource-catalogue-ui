@@ -181,7 +181,7 @@ export class ConfigurationTemplatesComponent implements OnInit {
   }
 
   saveForm(submittedEvent: any, templateId: string): void {
-    let myFormGroup: FormGroup = submittedEvent;
+    const myFormGroup: FormGroup = submittedEvent;
     const ctiValue = submittedEvent.value.configurationTemplateInstance;
     const isUpdate = !!ctiValue?.id;
     // console.log(submittedEvent.value);

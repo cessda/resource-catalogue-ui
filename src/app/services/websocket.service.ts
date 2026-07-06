@@ -3,8 +3,8 @@ import { environment } from "../../environments/environment";
 import { BehaviorSubject, Subject } from "rxjs";
 import { UserActivity } from "../domain/userInfo";
 
-declare var SockJS;
-declare var Stomp;
+declare let SockJS;
+declare let Stomp;
 
 const URL = environment.WS_ENDPOINT;
 

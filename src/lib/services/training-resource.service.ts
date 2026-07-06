@@ -19,7 +19,7 @@ import {Observable, throwError} from 'rxjs';
 import {catchError, map} from 'rxjs/operators';
 import {ConfigService} from "./config.service";
 
-declare var UIkit: any;
+declare let UIkit: any;
 
 @Injectable()
 export class TrainingResourceService {

@@ -375,7 +375,7 @@
                     </button>
                     <div uk-dropdown="mode: click">
                       <ul class="uk-nav uk-dropdown-nav uk-dropdown-close">
-                        @if (datasourceBundle.active && datasourceBundle.status=='approved') {
+                        @if (datasourceBundle.active && datasourceBundle.status==='approved') {
                           <li class="uk-margin-small-bottom"
                               (click)="showAuditForm('main', datasourceBundle)">
                             <a><span class="material-symbols-outlined uk-margin-small-right" style="vertical-align: middle;">check_circle</span>Audit</a>

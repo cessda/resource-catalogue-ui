@@ -54,7 +54,7 @@ import {ConfigService} from '../lib/services/config.service';
 import {AccountingStatsService} from "../lib/services/accounting-stats.service";
 import {APP_ENV} from "../dynamic-catalogue/config/app-env.token";
 
-declare var require: any;
+declare let require: any;
 
 export function initConfig(configService: ConfigService) {
   return () => configService.loadConfig();

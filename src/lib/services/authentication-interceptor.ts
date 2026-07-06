@@ -6,7 +6,7 @@ import { catchError } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
 import { AuthenticationService } from './authentication.service';
 
-declare var UIkit: any;
+declare let UIkit: any;
 
 @Injectable()
 export class AuthenticationInterceptor implements HttpInterceptor {

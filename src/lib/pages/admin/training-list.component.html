@@ -345,7 +345,7 @@
                         </button>
                         <div uk-dropdown="mode: click">
                           <ul class="uk-nav uk-dropdown-nav uk-dropdown-close">
-                            @if (trBundle.active && trBundle.status=='approved') {
+                            @if (trBundle.active && trBundle.status==='approved') {
                               <li class="uk-margin-small-bottom"
                                 (click)="showAuditForm('main', trBundle)">
                                 <a><span class="material-symbols-outlined uk-margin-small-right" style="vertical-align: middle;">check_circle</span>Audit</a>
@@ -395,7 +395,7 @@
                         }
                         <div uk-dropdown="mode: click">
                           <ul class="uk-nav uk-dropdown-nav uk-dropdown-close">
-                            @if (trBundle.status=='approved') {
+                            @if (trBundle.status==='approved') {
                               @if (trBundle.active) {
                                 <ng-container class="uk-margin-small-bottom">
                                   <li (click)="showAuditForm('main', trBundle)">
@@ -451,7 +451,7 @@
                                 </li>
                               }
                             }
-                            @if (trBundle.status=='pending') {
+                            @if (trBundle.status==='pending') {
                               <li class="uk-active" (click)="templateAction(trBundle.id, true, 'approved')">
                                 <a><span class="material-symbols-outlined uk-margin-small-right" style="vertical-align: middle;">thumb_up</span>Approve First Training Resource</a>
                               </li>

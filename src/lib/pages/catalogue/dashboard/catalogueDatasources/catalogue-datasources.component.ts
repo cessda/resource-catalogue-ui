@@ -8,7 +8,7 @@ import {URLParameter} from '../../../../domain/url-parameter';
 import {CatalogueService} from "../../../../services/catalogue.service";
 import {DatasourceService} from "../../../../services/datasource.service";
 
-declare var UIkit: any;
+declare let UIkit: any;
 
 @Component({
     selector: 'app-catalogue-datasources',
