@@ -5,7 +5,7 @@ WORKDIR /usr/src/app
 
 COPY package*.json ./
 
-RUN npm install
+RUN npm ci
 
 COPY angular.json tsconfig.json tslint.json .browserslistrc ./
 COPY src ./src
