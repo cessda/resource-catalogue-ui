@@ -1,3 +1,4 @@
+def BUILD_CONFIGURATION = 'beta'
 def DOCKER_IMAGE = null
 def DOCKER_TAG = ''
 def DOCKER_IMAGE_SHA = ''
@@ -17,8 +18,6 @@ pipeline {
   environment {
     IMAGE_NAME = 'eosc-resource-catalogue-ui'
     REGISTRY = 'europe-west1-docker.pkg.dev/cessda-prod/docker'
-    REGISTRY_CRED = 'docker-registry'
-    BUILD_CONFIGURATION = 'beta'
     DOCKER_BUILDKIT = '1'
   }
 
@@ -64,21 +63,19 @@ pipeline {
       }
       steps {
         script {
-          withCredentials([usernamePassword(credentialsId: "${REGISTRY_CRED}", usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
-            sh """
-              echo "Pushing image: ${DOCKER_IMAGE_SHA}"
-              gcloud auth configure-docker ${ARTIFACT_REGISTRY_HOST}
-            """
-            if (env.TAG_NAME) {
-              def minorTag = DOCKER_TAG.tokenize('.').take(2).join('.')
-              DOCKER_IMAGE.push()
-              DOCKER_IMAGE.push(minorTag)
-              DOCKER_IMAGE.push("latest")
-            } else if (env.BRANCH_NAME == 'master') {
-              DOCKER_IMAGE.push("latest")
-            } else {
-              DOCKER_IMAGE.push("dev")
-            }
+          sh """
+            echo "Pushing image: ${DOCKER_IMAGE_SHA}"
+            gcloud auth configure-docker ${ARTIFACT_REGISTRY_HOST}
+          """
+          if (env.TAG_NAME) {
+            def minorTag = DOCKER_TAG.tokenize('.').take(2).join('.')
+            DOCKER_IMAGE.push()
+            DOCKER_IMAGE.push(minorTag)
+            DOCKER_IMAGE.push("latest")
+          } else if (env.BRANCH_NAME == 'master') {
+            DOCKER_IMAGE.push("latest")
+          } else {
+            DOCKER_IMAGE.push("dev")
           }
         }
       }
