@@ -3,7 +3,6 @@ import {isNullOrUndefined} from '../../../../shared/tools';
 import {combineLatest, zip} from 'rxjs';
 import {AuthenticationService} from '../../../../services/authentication.service';
 import {ResourceService} from '../../../../services/resource.service';
-import {RecommendationsService} from '../../../../services/recommendations.service';
 import {NavigationService} from '../../../../services/navigation.service';
 import {ActivatedRoute} from '@angular/router';
 import {ServiceProviderService} from '../../../../services/service-provider.service';
@@ -16,10 +15,10 @@ import * as Highcharts from 'highcharts';
 import MapModule from 'highcharts/modules/map';
 MapModule(Highcharts);
 
-declare var require: any;
+declare let require: any;
 // const mapWorld = require('@highcharts/map-collection/custom/world.geo.json');
 const mapWorld = require('@highcharts/map-collection/custom/world.geo.json')
-declare var UIkit: any;
+declare let UIkit: any;
 
 
 @Component({
@@ -30,7 +29,6 @@ declare var UIkit: any;
 
 export class ProviderStatsComponent implements OnInit {
 
-  catalogueConfigId: string = this.config.getProperty('catalogueId');
   catalogueName: string | null = null;
   serviceORresource = environment.serviceORresource;
   marketplaceServicesURL = environment.marketplaceServicesURL;
@@ -50,7 +48,6 @@ export class ProviderStatsComponent implements OnInit {
   public WW: string[];
 
   providerVisitsOptions: any = null;
-  providerRatingsOptions: any = null;
   providerFavouritesOptions: any = null;
   providerAddsToProjectOptions: any = null;
   providerOrdersOptions: any = null;
@@ -63,11 +60,6 @@ export class ProviderStatsComponent implements OnInit {
   accessModesPerServiceForProvider: any = null;
   accessTypesPerServiceForProvider: any = null;
   orderTypesPerServiceForProvider: any = null;
-  recommendationsOverTimeForProvider: any = null;
-  recommendationsOfTopServices: any = null;
-  recommendationsOfCompetitorsServices: any[] = [];
-  emptyResponseOnGetCompetitorsServices = false;
-  enrichedRecommendationsOfCompetitorsServices: any[] = [];
 
   selectedCountryName: string = null;
   selectedCountryServices: any = null;
@@ -78,7 +70,6 @@ export class ProviderStatsComponent implements OnInit {
   constructor(
     public authenticationService: AuthenticationService,
     public resourceService: ResourceService,
-    public recommendationsService: RecommendationsService,
     public navigator: NavigationService,
     private route: ActivatedRoute,
     private providerService: ServiceProviderService,
@@ -95,7 +86,7 @@ export class ProviderStatsComponent implements OnInit {
       zip(
         this.resourceService.getEU(),
         this.resourceService.getWW(),
-        this.providerService.getServiceProviderBundleById(this.providerId, this.catalogueId)
+        this.providerService.getServiceProviderBundleById(this.providerId)
         /*this.resourceService.getProvidersNames()*/
       ).subscribe(suc => {
         this.EU = <string[]>suc[0];
@@ -104,13 +95,13 @@ export class ProviderStatsComponent implements OnInit {
         this.getDataForProvider(this.statisticPeriod);
       });
     } else {
-      this.providerService.getMyServiceProviders().subscribe(
+      this.providerService.getMyProviders().subscribe(
         res => {
           this.providerId = res[0].id;
           zip(
             this.resourceService.getEU(),
             this.resourceService.getWW(),
-            this.providerService.getServiceProviderBundleById(this.providerId, this.catalogueId)
+            this.providerService.getServiceProviderBundleById(this.providerId)
             /*this.resourceService.getProvidersNames()*/
           ).subscribe(suc => {
             this.EU = <string[]>suc[0];
@@ -145,42 +136,31 @@ export class ProviderStatsComponent implements OnInit {
         );
     }
 
-    this.resourceService.getVisitsForProvider(this.providerId, period).pipe(
-      map(data => {
-        // THESE 3 weird lines should be deleted when pgl makes everything ok :)
-        return Object.entries(data).map((d) => {
-          return [new Date(d[0]).getTime(), d[1]];
-        }).sort((l, r) => l[0] - r[0]);
-      })).subscribe(
-      data => this.setVisitsForProvider(data),
-      err => {
-        this.errorMessage = 'An error occurred while retrieving visits for this provider. ' + err.error;
-      }
-    );
+    //TODO: enable when back transitions its API calls
+
+    // this.resourceService.getVisitsForProvider(this.providerId, period).pipe(
+    //   map(data => {
+    //     // THESE 3 weird lines should be deleted when pgl makes everything ok :)
+    //     return Object.entries(data).map((d) => {
+    //       return [new Date(d[0]).getTime(), d[1]];
+    //     }).sort((l, r) => l[0] - r[0]);
+    //   })).subscribe(
+    //   data => this.setVisitsForProvider(data),
+    //   err => {
+    //     this.errorMessage = 'An error occurred while retrieving visits for this provider. ' + err.error;
+    //   }
+    // );
 
     if (this.catalogueName === 'EOSC') {
 
-      this.resourceService.getAddsToProjectForProvider(this.providerId, period).pipe(
-        map(data => {
-          // THESE 3 weird lines should be deleted when pgl makes everything ok :)
-          return Object.entries(data).map((d) => {
-            return [new Date(d[0]).getTime(), d[1]];
-          }).sort((l, r) => l[0] - r[0]);
-        })).subscribe(
-        data => this.setAddsToProjectOptions(data),
-        err => {
-          this.errorMessage = 'An error occurred while retrieving favourites for this provider. ' + err.error;
-        }
-      );
-
-      // this.resourceService.getOrdersForProvider(this.providerId, period).pipe(
+      // this.resourceService.getAddsToProjectForProvider(this.providerId, period).pipe(
       //   map(data => {
       //     // THESE 3 weird lines should be deleted when pgl makes everything ok :)
       //     return Object.entries(data).map((d) => {
       //       return [new Date(d[0]).getTime(), d[1]];
       //     }).sort((l, r) => l[0] - r[0]);
       //   })).subscribe(
-      //   data => this.setOrdersOptions(data),
+      //   data => this.setAddsToProjectOptions(data),
       //   err => {
       //     this.errorMessage = 'An error occurred while retrieving favourites for this provider. ' + err.error;
       //   }
@@ -223,57 +203,6 @@ export class ProviderStatsComponent implements OnInit {
       }
     );
 
-    this.resourceService.getTargetUsersPerServiceForProvider(this.providerId).subscribe(
-      data => {
-        const barChartCategories: string[] = [];
-        const barChartData: number[] = [];
-        for (let i = 0; i < Object.keys(data).length; i++) {
-          const str = (Object.values(data[i])[0]).toString();
-          const key = str.substring(str.lastIndexOf('-') + 1).replace(/_/g, ' ').replace(/^\w/, c => c.toUpperCase());
-          barChartCategories.push(key);
-          barChartData.push(Object.keys(Object.values(data[i])[1]).length);
-        }
-        this.setTargetUsersPerServiceForProvider(barChartCategories, barChartData);
-      },
-      err => {
-        this.errorMessage = 'An error occurred while retrieving target users for this provider. ' + err.error;
-      }
-    );
-
-    this.resourceService.getAccessModesPerServiceForProvider(this.providerId).subscribe(
-      data => {
-        const barChartCategories: string[] = [];
-        const barChartData: number[] = [];
-        for (let i = 0; i < Object.keys(data).length; i++) {
-          const str = (Object.values(data[i])[0]).toString();
-          const key = str.substring(str.lastIndexOf('-') + 1).replace(/_/g, ' ').replace(/^\w/, c => c.toUpperCase());
-          barChartCategories.push(key);
-          barChartData.push(Object.keys(Object.values(data[i])[1]).length);
-        }
-        this.setAccessModesPerServiceForProvider(barChartCategories, barChartData);
-      },
-      err => {
-        this.errorMessage = 'An error occurred while retrieving access modes for this provider. ' + err.error;
-      }
-    );
-
-    this.resourceService.getAccessTypesPerServiceForProvider(this.providerId).subscribe(
-      data => {
-        const barChartCategories: string[] = [];
-        const barChartData: number[] = [];
-        for (let i = 0; i < Object.keys(data).length; i++) {
-          const str = (Object.values(data[i])[0]).toString();
-          const key = str.substring(str.lastIndexOf('-') + 1).replace(/_/g, ' ').replace(/^\w/, c => c.toUpperCase());
-          barChartCategories.push(key);
-          barChartData.push(Object.keys(Object.values(data[i])[1]).length);
-        }
-        this.setAccessTypesPerServiceForProvider(barChartCategories, barChartData);
-      },
-      err => {
-        this.errorMessage = 'An error occurred while retrieving access types for this provider. ' + err.error;
-      }
-    );
-
     this.resourceService.getOrderTypesPerServiceForProvider(this.providerId).subscribe(
       data => {
         const barChartCategories: string[] = [];
@@ -309,66 +238,7 @@ export class ProviderStatsComponent implements OnInit {
       );
     }
 
-    this.resourceService.getMapDistributionOfServices(this.providerId).subscribe(
-      data => {
-        this.geographicalDistributionMap = new Map();
-
-        for (const [key, value] of Object.entries(data)) {
-          this.geographicalDistributionMap.set(value.key.toLowerCase(), value.values);
-        }
-        this.setMapDistributionOfServices(data);
-      },
-      err => {
-        this.errorMessage = 'An error occurred while retrieving geographical distribution of services for this provider. ' + err.error;
-      }
-    );
-
-    /** Recommendations -> **/
-    // this.recommendationsService.getRecommendationsOverTime(this.catalogueId.concat('.',this.providerId)).subscribe(
-    //     data => this.setRecommendationsOverTimeForProvider(data),
-    //     err => this.errorMessage = 'An error occurred while retrieving visits for this provider. ' + err.error
-    //   );
-    //
-    // this.recommendationsService.getMostRecommendedServices(this.catalogueId.concat('.',this.providerId)).subscribe(
-    //   data => this.enrichMostRecommendedServices(data),
-    //   err => this.errorMessage = 'An error occurred while retrieving most recommended services for this provider. ' + err.error
-    // );
-    //
-    // this.recommendationsService.getCompetitorsServices(this.catalogueId.concat('.',this.providerId)).subscribe(
-    //   data => this.setCompetitorsServices(data),
-    //   err => this.errorMessage = 'An error occurred while retrieving recommended services for this provider. ' + err.error
-    // );
-    /** <- Recommendations **/
   }
-
-  onRecommendationsTabClick() {
-    if (!this.recommendationsOverTimeForProvider) {
-      this.recommendationsService.getRecommendationsOverTime(this.catalogueId.concat('.', this.providerId)).subscribe(
-        data => this.setRecommendationsOverTimeForProvider(data),
-        err => this.errorMessage = 'An error occurred while retrieving visits for this provider. ' + err.error
-      );
-    }
-    if (!this.recommendationsOfTopServices) {
-      this.recommendationsService.getMostRecommendedServices(this.catalogueId.concat('.', this.providerId)).subscribe(
-        data => this.enrichMostRecommendedServices(data),
-        err => this.errorMessage = 'An error occurred while retrieving most recommended services for this provider. ' + err.error
-      );
-    }
-    if (this.enrichedRecommendationsOfCompetitorsServices.length == 0) {
-      this.recommendationsService.getCompetitorsServices(this.catalogueId.concat('.', this.providerId)).subscribe(
-        (data: any[]) => {
-          if (data && data.length === 0) {
-            this.emptyResponseOnGetCompetitorsServices = true;
-          } else {
-            this.setCompetitorsServices(data);
-            this.emptyResponseOnGetCompetitorsServices = false;
-          }
-        },
-        err => this.errorMessage = 'An error occurred while retrieving recommended services for this provider. ' + err.error
-      );
-    }
-  }
-
 
   onPeriodChange(event) {
     this.statisticPeriod = event.target.value;
@@ -500,42 +370,6 @@ export class ProviderStatsComponent implements OnInit {
     }
   }
 
-  setRatingsForProvider(data: any) {
-    if (data) {
-      this.providerRatingsOptions = {
-        chart: {
-          height: (3 / 4 * 100) + '%', // 3:4 ratio
-        },
-        title: {
-          text: 'Number of Ratings over time'
-        },
-        xAxis: {
-          type: 'datetime',
-          dateTimeLabelFormats: { // don't display the dummy year
-            month: '%e. %b',
-            year: '%b'
-          },
-          title: {
-            text: 'Date'
-          }
-        },
-        yAxis: {
-          title: {
-            text: 'Average rating'
-          }
-        },
-        series: [{
-          name: 'Average ratings over time',
-          color: '#013203',
-          data: data
-        }],
-        credits: {
-          enabled: false
-        }
-      };
-    }
-  }
-
   setVisitationsForProvider(data: any) {
     if (data) {
       this.providerVisitationPercentageOptions = {
@@ -585,7 +419,7 @@ export class ProviderStatsComponent implements OnInit {
         // borderWidth: 1
       },
       title: {
-        text: 'Countries serviced by ' + this.providerBundle.provider.name
+        text: 'Countries serviced by ' + this.providerBundle.organisation.name
       },
       // subtitle: {
       //     text: 'Demo of drawing all areas in the map, only highlighting partial data'
@@ -638,7 +472,7 @@ export class ProviderStatsComponent implements OnInit {
           height: (3 / 4 * 100) + '%', // 3:4 ratio
         },
         title: {
-          // text: 'Countries serviced by ' + this.providerBundle.provider.name
+          // text: 'Countries serviced by ' + this.providerBundle.organisation.name
           text: ''
         },
         colorAxis: {
@@ -977,168 +811,6 @@ export class ProviderStatsComponent implements OnInit {
         enabled: false
       }
     };
-  }
-
-  setRecommendationsOverTimeForProvider(data: any) {
-    const chartData = [];
-    data.forEach((value) => {
-      chartData.push([Date.parse(value.date), value.recommendations]);
-    });
-
-    if (data) {
-      this.recommendationsOverTimeForProvider = {
-        chart: {
-          height: (3 / 4 * 100) + '%', // 3:4 ratio
-        },
-        title: {
-          text: 'Recommendations over time'
-        },
-        xAxis: {
-          type: 'datetime',
-          // dateTimeLabelFormats: {
-          //   month: '%e. %b',
-          //   year: '%b'
-          // },
-          title: {
-            text: 'Date'
-          }
-        },
-        yAxis: {
-          title: {
-            text: 'Number of recommendations'
-          }
-        },
-        series: [{
-          name: 'Recommendations over time',
-          color: '#013203',
-          data: chartData
-        }],
-        credits: {
-          enabled: false
-        }
-      };
-    }
-  }
-
-  enrichMostRecommendedServices(data: any) {
-    const observables = data.map(item =>
-      this.resourceService.getService(item.service_id, /\..*\./.test(item.service_id) ? item.service_id.split(".")[0] : this.catalogueConfigId)
-    );
-
-    combineLatest(observables).subscribe(
-      results => {
-        results.forEach((res: any, index) => {
-          data[index].service_name = res.name;
-        });
-        this.setMostRecommendedServices(data);
-      },
-      error => {
-        this.errorMessage = error;
-      }
-    );
-  }
-
-  setMostRecommendedServices(data: any) {
-    this.recommendationsOfTopServices = {
-      chart: {
-        type: 'bar',
-        height: (3 / 4 * 100) + '%' // 3:4 ratio
-      },
-      title: {
-        text: 'Most recommended'
-      },
-      xAxis: {
-        type: 'category',
-        title: {
-          text: 'Service'
-        }
-      },
-      series: [{
-        name: 'Recommendations',
-        data: data.map(item => [item.service_name, item.recommendations])
-      }],
-      yAxis: {
-        min: 0,
-        title: {
-          text: 'Number of recommendations'
-        },
-        labels: {
-          overflow: 'justify',
-          display: 'none'
-        }
-      },
-      // tooltip: {
-      //   valueSuffix: ' services'
-      // },
-      plotOptions: {
-        bar: {
-          dataLabels: {
-            enabled: true
-          }
-        }
-      },
-      credits: {
-        enabled: false
-      }
-    };
-  }
-
-  setCompetitorsServices(data: any) {
-    this.recommendationsOfCompetitorsServices = data;
-    this.enrichedRecommendationsOfCompetitorsServices = [];
-
-    for (const item of data) {
-      const competitorsWithDetails = [];
-
-      // let competitorPublicIds = [];
-      for (const competitor of item.competitors) {
-        if (competitor.service_id !== 'tnp.lumi_etais__regular_access') {
-          // competitorPublicIds.push(competitor.service_id);
-          const isPublicId = /\..*\./.test(competitor.service_id); // if it has two dot occurrences its a publicId
-          this.resourceService.getService(competitor.service_id, isPublicId ? competitor.service_id.split(".")[0] : this.catalogueConfigId).subscribe(
-            res => {
-              const competitorWithDetails = {
-                service_id: competitor.service_id,
-                recommendations: competitor.recommendations,
-                logo: res.logo,
-                name: res.name,
-                description: res.description
-              };
-              competitorsWithDetails.push(competitorWithDetails);
-            },
-            error => {
-            },
-            () => {
-            }
-          );
-        }
-      }
-      const itemWithDetails = {
-        service_id: item.service_id,
-        total_competitor_recommendations: item.total_competitor_recommendations,
-        competitors: competitorsWithDetails
-      };
-      this.enrichedRecommendationsOfCompetitorsServices.push(itemWithDetails);
-    }
-
-    // let outerServicesPublicIds = [];
-    for (const item of this.enrichedRecommendationsOfCompetitorsServices) {
-      // outerServicesPublicIds.push(item.service_id);
-      const isPublicId = /\..*\./.test(item.service_id); // if it has two dot occurrences its a publicId
-      this.resourceService.getService(item.service_id, isPublicId ? item.service_id.split(".")[0] : this.catalogueConfigId).subscribe(
-        res => {
-          item.logo = res.logo;
-          item.name = res.name;
-          item.description = res.description;
-        },
-        error => { },
-        () => { }
-      );
-    }
-
-    // console.log(this.enrichedRecommendationsOfCompetitorsServices);
-    // console.log(competitorsPublicIds);
-    // console.log(outerServicesPublicIds);
   }
 
 }

@@ -1,83 +1,156 @@
+def DOCKER_IMAGE = null
+def DOCKER_TAG = ''
+def DOCKER_IMAGE_SHA = ''
+
 pipeline {
   agent {
     label 'jnlp-himem'
+  }
+
+  options {
+    buildDiscarder(logRotator(numToKeepStr: '20'))
+    disableConcurrentBuilds()
+    timeout(time: 30, unit: 'MINUTES')
+    timestamps()
   }
 
   environment {
     IMAGE_NAME = 'eosc-resource-catalogue-ui'
     REGISTRY = 'europe-west1-docker.pkg.dev/cessda-prod/docker'
     REGISTRY_CRED = 'docker-registry'
-    DOCKER_IMAGE = ''
-    DOCKER_TAG = ''
-    BUILD_CONFIGURATION = 'prod'
+    BUILD_CONFIGURATION = 'beta'
+    DOCKER_BUILDKIT = '1'
   }
+
   stages {
-    stage('Validate Version & Determine Docker Tag') {
+
+    stage('Determine Docker Tag') {
       steps {
         script {
-          def VERSION
-          def PROJECT_VERSION = sh(script: 'cat package.json | grep version | head -1 | sed -e \'s/[ "]*version":[ ]*//g\' | cut -c 2-6', returnStdout: true).trim()
-          if (env.BRANCH_NAME == 'develop') {
-            VERSION = PROJECT_VERSION
-            DOCKER_TAG = "${GIT_COMMIT}-dev"
-            BUILD_CONFIGURATION = 'beta'
-            echo "Detected develop branch version: ${VERSION}"
-          } else if (env.BRANCH_NAME == 'master') {
-            VERSION = PROJECT_VERSION
-            DOCKER_TAG = "${VERSION}-${GIT_COMMIT}"
-            echo "Detected master branch version: ${VERSION}"
-          } else {
-            VERSION = PROJECT_VERSION
-            DOCKER_TAG = "${VERSION}-${GIT_COMMIT}"
-            BUILD_CONFIGURATION = 'beta'
-          }
-          if ( PROJECT_VERSION != VERSION ) {
-            error("Version mismatch. \n\tProject's version:\t${PROJECT_VERSION} \n\tBranch|Tag version:\t${VERSION}")
-          }
-
+          DOCKER_TAG = sh(script: 'awk -F\'"\' \'/"version"/{print $4; exit}\' package.json', returnStdout: true).trim()
+          echo "Docker tag: ${DOCKER_TAG}"
           currentBuild.displayName = "${currentBuild.displayName}-${DOCKER_TAG}"
         }
       }
     }
-    stage('Build Image') {
-      steps{
-        script {
-          DOCKER_IMAGE = docker.build("${REGISTRY}/${IMAGE_NAME}:${DOCKER_TAG}", "--build-arg configuration=${BUILD_CONFIGURATION} .")
-        }
-      }
-    }
-    stage('Upload Image') {
-      when { // upload images only from the 'master' branch and tagged builds
+
+    stage('Set Build Configuration') {
+      when { // 'master' branches and TAG builds
         expression {
           return env.TAG_NAME != null || env.BRANCH_NAME == 'master'
         }
       }
-      steps{
+      steps {
         script {
-          sh """
-              echo "Pushing image: ${DOCKER_IMAGE.id}"
-              gcloud auth configure-docker ${ARTIFACT_REGISTRY_HOST}
-          """
-          DOCKER_IMAGE.push()
+          BUILD_CONFIGURATION = 'prod'
         }
       }
     }
-    stage('Remove Image') {
+
+    stage('Build Image') {
       steps{
         script {
-          sh "docker rmi ${DOCKER_IMAGE.id}"
+          DOCKER_IMAGE = docker.build("${REGISTRY}/${IMAGE_NAME}:${DOCKER_TAG}", "--build-arg configuration=${BUILD_CONFIGURATION} .")
+          DOCKER_IMAGE_SHA = sh(script: "docker inspect --format='{{.Id}}' ${DOCKER_IMAGE.id}", returnStdout: true).trim()
         }
       }
     }
+
+    stage('Upload Image') {
+      when { // upload images only from 'develop' or 'master' branches and TAG builds
+        expression {
+          return env.TAG_NAME != null || env.BRANCH_NAME == 'develop' || env.BRANCH_NAME == 'master'
+        }
+      }
+      steps {
+        script {
+          withCredentials([usernamePassword(credentialsId: "${REGISTRY_CRED}", usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+            sh """
+              echo "Pushing image: ${DOCKER_IMAGE_SHA}"
+              echo "\$DOCKER_PASS" | docker login ${REGISTRY} -u "\$DOCKER_USER" --password-stdin
+            """
+            if (env.TAG_NAME) {
+              def minorTag = DOCKER_TAG.tokenize('.').take(2).join('.')
+              DOCKER_IMAGE.push()
+              DOCKER_IMAGE.push(minorTag)
+              DOCKER_IMAGE.push("latest")
+            } else if (env.BRANCH_NAME == 'master') {
+              DOCKER_IMAGE.push("latest")
+            } else {
+              DOCKER_IMAGE.push("dev")
+            }
+          }
+        }
+      }
+    }
+
+    stage('Handle Releases') {
+      when {
+        allOf {
+          branch 'master'
+          not { changeRequest() }  // skip PR builds
+        }
+      }
+      steps {
+        lock(resource: "release-${IMAGE_NAME}") {
+          retry(5) {
+            script {
+              try {
+                withCredentials([string(credentialsId: 'jenkins-github-pat', variable: 'GH_TOKEN')]) {
+                  sh '''
+                    [ -f /etc/profile.d/load_nvm.sh ] || { echo "ERROR: /etc/profile.d/load_nvm.sh not found. NVM is required on this agent."; exit 1; }
+                    . /etc/profile.d/load_nvm.sh
+                    nvm install --lts
+                    npx release-please@17 github-release --repo-url ${GIT_URL} --token ${GH_TOKEN}
+
+                    npx release-please@17 release-pr --repo-url ${GIT_URL} --token ${GH_TOKEN}
+                  '''
+                }
+              } catch (e) {
+                sleep time: 45, unit: 'SECONDS'
+                throw e
+              }
+            }
+          }
+        }
+      }
+    }
+
   }
-  // post-build actions
+
   post {
     success {
       echo 'Build Successful'
       build job: 'cessda.resource-catalogue.deploy/main', parameters: [string(name: 'FRONTEND_IMAGE_TAG', value: DOCKER_TAG)], wait: false
     }
+    always {
+      script {
+        if (DOCKER_IMAGE_SHA) {
+          sh "docker rmi -f ${DOCKER_IMAGE_SHA} || true"
+        }
+      }
+    }
     failure {
-      echo 'Build Failed'
+      emailext(
+        subject: "FAILED: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+        body: """<p>Build <b>${env.JOB_NAME} #${env.BUILD_NUMBER}</b> failed.</p>
+                 <p>Branch: <b>${env.BRANCH_NAME}</b></p>
+                 <p>Check the details: <a href="${env.BUILD_URL}">${env.BUILD_URL}</a></p>""",
+        mimeType: 'text/html',
+        recipientProviders: [[$class: 'DevelopersRecipientProvider']],
+        to: '$DEFAULT_RECIPIENTS'
+      )
+    }
+    fixed {
+      emailext(
+        subject: "FIXED: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+        body: """<p>Build <b>${env.JOB_NAME} #${env.BUILD_NUMBER}</b> is back to normal.</p>
+                 <p>Branch: <b>${env.BRANCH_NAME}</b></p>
+                 <p>Check the details: <a href="${env.BUILD_URL}">${env.BUILD_URL}</a></p>""",
+        mimeType: 'text/html',
+        recipientProviders: [[$class: 'DevelopersRecipientProvider']],
+        to: '$DEFAULT_RECIPIENTS'
+      )
     }
   }
 }

@@ -9,7 +9,7 @@ import {URLParameter} from '../../../../domain/url-parameter';
 import {environment} from '../../../../../environments/environment';
 import {NavigationService} from "../../../../services/navigation.service";
 
-declare var UIkit: any;
+declare let UIkit: any;
 
 @Component({
     selector: 'app-rejected-services',
@@ -88,7 +88,7 @@ export class RejectedServicesComponent implements OnInit {
   }
 
   getProvider() {
-    this.providerService.getServiceProviderBundleById(this.providerId, this.catalogueId).subscribe(
+    this.providerService.getServiceProviderBundleById(this.providerId).subscribe(
       providerBundle => {
         this.providerBundle = providerBundle;
       }, error => {
@@ -123,10 +123,12 @@ export class RejectedServicesComponent implements OnInit {
     // UIkit.modal('#spinnerModal').show();
     this.service.deletePendingService(id).subscribe(
       res => {},
-      error => {
+      err => {
         // console.log(error);
         // UIkit.modal('#spinnerModal').hide();
-        this.errorMessage = 'Something went bad. ' + error.error ;
+        this.errorMessage = (err?.status >= 500 && err?.status < 600)
+            ? `Something went wrong. If the issue persists, please contact support and provide the following error code: ${err?.error?.traceId}`
+            : `Something went bad, server responded: ${err?.error?.detail}`;
         this.getRejectedResources();
       },
       () => {

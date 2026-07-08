@@ -9,7 +9,7 @@ import {URLParameter} from '../../../../domain/url-parameter';
 import {environment} from '../../../../../environments/environment';
 import {NavigationService} from "../../../../services/navigation.service";
 
-declare var UIkit: any;
+declare let UIkit: any;
 
 @Component({
     selector: 'app-pending-services',
@@ -99,7 +99,7 @@ export class PendingServicesComponent implements OnInit {
   }
 
   getProvider() {
-    this.providerService.getServiceProviderBundleById(this.providerId, this.catalogueId).subscribe(
+    this.providerService.getServiceProviderBundleById(this.providerId).subscribe(
       providerBundle => {
         this.providerBundle = providerBundle;
       }, error => {
@@ -131,9 +131,11 @@ export class PendingServicesComponent implements OnInit {
     // UIkit.modal('#spinnerModal').show();
     this.resourceService.deletePendingService(bundle.id).subscribe(
       res => {window.location.reload()},
-      error => {
+      err => {
         // UIkit.modal('#spinnerModal').hide();
-        this.errorMessage = 'Something went bad. ' + error.error ;
+        this.errorMessage = (err?.status >= 500 && err?.status < 600)
+            ? `Something went wrong. If the issue persists, please contact support and provide the following error code: ${err?.error?.traceId}`
+            : `Something went bad, server responded: ${err?.error?.detail}`;
       }
     );
   }

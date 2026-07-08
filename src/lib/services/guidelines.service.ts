@@ -8,15 +8,13 @@ import {
 } from '../domain/eic-model';
 import {Paging} from "../domain/paging";
 import {ConfigService} from "./config.service";
+import {Model} from "../../dynamic-catalogue/domain/dynamic-form-model";
 
 @Injectable()
 export class GuidelinesService {
 
-  private catalogueConfigId: string;
+  constructor(public http: HttpClient, public authenticationService: AuthenticationService, private configService: ConfigService) {}
 
-  constructor(public http: HttpClient, public authenticationService: AuthenticationService, private configService: ConfigService) {
-    this.catalogueConfigId = this.configService.getProperty('catalogueId');
-  }
   base = environment.API_ENDPOINT;
   private options = {withCredentials: true};
 
@@ -39,13 +37,14 @@ export class GuidelinesService {
     return this.http.delete(this.base + `/interoperabilityRecord/${id}`, this.options);
   }
 
-  getInteroperabilityRecords(from?: string, quantity?: string, sort?: string, order?: string, query?: string) { //open for EPOT and Providers
+  getInteroperabilityRecords(from?: string, quantity?: string, sort?: string, order?: string, keyword?: string, status?: string) { //open for EPOT and Providers
     let params = new HttpParams();
     if (from && from !== '') params = params.append('from', from);
     if (quantity && quantity !== '') params = params.append('quantity', quantity);
     if (sort && sort !== '') params = params.append('sort', sort);
     if (order && order !== '') params = params.append('order', order);
-    if (query && query !== '') params = params.append('keyword', query);
+    if (keyword && keyword !== '') params = params.append('keyword', keyword);
+    if (status && status !== '') params = params.append('status', status);
     return this.http.get(this.base + `/interoperabilityRecord/all`, {params});
   }
 
@@ -79,9 +78,9 @@ export class GuidelinesService {
     return this.http.patch(this.base + `/interoperabilityRecord/verify/${id}?active=${active}&status=${status}`, {}, this.options);
   }
 
-  publishInteroperabilityRecord(id: string, active: boolean) { // toggles active/inactive provider
+  activateInteroperabilityRecord(id: string, active: boolean) { // toggles active/inactive provider
     // id = decodeURIComponent(id);
-    return this.http.patch(this.base + `/interoperabilityRecord/publish/${id}?active=${active}`, this.options);
+    return this.http.patch(this.base + `/interoperabilityRecord/setActive/${id}?active=${active}`, this.options);
   }
    /** <-- new **/
   /** <-- InteroperabilityRecords **/
@@ -106,16 +105,18 @@ export class GuidelinesService {
 
   suspendInteroperabilityRecord(interoperabilityRecordId: string, catalogueId: string, suspend: boolean) {
     interoperabilityRecordId = decodeURIComponent(interoperabilityRecordId);
-    return this.http.put<InteroperabilityRecordBundle>(this.base + `/interoperabilityRecord/suspend?interoperabilityRecordId=${interoperabilityRecordId}&catalogueId=${catalogueId}&suspend=${suspend}`, this.options);
+    if (catalogueId == null)
+      return this.http.put<InteroperabilityRecordBundle>(this.base + `/interoperabilityRecord/suspend?id=${interoperabilityRecordId}&suspend=${suspend}`, this.options);
+    else
+      return this.http.put<InteroperabilityRecordBundle>(this.base + `/catalogue/${catalogueId}/interoperabilityRecord/suspend/${interoperabilityRecordId}?suspend=${suspend}`, this.options);
   }
 
   auditGuideline(id: string, action: string, catalogueId: string, comment: string) {
     id = decodeURIComponent(id);
-    if(!catalogueId) catalogueId = this.catalogueConfigId;
-    if (catalogueId === this.catalogueConfigId)
-      return this.http.patch(this.base + `/interoperabilityRecord/auditResource/${id}?actionType=${action}&catalogueId=${catalogueId}&comment=${comment}`, this.options);
+    if (catalogueId == null)
+      return this.http.patch(this.base + `/interoperabilityRecord/audit/${id}?actionType=${action}&comment=${comment}`, this.options);
     else
-      return this.http.patch(this.base + `/catalogue/${catalogueId}/interoperabilityRecord/auditInteroperabilityRecord/${id}?actionType=${action}&comment=${comment}`, this.options);
+      return this.http.patch(this.base + `/catalogue/${catalogueId}/interoperabilityRecord/audit/${id}?actionType=${action}&comment=${comment}`, this.options);
   }
 
   /** Configuration Templates --> **/
@@ -124,13 +125,18 @@ export class GuidelinesService {
     return this.http.get<any>(this.base + `/configurationTemplate/getAllByInteroperabilityRecordId/${guidelineId}`, this.options);
   }
 
+  getTemplatesForGuidelineWithAuth(guidelineId: string) {
+    guidelineId = decodeURIComponent(guidelineId);
+    return this.http.get<any>(this.base + `/configurationTemplate/bundle/getAllByInteroperabilityRecordId/${guidelineId}`, this.options);
+  }
+
   getTemplatesForGuidelinesMapping() {
     return this.http.get<any>(this.base + `/configurationTemplate/interoperabilityRecordIdToConfigurationTemplateListMap`, this.options);
   }
 
   saveConfigurationTemplateInstance(payload: any) {
     console.log(payload);
-    const shouldPut = !!payload.id; // PUT if id exists, else POST
+    const shouldPut = !!payload?.id; // PUT if id exists, else POST
     return this.http[shouldPut ? 'put' : 'post'](this.base + `/configurationTemplateInstance`, payload, this.options);
   }
 
@@ -144,5 +150,42 @@ export class GuidelinesService {
     return this.http.get<any>(this.base + `/configurationTemplateInstance/resources/${resId}/templates/${ctId}`, this.options);
   }
 
+  getInstancesByConfigurationTemplateId(ctId: string) {
+    return this.http.get<any>(this.base + `/configurationTemplateInstance/getAllByConfigurationTemplateId/${ctId}`, this.options);
+  }
+
+  getExistingTemplate(id: string) {
+    return this.http.get<Model>(this.base + `/configurationTemplate/${id}/model`);
+  }
+
+  getBaseTemplate() {
+    return this.http.get<Model>(this.base + `/configurationTemplateInstance/baseModel`);
+  }
+
+  saveModel(model: Model | null, editMode: boolean, guidelineId: string) {
+    const id = decodeURIComponent(guidelineId);
+    if (editMode) {
+      return this.http.put(this.base + `/configurationTemplate/${id}/withModel`, model, this.options);
+    } else {
+      return this.http.post(this.base + `/configurationTemplate/${id}/withModel`, model, this.options);
+    }
+  }
+
+  // saveModel(model: Model | null, editMode: boolean, guidelineId: string) {
+  //   if (editMode) {
+  //     return this.http.put(this.base + `/forms/models/${model?.id}`, model);
+  //   } else {
+  //     return this.http.post<{ id: string }>(this.base + '/forms/models', model).pipe(
+  //       switchMap((response) =>
+  //         this.http.post(this.base + '/configurationTemplate', {
+  //           interoperabilityRecordId: decodeURIComponent(guidelineId),
+  //           name: model?.name,
+  //           description: model?.description,
+  //           modelId: response.id
+  //         })
+  //       )
+  //     );
+  //   }
+  // }
   /** <-- Configuration Templates **/
 }

@@ -27,9 +27,12 @@ export class HelpdeskService {
       group: ticket.group || "EPOT", // Use provided group or default to EPOT
     };
 
-    console.debug("HelpdeskService: Sending POST via proxy to KIT webhook");
-    console.debug("Proxy route: /api/helpdesk → KIT webhook");
-    console.debug("Payload (GDPR compliant - no customer data):", JSON.stringify(payload, null, 2));
+    console.log("🔧 HelpdeskService: Sending POST via proxy to KIT webhook");
+    console.log("🌐 Proxy route: /api/helpdesk → KIT webhook");
+    console.log(
+      "📦 Payload (GDPR compliant - no customer data):",
+      JSON.stringify(payload, null, 2)
+    );
 
     return this.http.post<HelpdeskTicketResponse>(this.webhookUrl, payload);
   }
@@ -39,7 +42,9 @@ export class HelpdeskService {
    * Backend handles user identification via access token
    */
   getUserTickets(): Observable<HelpdeskTicketResponse[]> {
-    console.debug("HelpdeskService: Getting user tickets via proxy to KIT webhook");
+    console.log(
+      "🔧 HelpdeskService: Getting user tickets via proxy to KIT webhook"
+    );
     return this.http.get<HelpdeskTicketResponse[]>(
       `${this.webhookUrl}/tickets`
     );
@@ -50,7 +55,7 @@ export class HelpdeskService {
    * Backend handles user identification via access token
    */
   getTicket(ticketId: string): Observable<HelpdeskTicketResponse> {
-    console.debug("HelpdeskService: Getting ticket via proxy to KIT webhook");
+    console.log("🔧 HelpdeskService: Getting ticket via proxy to KIT webhook");
     return this.http.get<HelpdeskTicketResponse>(
       `${this.webhookUrl}/tickets/${ticketId}`
     );
@@ -60,21 +65,24 @@ export class HelpdeskService {
   // via access token authentication
 
   /**
-   * Add a reply to an existing ticket
+   * Add a reply to an existing ticket using PUT API
    * Backend handles user identification via access token
+   * PUT /helpdesk?ticket_id={ticketId}
+   * Payload: { "article": { "body": "message text" } }
    */
   addReply(ticketId: string, body: string): Observable<HelpdeskTicketResponse> {
     const payload = {
       article: {
         body: body,
-        type: "note",
-        internal: false,
       },
     };
 
-    console.debug("HelpdeskService: Adding reply via proxy to KIT webhook");
-    return this.http.post<HelpdeskTicketResponse>(
-      `${this.webhookUrl}/tickets/${ticketId}/articles`,
+    console.log("🔧 HelpdeskService: Adding reply via PUT to KIT webhook");
+    console.log("🌐 Endpoint:", `${this.webhookUrl}?ticket_id=${ticketId}`);
+    console.log("📦 Payload:", JSON.stringify(payload, null, 2));
+
+    return this.http.put<HelpdeskTicketResponse>(
+      `${this.webhookUrl}/tickets/${ticketId}`,
       payload
     );
   }

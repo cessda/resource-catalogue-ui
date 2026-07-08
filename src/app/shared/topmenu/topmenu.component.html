@@ -112,7 +112,7 @@
 <!--NO MOBILE-->
 <div id="header_main" style="margin-top: 47px">
   @if (beta) {
-    <div class="beta-badge uk-visible@m"><span class="uk-label uk-label-danger">Beta instance<span class="uk-margin-small-left">&lt;</span></span></div>
+    <div class="beta-badge uk-visible@m uk-padding"><span class="uk-label uk-label-danger">Beta instance</span></div>
   }
   <!--    <div id="top-header" class="uk-visible@m">-->
   <!--    <div class="uk-container">-->
@@ -218,7 +218,7 @@
           </div>
         </li>
 
-        <li class="uk-parent" [routerLinkActive]="['uk-active']">
+        <!--<li class="uk-parent" [routerLinkActive]="['uk-active']">
           <a href="#" class="" aria-expanded="false">
             For Catalogues
           </a>
@@ -227,7 +227,7 @@
             <div class="uk-navbar-dropdown-grid uk-child-width-1-1 uk-grid uk-grid-stack" uk-grid="">
               <div class="uk-first-column">
                 <ul class="uk-nav uk-navbar-dropdown-nav">
-                  <li><a [routerLink]="['/catalogue/add']" routerLinkActive="uk-active">Add a Catalogue</a></li>
+&lt;!&ndash;                  <li><a [routerLink]="['/catalogue/add']" routerLinkActive="uk-active">Add a Catalogue</a></li>&ndash;&gt;
                   @if (authenticationService.isLoggedIn()) {
                     <li><a [routerLink]="['/catalogue/my']" routerLinkActive="uk-active">My Catalogues</a></li>
                   }
@@ -238,26 +238,7 @@
               </div>
             </div>
           </div>
-        </li>
-
-        <li class="uk-parent" [routerLinkActive]="['uk-active']">
-          <a href="#" class="" aria-expanded="false">
-            Adapters
-          </a>
-          <div class="uk-navbar-dropdown uk-navbar-dropdown-bottom-left" style="top: 80px; left: 106.55px;"
-            id="forAdapters" (click)="onClick('forAdapters')">
-            <div class="uk-navbar-dropdown-grid uk-child-width-1-1 uk-grid uk-grid-stack" uk-grid="">
-              <div class="uk-first-column">
-                <ul class="uk-nav uk-navbar-dropdown-nav">
-                  <li><a [routerLink]="['/adapters/add']" routerLinkActive="uk-active">Add an Adapter</a></li>
-                  @if (authenticationService.isLoggedIn()) {
-                    <li><a [routerLink]="['/adapters/my']" routerLinkActive="uk-active">My Adapters</a></li>
-                  }
-                </ul>
-              </div>
-            </div>
-          </div>
-        </li>
+        </li>-->
 
         @if (authenticationService.isAdmin()) {
           <li class="uk-parent" [routerLinkActive]="['uk-active']">
@@ -269,16 +250,15 @@
               <div class="uk-navbar-dropdown-grid uk-child-width-1-1 uk-grid uk-grid-stack" uk-grid="">
                 <div class="uk-first-column">
                   <ul class="uk-nav uk-navbar-dropdown-nav">
-                    <li><a [routerLink]="['/catalogue/all']" routerLinkActive="uk-active">Catalogues</a></li>
                     <li><a [routerLink]="['/provider/all']" routerLinkActive="uk-active">Providers</a></li>
                     <li><a [routerLink]="['/provider/resource/all']" routerLinkActive="uk-active">Services</a></li>
-                    <!--                        <ul class="uk-nav-sub">Service Subprofiles</ul>-->
-                    <li class="uk-text-nowrap"><a class="uk-padding-remove-top" [routerLink]="['/provider/datasource/all']" routerLinkActive="uk-active">&boxur;<i class="fa "></i> Datasource Subprofiles</a></li>
+                    <li><a [routerLink]="['/catalogue/all']" routerLinkActive="uk-active">Catalogues</a></li>
+                    <li><a [routerLink]="['/provider/datasource/all']" routerLinkActive="uk-active">Datasources</a></li>
                     <li><a [routerLink]="['/provider/training/all']" routerLinkActive="uk-active">Training Resources</a></li>
-                    <li><a [routerLink]="['/provider/deployable-service/all']" routerLinkActive="uk-active">Deployable Services</a></li>
+                    <li><a [routerLink]="['/provider/deployable-service/all']" routerLinkActive="uk-active">Deployable Application</a></li>
+                    <li><a [routerLink]="['/provider/adapter/all']" routerLinkActive="uk-active">Adapters</a></li>
                     <li><a [routerLink]="['/guidelines/all']" routerLinkActive="uk-active">Guidelines</a></li>
-                    <li><a [routerLink]="['/adapters/all']" routerLinkActive="uk-active">Adapters</a></li>
-                    <li><a [routerLink]="['/vocabulary-requests']" routerLinkActive="uk-active">Vocabulary Requests</a></li>
+<!--                    <li><a [routerLink]="['/vocabulary-requests']" routerLinkActive="uk-active">Vocabulary Requests</a></li>-->
                   </ul>
                 </div>
               </div>

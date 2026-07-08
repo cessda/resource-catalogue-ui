@@ -14,13 +14,13 @@ export class ServiceExtensionsService {
   base = environment.API_ENDPOINT;
   private options = {withCredentials: true};
 
-  //native catlogue call only
+  //native catalogue call only - commented out calls - to be deleted
   getMonitoringByServiceId(serviceId: string) {
     serviceId = decodeURIComponent(serviceId);
     return this.http.get<Monitoring>(this.base + `/service-extensions/monitoring/byService/${serviceId}`, this.options);
   }
 
-  //native catlogue call only
+  //native catalogue call only - commented out calls - to be deleted
   getHelpdeskByServiceId(serviceId: string) {
     serviceId = decodeURIComponent(serviceId);
     return this.http.get<Helpdesk>(this.base + `/service-extensions/helpdesk/byService/${serviceId}`, this.options);
@@ -57,7 +57,7 @@ export class ServiceExtensionsService {
   }
 
   getServiceTypes() {
-    return this.http.get<any>(this.base + `/service-extensions/monitoring/serviceTypes`);
+    return this.http.get<any>(this.base + `/configurationTemplate/monitoring/serviceTypes`);
   }
 
   getMonitoringStatus(serviceId: string, showAllStatuses?: boolean) {

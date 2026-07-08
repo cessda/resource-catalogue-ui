@@ -40,7 +40,12 @@
           <div
             *ngFor="let article of ticket.articles; let i = index"
             class="conversation-item"
+            [class.message-user]="!isEpotMessage(article)"
+            [class.message-epot]="isEpotMessage(article)"
           >
+            <div class="message-originator">
+              {{ getMessageOriginator(article) }}
+            </div>
             <div class="message-body">
               <p [innerHTML]="cleanBodyHtml(article.body)"></p>
             </div>
@@ -74,6 +79,55 @@
           <span class="timeline-label">Closed:</span>
           <span class="timeline-value">{{ formatDate(ticket.close_at) }}</span>
         </div>
+      </div>
+
+      <!-- Reply Section (only if ticket is not closed) -->
+      <div *ngIf="!isTicketClosed()" class="reply-section">
+        <h4 class="reply-header">Add a Reply</h4>
+        <form
+          [formGroup]="replyForm"
+          (ngSubmit)="onSubmitReply()"
+          class="reply-form"
+        >
+          <div class="form-group">
+            <textarea
+              formControlName="body"
+              placeholder="Type your reply here..."
+              rows="4"
+              class="form-control"
+              [class.is-invalid]="
+                replyForm.get('body')?.invalid && replyForm.get('body')?.touched
+              "
+            ></textarea>
+            <div
+              *ngIf="
+                replyForm.get('body')?.invalid && replyForm.get('body')?.touched
+              "
+              class="error-text"
+            >
+              {{ getErrorMessage("body") }}
+            </div>
+            <div *ngIf="replyError" class="error-text">
+              {{ replyError }}
+            </div>
+          </div>
+          <div class="form-actions">
+            <button
+              type="submit"
+              class="btn btn-primary"
+              [disabled]="replyForm.invalid || submittingReply"
+            >
+              <span *ngIf="submittingReply" class="spinner"></span>
+              {{ submittingReply ? "Sending..." : "Update" }}
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Closed Ticket Message -->
+      <div *ngIf="isTicketClosed()" class="ticket-closed-notice">
+        <i class="fa fa-lock"></i>
+        <p>This ticket is closed. If you need further assistance, please create a new ticket.</p>
       </div>
     </div>
 

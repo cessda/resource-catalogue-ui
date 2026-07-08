@@ -6,7 +6,7 @@ import {ResourceService} from '../../services/resource.service';
 import {AuthenticationService} from '../../services/authentication.service';
 import {EmailService} from '../../services/email.service';
 
-declare var UIkit: any;
+declare let UIkit: any;
 
 @Component({
     selector: 'app-email-modal',

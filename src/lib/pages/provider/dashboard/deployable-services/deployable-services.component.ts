@@ -10,17 +10,15 @@ import {environment} from '../../../../../environments/environment';
 import {pidHandler} from "../../../../shared/pid-handler/pid-handler.service";
 import {DeployableServiceService} from "../../../../services/deployable-service.service";
 
-declare var UIkit: any;
+declare let UIkit: any;
 
 @Component({
     selector: 'app-deployable-services',
     templateUrl: './deployable-services.component.html',
-    styleUrls: ['../services/service.component.css'],
     standalone: false
 })
 
 export class DeployableServicesComponent implements OnInit {
-  catalogueConfigId: string | null = null;
   protected readonly environment = environment;
   serviceORresource = environment.serviceORresource;
 
@@ -65,7 +63,6 @@ export class DeployableServicesComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.catalogueConfigId = this.config.getProperty('catalogueId');
     this.providerId = this.route.parent.snapshot.paramMap.get('provider');
     this.catalogueId = this.route.parent.snapshot.paramMap.get('catalogueId');
 
@@ -99,7 +96,7 @@ export class DeployableServicesComponent implements OnInit {
   }
 
   getProvider() {
-    this.providerService.getServiceProviderBundleById(this.providerId, this.catalogueId).subscribe(
+    this.providerService.getServiceProviderBundleById(this.providerId).subscribe(
       providerBundle => {
         this.providerBundle = providerBundle;
       }, error => {
@@ -109,16 +106,18 @@ export class DeployableServicesComponent implements OnInit {
   }
 
   toggleDeployableService(dsBundle: DeployableServiceBundle) {
-    if (dsBundle.status === 'pending resource' || dsBundle.status === 'rejected resource') {
+    if (dsBundle.status === 'pending' || dsBundle.status === 'rejected') {
       this.errorMessage = `You cannot activate a ${dsBundle.status}.`;
       window.scrollTo(0, 0);
       return;
     }
     UIkit.modal('#spinnerModal').show();
-    this.deployableServiceService.publishDeployableService(dsBundle.id, !dsBundle.active).subscribe(
+    this.deployableServiceService.activateDeployableService(dsBundle.id, !dsBundle.active).subscribe(
       res => {},
-      error => {
-        this.errorMessage = 'Something went bad. ' + error.error ;
+      err => {
+        this.errorMessage = (err?.status >= 500 && err?.status < 600)
+            ? `Something went wrong. If the issue persists, please contact support and provide the following error code: ${err?.error?.traceId}`
+            : `Something went bad, server responded: ${err?.error?.detail}`;
         this.getDeployableServices();
         UIkit.modal('#spinnerModal').hide();
         // console.log(error);
@@ -154,9 +153,11 @@ export class DeployableServicesComponent implements OnInit {
     UIkit.modal('#spinnerModal').show();
     this.deployableServiceService.deleteDeployableService(id).subscribe(
       res => {},
-      error => {
+      err => {
         UIkit.modal('#spinnerModal').hide();
-        this.errorMessage = 'Something went bad. ' + error.error ;
+        this.errorMessage = (err?.status >= 500 && err?.status < 600)
+            ? `Something went wrong. If the issue persists, please contact support and provide the following error code: ${err?.error?.traceId}`
+            : `Something went bad, server responded: ${err?.error?.detail}`;
         this.getDeployableServices();
       },
       () => {
@@ -184,7 +185,7 @@ export class DeployableServicesComponent implements OnInit {
       }
     }
 
-    this.router.navigate([`/dashboard`, this.catalogueId, this.providerId, `deployable-services`], {queryParams: map});
+    this.router.navigate([`/dashboard`, this.providerId, `deployable-services`], {queryParams: map});
   }
 
   paginationInit() {

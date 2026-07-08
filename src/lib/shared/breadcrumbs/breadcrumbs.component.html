@@ -10,10 +10,13 @@
         }
         @if (!goBack) {
           <ul class="uk-breadcrumb">
-            @for (breadcrumb of breadcrumbs; track breadcrumb; let isLast = $last; let i = $index) {
+            @for (breadcrumb of breadcrumbs; track breadcrumb.url; let isLast = $last; let i = $index) {
               <li>
-                @if (!isLast) {
-                  <a [routerLink]="[breadcrumb.url, breadcrumb.params]" href="">{{breadcrumb.label}}</a>
+                @if (!isLast && breadcrumb.navigable) {
+                  <a [href]="breadcrumb.url">{{breadcrumb.label}}</a>
+                }
+                @if (!isLast && !breadcrumb.navigable) {
+                  <span>{{breadcrumb.label}}</span>
                 }
                 @if (isLast) {
                   <span>{{breadcrumb.label}}</span>

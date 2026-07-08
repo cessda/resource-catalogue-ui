@@ -11,17 +11,15 @@ import {environment} from '../../../../../environments/environment';
 import {ServiceExtensionsService} from "../../../../services/service-extensions.service";
 import {pidHandler} from "../../../../shared/pid-handler/pid-handler.service";
 
-declare var UIkit: any;
+declare let UIkit: any;
 
 @Component({
     selector: 'app-services',
     templateUrl: './services.component.html',
-    styleUrls: ['./service.component.css'],
     standalone: false
 })
 
 export class ServicesComponent implements OnInit {
-  catalogueConfigId: string = this.config.getProperty('catalogueId');
   protected readonly environment = environment;
   serviceORresource = environment.serviceORresource;
 
@@ -103,7 +101,7 @@ export class ServicesComponent implements OnInit {
   }
 
   getProvider() {
-    this.providerService.getServiceProviderBundleById(this.providerId, this.catalogueId).subscribe(
+    this.providerService.getServiceProviderBundleById(this.providerId).subscribe(
       providerBundle => {
         this.providerBundle = providerBundle;
       }, error => {
@@ -113,17 +111,17 @@ export class ServicesComponent implements OnInit {
   }
 
   toggleService(bundle: ServiceBundle) {
-    if (bundle.status === 'pending resource' || bundle.status === 'rejected resource') {
+    if (bundle.status === 'pending' || bundle.status === 'rejected') {
       this.errorMessage = `You cannot activate a ${bundle.status}.`;
       window.scrollTo(0, 0);
       return;
     }
     UIkit.modal('#spinnerModal').show();
-    this.providerService.publishService(bundle.id, bundle.service.version, !bundle.active).subscribe(
+    this.providerService.activateService(bundle.id, bundle.service.version, !bundle.active).subscribe(
       res => {},
       error => {
         UIkit.modal('#spinnerModal').hide();
-        this.errorMessage = 'Something went bad. ' + error.error.error ;
+        this.errorMessage = 'Something went bad. ' + error.error.detail ;
       },
       () => {
         UIkit.modal('#spinnerModal').hide();
@@ -169,9 +167,11 @@ export class ServicesComponent implements OnInit {
     UIkit.modal('#spinnerModal').show();
     this.resourceService[bundle.service ? 'deleteService' : 'deleteDatasource'](bundle.id).subscribe( //todo: seems outdated
       res => {},
-      error => {
+      err => {
         UIkit.modal('#spinnerModal').hide();
-        this.errorMessage = 'Something went bad. ' + error.error ;
+        this.errorMessage = (err?.status >= 500 && err?.status < 600)
+            ? `Something went wrong. If the issue persists, please contact support and provide the following error code: ${err?.error?.traceId}`
+            : `Something went bad, server responded: ${err?.error?.detail}`;
         this.getServices();
       },
       () => {
@@ -199,7 +199,7 @@ export class ServicesComponent implements OnInit {
       }
     }
 
-    this.router.navigate([`/dashboard`, this.catalogueId, this.providerId, `resources`], {queryParams: map});
+    this.router.navigate([`/dashboard`, this.providerId, `resources`], {queryParams: map});
   }
 
   paginationInit() {

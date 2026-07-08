@@ -14,9 +14,9 @@
 
         <ul>
 
-          <li [routerLinkActive]="['current_section']" #datasources="routerLinkActive">
-            <a [routerLink]="['/dashboard', catalogueId, providerId, 'deployable-service-dashboard', deployableServiceId, 'history']">
-              <img src="{{datasources.isActive ? 'assets/images/new-icons/history-active.svg' : 'assets/images/new-icons/history.svg'}}" class="uk-margin-small-right">
+          <li [routerLinkActive]="['current_section']" #hist="routerLinkActive">
+            <a [routerLink]="['/dashboard', providerId, 'deployable-service-dashboard', deployableServiceId, 'history']">
+              <img src="{{hist.isActive ? 'assets/images/new-icons/history-active.svg' : 'assets/images/new-icons/history.svg'}}" class="uk-margin-small-right">
               Update History
             </a>
           </li>
@@ -29,24 +29,23 @@
 
         <ul>
 
-          @if (catalogueId === catalogueConfigId) {
+          @if (catalogueId == null) {
             <li>
               <a [routerLink]="['/provider/' + pidHandler.customEncodeURIComponent(providerId) + '/deployable-service/update/' + pidHandler.customEncodeURIComponent(deployableServiceId)]">
                 <img src="../../../../../assets/images/new-icons/add-service.svg" class="uk-margin-small-right">
-                Update Deployable Service
+                Update Deployable Application
               </a>
             </li>
           }
 
           <li>
-            <!--            <a href="{{_marketplaceTrainingResourcesURL}}{{catalogueId}}.{{deployableServiceId}}" target="_blank">-->
             <a href="{{_marketplaceTrainingResourcesURL}}" target="_blank">
               <img src="../../../../../assets/images/new-icons/update-provider.svg" class="uk-margin-small-right">
               View in Catalogue
             </a>
           </li>
           <li>
-            <a [routerLink]="['/dashboard', catalogueId, providerId]">
+            <a [routerLink]="['/dashboard', pidHandler.customEncodeURIComponent(providerId)]">
               <img src="../../../../../assets/images/new-icons/stats.svg" class="uk-margin-small-right">
               Back to Provider Dashboard
             </a>

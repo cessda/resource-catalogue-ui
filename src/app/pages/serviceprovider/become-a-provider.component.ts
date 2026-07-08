@@ -6,7 +6,6 @@ import {environment} from '../../../environments/environment';
 @Component({
     selector: 'app-become-a-provider',
     templateUrl: './become-a-provider.component.html',
-    styleUrls: ['./become-a-provider.component.css'],
     standalone: false
 })
 export class BecomeAProviderComponent {

@@ -22,7 +22,7 @@ import {Paging} from '../../domain/paging';
 import {getLocaleDateFormat} from '@angular/common';
 import {zip} from 'rxjs';
 
-declare var UIkit: any;
+declare let UIkit: any;
 
 @Component({
     selector: 'app-catalogues-list',
@@ -33,9 +33,12 @@ export class CataloguesListComponent implements OnInit {
   url = environment.API_ENDPOINT;
   serviceORresource = environment.serviceORresource;
 
+  sortUserSelected = false;
+  readonly DEFAULT_SORT = 'name';
+
   formPrepare = {
     query: '',
-    sort: 'name',
+    sort: this.DEFAULT_SORT,
     order: 'ASC',
     quantity: '10',
     from: '0',
@@ -105,7 +108,7 @@ export class CataloguesListComponent implements OnInit {
   @ViewChildren("auditCheckboxes") auditCheckboxes: QueryList<ElementRef>;
 
   // public statuses: Array<string> = ['approved provider', 'pending provider', 'rejected provider'];
-  public statuses: Array<string> = ['approved catalogue', 'pending catalogue', 'rejected catalogue'];
+  public statuses: Array<string> = ['approved', 'pending', 'rejected'];
   public labels: Array<string> = ['Approved', 'Pending', 'Rejected'];
   @ViewChildren("checkboxes") checkboxes: QueryList<ElementRef>;
 
@@ -127,6 +130,17 @@ export class CataloguesListComponent implements OnInit {
       this.router.navigateByUrl('/home');
     } else {
       this.dataForm = this.fb.group(this.formPrepare);
+
+      this.dataForm.get('query').valueChanges.subscribe(val => {
+        if (val && val !== '') {
+          if (!this.sortUserSelected) {
+            this.dataForm.get('sort').setValue('', { emitEvent: false }); // matches the Relevance option value
+          }
+        } else {
+          this.sortUserSelected = false; // back to default behavior
+          this.dataForm.get('sort').setValue(this.DEFAULT_SORT, { emitEvent: false }); // reset to default sort option
+        }
+      });
 
       this.urlParams = [];
       this.route.queryParams
@@ -232,8 +246,11 @@ export class CataloguesListComponent implements OnInit {
         this.geographicalVocabulary = this.vocabularies[Type.COUNTRY];
         this.languagesVocabulary = this.vocabularies[Type.LANGUAGE];
       },
-      error => {
-        this.errorMessage = 'Something went bad while getting the data for page initialization. ' + JSON.stringify(error.error.message);
+      err => {
+                this.errorMessage =
+          (err?.status >= 500 && err?.status < 600)
+            ? `Something went wrong. If the issue persists, please contact support and provide the following error code: ${err?.error?.traceId}`
+            : `Something went bad while getting the data for page initialization: ${err?.error?.detail}`;
       },
       () => {}
     );
@@ -314,11 +331,36 @@ export class CataloguesListComponent implements OnInit {
     this.handleChange();
   }
 
+  handleSortChange() {
+    const sortValue = this.dataForm.get('sort').value;
+    if (sortValue === '') {
+      // User explicitly picked "Relevance"
+      this.sortUserSelected = false;
+      this.dataForm.get('sort').setValue('', { emitEvent: false });
+    } else {
+      this.sortUserSelected = true;
+    }
+    this.handleChangeAndResetPage();
+  }
+
+  isSearchActive(): boolean {
+    const query = this.dataForm?.get('query')?.value;
+    return query && query !== '';
+  }
+
   getCatalogues() {
     this.loadingMessage = 'Loading Providers...';
     this.catalogues = [];
+
+    // Send sort only if: no query, OR user explicitly picked a sort
+    const query = this.dataForm.get('query').value;
+    const hasQuery = query && query !== '';
+    const shouldApplySort = !hasQuery || this.sortUserSelected;
+    const sort = shouldApplySort ? this.dataForm.get('sort').value : null;
+    const order = shouldApplySort ? this.dataForm.get('order').value : null;
+
     this.catalogueService.getCatalogueBundles(this.dataForm.get('from').value, this.dataForm.get('quantity').value,
-      this.dataForm.get('sort').value, this.dataForm.get('order').value, this.dataForm.get('query').value, this.dataForm.get('suspended').value,
+      sort, order, query, this.dataForm.get('suspended').value,
       this.dataForm.get('status').value, this.dataForm.get('templateStatus').value, this.dataForm.get('auditState').value).subscribe(
       res => {
         this.catalogues = res['results'];
@@ -401,7 +443,10 @@ export class CataloguesListComponent implements OnInit {
           UIkit.modal('#suspensionModal').hide();
           UIkit.modal('#spinnerModal').hide();
           this.loadingMessage = '';
-          this.errorMessage = err.error.error;
+          this.errorMessage =
+          (err?.status >= 500 && err?.status < 600)
+            ? `Something went wrong. If the issue persists, please contact support and provide the following error code: ${err?.error?.traceId}`
+            : `Something went bad, server responded: ${err?.error?.detail}`;
           window.scroll(0,0);
         },
         () => {
@@ -430,7 +475,7 @@ export class CataloguesListComponent implements OnInit {
   // }
 
   statusChangeActionCatalogue(){
-      const active = this.newStatus === 'approved catalogue';
+      const active = this.newStatus === 'approved';
       this.catalogueService.verifyCatalogue(this.selectedCatalogue.id, active, this.newStatus)
       .subscribe(
         res => {
@@ -541,7 +586,13 @@ export class CataloguesListComponent implements OnInit {
     this.catalogueService.auditCatalogue(this.selectedCatalogue.id, action, this.commentAuditControl.value)
       .subscribe(
         res => {this.getCatalogues();},
-        err => {console.log(err);},
+        err => {
+          this.errorMessage =
+            (err?.status >= 500 && err?.status < 600)
+              ? `Something went wrong. If the issue persists, please contact support and provide the following error code: ${err?.error?.traceId}`
+              : `Something went bad, server responded: ${err?.error?.detail}`;
+          window.scroll(0,0);
+        },
         () => {
           this.selectedCataloguesForAudit.forEach(
             s => {

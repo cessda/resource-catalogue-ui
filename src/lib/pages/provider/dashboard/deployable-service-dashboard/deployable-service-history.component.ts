@@ -11,7 +11,6 @@ import {DeployableServiceService} from "../../../../services/deployable-service.
 @Component({
     selector: 'app-deployable-service-history',
     templateUrl: './deployable-service-history.component.html',
-    styleUrls: ['../resource-dashboard/service-stats.component.css'],
     standalone: false
 })
 
@@ -20,12 +19,12 @@ export class DeployableServiceHistoryComponent implements OnInit, OnDestroy {
   serviceORresource = environment.serviceORresource;
 
   public catalogueId: string;
-  public deployableService: DeployableService;
+  public deployableApplication: DeployableService;
   public errorMessage: string;
   private sub: Subscription;
   public pidHandler: pidHandler;
 
-  deployableServiceHistory: Paging<LoggingInfo>;
+  deployableServiceHistory: LoggingInfo[];
 
   constructor(private route: ActivatedRoute,
               private navigator: NavigationService,
@@ -37,9 +36,9 @@ export class DeployableServiceHistoryComponent implements OnInit, OnDestroy {
     // this.sub = this.route.params.subscribe(params => {
     this.sub = this.route.parent.params.subscribe(params => {
       zip(
-        this.deployableServiceService.getService(params['deployableServiceId'], params['catalogueId'])
+        this.deployableServiceService.getService(params['deployableServiceId'])
       ).subscribe(suc => {
-          this.deployableService = <DeployableService>suc[0];
+          this.deployableApplication = <DeployableService>suc[0];
           this.getDataForDeployableService();
 
         },
@@ -47,17 +46,17 @@ export class DeployableServiceHistoryComponent implements OnInit, OnDestroy {
           if (err.status === 404) {
             this.navigator.go('/404');
           }
-          this.errorMessage = 'An error occurred while retrieving data for this deployable service. ' + err.error;
+          this.errorMessage = 'An error occurred while retrieving data for this Deployable Application. ' + err.error;
         }
       );
     });
   }
 
   getDataForDeployableService() {
-    this.deployableServiceService.getServiceLoggingInfoHistory(this.deployableService.id, this.catalogueId).subscribe(
+    this.deployableServiceService.getServiceLoggingInfoHistory(this.deployableApplication.id).subscribe(
       res => this.deployableServiceHistory = res,
       err => {
-        this.errorMessage = 'An error occurred while retrieving the history of this deployable service. ' + err.error;
+        this.errorMessage = 'An error occurred while retrieving the history of this Deployable Application. ' + err.error;
       }
     );
   }
@@ -67,7 +66,7 @@ export class DeployableServiceHistoryComponent implements OnInit, OnDestroy {
   }
 
   handleError(error) {
-    this.errorMessage = 'System error retrieving deployable service (Server responded: ' + error + ')';
+    this.errorMessage = 'System error retrieving Deployable Application (Server responded: ' + error + ')';
   }
 
 }

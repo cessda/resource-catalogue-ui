@@ -94,9 +94,9 @@
                 <div class="uk-margin-right">
 
                   <div class="uk-inline uk-margin-right">
-                    <label class="" for="orderBy">Order by </label>
+                    <label class="" for="order">Order </label>
                     <div class="uk-inline">
-                      <select class="uk-input uk-select" id="orderBy" (change)="handleChangeAndResetPage()" formControlName="order">
+                      <select class="uk-input uk-select" id="order" (change)="handleChangeAndResetPage()" formControlName="order">
                         <option value="ASC">Ascending</option>
                         <option value="DESC" selected>Descending</option>
                       </select>
@@ -104,10 +104,11 @@
                   </div>
 
                   <div class="uk-inline uk-margin-right">
-                    <label class="" for="sort">Sort by </label>
+                    <label for="sort">Sort by </label>
                     <div class="uk-inline">
-                      <select class="uk-input uk-select" id="sort" (change)="handleChangeAndResetPage()" formControlName="sort">
-                        <option value="name" selected>Name</option>
+                      <select class="uk-input uk-select" id="sort" (change)="handleSortChange()" formControlName="sort">
+                        <option *ngIf="isSearchActive()" value="">Relevance</option>
+                        <option value="name">Name</option>
                         <option value="id">ID</option>
                       </select>
                     </div>
@@ -118,9 +119,9 @@
                     <div class="uk-inline">
                       <select class="uk-input uk-select" id="status" (change)="handleChangeAndResetPage()" formControlName="status">
                         <option value="" selected>All</option>
-                        <option value="approved adapter">Approved</option>
-                        <option value="rejected adapter">Rejected</option>
-                        <option value="pending adapter">Pending</option>
+                        <option value="approved">Approved</option>
+                        <option value="rejected">Rejected</option>
+                        <option value="pending">Pending</option>
                       </select>
                     </div>
                   </div>
@@ -150,7 +151,7 @@
                 <div class="">
                   <form [formGroup]="dataForm" (ngSubmit)="handleChangeAndResetPage()" class="uk-search uk-search-default" style="width: 250px;">
                     <span uk-search-icon></span>
-                    <input class="uk-search-input" type="search" placeholder="Search (id, name)" formControlName="query">
+                    <input class="uk-search-input" type="search" placeholder="Search" formControlName="query">
                   </form>
                 </div>
 
@@ -199,17 +200,17 @@
                   @for (adapterBundle of adapters; track adapterBundle) {
                     <div class="uk-card provider-card uk-margin-medium-top">
                       <div class="uk-card-body uk-padding-remove-bottom">
-                        @if (adapterBundle.status === 'approved adapter') {
+                        @if (adapterBundle.status === 'approved') {
                           <div class="approved">
                             <div class="uk-card-badge uk-label">Approved</div>
                           </div>
                         }
-                        @if (adapterBundle.status === 'pending adapter') {
+                        @if (adapterBundle.status === 'pending') {
                           <div class="pending">
                             <div class="uk-card-badge uk-label">Pending</div>
                           </div>
                         }
-                        @if ((adapterBundle.status === 'rejected adapter')) {
+                        @if ((adapterBundle.status === 'rejected')) {
                           <div class="rejected">
                             <div class="uk-card-badge uk-label">Rejected</div>
                           </div>
@@ -221,12 +222,12 @@
                         }
                         @if (!adapterBundle.active) {
                           <div class="rejected">
-                            <div class="uk-label uk-align-right" [ngClass]="adapterBundle.status === 'pending adapter' ? 'uk-position-top-right uk-margin-medium-right' : ''">Inactive</div>
+                            <div class="uk-label uk-align-right" [ngClass]="adapterBundle.status === 'pending' ? 'uk-position-top-right uk-margin-medium-right' : ''">Inactive</div>
                           </div>
                         }
                         @if (adapterBundle.suspended) {
                           <div class="rejected">
-                            <div class="uk-label uk-align-right" [ngClass]="adapterBundle.status === 'pending adapter' ? 'uk-position-top-right uk-margin-xlarge-right' : ''">Suspended</div>
+                            <div class="uk-label uk-align-right" [ngClass]="adapterBundle.status === 'pending' ? 'uk-position-top-right uk-margin-xlarge-right' : ''">Suspended</div>
                           </div>
                         }
                         <div class="">
@@ -243,9 +244,11 @@
                                   <div class="uk-margin-small-top">
                                     <span class="statusLabel">Linked Resource ID: </span>{{ adapterBundle.adapter.linkedResource.id }}
                                   </div>
-                                  <div class="uk-margin-small-top">
-                                    <span class="statusLabel">Catalogue ID: </span>{{ adapterBundle.adapter.catalogueId }}
-                                  </div>
+                                  @if (adapterBundle.catalogueId != null) {
+                                    <div class="uk-margin-small-top">
+                                      <span class="statusLabel">Catalogue ID: </span>{{ adapterBundle.catalogueId }}
+                                    </div>
+                                  }
                                 </div>
                                 <div>
                                   <div class="uk-margin-small-top">
@@ -273,74 +276,72 @@
                                 </div>
                               </div>
                             </div>
-                            <div class="uk-width-1-5">
-                              @if (adapterBundle.status === 'pending adapter') {
+<!--                            <div class="uk-width-1-5">
+                              @if (adapterBundle.status === 'pending') {
                                 <div class="action-buttons uk-flex uk-flex-middle uk-flex-center" style="flex-direction: column;">
-                                  <button (click)="verifyAdapter(adapterBundle.id, true, 'approved adapter')" class="uk-button uk-button-primary uk-display-block">
+                                  <button (click)="verifyAdapter(adapterBundle.id, true, 'approved')" class="uk-button uk-button-primary uk-display-block">
                                     <i class="fa fa-thumbs-up fa-lg" aria-hidden="true"></i> Approve
                                   </button>
-                                  <button (click)="verifyAdapter(adapterBundle.id, true, 'rejected adapter')" class="uk-button uk-button-danger uk-display-block uk-margin-small-top">
+                                  <button (click)="verifyAdapter(adapterBundle.id, false, 'rejected')" class="uk-button uk-button-danger uk-display-block uk-margin-small-top">
                                     <i class="fa fa-thumbs-down fa-lg" aria-hidden="true"></i>  Reject
                                   </button>
                                 </div>
                               }
-                            </div>
+                            </div>-->
                           </div>
                           <hr class="uk-margin-top">
                           <div class="uk-align-right uk-margin-bottom">
-                            @if (adapterBundle.adapter.catalogueId===catalogueConfigId) {
+                            @if (adapterBundle.catalogueId==null) {
                               <button
-                                routerLink="/adapters/update/{{pidHandler.customEncodeURIComponent(adapterBundle.id)}}"
+                                routerLink="/provider/{{pidHandler.customEncodeURIComponent(adapterBundle.adapter.resourceOwner)}}/adapter/update/{{pidHandler.customEncodeURIComponent(adapterBundle.id)}}"
                                 class="uk-button uk-button-link"
                                 style="">
-                                <i class="fa fa-pencil fa-lg uk-margin-small-right" aria-hidden="true"></i>
-                                Update
+                                <span class="material-symbols-outlined uk-margin-small-right" style="vertical-align: middle;">edit_square</span>Edit
                               </button>
                               <button (click)="showDeletionModal(adapterBundle.id)"
                                 class="uk-button uk-button-link uk-margin-medium-left"
                                 style="padding-left: 40px; border-left: 1px solid #ccc">
-                                <i class="fa fa-trash fa-lg uk-margin-small-right" aria-hidden="true"></i>
-                                Delete
+                                <span class="material-symbols-outlined uk-margin-small-right" style="vertical-align: middle;">delete</span>Delete
                               </button>
                             }
-                            <button class="uk-button uk-button-link uk-margin-medium-left uk-disabled"
+                            <button class="uk-button uk-button-link uk-margin-medium-left"
                               style="padding-left: 40px; border-left: 1px solid #ccc">
-                              <i class="fa fa-ellipsis-v fa-lg uk-margin-small-right"></i>More Options
+                              <span class="material-symbols-outlined" style="vertical-align: middle;">more_vert</span> More Options
                             </button>
                             <div uk-dropdown="mode: click">
                               <ul class="uk-nav uk-dropdown-nav uk-dropdown-close">
-                                @if (adapterBundle.active && adapterBundle.status=='approved adapter') {
+                                @if (adapterBundle.active && adapterBundle.status==='approved') {
                                   <li class="uk-margin-small-bottom"
                                     (click)="showAuditForm(adapterBundle)">
-                                    <a><i class="fa fa-check-circle-o fa-lg uk-margin-small-right"></i>Audit</a>
+                                    <a><span class="material-symbols-outlined uk-margin-small-right" style="vertical-align: middle;">check_circle</span>Audit</a>
                                   </li>
                                 }
-                                @if ((adapterBundle.status === 'approved adapter') && (!adapterBundle.active)) {
+                                @if ((adapterBundle.status === 'approved') && (!adapterBundle.active)) {
                                   <li
-                                    (click)="publishAdapter(adapterBundle.id, true)"
+                                    (click)="activateAdapter(adapterBundle.id, true)"
                                     class="uk-margin-small-top">
-                                    <a><i aria-hidden="true" class="fa fa-thumbs-up uk-margin-small-right"></i>Activate</a>
+                                    <a><span class="material-symbols-outlined uk-margin-small-right" style="vertical-align: middle;">check</span>Activate</a>
                                   </li>
                                 }
-                                @if ((adapterBundle.status === 'approved adapter') && (adapterBundle.active)) {
+                                @if ((adapterBundle.status === 'approved') && (adapterBundle.active)) {
                                   <li
-                                    (click)="publishAdapter(adapterBundle.id, false)"
+                                    (click)="activateAdapter(adapterBundle.id, false)"
                                     class="uk-margin-small-top">
-                                    <a><i aria-hidden="true" class="fa fa-thumbs-down uk-margin-small-right"></i>Deactivate</a>
+                                    <a><span class="material-symbols-outlined uk-margin-small-right" style="vertical-align: middle;">close</span>Deactivate</a>
                                   </li>
                                 }
                                 @if ((adapterBundle.suspended==false)) {
                                   <li
                                     (click)="showSuspensionModal(adapterBundle)"
                                     class="uk-margin-small-top">
-                                    <a><i aria-hidden="true" class="fa fa-dot-circle-o uk-margin-small-right"></i>Suspend</a>
+                                    <a><span class="material-symbols-outlined uk-margin-small-right" style="vertical-align: middle;">adjust</span>Suspend</a>
                                   </li>
                                 }
                                 @if ((adapterBundle.suspended==true)) {
                                   <li
                                     (click)="showSuspensionModal(adapterBundle)"
                                     class="uk-margin-small-top">
-                                    <a><i aria-hidden="true" class="fa fa-dot-circle-o uk-margin-small-right"></i>Unsuspend</a>
+                                    <a><span class="material-symbols-outlined uk-margin-small-right" style="vertical-align: middle;">adjust</span>Unsuspend</a>
                                   </li>
                                 }
                               </ul>

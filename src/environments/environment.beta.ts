@@ -1,7 +1,6 @@
 export const environment = {
   production: true,
   beta: true,
-  FAQ_ENDPOINT: '/faq/api',
   API_ENDPOINT: '/api',
   API_LOGIN: '/api/oauth2/authorization/eosc',
   API_LOGOUT: '/api/logout',
@@ -14,8 +13,6 @@ export const environment = {
   marketplaceDatasourcesURL: './comingSoon',
   marketplaceTrainingResourcesURL: './comingSoon',
   API_TOKEN_ENDPOINT: 'https://core-proxy.sandbox.eosc-beyond.eu/providers-api/',
-  INSIGHTS_ENDPOINT: 'provider_insights_api/v1/statistics/rs',
-  AUTOCOMPLETION_ENDPOINT: 'v1/auto_completion',
   MONITORING_URL: './comingSoon',
   WS_ENDPOINT: ''
 };

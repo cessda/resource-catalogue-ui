@@ -1,3 +1,9 @@
 .git
+.angular
+.codex
+.idea
+.agents
 dist
 node_modules
+npm-debug.log*
+nohup.out

@@ -3,7 +3,7 @@ import {RouterModule, Routes} from '@angular/router';
 import {DashboardComponent} from './dashboard.component';
 import {CanActivateViaAuthGuard} from '../../../services/can-activate-auth-guard.service';
 import {ProviderStatsComponent} from './providerStats/provider-stats.component';
-import {ProviderInfoComponent} from './providerInfo/provider-info.component';
+import {ProviderInfoComponent} from "./providerInfo/provider-info.component";
 import {ServicesComponent} from './services/services.component';
 import {PendingServicesComponent} from './pendingservices/pending-services.component';
 import {SharedServicesComponent} from "./sharedServices/shared-services.component";
@@ -16,6 +16,10 @@ import {TrainingResourcesComponent} from "./trainingResources/training-resources
 import {GuidelinesComponent} from "./guidelines/guidelines.component";
 import {DeployableServicesComponent} from "./deployable-services/deployable-services.component";
 import {ProviderAccountingStatsComponent} from "./providerAccountingStats/provider-accounting-stats.component";
+import {AdaptersComponent} from "./adapters/adapters.component";
+import {DatasourcesComponent} from "./datasources/datasources.component";
+import {DraftDatasourcesComponent} from "./draftDatasources/draft-datasources.component";
+import {CataloguesComponent} from "./catalogues/catalogues.component";
 
 const providerDashboardRoutes: Routes = [
   {
@@ -93,6 +97,27 @@ const providerDashboardRoutes: Routes = [
         }
       },
       {
+        path: 'draft-datasources',
+        component: DraftDatasourcesComponent,
+        data: {
+          isResource: false
+        }
+      },
+      {
+        path: 'catalogues',
+        component: CataloguesComponent,
+        data: {
+          isResource: false
+        }
+      },
+      {
+        path: 'datasources',
+        component: DatasourcesComponent,
+        data: {
+          isResource: false
+        }
+      },
+      {
         path: 'training-resources',
         component: TrainingResourcesComponent,
         data: {
@@ -102,6 +127,13 @@ const providerDashboardRoutes: Routes = [
       {
         path: 'deployable-services',
         component: DeployableServicesComponent,
+        data: {
+          isResource: false
+        }
+      },
+      {
+        path: 'adapters',
+        component: AdaptersComponent,
         data: {
           isResource: false
         }

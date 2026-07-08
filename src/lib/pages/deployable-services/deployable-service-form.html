@@ -4,7 +4,7 @@
   </div>
 }
 
-@if (model && vocabularies && subVocabularies) {
+@if (model) {
   <div class="uk-section-default uk-section uk-section-small uk-padding-remove-top uk-padding-remove-bottom" style="min-height: 90vh;">
     <div class="uk-container uk-container-expand uk-margin-left uk-margin-right">
       @if (errorMessage) {
@@ -14,21 +14,22 @@
         </div>
       }
       @if ((editMode && payloadAnswer) || !editMode) {
-        <app-survey [payload]="payloadAnswer" [model]="model" [vocabulariesMap]="vocabulariesMap" [subVocabularies]="subVocabulariesMap"
-          [tabsHeader]="" (submit)="showCommentModal($event)" [activeUsers]="[]">
+        <app-survey [payload]="payloadAnswer" [model]="model" [tabsHeader]="" (submitForm)="showCommentModal($event)">
           @if (model) {
             <div class="uk-grid form-top-section">
               <h5 class="uk-width-1-1 uk-margin-bottom">{{ model.name }}</h5>
               <p class="uk-margin-bottom" [innerHTML]="model.notice"></p>
             </div>
           }
-          <div class="form-action-bar titleAndActionsBar uk-flex uk-flex-right justify-content-end" style="min-height: 40px">
-            <div>
-              <button class="uk-button uk-button-secondary uk-margin-left" (click)="child.parentSubmit()">
-                Submit
-              </button>
+          @if (!viewOnlyMode) {
+            <div class="form-action-bar titleAndActionsBar uk-flex uk-flex-right justify-content-end" style="min-height: 40px">
+              <div>
+                <button class="uk-button uk-button-secondary uk-margin-left" (click)="child.parentSubmit()">
+                  Submit
+                </button>
+              </div>
             </div>
-          </div>
+          }
         </app-survey>
       }
     </div>

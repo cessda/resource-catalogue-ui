@@ -6,7 +6,7 @@ import { catchError } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
 import { AuthenticationService } from './authentication.service';
 
-declare var UIkit: any;
+declare let UIkit: any;
 
 @Injectable()
 export class AuthenticationInterceptor implements HttpInterceptor {
@@ -19,8 +19,8 @@ export class AuthenticationInterceptor implements HttpInterceptor {
     return next.handle(request).pipe(
       catchError((response: HttpErrorResponse) => {
         let errorMessage: string;
-        if (response.error.message) {
-          errorMessage = response.error.message;
+        if (response.error.detail) {
+          errorMessage = response.error.detail;
         } else {
           // if (response.error.length > 100) {
           //   errorMessage = 'Server error';

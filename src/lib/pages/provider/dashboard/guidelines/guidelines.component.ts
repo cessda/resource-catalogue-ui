@@ -10,12 +10,11 @@ import {pidHandler} from "../../../../shared/pid-handler/pid-handler.service";
 import {environment} from "../../../../../environments/environment";
 import {ConfigService} from "../../../../services/config.service";
 
-declare var UIkit: any;
+declare let UIkit: any;
 
 @Component({
     selector: 'app-guidelines',
     templateUrl: './guidelines.component.html',
-    styleUrls: ['../services/service.component.css'],
     standalone: false
 })
 
@@ -25,7 +24,7 @@ export class GuidelinesComponent implements OnInit {
     from: '0',
     quantity: '10',
     order: 'ASC',
-    sort: 'title',
+    sort: 'name',
     query: '',
     // active: 'statusAll',
     status: ''
@@ -37,7 +36,6 @@ export class GuidelinesComponent implements OnInit {
   // toggleLoading = false;
   urlParams: URLParameter[] = [];
   providerId: string;
-  catalogueConfigId: string = this.config.getProperty('catalogueId');
   catalogueId: string;
   providerBundle: ProviderBundle;
   guidelines: Paging<InteroperabilityRecordBundle>;
@@ -92,7 +90,7 @@ export class GuidelinesComponent implements OnInit {
   }
 
   getProvider() {
-    this.providerService.getServiceProviderBundleById(this.providerId, this.catalogueId).subscribe(
+    this.providerService.getServiceProviderBundleById(this.providerId).subscribe(
       providerBundle => {
         this.providerBundle = providerBundle;
       }, error => {
@@ -126,9 +124,11 @@ export class GuidelinesComponent implements OnInit {
     UIkit.modal('#spinnerModal').show();
     this.guidelinesService.deleteInteroperabilityRecordById(id).subscribe(
       res => {},
-      error => {
+      err => {
         UIkit.modal('#spinnerModal').hide();
-        this.errorMessage = 'Something went bad. ' + error.error ;
+        this.errorMessage = (err?.status >= 500 && err?.status < 600)
+            ? `Something went wrong. If the issue persists, please contact support and provide the following error code: ${err?.error?.traceId}`
+            : `Something went bad, server responded: ${err?.error?.detail}`;
         this.getGuidelines();
       },
       () => {
@@ -156,7 +156,7 @@ export class GuidelinesComponent implements OnInit {
       }
     }
 
-    this.router.navigate([`/dashboard`, this.catalogueId, this.providerId, `guidelines`], {queryParams: map});
+    this.router.navigate([`/dashboard`, this.providerId, `guidelines`], {queryParams: map});
   }
 
   paginationInit() {

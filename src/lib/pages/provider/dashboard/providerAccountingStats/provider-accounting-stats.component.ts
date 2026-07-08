@@ -39,7 +39,7 @@ export class ProviderAccountingStatsComponent implements OnInit {
 
     forkJoin({
       stats: this.accountingStatsService.getAccountingStatsForProvider(this.providerId, this.startDate, this.endDate),
-      provider: this.serviceProviderService.getServiceProviderById(this.providerId, this.catalogueId)
+      provider: this.serviceProviderService.getServiceProviderById(this.providerId)
     }).subscribe({
       next: ({ stats, provider }) => {
         this.provider = provider;
@@ -52,7 +52,7 @@ export class ProviderAccountingStatsComponent implements OnInit {
         }
       },
       error: (err) => {
-        this.errorMessage = 'An error occurred while retrieving data for this provider: ' + err.error.message;
+        this.errorMessage = 'An error occurred while retrieving data for this provider: ' + err.error.detail;
       }
     });
   }
@@ -115,7 +115,7 @@ export class ProviderAccountingStatsComponent implements OnInit {
         }
       },
       error: (err) => {
-        this.errorMessage = 'An error occurred while retrieving data for this provider: ' + err.error.message;
+        this.errorMessage = 'An error occurred while retrieving data for this provider: ' + err.error.detail;
       }
     });
   }

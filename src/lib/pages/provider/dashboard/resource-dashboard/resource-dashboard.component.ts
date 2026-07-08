@@ -11,7 +11,7 @@ import {DatasourceService} from "../../../../services/datasource.service";
 import {pidHandler} from '../../../../shared/pid-handler/pid-handler.service';
 import {GuidelinesService} from "../../../../services/guidelines.service";
 
-declare var UIkit: any;
+declare let UIkit: any;
 
 @Component({
     selector: 'app-resource-dashboard',
@@ -22,7 +22,6 @@ export class ResourceDashboardComponent implements OnInit {
 
   _marketplaceServicesURL = environment.marketplaceServicesURL;
   serviceORresource = environment.serviceORresource;
-  catalogueConfigId: string = this.config.getProperty('catalogueId');
   catalogueId: string;
   providerId: string;
   resourceId: string;
@@ -51,27 +50,31 @@ export class ResourceDashboardComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.catalogueId = this.route.snapshot.paramMap.get('catalogueId');
     this.providerId = this.route.snapshot.paramMap.get('providerId');
     this.resourceId = this.route.snapshot.paramMap.get('resourceId');
-    // console.log(this.providerId);
-    this.providerPID = decodeURIComponent(this.providerId);
-    this.resourcePID = decodeURIComponent(this.resourceId);
-    // console.log(this.providerPID);
-    this.resourceService.getServiceBundleById(this.resourceId, this.catalogueId).subscribe(
-      res => { if (res!=null) this.resourceBundle = res },
+
+    // this.providerPID = decodeURIComponent(this.providerId);
+    // this.resourcePID = decodeURIComponent(this.resourceId);
+    this.resourceService.getServiceBundleById(this.resourceId).subscribe(
+      res => {
+        if (res != null) {
+          this.resourceBundle = res;
+          this.catalogueId = this.resourceBundle.catalogueId;
+          console.log('catalogueId:', this.catalogueId);
+        }
+      },
       error => {},
       () => {
-        this.datasourceService.getDatasourceByServiceId(this.resourceId, this.catalogueId).subscribe(
+/*        this.datasourceService.getDatasourceByServiceId(this.resourceId, this.catalogueId).subscribe( // TODO check
           res => { if (res!=null) this.datasourceId = res.id }
-        );
-        if (this.catalogueId === this.catalogueConfigId){
-          this.serviceExtensionsService.getMonitoringByServiceId(this.resourceId).subscribe(
-            res => { if (res!=null) this.monitoringId = res.id }
-          );
-          this.serviceExtensionsService.getHelpdeskByServiceId(this.resourceId).subscribe(
-            res => { if (res!=null) this.helpdeskId = res.id }
-          );
+        );*/
+        if (this.catalogueId == null){
+          // this.serviceExtensionsService.getMonitoringByServiceId(this.resourceId).subscribe(
+          //   res => { if (res!=null) this.monitoringId = res.id }
+          // );
+          // this.serviceExtensionsService.getHelpdeskByServiceId(this.resourceId).subscribe(
+          //   res => { if (res!=null) this.helpdeskId = res.id }
+          // );
         }
 
         this.guidelinesService.getGuidelinesOfResource(this.resourceId).subscribe(
@@ -92,10 +95,10 @@ export class ResourceDashboardComponent implements OnInit {
   }
 
   getGuidelineName(id: string): string {
-    return this.guidelines?.find(g => g.id === id)?.title || id;
+    return this.guidelines?.find(g => g.id === id)?.name || id;
   }
 
-  showDatasourceDeletionModal() {
+/*  showDatasourceDeletionModal() {
     UIkit.modal('#datasourceDeletionModal').show();
   }
 
@@ -103,16 +106,17 @@ export class ResourceDashboardComponent implements OnInit {
     UIkit.modal('#spinnerModal').show();
     this.datasourceService.deleteDatasource(id).subscribe(
       res => {},
-      error => {
-        // console.log(error);
+      err => {
         UIkit.modal('#spinnerModal').hide();
-        this.errorMessage = 'Something went bad. ' + error.error ;
+                this.errorMessage = (err?.status >= 500 && err?.status < 600)
+            ? `Something went wrong. If the issue persists, please contact support and provide the following error code: ${err?.error?.traceId}`
+            : `Something went bad, server responded: ${err?.error?.detail}`;
       },
       () => {
         UIkit.modal('#spinnerModal').hide();
         window.location.reload()
       }
     );
-  }
+  }*/
 
 }

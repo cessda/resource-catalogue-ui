@@ -1,0 +1,32 @@
+name: resource-catalogue
+
+services:
+
+  ui:
+    image: docker.madgik.di.uoa.gr/resource-catalogue-ui:dev
+    build: .
+#    container_name: resource-catalogue-ui
+    environment:
+      - API_BASE_URL=http://backend:8080/api
+    expose:
+      - "80"
+    ports:
+      - "127.0.0.1:4200:80"
+    networks:
+      - rc-net
+    healthcheck:
+      test: ["CMD-SHELL", "curl -s http://localhost -o /dev/null && curl --connect-timeout 2 --max-time 4 -s http://localhost/api/actuator/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    restart: always
+
+networks:
+  # Shared with the backend compose project (compose/compose.yaml in resource-catalogue).
+  # The nginx config proxies /api/ to http://backend:8080/api, which requires the
+  # backend service/container to be reachable as 'backend' on this network.
+  # Start the backend stack first so this network exists.
+  rc-net:
+    name: rc-net
+    external: true

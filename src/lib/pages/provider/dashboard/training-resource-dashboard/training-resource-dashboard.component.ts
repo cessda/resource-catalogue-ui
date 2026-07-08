@@ -18,7 +18,6 @@ import {pidHandler} from "../../../../shared/pid-handler/pid-handler.service";
 })
 export class TrainingResourceDashboardComponent implements OnInit {
 
-  catalogueConfigId: string = this.config.getProperty('catalogueId');
   protected readonly environment = environment;
   _marketplaceTrainingResourcesURL = environment.marketplaceTrainingResourcesURL;
 
@@ -41,19 +40,24 @@ export class TrainingResourceDashboardComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.catalogueId = this.route.snapshot.paramMap.get('catalogueId');
     this.providerId = this.route.snapshot.paramMap.get('providerId');
     this.trainingResourceId = this.route.snapshot.paramMap.get('trainingResourceId');
-    this.trainingResourceService.getTrainingResourceBundle(this.trainingResourceId, this.catalogueId).subscribe(
-      res => { if (res!=null) this.trainingResourceBundle = res },
+    this.trainingResourceService.getTrainingResourceBundle(this.trainingResourceId).subscribe(
+      res => {
+        if (res != null) {
+          this.trainingResourceBundle = res;
+          this.catalogueId = this.trainingResourceBundle.catalogueId;
+          console.log('catalogueId:', this.catalogueId);
+        }
+      },
       error => {},
       () => {
-        this.serviceExtensionsService.getMonitoringByServiceId(this.trainingResourceId).subscribe(
-          res => { if (res!=null) this.monitoringId = res.id }
-        );
-        this.serviceExtensionsService.getHelpdeskByServiceId(this.trainingResourceId).subscribe(
-          res => { if (res!=null) this.helpdeskId = res.id }
-        );
+        // this.serviceExtensionsService.getMonitoringByServiceId(this.trainingResourceId).subscribe(
+        //   res => { if (res!=null) this.monitoringId = res.id }
+        // );
+        // this.serviceExtensionsService.getHelpdeskByServiceId(this.trainingResourceId).subscribe(
+        //   res => { if (res!=null) this.helpdeskId = res.id }
+        // );
       }
     );
   }

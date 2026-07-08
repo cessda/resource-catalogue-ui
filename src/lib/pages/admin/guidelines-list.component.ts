@@ -10,7 +10,7 @@ import {NavigationService} from '../../services/navigation.service';
 import {GuidelinesService} from "../../services/guidelines.service";
 import {pidHandler} from "../../shared/pid-handler/pid-handler.service";
 
-declare var UIkit: any;
+declare let UIkit: any;
 
 @Component({
     selector: 'app-guidelines-list',
@@ -20,11 +20,13 @@ declare var UIkit: any;
 export class GuidelinesListComponent implements OnInit {
   url = environment.API_ENDPOINT;
   serviceORresource = environment.serviceORresource;
-  catalogueConfigId: string | null = null;
+
+  sortUserSelected = false;
+  readonly DEFAULT_SORT = 'name';
 
   formPrepare = {
     order: 'ASC',
-    sort: 'title',
+    sort: this.DEFAULT_SORT,
     quantity: '10',
     from: '0',
     query: '',
@@ -81,11 +83,21 @@ export class GuidelinesListComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.catalogueConfigId = this.config.getProperty('catalogueId');
     if (!this.authenticationService.isAdmin()) {
       this.router.navigateByUrl('/home');
     } else {
       this.dataForm = this.fb.group(this.formPrepare);
+
+      this.dataForm.get('query').valueChanges.subscribe(val => {
+        if (val && val !== '') {
+          if (!this.sortUserSelected) {
+            this.dataForm.get('sort').setValue('', { emitEvent: false }); // matches the Relevance option value
+          }
+        } else {
+          this.sortUserSelected = false; // back to default behavior
+          this.dataForm.get('sort').setValue(this.DEFAULT_SORT, { emitEvent: false }); // reset to default sort option
+        }
+      });
 
       this.urlParams = [];
       this.route.queryParams
@@ -194,11 +206,36 @@ export class GuidelinesListComponent implements OnInit {
     return this.dataForm.get('auditState').value.includes(value);
   }
 
+  handleSortChange() {
+    const sortValue = this.dataForm.get('sort').value;
+    if (sortValue === '') {
+      // User explicitly picked "Relevance"
+      this.sortUserSelected = false;
+      this.dataForm.get('sort').setValue('', { emitEvent: false });
+    } else {
+      this.sortUserSelected = true;
+    }
+    this.handleChangeAndResetPage();
+  }
+
+  isSearchActive(): boolean {
+    const query = this.dataForm?.get('query')?.value;
+    return query && query !== '';
+  }
+
   getGuidelines() {
     this.loadingMessage = 'Loading guidelines entries...';
     this.guidelines = [];
+
+    // Send sort only if: no query, OR user explicitly picked a sort
+    const query = this.dataForm.get('query').value;
+    const hasQuery = query && query !== '';
+    const shouldApplySort = !hasQuery || this.sortUserSelected;
+    const sort = shouldApplySort ? this.dataForm.get('sort').value : null;
+    const order = shouldApplySort ? this.dataForm.get('order').value : null;
+
     this.guidelinesService.getInteroperabilityRecordBundles(this.dataForm.get('from').value, this.dataForm.get('quantity').value,
-      this.dataForm.get('sort').value, this.dataForm.get('order').value, this.dataForm.get('query').value,
+      sort, order, query,
       this.dataForm.get('catalogue_id').value, this.dataForm.get('provider_id').value, this.dataForm.get('status').value,
       this.dataForm.get('active').value, this.dataForm.get('suspended').value, this.dataForm.get('auditState').value).subscribe(
       res => {
@@ -229,10 +266,12 @@ export class GuidelinesListComponent implements OnInit {
     // UIkit.modal('#spinnerModal').show();
     this.guidelinesService.deleteInteroperabilityRecordById(id).subscribe(
       res => {},
-      error => {
+      err => {
         // console.log(error);
         // UIkit.modal('#spinnerModal').hide();
-        this.errorMessage = 'Something went bad. ' + error.error ;
+        this.errorMessage = (err?.status >= 500 && err?.status < 600)
+            ? `Something went wrong. If the issue persists, please contact support and provide the following error code: ${err?.error?.traceId}`
+            : `Something went bad, server responded: ${err?.error?.detail}`;
         this.getGuidelines();
       },
       () => {
@@ -251,7 +290,7 @@ export class GuidelinesListComponent implements OnInit {
 
   suspendInteroperabilityRecord() {
     UIkit.modal('#spinnerModal').show();
-    this.guidelinesService.suspendInteroperabilityRecord(this.selectedGuideline.id, this.selectedGuideline.interoperabilityRecord.catalogueId, !this.selectedGuideline.suspended)
+    this.guidelinesService.suspendInteroperabilityRecord(this.selectedGuideline.id, this.selectedGuideline.catalogueId, !this.selectedGuideline.suspended)
       .subscribe(
         res => {
           UIkit.modal('#suspensionModal').hide();
@@ -262,7 +301,10 @@ export class GuidelinesListComponent implements OnInit {
           UIkit.modal('#suspensionModal').hide();
           UIkit.modal('#spinnerModal').hide();
           this.loadingMessage = '';
-          this.errorMessage = err.error.error;
+          this.errorMessage =
+          (err?.status >= 500 && err?.status < 600)
+            ? `Something went wrong. If the issue persists, please contact support and provide the following error code: ${err?.error?.traceId}`
+            : `Something went bad, server responded: ${err?.error?.detail}`;
           window.scroll(0,0);
         },
         () => {
@@ -285,10 +327,10 @@ export class GuidelinesListComponent implements OnInit {
     );
   }
 
-  publishGuideline(id: string, active: boolean){ // Activates/Deactivates
+  activateGuideline(id: string, active: boolean){
     this.loadingMessage = '';
     UIkit.modal('#spinnerModal').show();
-    this.guidelinesService.publishInteroperabilityRecord(id, active).subscribe(
+    this.guidelinesService.activateInteroperabilityRecord(id, active).subscribe(
       res => this.getGuidelines(),
       err => UIkit.modal('#spinnerModal').hide(),
       () => {
@@ -311,10 +353,16 @@ export class GuidelinesListComponent implements OnInit {
   }
 
   auditResourceAction(action: string, bundle: InteroperabilityRecordBundle) {
-    this.guidelinesService.auditGuideline(this.selectedGuideline.id, action, this.selectedGuideline.interoperabilityRecord.catalogueId, this.commentAuditControl.value)
+    this.guidelinesService.auditGuideline(this.selectedGuideline.id, action, this.selectedGuideline.catalogueId, this.commentAuditControl.value)
       .subscribe(
         res => {this.getGuidelines();},
-        err => {console.log(err);},
+        err => {
+          this.errorMessage =
+            (err?.status >= 500 && err?.status < 600)
+              ? `Something went wrong. If the issue persists, please contact support and provide the following error code: ${err?.error?.traceId}`
+              : `Something went bad, server responded: ${err?.error?.detail}`;
+          window.scroll(0,0);
+        },
         () => {
           this.guidelinesForAudit.forEach(
             s => {

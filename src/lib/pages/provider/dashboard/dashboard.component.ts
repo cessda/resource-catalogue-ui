@@ -9,7 +9,7 @@ import {ServiceProviderService} from '../../../services/service-provider.service
 import {ProviderBundle} from '../../../domain/eic-model';
 import {pidHandler} from '../../../shared/pid-handler/pid-handler.service';
 
-declare var UIkit: any;
+declare let UIkit: any;
 
 @Component({
     selector: 'app-dashboard',
@@ -18,7 +18,10 @@ declare var UIkit: any;
 })
 export class DashboardComponent implements OnInit {
 
-  catalogueConfigId: string | null = null;
+  showResourcesSubmenu = false;
+  showAddNewSubmenu = false;
+  showAddFirstSubmenu = false;
+
   catalogueId: string;
   providerId: string;
   providerStatus: string;
@@ -36,16 +39,18 @@ export class DashboardComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.catalogueConfigId = this.config.getProperty('catalogueId');
     // this.activeTab = this.route.firstChild.snapshot.routeConfig.path;
-    this.catalogueId = this.route.snapshot.paramMap.get('catalogueId');
     this.providerId = this.route.snapshot.paramMap.get('provider');
     this.getProvider();
   }
 
   getProvider() {
-    this.serviceProviderService.getServiceProviderBundleById(this.providerId, this.catalogueId).subscribe(
-      providerBundle => this.providerBundle = providerBundle,
+    this.serviceProviderService.getServiceProviderBundleById(this.providerId).subscribe(
+      providerBundle => {
+        this.providerBundle = providerBundle,
+        this.catalogueId = this.providerBundle.catalogueId;
+        console.log('catalogueId:', this.catalogueId);
+      },
       error =>  console.log(error),
       () => this.providerStatus = this.providerBundle.status
     );
@@ -67,6 +72,15 @@ export class DashboardComponent implements OnInit {
         },
         () => {}
       );
+  }
+
+  showPendingNotification(): void {
+    UIkit.notification({
+      message: 'Disabled until provider gets approved.',
+      status: 'warning',
+      pos: 'bottom-right',
+      timeout: 3000
+    });
   }
 
 }

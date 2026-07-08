@@ -1,0 +1,112 @@
+<div class="uk-section uk-section-xsmall uk-padding-remove-bottom">
+  <div class="uk-container uk-container-expand">
+
+    <div class="services-provider-container">
+      @if (catalogueBundle) {
+        <div class="uk-flex">
+          <div>
+            <img src="{{ catalogueBundle.catalogue.logo ? catalogueBundle.catalogue.logo : '/assets/images/broken_image-black-48dp.svg' }}" style="max-width: 200px">
+          </div>
+          <div class="uk-margin-medium-left">
+            <h3 class="uk-margin-remove">{{catalogueBundle.catalogue.name}}</h3>
+            <div><span class="status-label">ID: </span>{{ catalogueBundle.id}}</div>
+            <div><span class="status-label">Status: </span>{{catalogueBundle.status | titlecase}}</div>
+          </div>
+        </div>
+      }
+    </div>
+
+    <div class="uk-container uk-margin-medium-top uk-margin-medium-bottom">
+      <div class="uk-grid">
+
+        <!-- MIDDLE -->
+        <div class=" uk-width-expand@m">
+
+          @if (errorMessage) {
+            <div class="uk-alert uk-alert-danger uk-animation-slide-top">{{errorMessage}}</div>
+          }
+
+          <div class="uk-grid">
+            <div class="uk-width-1-1">
+
+              <section class="section">
+                <div class="uk-container uk-container-center">
+                  <div class="uk-button uk-button-danger uk-disabled uk-position-top-center uk-margin-small-top todayBadge">Today</div>
+
+                  <div class="al_timeline">
+
+                    @if (providerHistory?.length>0) {
+                      @for (history of providerHistory; track history; let i = $index) {
+                        @if (i < 10) {
+                          <div class="al_timeline_block update">
+                            <div class="al_timeline_image uk-scrollspy-init-inview uk-scrollspy-inview uk-animation-scale-up"></div>
+                            <div class="al_timeline_content uk-scrollspy-init-inview uk-scrollspy-inview uk-animation-slide-right">
+                              <div class="">
+                                <div>
+                                  <div class="uk-card-badge uk-label uk-label-gray">
+                                    <span class="">{{history.type | titlecase}}</span></div>
+                                </div>
+                                <div class="uk-position-top-right uk-margin-small uk-padding-small uk-padding-remove-top uk-padding-remove-bottom date-comment">
+                                  {{history.date | date:'dd/MM/yyyy'}}
+                                </div>
+                                <div class="uk-margin-medium uk-text-left">
+                                  @if (history.type === 'onboard') {
+                                    <h4>Onboarding - {{history.actionType | titlecase}}</h4>
+                                  }
+                                  @if (history.type === 'update') {
+                                    <h4>Update - {{history.actionType | titlecase}}</h4>
+                                  }
+                                  @if (history.type === 'audit') {
+                                    <h4>Audited as {{history.actionType | titlecase}}</h4>
+                                  }
+                                  @if (history.type === 'draft') {
+                                    <h4>Saved as Draft</h4>
+                                  }
+                                  <div>
+                                    @if (history.userFullName || history.userEmail || history.userRole) {
+                                      <span>by</span>
+                                    }
+                                    {{history.userFullName}}
+                                    @if (history.userFullName && history.userEmail) {
+                                      <span>-</span>
+                                    }
+                                    {{history.userEmail}}
+                                    @if (history.userRole) {
+                                      <span>({{history.userRole}})</span>
+                                    }
+                                  </div>
+                                  @if (history.comment && history.comment!=='null') {
+                                    <div class="uk-margin-medium-top">
+                                      <span class="comment"><i class="fa fa-comment uk-margin-small-right"></i>{{history.comment}}</span>
+                                    </div>
+                                  }
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        }
+                      }
+                    }
+
+                  </div>
+                </div>
+              </section>
+
+              <div class="uk-margin-top uk-text-center">
+                @if (catalogueId) {
+                  <a
+                    [routerLink]="['/catalogue-dashboard/' + catalogueId + '/fullHistory']"
+                    class="uk-h3 uk-link">See more results ...</a>
+                }
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</div>

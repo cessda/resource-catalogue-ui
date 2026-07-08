@@ -5,18 +5,24 @@
       @if (providerBundle) {
         <div class="uk-flex">
           <div>
-            <img src="{{ providerBundle.provider.logo ? providerBundle.provider.logo : '/assets/images/broken_image-black-48dp.svg' }}" style="max-width: 200px">
+            <img src="{{ providerBundle.organisation.logo ? providerBundle.organisation.logo : '/assets/images/broken_image-black-48dp.svg' }}" style="max-width: 200px">
           </div>
           <div class="uk-margin-medium-left">
-            <h3 class="uk-margin-remove">{{providerBundle.provider.name}}</h3>
+            <h3 class="uk-margin-remove">{{providerBundle.organisation.name}}</h3>
             <div><span class="status-label">ID: </span>{{ providerBundle.id}}</div>
-            <div><span class="status-label">Provider Status: </span>{{ providerBundle.status.substr(0,providerBundle.status.indexOf(' ')) | titlecase }}</div>
+            <div><span class="status-label">Provider Status: </span>{{ providerBundle.status | titlecase }}</div>
           </div>
         </div>
       }
     </div>
 
-    <div class="uk-margin-large-top">
+    <div class="uk-alert-primary" uk-alert>
+      <p class="uk-margin-remove">
+        Create and manage configuration templates for each guideline to standardize and streamline configuration setup.
+      </p>
+    </div>
+
+    <div class="uk-margin-small-top">
       @if (errorMessage) {
         <div class="uk-alert uk-alert-danger">
           <p>{{errorMessage}}</p>
@@ -52,10 +58,10 @@
           </div>
 
           <div class="uk-inline">
-            <label class="" for="sort">Order by </label>
+            <label class="" for="sort">Sort by </label>
             <div class="uk-inline">
               <select class="uk-input uk-select" id="sort" (change)="handleChangeAndResetPage()" formControlName="sort">
-                <option value="title" selected>Title</option>
+                <option value="name" selected>Name</option>
                 <option value="registeredAt">Creation Date</option>
                 <option value="modifiedAt">Modification Date</option>
               </select>
@@ -70,9 +76,9 @@
             <div class="uk-inline">
               <select class="uk-input uk-select" id="status" (change)="handleChangeAndResetPage()" formControlName="status">
                 <option value="" selected>All</option>
-                <option value="approved interoperability record">Approved</option>
-                <option value="pending interoperability record">Pending</option>
-                <option value="rejected interoperability record">Rejected</option>
+                <option value="approved">Approved</option>
+                <option value="pending">Pending</option>
+                <option value="rejected">Rejected</option>
               </select>
             </div>
           </div>
@@ -115,17 +121,17 @@
             @for (irBundle of guidelines.results; track irBundle; let i = $index) {
               <div class="uk-card uk-card-small uk-card-default uk-margin-bottom service-card">
                 <div class="uk-card-body">
-                  @if (irBundle.status === 'approved interoperability record') {
+                  @if (irBundle.status === 'approved') {
                     <div class="approved">
                       <div class="uk-card-badge uk-label">Approved</div>
                     </div>
                   }
-                  @if (irBundle.status === 'pending interoperability record') {
+                  @if (irBundle.status === 'pending') {
                     <div class="pending">
                       <div class="uk-card-badge uk-label">Pending</div>
                     </div>
                   }
-                  @if ((irBundle.status === 'rejected interoperability record')) {
+                  @if ((irBundle.status === 'rejected')) {
                     <div class="rejected">
                       <div class="uk-card-badge uk-label">Rejected</div>
                     </div>
@@ -143,7 +149,7 @@
                   <div class="uk-grid uk-flex-middle uk-margin-remove-top">
                     <div class="uk-width-3-4">
                       <h4 class="uk-margin-medium-top">
-                        {{irBundle.interoperabilityRecord.title}}
+                        {{irBundle.interoperabilityRecord.name}}
                       </h4>
                       <div class="uk-margin-small-top">
                         @if (irBundle.interoperabilityRecord.description) {
@@ -157,11 +163,15 @@
                         <span class="">Last Update: </span>{{ irBundle.metadata.modifiedAt | date }}
                       </div>
                     </div>
-                    @if (catalogueId === catalogueConfigId) {
+                    @if (catalogueId == null) {
                       <div class="uk-width-1-4">
                         <div class="action-buttons">
+                          <button class="uk-button uk-button-action uk-display-block uk-margin-small-top"
+                                  [routerLink]="['/guidelines/' + pidHandler.customEncodeURIComponent(irBundle.id) + '/configuration-templates-management']">
+                            <i class="fa fa-tablet fa-lg" aria-hidden="true"></i> Manage Configuration Templates
+                          </button>
                           <button
-                            [routerLink]="['/guidelines/'+ pidHandler.customEncodeURIComponent(irBundle.interoperabilityRecord.providerId) +'/update/'+ pidHandler.customEncodeURIComponent(irBundle.id)]"
+                            [routerLink]="['/guidelines/'+ pidHandler.customEncodeURIComponent(irBundle.interoperabilityRecord.resourceOwner) +'/update/'+ pidHandler.customEncodeURIComponent(irBundle.id)]"
                             class="uk-button uk-button-action uk-display-block uk-margin-small-top">
                             <i class="fa fa-pencil fa-lg" aria-hidden="true"></i> Update Guidelines
                           </button>
@@ -196,7 +206,7 @@
 <div id="actionModal" uk-modal>
   <div class="uk-modal-dialog uk-modal-body uk-margin-auto-vertical">
     @if (selectedGuideline) {
-      <h6>Are you sure you want to delete the guidelines: '{{selectedGuideline.interoperabilityRecord.title}}'?</h6>
+      <h6>Are you sure you want to delete the guidelines: '{{selectedGuideline.interoperabilityRecord.name}}'?</h6>
     }
     <div class="uk-text-right">
       <button class="uk-button uk-button-default uk-modal-close uk-margin-small-right" type="button">Cancel</button>

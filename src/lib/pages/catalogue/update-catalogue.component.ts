@@ -1,6 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {Catalogue, Provider, Type} from '../../domain/eic-model';
-import {ServiceProviderFormComponent} from '../provider/service-provider-form.component';
+        import {Catalogue} from '../../domain/eic-model';
 import {ResourceService} from '../../services/resource.service';
 import {UntypedFormBuilder} from '@angular/forms';
 import {AuthenticationService} from '../../services/authentication.service';
@@ -10,8 +9,9 @@ import {CatalogueFormComponent} from "./catalogue-form.component";
 import {CatalogueService} from "../../services/catalogue.service";
 import {FormControlService} from "../../../dynamic-catalogue/services/form-control.service";
 import {ConfigService} from "../../services/config.service";
+import {pidHandler} from "../../shared/pid-handler/pid-handler.service";
 
-declare var UIkit: any;
+declare let UIkit: any;
 
 @Component({
     selector: 'app-update-catalogue',
@@ -30,42 +30,20 @@ export class UpdateCatalogueComponent extends CatalogueFormComponent implements 
               public router: Router,
               public route: ActivatedRoute,
               public dynamicFormService: FormControlService,
-              public config: ConfigService) {
-    super(fb, authService, serviceProviderService, catalogueService, resourceService, router, route, dynamicFormService, config);
+              public config: ConfigService,
+              public pidhandler: pidHandler) {
+    super(fb, authService, serviceProviderService, catalogueService, resourceService, router, route, dynamicFormService, config, pidhandler);
   }
 
   ngOnInit() {
     this.editMode = true;
-    this.catalogueId = this.route.snapshot.paramMap.get('catalogueId');
-    const path = this.route.snapshot.routeConfig.path;
-    if (path === 'info/:catalogueId') {
-      this.disable = true;
-    }
+    this.catalogueId = decodeURIComponent(this.route.snapshot.paramMap.get('catalogueId'));
+    // const path = this.route.snapshot.routeConfig.path;
+    // if (path === 'info/:catalogueId') {
+    //   this.viewOnlyMode = true;
+    // }
+    this.getProvider();
     super.ngOnInit();
-    if (sessionStorage.getItem('service')) {
-      sessionStorage.removeItem('service');
-    } else {
-      if (this.vocabularies === null) {
-        this.resourceService.getAllVocabulariesByType().subscribe(
-          res => {
-            this.vocabularies = res;
-            this.placesVocabulary = this.vocabularies[Type.COUNTRY];
-            this.providerTypeVocabulary = this.vocabularies[Type.PROVIDER_STRUCTURE_TYPE];
-            this.domainsVocabulary = this.vocabularies[Type.SCIENTIFIC_DOMAIN];
-            this.categoriesVocabulary = this.vocabularies[Type.SCIENTIFIC_SUBDOMAIN];
-            this.legalStatusVocabulary = this.vocabularies[Type.PROVIDER_LEGAL_STATUS];
-            this.networksVocabulary = this.vocabularies[Type.PROVIDER_NETWORK];
-            this.hostingLegalEntityVocabulary = this.vocabularies[Type.PROVIDER_HOSTING_LEGAL_ENTITY];
-          },
-          error => console.log(error),
-          () => {
-            this.getProvider();
-          }
-        );
-      } else {
-        this.getProvider();
-      }
-    }
   }
 
   getProvider() {
@@ -79,7 +57,7 @@ export class UpdateCatalogueComponent extends CatalogueFormComponent implements 
             ...this.catalogue,
             legalEntity: typeof this.catalogue.legalEntity === 'boolean' ? this.catalogue.legalEntity.toString() : this.catalogue.legalEntity
           };
-          this.payloadAnswer = {'answer': {Catalogue: parsedCatalogue}};
+          this.payloadAnswer = {'answer': {catalogue: parsedCatalogue}};
         },
         err => {
           console.log(err);

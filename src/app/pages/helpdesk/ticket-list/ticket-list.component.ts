@@ -1,38 +1,18 @@
 import { Component, OnInit, ChangeDetectorRef } from "@angular/core";
 import { Router } from "@angular/router";
 import { HelpdeskService } from "../../../services/helpdesk.service";
+import { HelpdeskNotificationService } from "../../../services/helpdesk-notification.service";
 import { HelpdeskTicketResponse } from "../../../../lib/domain/eic-model";
-import {TicketModalComponent} from '../ticket-modal/ticket-modal.component';
-import { CommonModule } from '@angular/common';
+import { TicketModalComponent } from "../ticket-modal/ticket-modal.component";
+import { CommonModule } from "@angular/common";
 
 @Component({
   selector: "app-ticket-list",
   templateUrl: "./ticket-list.component.html",
   styleUrls: ["./ticket-list.component.css"],
   standalone: true,
-  imports: [TicketModalComponent, CommonModule]
+  imports: [TicketModalComponent, CommonModule],
 })
-// @Component({
-//   selector: 'app-ticket-list',
-//   template: `
-//     <div class="ticket-list-container">
-//       <div class="list-header">
-//         <div class="header-content">
-//           <h2>My Support Tickets</h2>
-//           <p>This feature is currently under construction</p>
-//         </div>
-//       </div>
-//       <div class="construction-message">
-//         <i class="fas fa-tools"></i>
-//         <h3>Coming Soon</h3>
-//         <p>The "My Tickets" functionality is currently under development. The webhook from our backend team is still being constructed.</p>
-//         <p>You can still create new tickets using the "Create Ticket" option.</p>
-//       </div>
-//     </div>
-//   `,
-//   styleUrls: ['./ticket-list.component.css'],
-//   standalone: true
-// })
 export class TicketListComponent implements OnInit {
   tickets: HelpdeskTicketResponse[] = [];
   loading = true;
@@ -54,8 +34,9 @@ export class TicketListComponent implements OnInit {
 
   constructor(
     private helpdeskService: HelpdeskService,
+    private notificationService: HelpdeskNotificationService,
     private router: Router,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
   ) {}
 
   ngOnInit(): void {
@@ -65,26 +46,33 @@ export class TicketListComponent implements OnInit {
   loadTickets(): void {
     this.loading = true;
     this.error = "";
-    // Clear cache when loading new tickets
     this._cachedFilteredTickets = [];
     this._lastFilterStatus = "";
 
     this.helpdeskService.getUserTickets().subscribe({
       next: (tickets) => {
-        this.tickets = tickets;
+        this.tickets = tickets ?? [];
+        this.tickets.forEach((t) => this.notificationService.initIfUnseen(t));
+        this.notificationService.updateTotals(this.tickets);
+        this.currentPage = 1;
         this.updatePagination();
-        this.loading = false;
       },
       error: (err) => {
         this.error = "Failed to load tickets. Please try again.";
         this.loading = false;
         console.error("Error loading tickets:", err);
       },
+      complete: () => {
+        this.loading = false;
+      },
     });
   }
 
+  getUnreadCount(ticket: HelpdeskTicketResponse): number {
+    return this.notificationService.getUnreadCount(ticket);
+  }
+
   getFilteredTickets(): HelpdeskTicketResponse[] {
-    // Use cache if status hasn't changed
     if (
       this._lastFilterStatus === this.selectedStatus &&
       this._cachedFilteredTickets.length > 0
@@ -92,22 +80,22 @@ export class TicketListComponent implements OnInit {
       return this._cachedFilteredTickets;
     }
 
+    const tickets = this.tickets ?? [];
     let filtered: HelpdeskTicketResponse[];
     if (this.selectedStatus === "all") {
-      filtered = this.tickets;
+      filtered = tickets;
     } else {
-      filtered = this.tickets.filter(
-        (ticket) => this.getTicketState(ticket) === this.selectedStatus
+      filtered = tickets.filter(
+        (ticket) => this.getTicketState(ticket) === this.selectedStatus,
       );
     }
 
-    // Cache the result
     this._cachedFilteredTickets = filtered;
     this._lastFilterStatus = this.selectedStatus;
 
     console.debug(
       `Filtered tickets for status "${this.selectedStatus}":`,
-      filtered.length
+      filtered.length,
     );
     return filtered;
   }
@@ -115,7 +103,7 @@ export class TicketListComponent implements OnInit {
   get sortedTickets(): HelpdeskTicketResponse[] {
     return [...this.getFilteredTickets()].sort(
       (a, b) =>
-        new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+        new Date(b.created_at).getTime() - new Date(a.created_at).getTime(),
     );
   }
 
@@ -145,7 +133,7 @@ export class TicketListComponent implements OnInit {
       "Changing status filter from",
       this.selectedStatus,
       "to",
-      status
+      status,
     );
     this.selectedStatus = status;
     this.onStatusChange();
@@ -155,7 +143,7 @@ export class TicketListComponent implements OnInit {
         number: t.number,
         state_id: t.state_id,
         state: this.getTicketState(t),
-      }))
+      })),
     );
   }
 
@@ -172,9 +160,9 @@ export class TicketListComponent implements OnInit {
     const maxVisiblePages = 5;
     let startPage = Math.max(
       1,
-      this.currentPage - Math.floor(maxVisiblePages / 2)
+      this.currentPage - Math.floor(maxVisiblePages / 2),
     );
-    let endPage = Math.min(this.totalPages, startPage + maxVisiblePages - 1);
+    const endPage = Math.min(this.totalPages, startPage + maxVisiblePages - 1);
 
     if (endPage - startPage + 1 < maxVisiblePages) {
       startPage = Math.max(1, endPage - maxVisiblePages + 1);
@@ -250,9 +238,6 @@ export class TicketListComponent implements OnInit {
     }
   }
 
-  /**
-   * Gets the state name from a ticket, checking state_id first, then state
-   */
   getTicketState(ticket: HelpdeskTicketResponse): string {
     if (ticket.state_id !== undefined) {
       return this.getStateFromId(ticket.state_id);
@@ -265,7 +250,6 @@ export class TicketListComponent implements OnInit {
       return "";
     }
     const date = new Date(dateString);
-    // Use UTC methods to get the time as it appears in the ISO string (UTC timezone)
     const day = date.getUTCDate();
     const monthNames = [
       "Jan",
@@ -285,16 +269,14 @@ export class TicketListComponent implements OnInit {
     const year = date.getUTCFullYear();
     const hours = date.getUTCHours();
     const minutes = date.getUTCMinutes().toString().padStart(2, "0");
-    // Format: "Oct 31, 2025, 14:14" (24-hour format)
     return `${month} ${day}, ${year}, ${hours}:${minutes}`;
   }
 
   viewTicket(ticketNumber: string): void {
     console.log("Viewing ticket with number:", ticketNumber);
 
-    // Find the ticket in our list using ticket.number (string)
     let ticketFromList = this.paginatedTickets.find(
-      (t) => t.number === ticketNumber
+      (t) => t.number === ticketNumber,
     );
 
     if (!ticketFromList) {
@@ -311,14 +293,12 @@ export class TicketListComponent implements OnInit {
       return;
     }
 
-    // Use ticket.id (number) for API call: GET /helpdesk/tickets/{ticket_id}
-    const ticketIdForApi = String(ticketFromList.id); // Convert number to string
+    const ticketIdForApi = String(ticketFromList.id);
     console.log("Calling API with ticket ID:", ticketIdForApi);
     this.helpdeskService.getTicket(ticketIdForApi).subscribe({
       next: (fullTicket) => {
         console.debug("Full ticket details (raw):", fullTicket);
 
-        // Handle case where API returns an array instead of a single object
         let ticketData: HelpdeskTicketResponse;
         if (Array.isArray(fullTicket)) {
           ticketData = fullTicket[0];
@@ -328,6 +308,8 @@ export class TicketListComponent implements OnInit {
         }
 
         console.debug("Processed ticket data:", ticketData);
+        this.notificationService.markAsRead(ticketData);
+        this.notificationService.updateTotals(this.tickets);
         this.selectedTicket = ticketData;
         this.isModalOpen = true;
         this.cdr.detectChanges();
@@ -335,7 +317,6 @@ export class TicketListComponent implements OnInit {
       },
       error: (err) => {
         console.error("Error fetching ticket details:", err);
-        // Fallback to ticket from list if API call fails
         this.selectedTicket = ticketFromList;
         this.isModalOpen = true;
         this.cdr.detectChanges();
@@ -349,16 +330,25 @@ export class TicketListComponent implements OnInit {
     this.cdr.detectChanges();
   }
 
+  onTicketUpdated(ticket: HelpdeskTicketResponse): void {
+    const idx = this.tickets.findIndex((t) => t.id === ticket.id);
+    if (idx !== -1) {
+      this.tickets[idx] = ticket;
+    }
+    this.notificationService.updateTotals(this.tickets);
+    this.cdr.detectChanges();
+  }
+
   createNewTicket(): void {
     this.router.navigate(["/helpdesk/create"]);
   }
 
   getTicketCount(status: string): number {
     if (status === "all") {
-      return this.tickets.length;
+      return this.tickets?.length ?? 0;
     }
-    return this.tickets.filter(
-      (ticket) => this.getTicketState(ticket) === status
+    return (this.tickets ?? []).filter(
+      (ticket) => this.getTicketState(ticket) === status,
     ).length;
   }
 

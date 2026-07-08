@@ -12,12 +12,11 @@ import {pidHandler} from "../../shared/pid-handler/pid-handler.service";
 import {FormControlService} from "../../../dynamic-catalogue/services/form-control.service";
 import {ConfigService} from "../../services/config.service";
 
-declare var UIkit: any;
+declare let UIkit: any;
 
 @Component({
     selector: 'app-update-service-provider',
     templateUrl: './service-provider-form.component.html',
-    styleUrls: ['./service-provider-form.component.css'],
     standalone: false
 })
 export class UpdateServiceProviderComponent extends ServiceProviderFormComponent implements OnInit {
@@ -42,51 +41,17 @@ export class UpdateServiceProviderComponent extends ServiceProviderFormComponent
     this.editMode = true;
     const path = this.route.snapshot.routeConfig.path;
     this.providerId = this.route.snapshot.paramMap.get('providerId');
-    if (path.includes(':catalogueId')) {
-      this.catalogueId = this.route.snapshot.paramMap.get('catalogueId');
-    }
     if (path === 'view/:catalogueId/:providerId') {
       this.disable = true;
     }
-
-    if (sessionStorage.getItem('service')) {
-      sessionStorage.removeItem('service');
-    } else {
-      if (this.vocabularies === null) {
-        this.resourceService.getAllVocabulariesByType().subscribe(
-          res => {
-            this.vocabulariesMap = res;
-
-            this.vocabularies = res;
-            this.placesVocabulary = this.vocabularies[Type.COUNTRY];
-            this.providerTypeVocabulary = this.vocabularies[Type.PROVIDER_STRUCTURE_TYPE];
-            this.providerLCSVocabulary = this.vocabularies[Type.PROVIDER_LIFE_CYCLE_STATUS];
-            this.domainsVocabulary = this.vocabularies[Type.SCIENTIFIC_DOMAIN];
-            this.categoriesVocabulary = this.vocabularies[Type.SCIENTIFIC_SUBDOMAIN];
-            this.esfriDomainVocabulary = this.vocabularies[Type.PROVIDER_ESFRI_DOMAIN];
-            this.legalStatusVocabulary = this.vocabularies[Type.PROVIDER_LEGAL_STATUS];
-            this.esfriVocabulary = this.vocabularies[Type.PROVIDER_ESFRI_TYPE];
-            this.areasOfActivityVocabulary = this.vocabularies[Type.PROVIDER_AREA_OF_ACTIVITY];
-            this.networksVocabulary = this.vocabularies[Type.PROVIDER_NETWORK];
-            this.societalGrandChallengesVocabulary = this.vocabularies[Type.PROVIDER_SOCIETAL_GRAND_CHALLENGE];
-            this.hostingLegalEntityVocabulary = this.vocabularies[Type.PROVIDER_HOSTING_LEGAL_ENTITY];
-          },
-          error => console.log(error),
-          () => {
-            this.getProvider();
-          }
-        );
-      } else {
-        this.getProvider();
-      }
-    }
+    this.getProvider();
     super.ngOnInit();
   }
 
   getProvider() {
     this.errorMessage = '';
     const path = this.route.snapshot.routeConfig.path;
-    this.serviceProviderService[(path === 'add/:providerId' ? 'getPendingProviderById' : 'getServiceProviderById')](this.providerId, this.catalogueId)
+    this.serviceProviderService[(path === 'add/:providerId' ? 'getPendingProviderById' : 'getServiceProviderById')](this.providerId)
       .subscribe(
         provider => {
           this.provider = provider;
@@ -94,7 +59,7 @@ export class UpdateServiceProviderComponent extends ServiceProviderFormComponent
             ...this.provider,
             legalEntity: typeof this.provider.legalEntity === 'boolean' ? this.provider.legalEntity.toString() : this.provider.legalEntity
           };
-          this.payloadAnswer = {'answer': {Provider: parsedProvider}};
+          this.payloadAnswer = {'answer': {organisation: parsedProvider}};
         },
         err => {
           console.log(err);

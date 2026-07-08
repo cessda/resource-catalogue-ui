@@ -10,7 +10,7 @@ import {NavigationService} from '../../services/navigation.service';
 import {pidHandler} from "../../shared/pid-handler/pid-handler.service";
 import {AdaptersService} from "../../services/adapters.service";
 
-declare var UIkit: any;
+declare let UIkit: any;
 
 @Component({
     selector: 'app-adapters-list',
@@ -20,11 +20,13 @@ declare var UIkit: any;
 export class AdaptersListComponent implements OnInit {
   url = environment.API_ENDPOINT;
   serviceORresource = environment.serviceORresource;
-  catalogueConfigId: string | null = null;
+
+  sortUserSelected = false;
+  readonly DEFAULT_SORT = 'name';
 
   formPrepare = {
     order: 'ASC',
-    sort: 'name',
+    sort: this.DEFAULT_SORT,
     quantity: '10',
     from: '0',
     query: '',
@@ -81,11 +83,21 @@ export class AdaptersListComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.catalogueConfigId = this.config.getProperty('catalogueId');
     if (!this.authenticationService.isAdmin()) {
       this.router.navigateByUrl('/home');
     } else {
       this.dataForm = this.fb.group(this.formPrepare);
+
+      this.dataForm.get('query').valueChanges.subscribe(val => {
+        if (val && val !== '') {
+          if (!this.sortUserSelected) {
+            this.dataForm.get('sort').setValue('', { emitEvent: false }); // matches the Relevance option value
+          }
+        } else {
+          this.sortUserSelected = false; // back to default behavior
+          this.dataForm.get('sort').setValue(this.DEFAULT_SORT, { emitEvent: false }); // reset to default sort option
+        }
+      });
 
       this.urlParams = [];
       this.route.queryParams
@@ -162,7 +174,7 @@ export class AdaptersListComponent implements OnInit {
       map[urlParameter.key] = concatValue;
     }
     // console.log('map', map);
-    this.router.navigate([`/adapters/all`], {queryParams: map});
+    this.router.navigate([`/provider/adapter/all`], {queryParams: map});
   }
 
   handleChangeAndResetPage() {
@@ -194,11 +206,36 @@ export class AdaptersListComponent implements OnInit {
     return this.dataForm.get('auditState').value.includes(value);
   }
 
+  handleSortChange() {
+    const sortValue = this.dataForm.get('sort').value;
+    if (sortValue === '') {
+      // User explicitly picked "Relevance"
+      this.sortUserSelected = false;
+      this.dataForm.get('sort').setValue('', { emitEvent: false });
+    } else {
+      this.sortUserSelected = true;
+    }
+    this.handleChangeAndResetPage();
+  }
+
+  isSearchActive(): boolean {
+    const query = this.dataForm?.get('query')?.value;
+    return query && query !== '';
+  }
+
   getAdapters() {
     this.loadingMessage = 'Loading adapters entries...';
     this.adapters = [];
+
+    // Send sort only if: no query, OR user explicitly picked a sort
+    const query = this.dataForm.get('query').value;
+    const hasQuery = query && query !== '';
+    const shouldApplySort = !hasQuery || this.sortUserSelected;
+    const sort = shouldApplySort ? this.dataForm.get('sort').value : null;
+    const order = shouldApplySort ? this.dataForm.get('order').value : null;
+
     this.adaptersService.getAdapterBundles(this.dataForm.get('from').value, this.dataForm.get('quantity').value,
-      this.dataForm.get('sort').value, this.dataForm.get('order').value, this.dataForm.get('query').value,
+      sort, order, query,
       this.dataForm.get('catalogue_id').value, this.dataForm.get('provider_id').value, this.dataForm.get('status').value,
       this.dataForm.get('active').value, this.dataForm.get('suspended').value, this.dataForm.get('auditState').value).subscribe(
       res => {
@@ -229,10 +266,12 @@ export class AdaptersListComponent implements OnInit {
     // UIkit.modal('#spinnerModal').show();
     this.adaptersService.deleteAdapterById(id).subscribe(
       res => {},
-      error => {
+      err => {
         // console.log(error);
         // UIkit.modal('#spinnerModal').hide();
-        this.errorMessage = 'Something went bad. ' + error.error ;
+        this.errorMessage = (err?.status >= 500 && err?.status < 600)
+            ? `Something went wrong. If the issue persists, please contact support and provide the following error code: ${err?.error?.traceId}`
+            : `Something went bad, server responded: ${err?.error?.detail}`;
         this.getAdapters();
       },
       () => {
@@ -251,7 +290,7 @@ export class AdaptersListComponent implements OnInit {
 
   suspendAdapter() {
     UIkit.modal('#spinnerModal').show();
-    this.adaptersService.suspendAdapter(this.selectedAdapter.id, this.selectedAdapter.adapter.catalogueId, !this.selectedAdapter.suspended)
+    this.adaptersService.suspendAdapter(this.selectedAdapter.id, this.selectedAdapter.catalogueId, !this.selectedAdapter.suspended)
       .subscribe(
         res => {
           UIkit.modal('#suspensionModal').hide();
@@ -262,7 +301,10 @@ export class AdaptersListComponent implements OnInit {
           UIkit.modal('#suspensionModal').hide();
           UIkit.modal('#spinnerModal').hide();
           this.loadingMessage = '';
-          this.errorMessage = err.error.error;
+          this.errorMessage =
+          (err?.status >= 500 && err?.status < 600)
+            ? `Something went wrong. If the issue persists, please contact support and provide the following error code: ${err?.error?.traceId}`
+            : `Something went bad, server responded: ${err?.error?.detail}`;
           window.scroll(0,0);
         },
         () => {
@@ -285,10 +327,10 @@ export class AdaptersListComponent implements OnInit {
     );
   }
 
-  publishAdapter(id: string, active: boolean){ // Activates/Deactivates
+  activateAdapter(id: string, active: boolean){ // Activates/Deactivates
     this.loadingMessage = '';
     UIkit.modal('#spinnerModal').show();
-    this.adaptersService.publishAdapter(id, active).subscribe(
+    this.adaptersService.activateAdapter(id, active).subscribe(
       res => this.getAdapters(),
       err => UIkit.modal('#spinnerModal').hide(),
       () => {
@@ -311,10 +353,16 @@ export class AdaptersListComponent implements OnInit {
   }
 
   auditResourceAction(action: string, bundle: AdapterBundle) {
-    this.adaptersService.auditAdapter(this.selectedAdapter.id, action, this.selectedAdapter.adapter.catalogueId, this.commentAuditControl.value)
+    this.adaptersService.auditAdapter(this.selectedAdapter.id, action, this.selectedAdapter.catalogueId, this.commentAuditControl.value)
       .subscribe(
         res => {this.getAdapters();},
-        err => {console.log(err);},
+        err => {
+          this.errorMessage =
+            (err?.status >= 500 && err?.status < 600)
+              ? `Something went wrong. If the issue persists, please contact support and provide the following error code: ${err?.error?.traceId}`
+              : `Something went bad, server responded: ${err?.error?.detail}`;
+          window.scroll(0,0);
+        },
         () => {
           this.adaptersForAudit.forEach(
             s => {

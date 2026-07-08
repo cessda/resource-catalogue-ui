@@ -5,10 +5,10 @@
       @if (providerBundle) {
         <div class="uk-flex">
           <div>
-            <img src="{{ providerBundle.provider.logo ? providerBundle.provider.logo : '/assets/images/broken_image-black-48dp.svg' }}" style="max-width: 200px">
+            <img src="{{ providerBundle.organisation.logo ? providerBundle.organisation.logo : '/assets/images/broken_image-black-48dp.svg' }}" style="max-width: 200px">
           </div>
           <div class="uk-margin-medium-left">
-            <h3 class="uk-margin-remove">{{providerBundle.provider.name}}</h3>
+            <h3 class="uk-margin-remove">{{providerBundle.organisation.name}}</h3>
             <div><span class="status-label">ID: </span>{{ providerBundle.id}}</div>
             <div><span class="status-label">Status: </span>{{providerBundle.status | titlecase}}</div>
           </div>
@@ -25,7 +25,7 @@
 
       @if (providerServices && providerServices?.results?.length === 0) {
         <div>
-          <p>No pending {{serviceORresource | lowercase}}s found</p>
+          <p>No draft {{serviceORresource | lowercase}}s found</p>
         </div>
       }
 
@@ -63,10 +63,10 @@
                     <div class="uk-width-1-6">
                       <div class="action-buttons">
                         <button class="uk-button uk-button-action uk-display-block" (click)="navigate(serviceBundle)">
-                          <i class="fa fa-pencil fa-lg"></i> Edit {{serviceORresource | lowercase}}
+                          <span class="material-symbols-outlined uk-margin-small-right" style="vertical-align: middle;">edit_square</span>Edit
                         </button>
                         <button class="uk-button uk-button-action uk-display-block uk-margin-small-top" (click)="setSelectedService(serviceBundle)">
-                          <i class="fa fa-trash fa-lg" aria-hidden="true"></i> Delete {{serviceORresource | lowercase}}
+                          <span class="material-symbols-outlined uk-margin-small-right" style="vertical-align: middle;">delete</span>Delete
                         </button>
                       </div>
                     </div>

@@ -3,8 +3,7 @@ import {Component, Injector, isDevMode, OnInit, ViewChild} from '@angular/core';
 import {AuthenticationService} from '../../services/authentication.service';
 import {NavigationService} from '../../services/navigation.service';
 import {TrainingResourceService} from '../../services/training-resource.service';
-import * as dm from '../../shared/description.map';
-import {Provider, RichService, Service, TrainingResource, Type, Vocabulary} from '../../domain/eic-model';
+import {Provider, Service, TrainingResource, Type} from '../../domain/eic-model';
 import {Paging} from '../../domain/paging';
 import {URLValidator} from '../../shared/validators/generic.validator';
 import {zip} from 'rxjs';
@@ -19,23 +18,19 @@ import {Model} from "../../../dynamic-catalogue/domain/dynamic-form-model";
 import {FormControlService} from "../../../dynamic-catalogue/services/form-control.service";
 import {ConfigService} from "../../services/config.service";
 
-declare var UIkit: any;
+declare let UIkit: any;
 
 @Component({
     selector: 'app-training-resource-form',
     templateUrl: './training-resource-form.html',
-    styleUrls: ['../provider/service-provider-form.component.css'],
     standalone: false
 })
 export class TrainingResourceForm implements OnInit {
   @ViewChild(SurveyComponent) child: SurveyComponent
   model: Model = null;
-  vocabulariesMap: Map<string, object[]> = null;
-  subVocabulariesMap: Map<string, object[]> = null
   payloadAnswer: object = null;
   formDataToSubmit: any = null;
 
-  catalogueConfigId: string = this.config.getProperty('catalogueId');
   protected _marketplaceServicesURL = environment.marketplaceServicesURL;
   serviceName = '';
   firstServiceForm = false;
@@ -43,6 +38,7 @@ export class TrainingResourceForm implements OnInit {
   pendingResource = false;
   catalogueId: string;
   providerId: string;
+  viewOnlyMode = false;
   editMode = false;
   hasChanges = false;
   serviceForm: UntypedFormGroup;
@@ -54,7 +50,6 @@ export class TrainingResourceForm implements OnInit {
   weights: string[] = [];
   tabs: boolean[] = [false, false, false, false, false, false, false, false, false, false, false, false];
   fb: UntypedFormBuilder = this.injector.get(UntypedFormBuilder);
-  disable = false;
   isPortalAdmin = false;
 
   requiredOnTab0 = 4;
@@ -101,44 +96,6 @@ export class TrainingResourceForm implements OnInit {
   };
 
   commentControl = new UntypedFormControl();
-
-  readonly titleDesc: dm.Description = dm.trainingDescMap.get('titleDesc');
-  readonly resourceOrganisationDesc: dm.Description = dm.trainingDescMap.get('resourceOrganisationDesc');
-  readonly resourceProvidersDesc: dm.Description = dm.trainingDescMap.get('resourceProvidersDesc');
-  readonly authorsDesc: dm.Description = dm.trainingDescMap.get('authorsDesc');
-  readonly urlDesc: dm.Description = dm.trainingDescMap.get('urlDesc');
-  readonly urlTypeDesc: dm.Description = dm.trainingDescMap.get('urlTypeDesc');
-  readonly eoscRelatedServiceDesc: dm.Description = dm.trainingDescMap.get('eoscRelatedServiceDesc');
-  readonly altIdTypeDesc: dm.Description = dm.serviceDescMap.get('altIdTypeDesc');
-  readonly altIdValueDesc: dm.Description = dm.serviceDescMap.get('altIdValueDesc');
-
-  readonly descriptionDesc: dm.Description = dm.trainingDescMap.get('descriptionDesc');
-  readonly keywordsDesc: dm.Description = dm.trainingDescMap.get('keywordsDesc');
-  readonly licenseDesc: dm.Description = dm.trainingDescMap.get('licenseDesc');
-  readonly accessRightsDesc: dm.Description = dm.trainingDescMap.get('accessRightsDesc');
-  readonly versionDateDesc: dm.Description = dm.trainingDescMap.get('versionDateDesc');
-
-  readonly targetGroupDesc: dm.Description = dm.trainingDescMap.get('targetGroupDesc');
-  readonly learningResourceTypeDesc: dm.Description = dm.trainingDescMap.get('learningResourceTypeDesc');
-  readonly learningOutcomesDesc: dm.Description = dm.trainingDescMap.get('learningOutcomesDesc');
-  readonly expertiseLevelDesc: dm.Description = dm.trainingDescMap.get('expertiseLevelDesc');
-  readonly contentResourceTypeDesc: dm.Description = dm.trainingDescMap.get('contentResourceTypeDesc');
-  readonly qualificationDesc: dm.Description = dm.trainingDescMap.get('qualificationDesc');
-  readonly durationDesc: dm.Description = dm.trainingDescMap.get('durationDesc');
-
-  readonly languagesDesc: dm.Description = dm.trainingDescMap.get('languagesDesc');
-  readonly geographicalAvailabilityDesc: dm.Description = dm.trainingDescMap.get('geographicalAvailabilityDesc');
-
-  readonly scientificDomainDesc: dm.Description = dm.trainingDescMap.get('scientificDomainDesc');
-  readonly scientificSubDomainDesc: dm.Description = dm.trainingDescMap.get('scientificSubDomainDesc');
-
-  readonly firstNameDesc: dm.Description = dm.trainingDescMap.get('firstNameDesc');
-  readonly lastNameDesc: dm.Description = dm.trainingDescMap.get('lastNameDesc');
-  readonly emailDesc: dm.Description = dm.trainingDescMap.get('emailDesc');
-  readonly phoneDesc: dm.Description = dm.trainingDescMap.get('phoneDesc');
-  readonly positionDesc: dm.Description = dm.trainingDescMap.get('positionDesc');
-  readonly organisationDesc: dm.Description = dm.trainingDescMap.get('organisationDesc');
-
 
   formGroupMeta = {
     id: [''],
@@ -188,41 +145,10 @@ export class TrainingResourceForm implements OnInit {
   };
 
   providersPage: Paging<Provider>;
-  providersAsVocs: any;
-  resourcesAsVocs: any;
-  territoriesVoc: any;
-  vocabularies: Map<string, Vocabulary[]> = null;
-  subVocabularies: Map<string, Vocabulary[]> = null;
-  premiumSort = new PremiumSortPipe();
   resourceService: ResourceService = this.injector.get(ResourceService);
   trainingResourceService: TrainingResourceService = this.injector.get(TrainingResourceService);
 
   router: NavigationService = this.injector.get(NavigationService);
-
-  public fundingBodyVocabulary: Vocabulary[] = null;
-  public fundingProgramVocabulary: Vocabulary[] = null;
-  public relatedPlatformsVocabulary: Vocabulary[] = null;
-  public targetUsersVocabulary: Vocabulary[] = null;
-  public accessTypesVocabulary: Vocabulary[] = null;
-  public accessModesVocabulary: Vocabulary[] = null;
-  public orderTypeVocabulary: Vocabulary[] = null;
-  public phaseVocabulary: Vocabulary[] = null;
-  public trlVocabulary: Vocabulary[] = null;
-  public superCategoriesVocabulary: Vocabulary[] = null;
-  public categoriesVocabulary: Vocabulary[] = null;
-  public subCategoriesVocabulary: Vocabulary[] = null;
-  public scientificDomainVocabulary: Vocabulary[] = null;
-  public scientificSubDomainVocabulary: Vocabulary[] = null;
-  public placesVocabulary: Vocabulary[] = [];
-  public geographicalVocabulary: Vocabulary[] = null;
-  public languagesVocabulary: Vocabulary[] = null;
-
-  public accessRightsVocabulary: Vocabulary[] = null;
-  public contentResourceTypesVocabulary: Vocabulary[] = null;
-  public learningResourceTypesVocabulary: Vocabulary[] = null;
-  public expertiseLevelVocabulary: Vocabulary[] = null;
-  public qualificationsVocabulary: Vocabulary[] = null;
-  public urlTypeVocabulary: Vocabulary[] = null;
 
 
   constructor(protected injector: Injector,
@@ -241,7 +167,7 @@ export class TrainingResourceForm implements OnInit {
   }
 
   submitForm(formData: any, tempSave: boolean, pendingService: boolean) {//TODO
-    let trValue = formData.value.TrainingResource;
+    let trValue = formData.value.trainingResource;
     window.scrollTo(0, 0);
 
     if (!this.authenticationService.isLoggedIn()) {
@@ -252,8 +178,7 @@ export class TrainingResourceForm implements OnInit {
     this.errorMessage = '';
     this.showLoader = true;
 
-    this.cleanArrayProperty(trValue, 'alternativeIdentifiers');
-    this.cleanArrayProperty(trValue, 'scientificDomains');
+    trValue = FormControlService.cleanObjectInPlace(trValue);
 
     if (tempSave) {//TODO
       this.trainingResourceService.saveServiceAsDraft(this.serviceForm.value).subscribe(
@@ -261,13 +186,16 @@ export class TrainingResourceForm implements OnInit {
           // console.log(_service);
           this.showLoader = false;
           // return this.router.dashboardDraftResources(this.providerId); // navigate to draft list
-          return this.router.go('/provider/' + _service.resourceOrganisation + '/draft-resource/update/' + _service.id);
+          return this.router.go('/provider/' + _service.resourceOwner + '/draft-resource/update/' + _service.id);
         },
         err => {
           this.showLoader = false;
           window.scrollTo(0, 0);
           this.scientificDomainArray.enable();
-          this.errorMessage = 'Something went bad, server responded: ' + JSON.stringify(err.error.message);
+          this.errorMessage =
+          (err?.status >= 500 && err?.status < 600)
+            ? `Something went wrong. If the issue persists, please contact support and provide the following error code: ${err?.error?.traceId}`
+            : `Something went bad, server responded: ${err?.error?.detail}`;
         }
       );
     } else {
@@ -286,7 +214,10 @@ export class TrainingResourceForm implements OnInit {
           this.showLoader = false;
           window.scrollTo(0, 0);
           this.scientificDomainArray.enable();
-          this.errorMessage = 'Something went bad, server responded: ' + JSON.stringify(err.error.message);
+          this.errorMessage =
+          (err?.status >= 500 && err?.status < 600)
+            ? `Something went wrong. If the issue persists, please contact support and provide the following error code: ${err?.error?.traceId}`
+            : `Something went bad, server responded: ${err?.error?.detail}`;
         }
       );
     }
@@ -318,13 +249,16 @@ export class TrainingResourceForm implements OnInit {
           // console.log(_service);
           this.showLoader = false;
           // return this.router.dashboardDraftResources(this.providerId); // navigate to draft list
-          return this.router.go('/provider/' + _service.resourceOrganisation + '/draft-resource/update/' + _service.id);
+          return this.router.go('/provider/' + _service.resourceOwner + '/draft-resource/update/' + _service.id);
         },
         err => {
           this.showLoader = false;
           window.scrollTo(0, 0);
           this.scientificDomainArray.enable();
-          this.errorMessage = 'Something went bad, server responded: ' + JSON.stringify(err.error.message);
+          this.errorMessage =
+          (err?.status >= 500 && err?.status < 600)
+            ? `Something went wrong. If the issue persists, please contact support and provide the following error code: ${err?.error?.traceId}`
+            : `Something went bad, server responded: ${err?.error?.detail}`;
         }
       );
     } else if (this.serviceForm.valid) {
@@ -344,7 +278,10 @@ export class TrainingResourceForm implements OnInit {
           this.showLoader = false;
           window.scrollTo(0, 0);
           this.scientificDomainArray.enable();
-          this.errorMessage = 'Something went bad, server responded: ' + JSON.stringify(err.error.message);
+          this.errorMessage =
+          (err?.status >= 500 && err?.status < 600)
+            ? `Something went wrong. If the issue persists, please contact support and provide the following error code: ${err?.error?.traceId}`
+            : `Something went bad, server responded: ${err?.error?.detail}`;
         }
       );
     } else {
@@ -368,105 +305,40 @@ export class TrainingResourceForm implements OnInit {
 
   ngOnInit() {
     this.showLoader = true;
+    const path = this.route.snapshot.routeConfig.path;
+    if (path.includes('view/:trainingResourceId')) {
+      this.viewOnlyMode = true;
+    }
     zip(
       this.trainingResourceService.getProvidersNames('approved'),
-      this.trainingResourceService.getAllVocabulariesByType(),
-      this.resourceService.getProvidersAsVocs(this.catalogueId ? this.catalogueId : this.catalogueConfigId),
-      this.resourceService.getResourcesAsVocs(this.catalogueId ? this.catalogueId : this.catalogueConfigId),
-      this.trainingResourceService.getTerritories(),
       this.serviceProviderService.getFormModelById('m-b-training')
     ).subscribe(suc => {
         this.providersPage = <Paging<Provider>>suc[0];
-        this.vocabularies = <Map<string, Vocabulary[]>>suc[1];
-        this.vocabulariesMap = suc[1];
-        this.providersAsVocs = suc[2];
-        this.resourcesAsVocs = suc[3];
-        this.territoriesVoc = suc[4]; //combined COUNTRY and REGION vocs
-        this.model = suc[5];
-        // this.getLocations();
-
-        this.vocabulariesMap = suc[1];
-        let subVocs: Vocabulary[] = this.vocabulariesMap['SCIENTIFIC_SUBDOMAIN'].concat(this.vocabulariesMap['SUBCATEGORY']);
-        this.subVocabulariesMap = this.groupByKey(subVocs, 'parentId');
-
-        [this.providersAsVocs, this.resourcesAsVocs, this.territoriesVoc].forEach(vocSet => {
-          Object.entries(vocSet).forEach(([key, newItems]) => {
-            // Type assertion to ensure newItems is an array
-            const additionalItems = newItems as Vocabulary[];
-            const existingItems = this.vocabulariesMap[key] || [];
-            this.vocabulariesMap[key] = [...existingItems, ...additionalItems];
-          });
-        });
-
-/*        this.targetUsersVocabulary = this.vocabularies[Type.TARGET_USER];
-        this.accessTypesVocabulary = this.vocabularies[Type.ACCESS_TYPE];
-        this.accessModesVocabulary = this.vocabularies[Type.ACCESS_MODE];
-        this.orderTypeVocabulary = this.vocabularies[Type.ORDER_TYPE];
-        this.phaseVocabulary = this.vocabularies[Type.LIFE_CYCLE_STATUS];
-        this.trlVocabulary = this.vocabularies[Type.TRL];
-        this.superCategoriesVocabulary = this.vocabularies[Type.SUPERCATEGORY];
-        this.categoriesVocabulary = this.vocabularies[Type.CATEGORY];
-        this.subCategoriesVocabulary = this.vocabularies[Type.SUBCATEGORY];
-        this.scientificDomainVocabulary = this.vocabularies[Type.SCIENTIFIC_DOMAIN];
-        this.scientificSubDomainVocabulary = this.vocabularies[Type.SCIENTIFIC_SUBDOMAIN];
-        this.fundingBodyVocabulary = this.vocabularies[Type.FUNDING_BODY];
-        this.fundingProgramVocabulary = this.vocabularies[Type.FUNDING_PROGRAM];
-        this.relatedPlatformsVocabulary = this.vocabularies[Type.RELATED_PLATFORM];
-        this.placesVocabulary = this.vocabularies[Type.COUNTRY];
-        // this.geographicalVocabulary = Object.assign(this.vocabularies[Type.COUNTRY],this.vocabularies[Type.REGION]);
-        this.geographicalVocabulary = this.vocabularies[Type.REGION];
-        this.geographicalVocabulary.push(...this.vocabularies[Type.COUNTRY]);
-        this.languagesVocabulary = this.vocabularies[Type.LANGUAGE];
-
-
-        this.accessRightsVocabulary = this.vocabularies[Type.TR_ACCESS_RIGHT];
-        this.contentResourceTypesVocabulary = this.vocabularies[Type.TR_CONTENT_RESOURCE_TYPE];
-        this.learningResourceTypesVocabulary = this.vocabularies[Type.TR_DCMI_TYPE];
-        this.expertiseLevelVocabulary = this.vocabularies[Type.TR_EXPERTISE_LEVEL];
-        this.qualificationsVocabulary = this.vocabularies[Type.TR_QUALIFICATION];
-        this.urlTypeVocabulary = this.vocabularies[Type.TR_URL_TYPE];*/
+        this.model = suc[1];
       },
-      error => {
-        this.errorMessage = 'Something went bad while getting the data for page initialization. ' + JSON.stringify(error.error.message);
+      err => {
+                this.errorMessage =
+          (err?.status >= 500 && err?.status < 600)
+            ? `Something went wrong. If the issue persists, please contact support and provide the following error code: ${err?.error?.traceId}`
+            : `Something went bad while getting the data for page initialization: ${err?.error?.detail}`;
       },
       () => {
-        this.premiumSort.transform(this.geographicalVocabulary, ['Europe', 'Worldwide']);
-        this.premiumSort.transform(this.languagesVocabulary, ['English']);
-        this.providersPage.results.sort((a, b) => 0 - (a.name > b.name ? -1 : 1));
-
-        let voc: Vocabulary[] = this.vocabularies[Type.SUBCATEGORY].concat(this.vocabularies[Type.SCIENTIFIC_SUBDOMAIN]);
-        this.subVocabularies = this.groupByKey(voc, 'parentId');
-
         this.providerId = this.route.snapshot.paramMap.get('providerId');
 
         if(!this.editMode){ //prefill field(s)
           this.payloadAnswer = {
             'answer': {
-              TrainingResource:
+              trainingResource:
                 {
-                  'resourceOrganisation': decodeURIComponent(this.providerId),
-                  'catalogueId': this.catalogueConfigId
+                  'resourceOwner': decodeURIComponent(this.providerId),
+                  'type': "TrainingMaterial",
+                  'catalogueId': null,
+                  'nodePID': (this.config.getProperty('nodePidFixed')) ? this.config.getProperty('nodePid') : null
                 }
             }
           };
         }
 
-/*        if (!this.editMode) { // prefill main contact info
-          this.serviceProviderService.getServiceProviderById(this.providerId).subscribe(
-            res => { this.provider = res; },
-            err => { console.log(err); },
-            () => {
-              Object.entries(this.provider.mainContact).forEach(([key, val]) => {
-                if (val !== '' && val != null) {
-                  this.serviceForm.controls['contact'].get(key).setValue(val);
-                }
-              });
-              this.handleBitSetsOfGroups(5, 14, 'firstName', 'contact');
-              this.handleBitSetsOfGroups(5, 15, 'lastName', 'contact');
-              this.handleBitSetsOfGroups(5, 16, 'email', 'contact');
-            }
-          );
-        }*/
         this.showLoader = false;
       }
     );
@@ -680,26 +552,6 @@ export class TrainingResourceForm implements OnInit {
   }
   /** <--Alternative Identifiers**/
 
-  getVocabularyById(vocabularies: Vocabulary[], id: string) {
-    return vocabularies.find(entry => entry.id === id);
-  }
-
-  getSortedChildrenCategories(childrenCategory: Vocabulary[], parentId: string) {
-    return this.sortVocabulariesByName(childrenCategory.filter(entry => entry.parentId === parentId));
-  }
-
-  sortVocabulariesByName(vocabularies: Vocabulary[]): Vocabulary[] {
-    return vocabularies.sort((vocabulary1, vocabulary2) => {
-      if (vocabulary1.name > vocabulary2.name) {
-        return 1;
-      }
-      if (vocabulary1.name < vocabulary2.name) {
-        return -1;
-      }
-      return 0;
-    });
-  }
-
   formPrepare(trainingResource: TrainingResource) {
 
     this.removeScientificDomain(0);
@@ -715,8 +567,8 @@ export class TrainingResourceForm implements OnInit {
       this.scientificDomainArray.push(this.newScientificDomain());
     }
 
-    if (trainingResource.resourceProviders) {
-      for (let i = 0; i < trainingResource.resourceProviders.length - 1; i++) {
+    if (trainingResource.serviceProviders) {
+      for (let i = 0; i < trainingResource.serviceProviders.length - 1; i++) {
         this.push('resourceProviders', true);
       }
     }
@@ -989,7 +841,7 @@ export class TrainingResourceForm implements OnInit {
         },
         error => {
           console.log(error);
-          this.vocabularyEntryForm.get('errorMessage').setValue(error.error.message);
+          this.vocabularyEntryForm.get('errorMessage').setValue(error.error.detail);
         },
         () => {
           this.vocabularyEntryForm.reset();
@@ -1012,22 +864,6 @@ export class TrainingResourceForm implements OnInit {
     const element: HTMLElement = document.getElementById(id) as HTMLElement;
     element.click();
     window.scrollTo(0, -1);
-  }
-
-  cleanArrayProperty(obj: any, property: string): void {
-    if (obj && Array.isArray(obj[property])) {
-      // Filter out elements that are entirely empty:
-      const cleaned = obj[property].filter((element: any) => {
-        if (element && typeof element === 'object') {
-          // Keep the element if at least one property has a non-empty value.
-          return Object.keys(element).some(key => element[key] !== null && element[key] !== '');
-        }
-        // For non-objects, keep the element if it's not null or ''.
-        return element !== null && element !== '';
-      });
-      // If the cleaned array is empty, set the property to null. Otherwise, update it.
-      obj[property] = cleaned.length ? cleaned : null;
-    }
   }
 
   protected readonly environment = environment;

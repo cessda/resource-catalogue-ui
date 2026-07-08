@@ -4,7 +4,6 @@ import {ServiceProviderService} from '../../services/service-provider.service';
 import {resourceStatusChangeMap, statusList} from '../../domain/resource-status-list';
 import {
   TrainingResourceBundle,
-  ServiceBundle,
   LoggingInfo,
   Provider,
   ProviderBundle,
@@ -16,18 +15,15 @@ import {environment} from '../../../environments/environment';
 import {mergeMap} from 'rxjs/operators';
 import {AuthenticationService} from '../../services/authentication.service';
 import {ActivatedRoute, Router} from '@angular/router';
-import {UntypedFormArray, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators} from '@angular/forms';
+import {UntypedFormArray, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup} from '@angular/forms';
 import {URLParameter} from '../../domain/url-parameter';
 import {NavigationService} from '../../services/navigation.service';
-import {PremiumSortFacetsPipe} from '../../shared/pipes/premium-sort.pipe';
 import {statusChangeMap} from '../../domain/service-provider-status-list';
-import {zip} from 'rxjs';
 import {Paging} from '../../domain/paging';
-import {ResourceExtrasService} from "../../services/resource-extras.service";
 import {TrainingResourceService} from "../../services/training-resource.service";
 import {pidHandler} from "../../shared/pid-handler/pid-handler.service";
 
-declare var UIkit: any;
+declare let UIkit: any;
 
 @Component({
     selector: 'app-training-list',
@@ -35,14 +31,16 @@ declare var UIkit: any;
     standalone: false
 })
 export class TrainingListComponent implements OnInit {
-  catalogueConfigId: string | null = null;
   url = environment.API_ENDPOINT;
   serviceORresource = environment.serviceORresource;
   protected readonly environment = environment;
 
+  sortUserSelected = false;
+  readonly DEFAULT_SORT = 'name';
+
   formPrepare = {
     query: '',
-    sort: 'title',
+    sort: this.DEFAULT_SORT,
     order: 'ASC',
     quantity: '10',
     from: '0',
@@ -54,19 +52,6 @@ export class TrainingListComponent implements OnInit {
     catalogue_id: new UntypedFormArray([])
   };
   dataForm: UntypedFormGroup;
-
-  extrasFormPrepare = {
-    researchCategories: this.fb.array([this.fb.control('')]),
-    eoscIFGuidelines: this.fb.array([
-      this.fb.group({
-        label: [''],
-        pid: [''],
-        semanticRelationship: [''],
-        url: ['']
-      })
-    ])
-  };
-  extrasForm: UntypedFormGroup;
 
   urlParams: URLParameter[] = [];
 
@@ -112,18 +97,17 @@ export class TrainingListComponent implements OnInit {
 
   @ViewChildren("auditCheckboxes") auditCheckboxes: QueryList<ElementRef>;
 
-  public statuses: Array<string> = ['approved resource', 'pending resource', 'rejected resource'];
+  public statuses: Array<string> = ['approved', 'pending', 'rejected'];
   public labels: Array<string> = [`Approved`, `Pending`, `Rejected`];
 
   @ViewChildren("checkboxes") checkboxes: QueryList<ElementRef>;
 
   researchCategoriesVoc: Vocabulary[] = null;
-  semanticRelationshipVoc: Vocabulary[] = null;
+  // semanticRelationshipVoc: Vocabulary[] = null;
 
   constructor(private resourceService: ResourceService,
               private trainingResourceService: TrainingResourceService,
               private serviceProviderService: ServiceProviderService,
-              private resourceExtrasService: ResourceExtrasService,
               private authenticationService: AuthenticationService,
               private route: ActivatedRoute,
               private router: Router,
@@ -135,13 +119,22 @@ export class TrainingListComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.catalogueConfigId = this.config.getProperty('catalogueId');
     if (!this.authenticationService.isAdmin()) {
       this.router.navigateByUrl('/home');
     } else {
       this.dataForm = this.fb.group(this.formPrepare);
       this.providersDropdownForm = this.fb.group(this.providersFormPrepare);
-      this.extrasForm = this.fb.group(this.extrasFormPrepare);
+
+      this.dataForm.get('query').valueChanges.subscribe(val => {
+        if (val && val !== '') {
+          if (!this.sortUserSelected) {
+            this.dataForm.get('sort').setValue('', { emitEvent: false }); // matches the Relevance option value
+          }
+        } else {
+          this.sortUserSelected = false; // back to default behavior
+          this.dataForm.get('sort').setValue(this.DEFAULT_SORT, { emitEvent: false }); // reset to default sort option
+        }
+      });
 
       this.urlParams = [];
       this.route.queryParams
@@ -162,8 +155,8 @@ export class TrainingListComponent implements OnInit {
                     }
                   }
                 }
-
                 foundStatus = true;
+
               } else if (i === 'resource_organisation') {
 
                 if (this.dataForm.get('resource_organisation').value.length === 0) {
@@ -235,17 +228,17 @@ export class TrainingListComponent implements OnInit {
       this.resourceService.getProvidersNames('approved').subscribe(suc => {
           this.providersPage = <Paging<Provider>>suc;
         },
-        error => {
-          this.errorMessage = 'Something went bad while getting the data for page initialization. ' + JSON.stringify(error.error.message);
+        err => {
+                  this.errorMessage =
+          (err?.status >= 500 && err?.status < 600)
+            ? `Something went wrong. If the issue persists, please contact support and provide the following error code: ${err?.error?.traceId}`
+            : `Something went bad while getting the data for page initialization: ${err?.error?.detail}`;
         },
         () => {
           this.providersPage.results.sort((a, b) => 0 - (a.name > b.name ? -1 : 1));
           // console.log(this.providersPage.results);
         }
       );
-
-      this.getResearchCategoriesVoc();
-      this.getSemanticRelationshipVoc();
     }
   }
 
@@ -350,11 +343,36 @@ export class TrainingListComponent implements OnInit {
     );
   }
 
+  handleSortChange() {
+    const sortValue = this.dataForm.get('sort').value;
+    if (sortValue === '') {
+      // User explicitly picked "Relevance"
+      this.sortUserSelected = false;
+      this.dataForm.get('sort').setValue('', { emitEvent: false });
+    } else {
+      this.sortUserSelected = true;
+    }
+    this.handleChangeAndResetPage();
+  }
+
+  isSearchActive(): boolean {
+    const query = this.dataForm?.get('query')?.value;
+    return query && query !== '';
+  }
+
   getResources() {
     this.loadingMessage = 'Loading training resources';
     this.trainingResourceBundles = [];
+
+    // Send sort only if: no query, OR user explicitly picked a sort
+    const query = this.dataForm.get('query').value;
+    const hasQuery = query && query !== '';
+    const shouldApplySort = !hasQuery || this.sortUserSelected;
+    const sort = shouldApplySort ? this.dataForm.get('sort').value : null;
+    const order = shouldApplySort ? this.dataForm.get('order').value : null;
+
     this.trainingResourceService.getResourceBundles(this.dataForm.get('from').value, this.dataForm.get('quantity').value,
-      this.dataForm.get('sort').value, this.dataForm.get('order').value, this.dataForm.get('query').value,
+      sort, order, query,
       this.dataForm.get('active').value, this.dataForm.get('suspended').value, this.dataForm.get('resource_organisation').value,
       this.dataForm.get('status').value, this.dataForm.get('auditState').value, this.dataForm.get('catalogue_id').value).subscribe(
       res => {
@@ -530,10 +548,12 @@ export class TrainingListComponent implements OnInit {
     // UIkit.modal('#spinnerModal').show();
     this.trainingResourceService.deleteTrainingResource(id).subscribe(
       res => {},
-      error => {
+      err => {
         // console.log(error);
         // UIkit.modal('#spinnerModal').hide();
-        this.errorMessage = 'Something went bad. ' + error.error ;
+        this.errorMessage = (err?.status >= 500 && err?.status < 600)
+            ? `Something went wrong. If the issue persists, please contact support and provide the following error code: ${err?.error?.traceId}`
+            : `Something went bad, server responded: ${err?.error?.detail}`;
         this.getResources();
       },
       () => {
@@ -545,7 +565,7 @@ export class TrainingListComponent implements OnInit {
 
   suspendTrainingResource() {
     UIkit.modal('#spinnerModal').show();
-    this.trainingResourceService.suspendTrainingResource(this.selectedTrainingResource.id, this.selectedTrainingResource.trainingResource.catalogueId, !this.selectedTrainingResource.suspended)
+    this.trainingResourceService.suspendTrainingResource(this.selectedTrainingResource.id, this.selectedTrainingResource.catalogueId, !this.selectedTrainingResource.suspended)
       .subscribe(
         res => {
           UIkit.modal('#suspensionModal').hide();
@@ -556,7 +576,10 @@ export class TrainingListComponent implements OnInit {
           UIkit.modal('#suspensionModal').hide();
           UIkit.modal('#spinnerModal').hide();
           this.loadingMessage = '';
-          this.errorMessage = err.error.error;
+          this.errorMessage =
+          (err?.status >= 500 && err?.status < 600)
+            ? `Something went wrong. If the issue persists, please contact support and provide the following error code: ${err?.error?.traceId}`
+            : `Something went bad, server responded: ${err?.error?.detail}`;
           window.scroll(0,0);
         },
         () => {
@@ -566,139 +589,14 @@ export class TrainingListComponent implements OnInit {
       );
   }
 
-  /** resourceExtras--> **/
-  /*toggleHorizontalService(trBundle: TrainingResourceBundle) {
-    UIkit.modal('#spinnerModal').show();
-    this.resourceExtrasService.updateHorizontalService(trBundle.id, 'training_resource', trBundle.trainingResource.catalogueId, !trBundle?.resourceExtras?.horizontalService).subscribe(
-      res => {},
-      err => {
-        UIkit.modal('#spinnerModal').hide();
-        console.log(err)
-      },
-      () => {
-        UIkit.modal('#spinnerModal').hide();
-        location.reload();
-      }
-    );
-  }
-
-  showResourceCategories(trBundle: TrainingResourceBundle) {
-    this.selectedTrainingResource = trBundle;
-    if (this.selectedTrainingResource) {
-      this.extrasFormPrep(this.selectedTrainingResource);
-      this.extrasForm.patchValue(this.selectedTrainingResource.resourceExtras);
-      UIkit.modal('#researchCategoriesModal').show();
-    }
-  }
-
-  showEoscIFGuidelines(trBundle: TrainingResourceBundle) {
-    this.selectedTrainingResource = trBundle;
-    if (this.selectedTrainingResource) {
-      this.extrasFormPrep(this.selectedTrainingResource);
-      this.extrasForm.patchValue(this.selectedTrainingResource.resourceExtras);
-      UIkit.modal('#eoscIFGuidelinesModal').show();
-    }
-  }
-
-  updateResearchCategories(trBundle: TrainingResourceBundle) {
-    UIkit.modal('#spinnerModal').show();
-    this.resourceExtrasService.updateResearchCategories(trBundle.id, 'training_resource', trBundle.trainingResource.catalogueId, this.extrasForm.value.researchCategories).subscribe(
-      res => {},
-      err => {
-        UIkit.modal('#spinnerModal').hide();
-        console.log(err);
-      },
-      () => {
-        UIkit.modal('#spinnerModal').hide();
-        location.reload();
-      }
-    );
-  }
-
-  updateEoscIFGuidelines(trBundle: TrainingResourceBundle) {
-    UIkit.modal('#spinnerModal').show();
-    this.resourceExtrasService.updateEoscIFGuidelines(trBundle.id, 'training_resource', trBundle.trainingResource.catalogueId, this.extrasForm.value.eoscIFGuidelines).subscribe(
-      res => {},
-      err => {
-        UIkit.modal('#spinnerModal').hide();
-        console.log(err);
-      },
-      () => {
-        UIkit.modal('#spinnerModal').hide();
-        location.reload();
-      }
-    );
-  }
-
-  extrasFormPrep(trBundle: TrainingResourceBundle){
-    //resets the 2 parts of the form and then fills them
-    this.extrasForm.setControl('researchCategories', this.fb.array([this.fb.control('')]));
-    this.extrasForm.setControl('eoscIFGuidelines',
-      this.fb.array([this.fb.group({
-        label: [''],
-        pid: [''],
-        semanticRelationship: [''],
-        url: ['']
-      })
-      ]));
-    if ( trBundle?.resourceExtras?.researchCategories ) {
-      for (let i = 0; i < trBundle.resourceExtras.researchCategories.length - 1; i++) {
-        this.push('researchCategories');
-      }
-    }
-    if ( trBundle?.resourceExtras?.eoscIFGuidelines ) {
-      for (let i = 0; i < trBundle.resourceExtras.eoscIFGuidelines.length - 1; i++) {
-        this.pushEoscIFGuidelines();
-      }
-    }
-  }*/
-  /** <--resourceExtras **/
-
-  /** eoscIFGuidelines--> **/
-  /*newEoscIFGuidelines(): FormGroup {
-    return this.fb.group({
-      label: [''],
-      pid: [''],
-      semanticRelationship: [''],
-      url: ['']
-    });
-  }
-
-  get eoscIFGuidelinesArray() {
-    return this.extrasForm.get('eoscIFGuidelines') as FormArray;
-  }
-
-  pushEoscIFGuidelines() {
-    this.eoscIFGuidelinesArray.push(this.newEoscIFGuidelines());
-  }
-
-  removeEoscIFGuidelines(index: number) {
-    this.eoscIFGuidelinesArray.removeAt(index);
-  }
-*/
-  /** <--eoscIFGuidelines **/
-
-  /** manage form arrays--> **/
-  getFieldAsFormArray(field: string) {
-    return this.extrasForm.get(field) as UntypedFormArray;
-  }
-
-  push(field: string) {
-    this.getFieldAsFormArray(field).push(this.fb.control(''));
-  }
-
-  remove(field: string, i: number) {
-    this.getFieldAsFormArray(field).removeAt(i);
-  }
-
-  /** <--manage form arrays **/
-
   toggleService(trBundle: TrainingResourceBundle) {
     UIkit.modal('#spinnerModal').show();
-    this.trainingResourceService.publishTrainingResource(trBundle.id, !trBundle.active).subscribe(
+    this.trainingResourceService.activateTrainingResource(trBundle.id, !trBundle.active).subscribe(
       res => {},
-      error => {
-        this.errorMessage = 'Something went bad. ' + error.error ;
+      err => {
+        this.errorMessage = (err?.status >= 500 && err?.status < 600)
+            ? `Something went wrong. If the issue persists, please contact support and provide the following error code: ${err?.error?.traceId}`
+            : `Something went bad, server responded: ${err?.error?.detail}`;
         this.getResources();
         UIkit.modal('#spinnerModal').hide();
         // console.log(error);
@@ -732,10 +630,11 @@ export class TrainingListComponent implements OnInit {
     UIkit.modal('#spinnerModal').show();
     this.trainingResourceService.moveTrainingResourceToProvider(trainingResourceId, providerId, this.commentMoveControl.value).subscribe(
       res => {},
-      error => {
-        // console.log(error);
+      err => {
         UIkit.modal('#spinnerModal').hide();
-        this.errorMessage = 'Something went bad. ' + error.error ;
+        this.errorMessage = (err?.status >= 500 && err?.status < 600)
+            ? `Something went wrong. If the issue persists, please contact support and provide the following error code: ${err?.error?.traceId}`
+            : `Something went bad, server responded: ${err?.error?.detail}`;
         this.getResources();
       },
       () => {
@@ -763,14 +662,20 @@ export class TrainingListComponent implements OnInit {
   }
 
   auditResourceAction(action: string) {
-    this.trainingResourceService.auditTrainingResource(this.selectedTrainingResource.id, action, this.selectedTrainingResource.trainingResource.catalogueId, this.commentAuditControl.value)
+    this.trainingResourceService.auditTrainingResource(this.selectedTrainingResource.id, action, this.selectedTrainingResource.catalogueId, this.commentAuditControl.value)
       .subscribe(
         res => {
           if (!this.showSideAuditForm) {
             this.getResources();
           }
         },
-        err => { console.log(err); },
+        err => {
+          this.errorMessage =
+            (err?.status >= 500 && err?.status < 600)
+              ? `Something went wrong. If the issue persists, please contact support and provide the following error code: ${err?.error?.traceId}`
+              : `Something went bad, server responded: ${err?.error?.detail}`;
+          window.scroll(0,0);
+        },
         () => {
           this.trainingResourcesForAudit.forEach(
             s => {
@@ -870,28 +775,6 @@ export class TrainingListComponent implements OnInit {
 
   getProviderNameWithId(id: string) {
     return this.providersPage.results.find( x => x.id === id )?.name;
-  }
-
-  getProviderNamesWithIds(idsArray: string[]) {
-    let namesArray = [];
-    if (idsArray) {
-      for (let i=0; i<idsArray.length; i++) {
-        namesArray.push(this.providersPage.results.find( x => x.id == idsArray[i] )?.name);
-      }
-    }
-    return namesArray;
-  }
-
-  getResearchCategoriesVoc() {
-    this.resourceService.getVocabularyByType('RESEARCH_CATEGORY').subscribe(
-      suc => this.researchCategoriesVoc = suc
-    );
-  }
-
-  getSemanticRelationshipVoc() {
-    this.resourceService.getVocabularyByType('SEMANTIC_RELATIONSHIP').subscribe(
-      suc => this.semanticRelationshipVoc = suc
-    );
   }
 
 }

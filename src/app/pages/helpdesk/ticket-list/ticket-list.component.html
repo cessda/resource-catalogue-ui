@@ -22,7 +22,7 @@
     <p>Loading your tickets...</p>
   </div>
 
-  <div *ngIf="!loading && tickets.length === 0" class="empty-state">
+  <div *ngIf="!loading && (!tickets || tickets.length === 0)" class="empty-state">
     <i class="fa fa-ticket"></i>
     <h3>No tickets found</h3>
     <p>You haven't created any support tickets yet.</p>
@@ -31,7 +31,7 @@
     </button>
   </div>
 
-  <div *ngIf="!loading && tickets.length > 0" class="ticket-content">
+  <div *ngIf="!loading && (tickets?.length ?? 0) > 0" class="ticket-content">
     <div class="filters">
       <div class="status-filters">
         <button
@@ -63,7 +63,11 @@
         >
           <td data-label="Number">#{{ ticket.number }}</td>
           <td data-label="Date">{{ formatDate(ticket.created_at) }}</td>
-          <td data-label="Title">{{ ticket.title }}</td>
+          <td data-label="Title">
+            {{ ticket.title }}
+            <span *ngIf="getUnreadCount(ticket) > 0"
+                  class="uk-badge uk-margin-small-left" style="background-color:#f0506e">{{ getUnreadCount(ticket) }}</span>
+          </td>
           <td data-label="Status">
             <span
               class="status-badge"
@@ -144,6 +148,7 @@
     [ticket]="selectedTicket"
     [isOpen]="isModalOpen"
     (closeModal)="closeModal()"
+    (ticketUpdated)="onTicketUpdated($event)"
   >
   </app-ticket-modal>
 </div>

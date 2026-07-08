@@ -11,18 +11,16 @@ import {ServiceExtensionsService} from "../../../../services/service-extensions.
 import {TrainingResourceService} from "../../../../services/training-resource.service";
 import {pidHandler} from "../../../../shared/pid-handler/pid-handler.service";
 
-declare var UIkit: any;
+declare let UIkit: any;
 
 @Component({
     selector: 'app-training-resources',
     templateUrl: './training-resources.component.html',
-    styleUrls: ['../services/service.component.css'],
     standalone: false
 })
 
 export class TrainingResourcesComponent implements OnInit {
 
-  catalogueConfigId: string = this.config.getProperty('catalogueId');
   protected readonly environment = environment;
   serviceORresource = environment.serviceORresource;
 
@@ -30,7 +28,7 @@ export class TrainingResourcesComponent implements OnInit {
     from: '0',
     quantity: '10',
     order: 'ASC',
-    sort: 'title',
+    sort: 'name',
     query: '',
     active: 'statusAll',
     status: ''
@@ -104,7 +102,7 @@ export class TrainingResourcesComponent implements OnInit {
   }
 
   getProvider() {
-    this.providerService.getServiceProviderBundleById(this.providerId, this.catalogueId).subscribe(
+    this.providerService.getServiceProviderBundleById(this.providerId).subscribe(
       providerBundle => {
         this.providerBundle = providerBundle;
       }, error => {
@@ -114,16 +112,18 @@ export class TrainingResourcesComponent implements OnInit {
   }
 
   toggleTrainingResource(trBundle: TrainingResourceBundle) {
-    if (trBundle.status === 'pending resource' || trBundle.status === 'rejected resource') {
+    if (trBundle.status === 'pending' || trBundle.status === 'rejected') {
       this.errorMessage = `You cannot activate a ${trBundle.status}.`;
       window.scrollTo(0, 0);
       return;
     }
     UIkit.modal('#spinnerModal').show();
-    this.trainingResourceService.publishTrainingResource(trBundle.id, !trBundle.active).subscribe(
+    this.trainingResourceService.activateTrainingResource(trBundle.id, !trBundle.active).subscribe(
       res => {},
-      error => {
-        this.errorMessage = 'Something went bad. ' + error.error ;
+      err => {
+        this.errorMessage = (err?.status >= 500 && err?.status < 600)
+            ? `Something went wrong. If the issue persists, please contact support and provide the following error code: ${err?.error?.traceId}`
+            : `Something went bad, server responded: ${err?.error?.detail}`;
         this.getTrainingResources();
         UIkit.modal('#spinnerModal').hide();
         // console.log(error);
@@ -172,9 +172,11 @@ export class TrainingResourcesComponent implements OnInit {
     UIkit.modal('#spinnerModal').show();
     this.trainingResourceService.deleteTrainingResource(id).subscribe(
       res => {},
-      error => {
+      err => {
         UIkit.modal('#spinnerModal').hide();
-        this.errorMessage = 'Something went bad. ' + error.error ;
+        this.errorMessage = (err?.status >= 500 && err?.status < 600)
+            ? `Something went wrong. If the issue persists, please contact support and provide the following error code: ${err?.error?.traceId}`
+            : `Something went bad, server responded: ${err?.error?.detail}`;
         this.getTrainingResources();
       },
       () => {
@@ -202,7 +204,7 @@ export class TrainingResourcesComponent implements OnInit {
       }
     }
 
-    this.router.navigate([`/dashboard`, this.catalogueId, this.providerId, `training-resources`], {queryParams: map});
+    this.router.navigate([`/dashboard`, this.providerId, `training-resources`], {queryParams: map});
   }
 
   paginationInit() {

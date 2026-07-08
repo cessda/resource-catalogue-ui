@@ -8,18 +8,16 @@ import {DeployableServiceService} from "../../../../services/deployable-service.
 import {ConfigService} from "../../../../services/config.service";
 import {environment} from '../../../../../environments/environment';
 
-declare var UIkit: any;
+declare let UIkit: any;
 
 @Component({
     selector: 'app-catalogue-deployable-services',
     templateUrl: './catalogue-deployable-services.component.html',
-    styleUrls: ['../../../provider/dashboard/services/service.component.css'],
     standalone: false
 })
 
 export class CatalogueDeployableServicesComponent implements OnInit {
 
-  catalogueConfigId: string | null = null;
   protected readonly environment = environment;
 
   formPrepare = {
@@ -60,7 +58,6 @@ export class CatalogueDeployableServicesComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.catalogueConfigId = this.config.getProperty('catalogueId');
     this.catalogueId = this.route.parent.snapshot.paramMap.get('catalogue');
 
     this.getCatalogue();
@@ -104,16 +101,18 @@ export class CatalogueDeployableServicesComponent implements OnInit {
   }
 
   toggleDeployableService(bundle: DeployableServiceBundle) {
-    if (bundle.status === 'pending resource' || bundle.status === 'rejected resource') {
+    if (bundle.status === 'pending' || bundle.status === 'rejected') {
       this.errorMessage = `You cannot activate a ${bundle.status}.`;
       window.scrollTo(0, 0);
       return;
     }
     this.toggleLoading = true;
-    this.deployableServiceService.publishDeployableService(bundle.id, !bundle.active).subscribe(
+    this.deployableServiceService.activateDeployableService(bundle.id, !bundle.active).subscribe(
       res => {},
-      error => {
-        this.errorMessage = 'Something went bad. ' + error.error ;
+      err => {
+        this.errorMessage = (err?.status >= 500 && err?.status < 600)
+            ? `Something went wrong. If the issue persists, please contact support and provide the following error code: ${err?.error?.traceId}`
+            : `Something went bad, server responded: ${err?.error?.detail}`;
         this.getDeployableServices();
         this.toggleLoading = false;
         // console.log(error);
@@ -127,10 +126,9 @@ export class CatalogueDeployableServicesComponent implements OnInit {
 
   getDeployableServices() {
     this.toggleLoading = true;
-    this.catalogueService.getDeployableServicesOfCatalogue(this.dataForm.get('catalogue_id').value,
-      this.dataForm.get('from').value, this.dataForm.get('quantity').value,
-      this.dataForm.get('order').value, this.dataForm.get('sort').value,
-      this.dataForm.get('status').value, this.dataForm.get('query').value).subscribe(
+    this.deployableServiceService.getResourceBundles(this.dataForm.get('from').value, this.dataForm.get('quantity').value,
+      this.dataForm.get('sort').value, this.dataForm.get('order').value, this.dataForm.get('query').value,
+      null, null, this.dataForm.get('status').value, [], [], this.catalogueId ? [this.catalogueId] : []).subscribe(
       res => {
           this.toggleLoading = false;
           this.deployableServiceBundles = res['results'];
@@ -139,7 +137,7 @@ export class CatalogueDeployableServicesComponent implements OnInit {
         },
         err => {
           this.toggleLoading = false;
-          this.errorMessage = 'An error occurred while retrieving the deployable services of this provider. ' + err.error;
+          this.errorMessage = 'An error occurred while retrieving the Deployable Application of this provider. ' + err.error;
         }
       );
   }
@@ -153,10 +151,12 @@ export class CatalogueDeployableServicesComponent implements OnInit {
     // UIkit.modal('#spinnerModal').show();
     this.deployableServiceService.deleteDeployableService(id).subscribe(
       res => {},
-      error => {
+      err => {
         // console.log(error);
         // UIkit.modal('#spinnerModal').hide();
-        this.errorMessage = 'Something went bad. ' + error.error ;
+        this.errorMessage = (err?.status >= 500 && err?.status < 600)
+            ? `Something went wrong. If the issue persists, please contact support and provide the following error code: ${err?.error?.traceId}`
+            : `Something went bad, server responded: ${err?.error?.detail}`;
         this.getDeployableServices();
       },
       () => {

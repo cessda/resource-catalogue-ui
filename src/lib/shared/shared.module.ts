@@ -27,6 +27,10 @@ import {ExternalFooterComponent} from "../../app/shared/eosc-commons/eosc-common
 import {
   RejectedDeployableServicesComponent
 } from "../pages/provider/dashboard/rejectedDeployableServices/rejected-deployable-services.component";
+import {
+  RejectedDatasourcesComponent
+} from "../pages/provider/dashboard/rejectedDatasources/rejected-datasources.component";
+import {DraftDatasourcesComponent} from "../pages/provider/dashboard/draftDatasources/draft-datasources.component";
 
 @NgModule({
   imports: [
@@ -52,8 +56,10 @@ import {
     BreadcrumbsComponent,
     DashboardBreadcrumbsComponent,
     PendingServicesComponent,
+    DraftDatasourcesComponent,
     SharedServicesComponent,
     RejectedServicesComponent,
+    RejectedDatasourcesComponent,
     RejectedTrainingResourcesComponent,
     RejectedDeployableServicesComponent,
     PreviewResourceComponent,
@@ -74,8 +80,10 @@ import {
     BreadcrumbsComponent,
     DashboardBreadcrumbsComponent,
     PendingServicesComponent,
+    DraftDatasourcesComponent,
     SharedServicesComponent,
     RejectedServicesComponent,
+    RejectedDatasourcesComponent,
     RejectedTrainingResourcesComponent,
     RejectedDeployableServicesComponent,
     PreviewResourceComponent,
